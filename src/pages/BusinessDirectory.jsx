@@ -46,7 +46,7 @@ const BusinessDirectory = () => {
   useEffect(() => {
     (async () => {
       try {
-        const meta = await getBusinessFilters(); 
+        const meta = await getBusinessFilters();
         setFiltersMeta(meta || {});
 
         const cfg = [];
@@ -168,7 +168,7 @@ const BusinessDirectory = () => {
         {/* Header */}
         <div className="flex md:flex-row md:items-center md:justify-between md:px-0 px-4 py-4 gap-3 md:gap-0">
           <Link
-            to="/"
+            to="/home"
             className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-4 py-2 flex items-center justify-center md:justify-start"
           >
             <FaArrowLeft className="mr-2" />Back to Home
@@ -238,99 +238,100 @@ const BusinessDirectory = () => {
             </span>
           </div>
 
-          {loading && <p className="text-gray-500"><SpinnerProvider/></p>}
+          {loading && <p className="text-gray-500"><SpinnerProvider /></p>}
           {error && <p className="text-red-500">{error}</p>}
 
-          {businesses.map((biz) => {
-            const user = biz.user;
-            const profile = biz.profile;
+          {/* Grid container */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {businesses.map((biz) => {
+              const user = biz.user;
+              const profile = biz.profile;
 
-            return (
-              <div
-                key={biz.id}
-                className="bg-white border rounded-xl shadow-sm p-5 mb-5 ml-0 justify-center flex flex-row items-start max-w-xl mx-auto"
-              >
-                {/* Image */}
-                <img
-                  src={
-                    profile?.profile_picture || "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80"
-                  }
-                  alt={user?.full_name}
-                  className="w-20 h-20 rounded-lg object-cover"
-                />
+              return (
+                <div
+                  key={biz.id}
+                  className="bg-white border rounded-xl shadow-sm p-5 flex items-start gap-4"
+                >
+                  {/* Image */}
+                  <img
+                    src={
+                      profile?.profile_picture ||
+                      "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80"
+                    }
+                    alt={user?.full_name}
+                    className="w-20 h-20 rounded-lg object-cover shrink-0"
+                  />
 
-                {/* Content */}
-                <div className="flex-1 w-full">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                    <h2 className="font-bold text-base md:text-lg">
-                      {user?.full_name}
-                    </h2>
-                    <span className="text-xs md:text-sm text-gray-500 flex flex-row items-center gap-1">
-                      <FaStar className="text-orange-600"/> {biz.rating} ({biz.total_reviews})
+                  {/* Content */}
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                      <h2 className="font-bold text-base md:text-lg">{user?.full_name}</h2>
+                      <span className="text-xs md:text-sm text-gray-500 flex items-center gap-1">
+                        <FaStar className="text-orange-600" /> {biz.rating} ({biz.total_reviews})
+                      </span>
+                    </div>
+
+                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-md inline-block mt-1">
+                      {biz?.type || "Business"}
                     </span>
-                  </div>
 
-                  <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-md inline-block mt-1">
-                    {biz?.type || "Business"}
-                  </span>
+                    <p className="text-xs text-gray-600 mt-2">{biz.personal_intro}</p>
 
-                  <p className="text-xs text-gray-600 mt-2">
-                    {biz.personal_intro}
-                  </p>
+                    {/* Meta */}
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-500">
+                      <p className="flex items-center">
+                        <FaMapMarkerAlt className="mr-2" /> {user?.location.city.name},{" "}
+                        {user?.location.state.name}, {user?.location.country.name}
+                      </p>
+                      <p className="flex items-center">
+                        <FaPhoneAlt className="mr-2" /> {user.profile?.phone || "-"}
+                      </p>
+                      <p className="flex items-center">
+                        <FaEnvelope className="mr-2" /> {user?.email}
+                      </p>
+                    </div>
 
-                  {/* Meta */}
-                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-500">
-                    <p className="flex items-center">
-                      <FaMapMarkerAlt className="mr-2" /> {user?.location.city.name}, {user?.location.state.name}, {user?.location.country.name}
+                    {/* Price */}
+                    <p className="mt-3 text-gray-800 font-medium text-sm">
+                      💲 Hourly: ${biz.hourly_rate} | Daily: ${biz.daily_rate} | Project: ${biz.project_rate}
                     </p>
-                    <p className="flex items-center">
-                      <FaPhoneAlt className="mr-2" /> {user.profile?.phone || "-"}
-                    </p>
-                    <p className="flex items-center">
-                      <FaEnvelope className="mr-2" /> {user?.email}
-                    </p>  
-                  </div>
 
-                  {/* Price */}
-                  <p className="mt-3 text-gray-800 font-medium text-sm">
-                    💲 Hourly: ${biz.hourly_rate} | Daily: ${biz.daily_rate} | Project: ${biz.project_rate}
-                  </p>
+                    {/* Social Links */}
+                    <div className="mt-3 flex gap-2 flex-wrap">
+                      {user?.social_links?.map((link) => (
+                        <a
+                          key={link.id}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs bg-gray-100 px-2 py-1 rounded-md text-blue-600"
+                        >
+                          {link.platform}
+                        </a>
+                      ))}
+                    </div>
 
-                  {/* Social Links */}
-                  <div className="mt-3 flex gap-2 flex-wrap">
-                    {user?.social_links?.map((link) => (
+                    {/* Footer */}
+                    <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:space-x-3 justify-between">
                       <a
-                        key={link.id}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs bg-gray-100 px-2 py-1 rounded-md text-blue-600"
+                        href={
+                          user?.social_links?.find((l) => l.platform === "website")?.url || "#"
+                        }
+                        className="px-3 py-2 border rounded-md text-xs flex items-center justify-center gap-2 hover:bg-gray-100"
                       >
-                        {link.platform}
+                        <FaGlobe /> <span>Website</span>
                       </a>
-                    ))}
-                  </div>
-
-                  {/* Footer */}
-                  <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:space-x-3 justify-between">
-                    <a
-                      href={
-                        user?.social_links?.find((l) => l.platform === "website")
-                          ?.url || "#"
-                      }
-                      className="px-3 py-2 border rounded-md text-xs flex items-center justify-center gap-2 hover:bg-gray-100"
-                    >
-                      <FaGlobe /> <span>Website</span>
-                    </a>
-                    <button className="sm:ml-auto px-3 py-2 bg-teal-500 text-white font-semibold text-xs rounded-md hover:bg-teal-600">
-                      View Details
-                    </button>
+                      <button className="sm:ml-auto px-3 py-2 bg-teal-500 text-white font-semibold text-xs rounded-md hover:bg-teal-600">
+                        View Details
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
+
       </div>
     </div>
   );

@@ -254,7 +254,7 @@ const CreativeDirectory = () => {
         {/* Top Navigation */}
         <div className="flex flex-wrap items-center justify-between px-2 md:px-0 py-4 gap-3">
           <Link
-            to="/"
+            to="/home"
             className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 py-2 flex items-center"
           >
             <FaArrowLeft className="mr-2" /> Back to Home

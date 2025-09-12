@@ -28,7 +28,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainLayout />}>
-              <Route index element={<HomePage />} />
+              <Route path='home' element={<HomePage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="register" element={<RegisterPage />} />
               <Route path="creatives" element={<CreativeDirectory />} />
@@ -47,7 +47,7 @@ function App() {
             </Route>
             
             <Route path="*" element={<NotFoundPage />} />
-             <Route path="/landing-page" element={<LandingPage />}></Route>
+             <Route index element={<LandingPage />}></Route>
           </Routes>
         </Router>
       </ProjectProvider>

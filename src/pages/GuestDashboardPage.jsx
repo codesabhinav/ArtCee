@@ -30,7 +30,7 @@ const GuestDashboardPage = () => {
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4 border-b gap-3 sm:gap-0">
                     <Link
-                        to="/"
+                        to="/home"
                         className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-4 py-2 flex items-center w-fit"
                     >
                         <FaArrowLeft className="mr-2" /> Back to Home

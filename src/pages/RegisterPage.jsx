@@ -139,10 +139,10 @@ const RegisterPage = () => {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center">
       {/* Top header */}
       <div className="w-full p-4 flex justify-between items-center md:max-w-[50%]">
-        <button className="text-gray-600 text-xs hover:bg-gray-200 rounded-md px-6 py-1 flex items-center">
+        <Link to="/home" className="text-gray-600 text-xs hover:bg-gray-200 rounded-md px-4 py-1 flex items-center">
           <FaArrowLeft className="mr-2" /> Back
-        </button>
-        <Link to="/" className="text-gray-600 text-xs border px-3 py-1 rounded-md hover:bg-gray-200">
+        </Link>
+        <Link to="/home" className="text-gray-600 text-xs border px-3 py-1 rounded-md hover:bg-gray-200">
           Skip for now
         </Link>
       </div>

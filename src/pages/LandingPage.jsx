@@ -61,7 +61,7 @@ const LandingPage = () => {
                 <button onClick={() => navigate("/register")} className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-2 rounded-full shadow">
                     Join ArtCee
                 </button>
-                <button onClick={() => navigate("/")} className="border border-orange-500  bg-white text-orange-500 hover:bg-orange-50 px-8 py-2 rounded-full text-sm font-semibold">
+                <button onClick={() => navigate("/home")} className="border border-orange-500  bg-white text-orange-500 hover:bg-orange-50 px-8 py-2 rounded-full text-sm font-semibold">
                     Skip to Browse
                 </button>
             </div>
