@@ -1,196 +1,184 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa'
+import { useState } from "react"
+import { FaEnvelope, FaLock, FaGoogle } from "react-icons/fa"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
+import { Link } from "react-router-dom"
+import toast from "react-hot-toast"
+import { login } from "../Hooks/useAuth"
+import { useGoogleLogin } from "@react-oauth/google"
+import ProfileCompletionModal from "../modal/ProfileCompletionModal"
 
-const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
+const LoginPage = ({ onClose }) => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
-  const navigate = useNavigate()
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }))
-    }
-  }
-
-  const validateForm = () => {
-    const newErrors = {}
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required'
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid'
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required'
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
-    }
-    
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+  const [googleLoading, setGoogleLoading] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
-    if (!validateForm()) return
-    
     setLoading(true)
-    
+
     try {
-      const mockUser = {
-        id: '1',
-        name: 'John Doe',
-        email: formData.email,
-        role: 'freelancer'
-      }
-      
-      login(mockUser)
-      navigate('/dashboard')
+      const response = await login({ email, password })
+      console.log("Login success:", response)
+
+      toast.success("Login successful 🎉")
+      setShowProfileModal(true);
     } catch (error) {
-      setErrors({ general: 'Login failed. Please try again.' })
+      toast.error(error.message || "Login failed")
+      console.error("Login error:", error)
     } finally {
       setLoading(false)
     }
   }
 
+  const handleGoogleSuccess = async (tokenResp) => {
+    
+    setGoogleLoading(true)
+    try {
+      const token =
+        tokenResp?.access_token ?? tokenResp?.credential ?? tokenResp?.token
+
+      console.log("Google credential:", token)
+      if (!token) throw new Error("No credential returned from Google")
+
+      
+      const response = await login({ googleToken: token }) 
+      console.log("Google login success:", response)
+
+      toast.success("Signed in with Google 🎉")
+      onClose()
+    } catch (err) {
+      console.error("Google login error:", err)
+      toast.error(err.message || "Google sign-in failed")
+    } finally {
+      setGoogleLoading(false)
+    }
+  }
+
+  const handleGoogleError = (error) => {
+    console.error("Google login failure", error)
+    toast.error("Google sign-in failed")
+  }
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: handleGoogleSuccess,
+
+    onError: (error) => console.log("Google Login Failed:", error),
+  });
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
-              create a new account
-            </Link>
-          </p>
-        </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {errors.general && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
-              {errors.general}
-            </div>
-          )}
-          
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaEnvelope className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`appearance-none relative block w-full pl-10 pr-3 py-2 border ${
-                    errors.email ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
-                  placeholder="Enter your email"
-                />
-              </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-              )}
-            </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaLock className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`appearance-none relative block w-full pl-10 pr-10 py-2 border ${
-                    errors.password ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <FaEyeSlash className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <FaEye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-              )}
-            </div>
-          </div>
+    <div className="fixed inset-0 bg-transperant bg-opacity-40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
 
-            <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                Forgot your password?
-              </a>
-            </div>
-          </div>
+        {/* Header */}
+        <h2 className="text-center text-xl font-light mb-2">
+          <span className="bg-gradient-to-r from-[#1FA29A] to-orange-400 bg-clip-text text-transparent">
+            Welcome Back
+          </span>
+        </h2>
+        <p className="text-center text-gray-500 mb-6 font-light text-[14px]">
+          Sign in to your ArtCee account
+        </p>
 
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Email */}
           <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
+            <label className="text-sm text-gray-700">Email</label>
+            <div className="flex items-center rounded-md px-2 mt-1 bg-gray-50 border">
+              <FaEnvelope className="text-gray-400 mr-2" />
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full py-2 bg-transparent border-none focus:ring-0 focus:outline-none text-sm"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
           </div>
+
+          {/* Password */}
+          <div>
+            <label className="text-sm text-gray-700">Password</label>
+            <div className="flex items-center rounded-md px-2 mt-1 bg-gray-50 border">
+              <FaLock className="text-gray-400 mr-2" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="w-full py-2 bg-transparent border-none focus:ring-0 focus:outline-none text-sm"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </button>
+            </div>
+            <div className="flex justify-between items-center text-xs mt-3">
+              <label className="flex items-center">
+                <input type="checkbox" className="mr-1 rounded-md" /> Remember me
+              </label>
+              <button type="button" className="text-teal-500 hover:underline">
+                Forgot password?
+              </button>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-teal-500 text-sm font-semibold text-white py-2 rounded-md disabled:opacity-60"
+          >
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
         </form>
+
+        {/* Divider */}
+        <div className="flex items-center my-4">
+          <hr className="flex-grow border-gray-300" />
+          <span className="px-2 text-gray-500 text-xs font-light">OR CONTINUE WITH</span>
+          <hr className="flex-grow border-gray-300" />
+        </div>
+
+        {/* Google Sign In */}
+
+        
+        <button
+        onClick={handleGoogleLogin}
+         className="w-full flex items-center justify-center text-xs font-semibold border py-2 rounded-md hover:bg-gray-100">
+          <FaGoogle className="mr-2" /> Sign in with Google
+        </button>
+
+        {/* Footer */}
+        <p className="text-center font-light text-xs mt-5">
+          Don’t have an account?{" "}
+          <Link
+            to="/register"
+            onClick={onClose}
+            className="text-teal-500 hover:underline font-semibold"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
+      {showProfileModal && <ProfileCompletionModal onClose={() => setShowProfileModal(false)} />}
+
     </div>
   )
 }

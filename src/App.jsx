@@ -12,10 +12,18 @@ import ProjectDetailPage from './pages/ProjectDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import CreateProjectPage from './pages/CreateProjectPage'
 import NotFoundPage from './pages/NotFoundPage'
+import CreativeDirectory from './pages/CreativeDirectory'
+import BusinessDirectory from './pages/BusinessDirectory'
+import JobsOpportunities from './pages/JobsOpportunities'
+import FeaturePremiumPage from './pages/FeaturePremiumPage'
+import ToastProvider from "./components/ToastProvider";
+import GuestDashboardPage from './pages/GuestDashboardPage'
+import LandingPage from './pages/LandingPage'
 
 function App() {
   return (
     <AuthProvider>
+      <ToastProvider />
       <ProjectProvider>
         <Router>
           <Routes>
@@ -23,6 +31,11 @@ function App() {
               <Route index element={<HomePage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="register" element={<RegisterPage />} />
+              <Route path="creatives" element={<CreativeDirectory />} />
+              <Route path="business-directory" element={<BusinessDirectory />} />
+              <Route path="jobs" element={<JobsOpportunities />} />
+              <Route path="featured" element={<FeaturePremiumPage />} />
+              <Route path="guest-dashboard" element={<GuestDashboardPage />} />
             </Route>
             
             <Route path="/dashboard" element={<DashboardLayout />}>
@@ -34,6 +47,7 @@ function App() {
             </Route>
             
             <Route path="*" element={<NotFoundPage />} />
+             <Route path="/landing-page" element={<LandingPage />}></Route>
           </Routes>
         </Router>
       </ProjectProvider>
