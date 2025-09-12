@@ -248,7 +248,7 @@ const BusinessDirectory = () => {
             return (
               <div
                 key={biz.id}
-                className="bg-white border rounded-xl shadow-sm p-5 mb-5 ml-0 justify-start flex flex-row items-start max-w-xl mx-auto"
+                className="bg-white border rounded-xl shadow-sm p-5 mb-5 ml-0 justify-center flex flex-row items-start max-w-xl mx-auto"
               >
                 {/* Image */}
                 <img
