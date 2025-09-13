@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { LanguageProvider } from "./contexts/LanguageProvider";
 
 createRoot(document.getElementById('root')).render(
    <GoogleOAuthProvider
@@ -11,7 +12,9 @@ createRoot(document.getElementById('root')).render(
     }
   >
   <StrictMode>
-    <App />
+  <LanguageProvider>
+      <App />
+    </LanguageProvider>
   </StrictMode>
   </GoogleOAuthProvider>
 )

@@ -13,11 +13,14 @@ import ViewProfilePopupModel from "../modal/ViewProfilePopupModel";
 import { getCreativeData, getCreativeFilters } from "../Hooks/useSeller";
 import CustomDropdown from "../components/CustomDropdown";
 import SpinnerProvider from "../components/SpinnerProvider";
+import { useTranslation } from "../contexts/LanguageProvider";
 
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
 
 const CreativeDirectory = () => {
+  const { t } = useTranslation();
+
   const [open, setOpen] = useState(false);
   const [creatives, setCreatives] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +35,13 @@ const CreativeDirectory = () => {
   const [selectedFilters, setSelectedFilters] = useState({});
   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
 
-  const sortOptions = ["Highest Rated", "Price:Low to High", "Price:High to Low", "Most Expirence", "Name A-Z"];
+  const sortOptions = [
+    t("creative.sort_highest_rated"),
+    t("creative.sort_price_low_high"),
+    t("creative.sort_price_high_low"),
+    t("creative.sort_most_experience"),
+    t("creative.sort_name_az"),
+  ];
   const [sort, setSort] = useState(sortOptions[0]);
 
   useEffect(() => {
@@ -55,10 +64,10 @@ const CreativeDirectory = () => {
         const labelToKey = {};
 
         const humanLabel = (key) => {
-          if (key === "availability") return "Availability";
-          if (key === "level") return "Experience Level";
-          if (key === "working_style") return "Work Style";
-          if (key === "union_status") return "Union Status";
+          if (key === "availability") return t("creative.filter_availability");
+          if (key === "level") return t("creative.filter_experience_level");
+          if (key === "working_style") return t("creative.filter_work_style");
+          if (key === "union_status") return t("creative.filter_union_status");
           return key;
         };
 
@@ -71,10 +80,11 @@ const CreativeDirectory = () => {
           });
         };
 
-        pushFilter("availability", meta.availability, "All Status");
-        pushFilter("level", meta.level, "All Levels");
-        pushFilter("working_style", meta.working_style, "All Types");
-        pushFilter("union_status", meta.union_status, "All Status");
+        // localized "All ..." labels
+        pushFilter("availability", meta.availability, t("creative.all_status"));
+        pushFilter("level", meta.level, t("creative.all_levels"));
+        pushFilter("working_style", meta.working_style, t("creative.all_types"));
+        pushFilter("union_status", meta.union_status, t("creative.all_status"));
 
         if (meta.order_by_rate) {
           const map = {};
@@ -93,7 +103,8 @@ const CreativeDirectory = () => {
         console.error("Failed to load filters:", err);
       }
     })();
-  }, []);
+    // we intentionally depend on t so labels update when language changes
+  }, [t]);
 
   const buildApiParams = () => {
     const params = {};
@@ -101,7 +112,7 @@ const CreativeDirectory = () => {
 
     Object.entries(selectedFilters).forEach(([label, chosenLabel]) => {
       if (!chosenLabel) return;
-      if (chosenLabel.startsWith("All")) return;
+      if (chosenLabel.startsWith(t("creative.all"))) return; // treat any "All..." label as empty
       const filterObj = filtersConfigDynamic.find((f) => f.label === label);
       if (!filterObj) return;
       const apiKeyFromLabel = filterLabelToKeyMap[chosenLabel];
@@ -136,10 +147,14 @@ const CreativeDirectory = () => {
     if (filtersConfigDynamic.length > 0) {
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic]);
 
   const clearFilter = (label) => {
-    setSelectedFilters((prev) => ({ ...prev, [label]: defaultSelectedFilters[label] || (prev[label] && prev[label].startsWith("All") ? prev[label] : "") }));
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [label]: defaultSelectedFilters[label] || (prev[label] && prev[label].startsWith(t("creative.all")) ? prev[label] : ""),
+    }));
   };
 
   const clearAllFilters = () => {
@@ -151,23 +166,23 @@ const CreativeDirectory = () => {
     const state = creative?.user?.location?.state?.name;
     const country = creative?.user?.location?.country?.name;
     const parts = [city, state, country].filter(Boolean);
-    return parts.length ? parts.join(", ") : "N/A";
+    return parts.length ? parts.join(", ") : t("creative.na");
   };
 
   const getAvailability = (creative) => {
     const status = (creative?.status || "").toLowerCase();
-    if (status === "online") return { label: "Available", badge: "bg-green-100 text-green-700" };
-    if (status === "busy") return { label: "Busy", badge: "bg-yellow-100 text-yellow-700" };
-    if (status === "booked") return { label: "Booked", badge: "bg-orange-100 text-orange-700" };
-    return { label: "Offline", badge: "bg-gray-100 text-gray-700" };
+    if (status === "online") return { label: t("creative.available"), badge: "bg-green-100 text-green-700" };
+    if (status === "busy") return { label: t("creative.busy"), badge: "bg-yellow-100 text-yellow-700" };
+    if (status === "booked") return { label: t("creative.booked"), badge: "bg-orange-100 text-orange-700" };
+    return { label: t("creative.offline"), badge: "bg-gray-100 text-gray-700" };
   };
 
   const SidebarFilters = () => (
     <div className="w-full md:w-64 shrink-0 border rounded-lg p-4 bg-white shadow-sm">
-      <h2 className="font-semibold mb-4">Advanced Filters</h2>
+      <h2 className="font-semibold mb-4">{t("creative.advanced_filters")}</h2>
 
       <div className="mb-4">
-        <p className="font-medium text-sm">Budget Range</p>
+        <p className="font-medium text-sm">{t("creative.budget_range")}</p>
         <input
           type="range"
           min={filtersMeta?.budged_range?.min ?? 0}
@@ -176,28 +191,68 @@ const CreativeDirectory = () => {
         />
         <div className="flex justify-between text-xs text-gray-500 mt-1">
           <span>${filtersMeta?.budged_range?.min ?? 0}</span>
-          <span>${filtersMeta?.budged_range?.max ?? 10000}+</span>
+          <span>${filtersMeta?.budged_range?.max ?? 10000}+ </span>
         </div>
       </div>
 
-      <div className="mb-4">
-        <p className="font-medium text-sm">Industries</p>
+       <div className="mb-4">
+        <p className="font-medium text-sm">{t("creative.industries")}</p>
         <div className="mt-2 space-y-2 text-xs">
           {filtersMeta?.industries
             ? Object.values(filtersMeta.industries).map((ind, i) => (
-              <label key={i} className="flex items-center space-x-2">
-                <input type="checkbox" className="accent-teal-500" />
-                <span>{ind}</span>
-              </label>
-            ))
-            : ["Industries", "Servives", "Skills"].map((ind, i) => (
-              <label key={i} className="flex items-center space-x-2">
-                <input type="checkbox" className="accent-teal-500" />
-                <span>{ind}</span>
-              </label>
-            ))}
+                <label key={i} className="flex items-center space-x-2">
+                  <input type="checkbox" className="accent-teal-500" />
+                  <span>{ind}</span>
+                </label>
+              ))
+            : ["Industries", "Services", "Skills"].map((ind, i) => (
+                <label key={i} className="flex items-center space-x-2">
+                  <input type="checkbox" className="accent-teal-500" />
+                  <span>{ind}</span>
+                </label>
+              ))}
         </div>
-      </div>
+      </div> 
+
+
+
+{/* <div className="mb-4">
+  <p className="font-medium text-sm">{t("creative.industries")}</p>
+  <div className="mt-2 space-y-2 text-xs">
+    {/*
+      1) defaultIndustries: fallback from translations JSON (prefer array via returnObjects)
+      2) If filtersMeta.industries present, we try to localize each API label via translation mapping (`creative.industry_map`)
+         - if no mapping exists, show the original API label (defaultValue)
+    */}
+    {/* {filtersMeta?.industries ? (
+      Object.values(filtersMeta.industries).map((ind, i) => {
+        // try to translate API-provided label using map in JSON: creative.industry_map[apiLabel]
+        const localized = t(`creative.industry_map.${ind}`, { defaultValue: ind });
+        return (
+          <label key={i} className="flex items-center space-x-2">
+            <input type="checkbox" className="accent-teal-500" />
+            <span>{localized}</span>
+          </label>
+        );
+      })
+    ) : (
+      (() => { */}
+        {/* // read an array from translations. If your t() supports returnObjects, pass that.
+        const arr = t("creative.default_industries", { returnObjects: true });
+        const defaultIndustries = Array.isArray(arr)
+          ? arr
+          : (typeof arr === "string" ? arr.split(",").map(s => s.trim()) : ["Industries", "Services", "Skills"]);
+        return defaultIndustries.map((ind, i) => (
+          <label key={i} className="flex items-center space-x-2">
+            <input type="checkbox" className="accent-teal-500" />
+            <span>{ind}</span>
+          </label>
+        ));
+      })()
+    )}
+  </div>
+</div> */}
+
 
       {filtersConfigDynamic.map((filter, idx) => (
         <div key={idx} className="mb-3">
@@ -205,9 +260,7 @@ const CreativeDirectory = () => {
             label={filter.label}
             options={filter.options}
             value={selectedFilters[filter.label] || filter.options[0]}
-            setValue={(val) =>
-              setSelectedFilters((prev) => ({ ...prev, [filter.label]: val }))
-            }
+            setValue={(val) => setSelectedFilters((prev) => ({ ...prev, [filter.label]: val }))}
           />
         </div>
       ))}
@@ -215,7 +268,7 @@ const CreativeDirectory = () => {
   );
 
   const ActiveFilterChips = () => {
-    const active = Object.entries(selectedFilters).filter(([label, val]) => val && !val.startsWith("All"));
+    const active = Object.entries(selectedFilters).filter(([label, val]) => val && !val.startsWith(t("creative.all")));
     if (active.length === 0) return null;
 
     return (
@@ -226,7 +279,9 @@ const CreativeDirectory = () => {
             <button onClick={() => clearFilter(label)} className="ml-2 text-gray-600">✕</button>
           </div>
         ))}
-        <button onClick={clearAllFilters} className="ml-2 text-xs border px-3 py-1.5 rounded-md font-semibold hover:bg-gray-100">Clear all</button>
+        <button onClick={clearAllFilters} className="ml-2 text-xs border px-3 py-1.5 rounded-md font-semibold hover:bg-gray-100">
+          {t("creative.clear_all")}
+        </button>
       </div>
     );
   };
@@ -242,7 +297,7 @@ const CreativeDirectory = () => {
           <span key={s.id} className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{s.name}</span>
         ))}
         {extra > 0 && (
-          <span className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">+{extra} more</span>
+          <span className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{`+${extra} ${t("creative.more")}`}</span>
         )}
       </div>
     );
@@ -257,11 +312,11 @@ const CreativeDirectory = () => {
             to="/home"
             className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 py-2 flex items-center"
           >
-            <FaArrowLeft className="mr-2" /> Back to Home
+            <FaArrowLeft className="mr-2" /> {t("creative.back_to_home")}
           </Link>
-          <h1 className="text-center text-lg md:text-xl font-bold flex-1">Creative Directory</h1>
+          <h1 className="text-center text-lg md:text-xl font-bold flex-1">{t("creative.title")}</h1>
           <button className="px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
-            {creatives.length} Creatives
+            {t("creative.count_creatives", { count: creatives.length })}
           </button>
         </div>
 
@@ -271,7 +326,7 @@ const CreativeDirectory = () => {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search creatives by name, specialty, or bio..."
+            placeholder={t("creative.search_placeholder")}
             className="flex-1 form-input w-full"
           />
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
@@ -304,13 +359,13 @@ const CreativeDirectory = () => {
             {loading ? (
               <p className="text-gray-500"><SpinnerProvider/></p>
             ) : creatives.length === 0 ? (
-              <p className="text-gray-500">No creatives found.</p>
+              <p className="text-gray-500">{t("creative.no_creatives")}</p>
             ) : (
               creatives.map((creative) => {
                 const availability = getAvailability(creative);
                 const rating = typeof creative?.rating === "number" ? creative.rating.toFixed(1) : "—";
                 const reviews = creative?.total_reviews ?? 0;
-                const name = creative?.user?.full_name || "Anonymous";
+                const name = creative?.user?.full_name || t("creative.anonymous");
                 const title = creative?.user?.profile?.title || "—";
                 const years = creative?.experience_in_year ?? "0";
                 const level = creative?.experience_in_level
@@ -319,12 +374,11 @@ const CreativeDirectory = () => {
                   : "—";
                 const workStyle =
                   creative?.on_site_active === "1" && creative?.is_remote_active === "0" 
-                    ? "On-site"
+                    ? t("creative.on_site")
                     : creative?.is_remote_active === "1" && creative?.on_site_active === "0"
-                      ? "Remote OK"
-                      : "Remote OK & On-site";
+                      ? t("creative.remote_ok")
+                      : t("creative.remote_ok_on_site");
 
-                // Image with default fallback
                 const profileSrc = creative?.user?.profile?.profile_picture || DEFAULT_AVATAR;
 
                 return (
@@ -363,7 +417,7 @@ const CreativeDirectory = () => {
 
                     {/* Bio */}
                     <p className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
-                      {creative?.personal_intro || "No personal intro available."}
+                      {creative?.personal_intro || t("creative.no_intro")}
                     </p>
 
                     {/* Meta */}
@@ -372,10 +426,10 @@ const CreativeDirectory = () => {
                         <FaMapMarkerAlt className="mr-2" /> {getLocationText(creative)}
                       </p>
                       <p className="flex items-center">
-                        <FaClock className="mr-2" /> {years}+ years
+                        <FaClock className="mr-2" /> {years}+ {t("creative.years")}
                       </p>
                       <p className="flex items-center">
-                        <FaBriefcase className="mr-2" /> {level} Level
+                        <FaBriefcase className="mr-2" /> {level} {t("creative.level")}
                       </p>
                       <p className="flex items-center">
                         <FaGlobe className="mr-2" /> {workStyle}
@@ -389,7 +443,7 @@ const CreativeDirectory = () => {
                       onClick={() => setOpen(true)}
                       className="w-full mt-4 bg-teal-500 text-white text-xs font-semibold py-2 rounded-md hover:bg-teal-600"
                     >
-                      View Profile
+                      {t("creative.view_profile")}
                     </button>
                   </div>
                 );
