@@ -4,7 +4,7 @@ import { FaCheck, FaChevronDown } from "react-icons/fa";
 
 const CustomDropdown = ({ label, options, value, setValue }) => {
   return (
-    <div className="">
+    <div className="mt-1">
       {label ? <p className="font-medium mb-1 text-sm">{label}</p> : null}
       <Listbox value={value} onChange={setValue}>
         <div className="relative">

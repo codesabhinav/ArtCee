@@ -220,7 +220,7 @@ const JobsOpportunities = () => {
 
               <div className="flex-1">
                 <div className="flex justify-between items-start">
-                  <div>
+                  <div className="w-full">
                     <div className="flex gap-4 items-center">
                       <img
                         src={job.thumbnail || job.image || DEFAULT_JOB_IMAGE}

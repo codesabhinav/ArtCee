@@ -81,3 +81,28 @@ export function applyToJob(payload = {}) {
       throw new Error(errorMessage);
     });
 }
+
+export function getGuestDashboardData() {
+  return service
+    .get(`seller/dashboard`)
+    .then((res) => res.data || [])
+    .catch((error) => {
+      const errorMessage = error.response?.message || "Failed to fetch seller data";
+      throw new Error(errorMessage);
+    });
+}
+
+export function createPost(formData) {
+  return service
+    .post("seller/posts/store", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    .then((res) => res.data)
+    .catch((error) => {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to create post";
+      throw new Error(message);
+    });
+}

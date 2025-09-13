@@ -1,4 +1,3 @@
-// components/ViewJobDetailsModel.jsx
 import { useState, useEffect } from "react";
 
 const DEFAULT_JOB_IMAGE =
@@ -15,7 +14,7 @@ const ViewJobDetailsModel = ({ job, open, onClose, onOpenApply }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl p-6 relative overflow-auto max-h-[90vh]">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl p-6 relative overflow-auto max-h-[90vh] scrollbar-hide">
         <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-800">✕</button>
 
         <div className="flex items-center gap-4">
@@ -28,12 +27,6 @@ const ViewJobDetailsModel = ({ job, open, onClose, onOpenApply }) => {
           <div className="flex-1">
             <h2 className="text-md font-bold">{job.title}</h2>
             <p className="text-sm text-gray-600">{job.company_name}</p>
-            {/* <p className="text-xs text-gray-500 mt-1">{job.location}</p>
-            <div className="mt-2 text-xs text-gray-500 flex gap-3 flex-wrap">
-              {job.detected_extensions?.posted_at && <span>{job.detected_extensions.posted_at}</span>}
-              {job.detected_extensions?.schedule_type && <span>{job.detected_extensions.schedule_type}</span>}
-              {job.detected_extensions?.qualifications && <span>{job.detected_extensions.qualifications}</span>}
-            </div> */}
           </div>
         </div>
 
@@ -65,15 +58,26 @@ const ViewJobDetailsModel = ({ job, open, onClose, onOpenApply }) => {
         )}
 
         <div className="flex flex-col items-end gap-2 border-t pt-4">
-            {applied ? (
-              <button disabled className="px-4 py-2 bg-gray-300 text-gray-600 rounded-md text-sm">Applied</button>
-            ) : (
-              <button onClick={() => onOpenApply && onOpenApply(job)} className="px-4 py-2 bg-teal-500 text-white rounded-md text-xs font-semibold">Apply Now</button>
-            )}
-          </div>
+          {applied ? (
+            <button disabled className="px-4 py-2 bg-gray-300 text-gray-600 rounded-md text-sm">Applied</button>
+          ) : (
+            <button
+              onClick={() => {
+                onClose && onClose();
+
+                if (onOpenApply) {
+                  onOpenApply(job);
+                }
+              }}
+              className="px-4 py-2 bg-teal-500 text-white rounded-md text-xs font-semibold"
+            >
+              Apply Now
+            </button>
+          )}
+        </div>
       </div>
-      
-    </div>
+
+    </div >
   );
 };
 

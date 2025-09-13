@@ -10,19 +10,18 @@ const FeaturePremiumPage = () => {
   const { t } = useTranslation();
   const [selectedPlan, setSelectedPlan] = useState(null);
 
-  // sample dynamic numbers — replace with real data where available
   const joined = 347;
   const spotsLeft = 153;
   const foundingRemainingText = t("premium.founding_spots_remaining", { remaining: spotsLeft });
 
   return (
     <div className="bg-white min-h-screen w-full">
-      <div className="md:max-w-[80%] mx-auto">
+      <div className="md:max-w-[80%] justify-center mx-auto pb-5">
         {/* Header */}
-        <div className="flex items-center px-6 py-4">
+        <div className="flex flex-wrap items-center justify-between px-2 md:px-0 py-4 border-b">
           <Link
             to="/guest-dashboard"
-            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-6 py-2 flex items-center"
+            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-4 py-2 flex items-center"
           >
             <FaArrowLeft className="mr-2" /> {t("premium.back_to_dashboard")}
           </Link>
@@ -34,7 +33,7 @@ const FeaturePremiumPage = () => {
 
         {/* Crown Icon */}
         <div className="flex justify-center mt-20">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-500 to-orange-400 flex items-center justify-center">
+          <div className="w-18 h-18 rounded-full bg-gradient-to-r from-teal-500 to-orange-400 flex items-center justify-center">
             <FaCrown className="text-white text-4xl" />
           </div>
         </div>
@@ -221,7 +220,7 @@ const FeaturePremiumPage = () => {
           </div>
         </div>
 
-        <div className="flex justify-center m-10 md:ml-20 md:mr-20">
+        <div className="flex justify-center md:ml-20 md:mr-20">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full px-6">
             {/* Instant Access */}
             <div className="border rounded-xl p-6 text-center shadow-sm hover:shadow-md transition">

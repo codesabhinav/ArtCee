@@ -50,10 +50,8 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
     const payload = buildPayload(methodTitle);
 
     try {
-      await applyToJob(payload); // API call
-      // call parent to update UI (mark applied)
+      await applyToJob(payload);
       if (onApplied) onApplied(job?.job_id);
-      // open external link (after success)
       const linkToOpen = selectedOption?.link || job?.share_link || null;
       if (linkToOpen) window.open(linkToOpen, "_blank", "noopener,noreferrer");
       onClose?.();
@@ -67,7 +65,7 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative overflow-auto max-h-[90vh]">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative overflow-auto max-h-[90vh] scrollbar-hide">
         <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-800">✕</button>
 
         <h2 className="text-lg font-bold mb-4">Apply for {job.title}</h2>
@@ -91,18 +89,29 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
             <label className="block font-semibold mb-2">Apply via</label>
             <div className="flex flex-col gap-2">
               {job.apply_options.map((opt, i) => (
-                <label key={i} className={`p-2 border rounded flex items-center justify-between ${selectedOption?.link === opt.link ? "bg-teal-50 border-teal-200" : ""}`}>
-                  <div>
-                    <div className="text-sm font-medium">{opt.title}</div>
-                    <div className="text-xs text-gray-500">{opt.link}</div>
-                  </div>
+                <label
+                  key={i}
+                  className={`p-2 border rounded flex items-start gap-3 ${selectedOption?.link === opt.link ? "bg-teal-50 border-teal-200" : ""
+                    }`}
+                >
                   <input
                     type="radio"
                     name="apply_method"
                     checked={selectedOption?.link === opt.link}
                     onChange={() => setSelectedOption(opt)}
+                    className="mt-1"
                   />
+
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium">{opt.title}</div>
+                    <div
+                      className="text-xs text-gray-500 break-words"
+                    >
+                      {opt.link}
+                    </div>
+                  </div>
                 </label>
+
               ))}
             </div>
           </div>
@@ -110,7 +119,7 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
 
         {/* Cover Letter */}
         <div className="mb-4">
-          <label className="block font-semibold mb-1">Cover Letter (optional)</label>
+          <label className="block font-semibold mb-1 text-sm">Cover Letter (optional)</label>
           <textarea
             value={coverLetter}
             onChange={(e) => setCoverLetter(e.target.value)}
@@ -121,7 +130,8 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
         </div>
 
         {/* Info */}
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4 text-sm text-gray-700">
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4 text-xs text-gray-700">
+          <div className="text-black font-semibold text-base mb-2">Application Details</div>
           <p>• Your ArtCee profile and portfolio will be attached</p>
           <p>• The employer will review your application within 5 business days</p>
           <p>• You can track application status in your dashboard</p>
@@ -131,13 +141,13 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
         {error && <p className="text-sm text-red-500 mb-2">{error}</p>}
 
         <div className="flex justify-between">
-          <button onClick={onClose} className="px-4 py-2 border rounded-md hover:bg-gray-100">Cancel</button>
+          <button onClick={onClose} className="px-4 py-2 border rounded-md hover:bg-gray-100 text-xs">Cancel</button>
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 flex items-center gap-2"
+            className="px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 flex items-center gap-2 text-xs"
           >
-            {loading ? "Applying..." : "📨 Submit Application"}
+            {loading ? "Applying..." : "Submit Application"}
           </button>
         </div>
       </div>

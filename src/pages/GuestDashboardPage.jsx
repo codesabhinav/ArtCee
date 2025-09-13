@@ -4,7 +4,7 @@ import {
   PencilIcon,
   StarIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BiCloudUpload,
   BiImage,
@@ -15,20 +15,88 @@ import {
   FaCheckCircle,
   FaChevronRight,
   FaCrown,
+  FaMapMarkerAlt,
   FaRegCircle,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
+import SpinnerProvider from "../components/SpinnerProvider";
+import { getGuestDashboardData } from "../Hooks/useSeller";
+import { Star } from "lucide-react";
 
 const GuestDashboardPage = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [payload, setPayload] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    getGuestDashboardData()
+      .then((res) => {
+        if (!mounted) return;
+        setPayload(res || {});
+        setError(null);
+      })
+      .catch((err) => {
+        if (!mounted) return;
+        setError(err.message || "Failed to load dashboard");
+        setPayload(null);
+      })
+      .finally(() => {
+        if (!mounted) return;
+        setLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const user = payload?.user ?? {};
+  const profile = user?.profile ?? user?.seller?.profile ?? payload?.data?.profile ?? null;
+  const city = user?.seller?.user.location.city.name ?? null;
+  const state = user?.seller?.user.location.state.name ?? null;
+  const country = user?.seller?.user.location.country.name ?? null;
+  const data = payload?.data ?? {};
+
+  const fullName = user?.full_name || profile?.title || "Guest User";
+  const roleDisplay = user?.role?.[0]?.display_name || "Creative Professional";
+  const avatar = profile?.profile_picture || "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
+  const bio = user?.seller?.personal_intro;
+  const title = profile?.title || "Creative Professional";
+  const followers = data?.following_count ?? 0;
+  const portfolioCount = data?.portfolio_count ?? 0;
+  const servicesCount = data?.services_count ?? 0;
+  const yearsExp = user?.seller?.experience_in_year ?? data?.experience_in_year ?? 0;
+  const progress = data?.progress_percentage ?? 0;
+  const rating = user?.seller?.rating ?? 0;
+  const totalReviews = profile?.total_reviews ?? 0;
+  const memberSince = new Date(user?.created_at || profile?.created_at || Date.now()).toLocaleDateString();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-sm text-gray-600"> <SpinnerProvider/> </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-sm text-red-600">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen w-full">
-      <div className="md:max-w-[80%] mx-auto px-4 sm:px-6">
+      <div className="md:max-w-[80%] mx-auto px-4 pb-2 sm:px-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4 border-b gap-3 sm:gap-0">
           <Link
@@ -39,7 +107,7 @@ const GuestDashboardPage = () => {
           </Link>
 
           <div className="flex flex-col flex-1 text-start sm:ml-4">
-            <h1 className="text-lg sm:text-xl font-bold">{t("guest.welcome_message")}</h1>
+            <h1 className="text-lg sm:text-xl font-bold"> Welcome, {fullName}</h1>
             <p className="text-sm font-light text-gray-600">
               {t("guest.manage_profile")}
             </p>
@@ -51,189 +119,153 @@ const GuestDashboardPage = () => {
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-2">
           {/* Left Side */}
           <div className="col-span-2 space-y-6">
             {/* Profile Card */}
             <div className="bg-white border rounded-lg p-6">
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <img
-                  src={t("guest.profile_image")}
-                  alt={t("guest.guest_user")}
-                  className="w-16 h-16 rounded-full mx-auto sm:mx-0"
+                  src={avatar}
+                  alt={fullName}
+                  className="w-16 h-16 rounded-full mx-auto sm:mx-0 object-cover"
                 />
                 <div className="text-center sm:text-left">
-                  <h2 className="text-base sm:text-lg font-bold">{t("guest.guest_user")}</h2>
-                  <p className="text-gray-500 text-sm">{t("guest.creative_professional")}</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    {t("guest.welcome_note")}
-                  </p>
+                  <h2 className="text-base sm:text-lg font-bold">{fullName}</h2>
+                  <p className="text-gray-500 text-sm">{title}</p>
+                  <div className="flex flex-row">
+                    <p className="text-xs text-gray-500 mt-1 flex flex-row items-center gap-1"> <FaMapMarkerAlt/> {city}, {state}, {country}</p>
+                    <p className="text-xs text-gray-500 mx-5 mt-1 flex flex-row items-center gap-1"> <Star className="h-3 w-3"/> {rating}/5 </p>
+                  </div>
                 </div>
+              </div>
+
+              <div className="text-xs text-gray-600 text-center sm:text-left mt-4 line-clamp-2">
+                {bio}
               </div>
 
               {/* Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 text-center mt-6 gap-4">
                 <div>
-                  <p className="font-bold">0</p>
-                  <p className="text-xs text-gray-500">{t("guest.followers")}</p>
+                  <p className="font-bold">{followers}</p>
+                  <p className="text-xs text-gray-500">Followers</p>
                 </div>
                 <div>
-                  <p className="font-bold">0</p>
-                  <p className="text-xs text-gray-500">{t("guest.portfolio")}</p>
+                  <p className="font-bold">{portfolioCount}</p>
+                  <p className="text-xs text-gray-500">Portfolio</p>
                 </div>
                 <div>
-                  <p className="font-bold">0</p>
-                  <p className="text-xs text-gray-500">{t("guest.services")}</p>
+                  <p className="font-bold">{servicesCount}</p>
+                  <p className="text-xs text-gray-500">Services</p>
                 </div>
                 <div>
-                  <p className="font-bold">0</p>
-                  <p className="text-xs text-gray-500">{t("guest.years_exp")}</p>
+                  <p className="font-bold">{yearsExp}</p>
+                  <p className="text-xs text-gray-500">Years Exp</p>
                 </div>
               </div>
             </div>
 
             {/* Profile Completion */}
             <div className="bg-white border rounded-lg p-6 mt-6">
-              {/* Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-2">
-                <h3 className="font-semibold">{t("guest.profile_completion")}</h3>
-                <span className="text-xs bg-yellow-100 text-yellow-600 px-3 py-1 rounded-md w-fit">
-                  {t("guest.incomplete_profile")}
+              <div className="flex flex-col sm:flex-row sm:items-center  mb-3 gap-2">
+                <h3 className="font-regular text-sm">Profile Completion</h3>
+                <span className="text-xs font-medium bg-yellow-100 text-yellow-600 px-3 py-1 rounded-md w-fit">
+                  {progress >= 100 ? "Complete" : "Incomplete Profile"}
                 </span>
               </div>
 
-              {/* Progress Bar */}
+              
+              <p className="text-xs text-gray-500 mb-4">
+                {data.progress_percentage ?? 0}/100 completed – {progress}% 
+              </p>
               <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
                 <div
                   className="bg-black h-2 rounded-full"
-                  style={{ width: "10%" }}
-                ></div>
+                  style={{ width: `${Math.min(Math.max(progress, 0), 100)}%` }}
+                />
               </div>
-              <p className="text-xs text-gray-500 mb-4">
-                {t("guest.completion_status")}
-              </p>
-              <h4 className="font-semibold text-sm mb-3">{t("guest.required_for_activation")}</h4>
+
+              <h4 className="font-semibold text-xs my-3"> Required for Profile Activation </h4>
               <ul className="space-y-2 mb-6">
-                {/* Completed Example */}
-                <li className="flex items-center justify-between border border-green-500 bg-green-50 px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaCheckCircle className="text-green-500 mt-1 text-sm" />
-                    <div>
-                      <p className="text-sm font-medium">{t("guest.basic_information")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.basic_information_desc")}</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
+                {data.total_activities?.map((act) => {
+                  const done = (data.completed_activities || []).includes(act);
+                  // map key to readable label
+                  const label = {
+                    BASIC_INFO: "Basic Information",
+                    LOCATION: "Location Details",
+                    PERSONAL_INTRO: "Personal Intro & Vision",
+                    PROFILE_IMAGE_VID: "Profile Image/Video",
+                    EMAIL_VERIFY: "Email Verification",
+                    PERSONAL_BIO: "Professional Bio",
+                    SERVICE_SKILL_ADDED: "Services & Skills",
+                    PORTIFLIO_WORK: "Portfolio Work",
+                    SOCAIL_LINK: "Social Media Links",
+                    PRICING_INFO: "Pricing Information",
+                  }[act] || act;
 
-                {/* Pending Examples */}
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
-                    <div>
-                      <p className="text-sm font-medium">{t("guest.location_details")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.location_details_desc")}</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
-
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
-                    <div>
-                      <p className="text-sm font-medium">{t("guest.personal_intro")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.personal_intro_desc")}</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
-
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
-                    <div>
-                      <p className="text-sm font-medium">{t("guest.profile_media")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.profile_media_desc")}</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
-
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
-                    <div>
-                      <p className="text-sm font-medium">{t("guest.email_verification")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.email_verification_desc")}</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
+                  return (
+                    <li
+                      key={act}
+                      className={`flex items-center justify-between border px-4 py-2 rounded-md ${
+                        done ? "border-green-500 bg-green-50" : ""
+                      }`}
+                    >
+                      <div className="flex items-center  gap-3">
+                        {done ? (
+                          <FaCheckCircle className="text-green-500 mt-1 text-xs" />
+                        ) : (
+                          <FaRegCircle className="text-gray-400 mt-1 text-xs" />
+                        )}
+                        <div>
+                          <p className="text-xs font-medium">{label}</p>
+                          <p className="text-xs text-gray-500">
+                            {done ? "Completed" : "Pending"}
+                          </p>
+                        </div>
+                      </div>
+                      <FaChevronRight className="text-gray-400 text-xs" />
+                    </li>
+                  );
+                })}
               </ul>
 
-              {/* Optional Enhancements */}
-              <h4 className="font-semibold text-sm mb-3">{t("guest.optional_enhancements_title")}</h4>
+              {/* Optional Enhancements: keep static group but could be dynamic later */}
+              <h4 className="font-semibold text-xs mb-3">Optional Enhancements</h4>
               <ul className="space-y-2 mb-4">
                 <li className="flex items-center justify-between border px-4 py-2 rounded-md">
                   <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
+                    <FaRegCircle className="text-gray-400 mt-1 text-xs" />
                     <div>
-                      <p className="text-sm font-medium">{t("guest.professional_bio")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.professional_bio_desc")}</p>
+                      <p className="text-xs font-medium">Professional Bio</p>
+                      <p className="text-xs text-gray-500">Detailed professional biography</p>
                     </div>
                   </div>
                   <FaChevronRight className="text-gray-400 text-xs" />
                 </li>
-
                 <li className="flex items-center justify-between border px-4 py-2 rounded-md">
                   <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
+                    <FaRegCircle className="text-gray-400 mt-1 text-xs" />
                     <div>
-                      <p className="text-sm font-medium">{t("guest.services_skills")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.services_skills_desc")}</p>
+                      <p className="text-xs font-medium">Services & Skills</p>
+                      <p className="text-xs text-gray-500">Services offered and skill categories</p>
                     </div>
                   </div>
                   <FaChevronRight className="text-gray-400 text-xs" />
                 </li>
-
                 <li className="flex items-center justify-between border px-4 py-2 rounded-md">
                   <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
+                    <FaRegCircle className="text-gray-400 mt-1 text-xs" />
                     <div>
-                      <p className="text-sm font-medium">{t("guest.portfolio_work")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.portfolio_work_desc")}</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
-
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
-                    <div>
-                      <p className="text-sm font-medium">{t("guest.social_links")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.social_links_desc")}</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
-
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-sm" />
-                    <div>
-                      <p className="text-sm font-medium">{t("guest.pricing_info")}</p>
-                      <p className="text-xs text-gray-500">{t("guest.pricing_info_desc")}</p>
+                      <p className="text-xs font-medium">Portfolio Work</p>
+                      <p className="text-xs text-gray-500">Showcase your best creative work</p>
                     </div>
                   </div>
                   <FaChevronRight className="text-gray-400 text-xs" />
                 </li>
               </ul>
 
-              {/* Footer Note */}
               <div className="bg-yellow-50 text-yellow-700 text-xs px-4 py-3 rounded-md">
-                {t("guest.footer_note")}
+                Complete the required fields above to activate your profile and start getting discovered by potential clients.
               </div>
             </div>
 
@@ -241,13 +273,13 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
                 <h3 className="text-sm flex items-center gap-2">
-                  <PencilIcon className="h-5 w-5" /> {t("guest.activity_blog")}
+                  <PencilIcon className="h-5 w-5" /> Activity & Blog
                 </h3>
                 <button
                   onClick={() => setIsOpen(true)}
                   className="bg-teal-500 text-white px-4 py-2 text-xs rounded-md hover:bg-teal-600 w-full sm:w-auto"
                 >
-                  {t("guest.create_post")}
+                  + Create Post
                 </button>
               </div>
 
@@ -255,34 +287,30 @@ const GuestDashboardPage = () => {
                 <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
                   <PencilIcon className="h-7 w-7" />
                 </div>
-                <p className="text-sm font-medium">
-                  {t("guest.start_sharing")}
-                </p>
+                <p className="text-sm font-medium">Start sharing your creative journey</p>
                 <p className="text-xs text-gray-500 mb-4">
-                  {t("guest.create_blog_note")}
+                  Create blog posts to showcase your work, share insights, and attract potential clients
                 </p>
                 <button
                   onClick={() => setIsOpen(true)}
                   className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto"
                 >
-                  {t("guest.create_first_post")}
+                  + Create Your First Post
                 </button>
               </div>
             </div>
-
-            <CreatePostPopupModel isOpen={isOpen} setIsOpen={setIsOpen} />
 
             {/* Job Applications Section */}
             <div className="bg-white border rounded-lg p-6 mt-6">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
                 <h3 className="text-sm flex items-center gap-2">
-                  <BriefcaseIcon className="h-5 w-5" /> {t("guest.job_applications")}
+                  <BriefcaseIcon className="h-5 w-5" /> Job Applications
                 </h3>
                 <button
                   onClick={() => navigate("/jobs")}
                   className="border px-3 py-1 text-xs rounded-md hover:bg-gray-100 w-full sm:w-auto"
                 >
-                  {t("guest.browse_jobs")}
+                  Browse Jobs
                 </button>
               </div>
 
@@ -290,15 +318,13 @@ const GuestDashboardPage = () => {
                 <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
                   <BriefcaseIcon className="h-7 w-7" />
                 </div>
-                <p className="text-sm font-medium">{t("guest.no_applications")}</p>
-                <p className="text-xs text-gray-500 mb-4">
-                  {t("guest.apply_jobs_note")}
-                </p>
+                <p className="text-sm font-medium">No applications yet</p>
+                <p className="text-xs text-gray-500 mb-4">Start applying to creative jobs to track your progress here</p>
                 <button
                   onClick={() => navigate("/jobs")}
                   className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto"
                 >
-                  {t("guest.browse_available_jobs")}
+                  Browse Available Jobs
                 </button>
               </div>
             </div>
@@ -312,67 +338,63 @@ const GuestDashboardPage = () => {
                 <div className="bg-orange-500 text-white w-12 h-12 flex items-center justify-center rounded-full mb-3">
                   <FaCrown className="text-2xl" />
                 </div>
-                <h3 className="font-bold text-md mb-1">{t("guest.unlock_social_features_title")}</h3>
-                <p className="text-xs text-gray-500 mb-4">
-                  {t("guest.unlock_social_features_desc")}
-                </p>
+                <h3 className="font-bold text-md mb-1">Unlock Social Features</h3>
+                <p className="text-xs text-gray-500 mb-4">Get featured placement and unlock follow/like interactions</p>
               </div>
 
-              {/* Features */}
               <ul className="text-xs space-y-2 text-left">
-                <li className="text-green-600">✔ {t("guest.featured_in_directory")}</li>
-                <li className="text-green-600">✔ {t("guest.follow_other_creatives")}</li>
-                <li className="text-green-600">✔ {t("guest.like_support_content")}</li>
-                <li className="text-green-600">✔ {t("guest.story_spotlight")}</li>
-                <li className="text-orange-500">★ {t("guest.founding_member_badge")}</li>
+                <li className="text-green-600">✔ Featured in Directory</li>
+                <li className="text-green-600">✔ Follow Other Creatives</li>
+                <li className="text-green-600">✔ Like & Support Content</li>
+                <li className="text-green-600">✔ Story-First Spotlight</li>
+                <li className="text-orange-500">★ Founding Member Badge</li>
               </ul>
 
-              {/* Pricing */}
               <div className="mt-4 text-xs bg-orange-50 text-orange-600 border border-orange-600 px-3 py-2 rounded-md">
-                {t("guest.founding_pricing_note")}
+                Limited Time: Founding Member pricing – Save $50!
               </div>
 
               <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 bg-orange-500 text-white py-2 rounded-md font-medium">
-                {t("guest.become_founding")}
+                Become Founding Member – $47
               </button>
               <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 border border-teal-500 text-teal-600 py-2 rounded-md font-medium hover:bg-gray-200">
-                {t("guest.premium_monthly")}
+                Premium Monthly – $29/mo
               </button>
             </div>
 
             {/* Account Includes */}
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-normal text-sm mb-3">{t("guest.account_includes_title")}</h3>
+              <h3 className="font-normal text-sm mb-3">Your Free Account Includes</h3>
               <ul className="space-y-3 text-xs">
                 <li className="flex justify-between items-center">
                   <span className="flex items-center  gap-2">
-                    <BiCloudUpload className="text-teal-500 h-4 w-4" /> {t("guest.portfolio_uploads")}
+                    <BiCloudUpload className="text-teal-500 h-4 w-4" /> Portfolio Uploads
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.unlimited")}</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Unlimited</span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
-                    <BiImage className="text-teal-500 h-4 w-4" /> {t("guest.images_videos")}
+                    <BiImage className="text-teal-500 h-4 w-4" /> Images & Videos
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.unlimited")}</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Unlimited</span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
-                    <PencilIcon className="text-teal-500 h-4 w-4" /> {t("guest.blog_posts")}
+                    <PencilIcon className="text-teal-500 h-4 w-4" /> Blog Posts
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.unlimited")}</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Unlimited</span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
-                    <BriefcaseIcon className="text-teal-500 h-4 w-4" /> {t("guest.job_applications")}
+                    <BriefcaseIcon className="text-teal-500 h-4 w-4" /> Job Applications
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.unlimited")}</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Unlimited</span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
-                    <BiSearch className="text-teal-500 h-4 w-4" /> {t("guest.directory_listing")}
+                    <BiSearch className="text-teal-500 h-4 w-4" /> Directory Listing
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.included")}</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Included</span>
                 </li>
               </ul>
             </div>
@@ -380,49 +402,37 @@ const GuestDashboardPage = () => {
             {/* Current Plan */}
             <div className="bg-white border rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-normal text-sm">{t("guest.current_plan_label")}</h3>
+                <h3 className="font-normal text-sm">Current Plan: {payload?.data?.subcription?.plan_id ? "Paid" : "Free Account"}</h3>
                 <span className="text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-1 rounded-xl">
-                  {t("guest.active")}
+                  {payload?.data?.subcription?.status === "active" ? "Active" : "Inactive"}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-6 text-xs">
-                {/* Billing Info */}
                 <div>
-                  <p className="text-black font-medium mb-2">{t("guest.billing_information")}</p>
-                  <p className="text-gray-500">{t("guest.price_label")}</p>
-                  <p className="font-medium mb-2">$0</p>
+                  <p className="text-black font-medium mb-2">Billing Information</p>
+                  <p className="text-gray-500">Price:</p>
+                  <p className="font-medium mb-2">{payload?.data?.subcription?.plan_id ? "$" + payload?.data?.subcription?.plan_id : "$0"}</p>
 
-                  <p className="text-gray-500">{t("guest.billing_cycle_label")}</p>
-                  <p className="font-medium mb-2">{t("guest.free_label")}</p>
+                  <p className="text-gray-500">Billing Cycle:</p>
+                  <p className="font-medium mb-2">{payload?.data?.subcription?.status === "active" ? "Paid" : "Free"}</p>
 
-                  <p className="text-gray-500">{t("guest.member_since_label")}</p>
-                  <p className="font-medium">August 4, 2024</p>
+                  <p className="text-gray-500">Member Since:</p>
+                  <p className="font-medium">{memberSince}</p>
 
                   <button onClick={() => navigate("/featured")} className="w-full mt-4 bg-teal-500 text-white py-1.5 rounded-md text-xs font-semibold">
-                    {t("guest.upgrade_to_premium")}
+                    Upgrade to Premium
                   </button>
-                  <p className="text-[10px] text-gray-500 mt-1 text-center">
-                    {t("guest.upgrade_note")}
-                  </p>
+                  <p className="text-[10px] text-gray-500 mt-1 text-center">Unlock social features and premium placement</p>
                 </div>
 
-                {/* Plan Features */}
                 <div>
-                  <p className="text-black font-medium mb-2">{t("guest.plan_features_label")}</p>
+                  <p className="text-black font-medium mb-2">Plan Features</p>
                   <ul className="space-y-2 text-xs">
-                    <li className="flex items-center gap-2 text-gray-700">
-                      <span className="text-green-500">✔</span> {t("guest.basic_profile")}
-                    </li>
-                    <li className="flex items-center gap-2 text-gray-700">
-                      <span className="text-green-500">✔</span> {t("guest.unlimited_portfolio_uploads")}
-                    </li>
-                    <li className="flex items-center gap-2 text-gray-700">
-                      <span className="text-green-500">✔</span> {t("guest.job_applications")}
-                    </li>
-                    <li className="flex items-center gap-2 text-gray-700">
-                      <span className="text-green-500">✔</span> {t("guest.basic_directory_listing")}
-                    </li>
+                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> Basic Profile</li>
+                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> Unlimited Portfolio Uploads</li>
+                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> Job Applications</li>
+                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> Basic Directory Listing</li>
                   </ul>
                 </div>
               </div>
@@ -432,69 +442,62 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6 mt-6">
               <div className="flex items-center gap-2 mb-4">
                 <StarIcon className="h-5 w-5" />
-                <h3 className="font-normal text-sm">{t("guest.account_usage_title")}</h3>
+                <h3 className="font-normal text-sm">Account Usage</h3>
               </div>
 
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div className="bg-gray-50 rounded-md py-4">
-                  <p className="text-2xl font-bold text-teal-500">342</p>
-                  <p className="text-xs text-gray-500">{t("guest.profile_views")}</p>
-                  <p className="text-[11px] text-orange-500 font-medium">+23 {t("guest.this_month")}</p>
+                  <p className="text-2xl font-bold text-teal-500">{payload?.data?.profile_views ?? 342}</p>
+                  <p className="text-xs text-gray-500">Profile Views</p>
+                  <p className="text-[11px] text-orange-500 font-medium">+23 this month</p>
                 </div>
                 <div className="bg-gray-50 rounded-md py-4">
-                  <p className="text-2xl font-bold text-orange-500">89</p>
-                  <p className="text-xs text-gray-500">{t("guest.portfolio_items")}</p>
-                  <p className="text-[11px] text-teal-400">{t("guest.unlimited_uploads")}</p>
+                  <p className="text-2xl font-bold text-orange-500">{portfolioCount}</p>
+                  <p className="text-xs text-gray-500">Portfolio Items</p>
+                  <p className="text-[11px] text-teal-400">Unlimited uploads</p>
                 </div>
                 <div className="bg-gray-50 rounded-md py-4">
-                  <p className="text-2xl font-bold text-teal-500">12</p>
-                  <p className="text-xs text-gray-500">{t("guest.job_applications")}</p>
-                  <p className="text-[11px] text-orange-500 font-medium">+3 {t("guest.this_week")}</p>
+                  <p className="text-2xl font-bold text-teal-500">{payload?.data?.orders_count ?? 12}</p>
+                  <p className="text-xs text-gray-500">Job Applications</p>
+                  <p className="text-[11px] text-orange-500 font-medium">+3 this week</p>
                 </div>
               </div>
             </div>
 
             {/* Profile Stats */}
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-semibold text-sm mb-3">{t("guest.profile_stats_title")}</h3>
+              <h3 className="font-semibold text-sm mb-3">Profile Stats</h3>
               <ul className="space-y-2 text-xs font-light">
-                <li className="flex justify-between"><span>{t("guest.profile_views")}</span><span className="font-bold">42</span></li>
-                <li className="flex justify-between"><span>{t("guest.portfolio_items")}</span><span className="font-bold">0</span></li>
-                <li className="flex justify-between"><span>{t("guest.blog_posts")}</span><span className="font-bold">0</span></li>
-                <li className="flex justify-between"><span>{t("guest.job_applications")}</span><span className="font-bold">0</span></li>
-                <li className="flex justify-between"><span>{t("guest.member_since")}</span><span className="font-bold">Aug 2024</span></li>
+                <li className="flex justify-between"><span>Profile Views</span><span className="font-bold">{payload?.data?.profile_views ?? 42}</span></li>
+                <li className="flex justify-between"><span>Portfolio Items</span><span className="font-bold">{portfolioCount}</span></li>
+                <li className="flex justify-between"><span>Blog Posts</span><span className="font-bold">{payload?.data?.blog_posts_count ?? 0}</span></li>
+                <li className="flex justify-between"><span>Job Applications</span><span className="font-bold">{payload?.data?.orders_count ?? 0}</span></li>
+                <li className="flex justify-between"><span>Member Since</span><span className="font-bold">{memberSince}</span></li>
               </ul>
             </div>
 
             {/* Quick Actions */}
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-semibold mb-3">{t("guest.quick_actions")}</h3>
+              <h3 className="font-semibold mb-3">Quick Actions</h3>
               <ul className="space-y-2 text-xs font-bold">
                 <li className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2">
-                    <BiCloudUpload className="h-4 w-4" /> {t("guest.upload_new_work")}
-                  </span>
+                  <span className="flex items-center gap-2"><BiCloudUpload className="h-4 w-4" /> Upload New Work</span>
                 </li>
                 <li onClick={() => setIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2">
-                    <PencilIcon className="h-4 w-4" /> {t("guest.write_blog_post")}
-                  </span>
+                  <span className="flex items-center gap-2"><PencilIcon className="h-4 w-4" /> Write Blog Post</span>
                 </li>
                 <li onClick={() => navigate("/jobs")} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2">
-                    <BriefcaseIcon className="h-4 w-4" /> {t("guest.browse_jobs")}
-                  </span>
+                  <span className="flex items-center gap-2"><BriefcaseIcon className="h-4 w-4" /> Browse Jobs</span>
                 </li>
                 <li className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2">
-                    <CameraIcon className="h-4 w-4" /> {t("guest.update_profile_photo")}
-                  </span>
+                  <span className="flex items-center gap-2"><CameraIcon className="h-4 w-4" /> Update Profile Photo</span>
                 </li>
               </ul>
             </div>
           </div>
         </div>
       </div>
+      <CreatePostPopupModel isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };
