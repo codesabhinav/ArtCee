@@ -189,7 +189,37 @@
         "proven_results_desc": "Premium members get 3x more profile views",
         "exclusive_status_title": "Exclusive Status",
         "exclusive_status_desc": "Limited to first 500 founding members only"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "Back to Home",
+          "welcome_message": "Welcome, Guest User",
+          "manage_profile": "Manage your creative profile and content",
+          "free_account": "Free Account",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "Guest User",
+          "creative_professional": "Creative Professional",
+          "welcome_note": "Welcome to ArtCee! Complete your profile to get discovered.",
+          "followers": "Followers",
+          "portfolio": "Portfolio",
+          "services": "Services",
+          "years_exp": "Years Exp",
+          "profile_completion": "Profile Completion",
+          "incomplete_profile": "Incomplete Profile",
+          "completion_status": "1/10 completed – 10%",
+          "required_for_activation": "Required for Profile Activation",
+          "basic_information": "Basic Information",
+          "basic_information_desc": "Name, email, and creative specialty",
+          "location_details": "Location Details",
+          "location_details_desc": "City and state/province",
+          "footer_note": "Complete the required fields above to activate your profile and start getting discovered by potential clients.",
+          "activity_blog": "Activity & Blog",
+          "create_post": "+ Create Post",
+          "job_applications": "Job Applications",
+          "browse_jobs": "Browse Jobs"
+        }
+      
+      
     },
     "es": {
       "meta": { "name": "Español", "flag": "https://flagcdn.com/64x48/es.png" },
@@ -380,7 +410,36 @@
         "proven_results_desc": "Los miembros premium reciben 3x más vistas de perfil",
         "exclusive_status_title": "Estatus Exclusivo",
         "exclusive_status_desc": "Limitado solo a los primeros 500 miembros fundadores"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "Volver a inicio",
+          "welcome_message": "Bienvenido, usuario invitado",
+          "manage_profile": "Administra tu perfil creativo y contenido",
+          "free_account": "Cuenta gratuita",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "Usuario invitado",
+          "creative_professional": "Profesional creativo",
+          "welcome_note": "¡Bienvenido a ArtCee! Completa tu perfil para ser descubierto.",
+          "followers": "Seguidores",
+          "portfolio": "Portafolio",
+          "services": "Servicios",
+          "years_exp": "Años de experiencia",
+          "profile_completion": "Completitud del perfil",
+          "incomplete_profile": "Perfil incompleto",
+          "completion_status": "1/10 completado – 10%",
+          "required_for_activation": "Requerido para la activación del perfil",
+          "basic_information": "Información básica",
+          "basic_information_desc": "Nombre, correo electrónico y especialidad creativa",
+          "location_details": "Detalles de ubicación",
+          "location_details_desc": "Ciudad y estado/provincia",
+          "footer_note": "Completa los campos requeridos arriba para activar tu perfil y comenzar a ser descubierto por clientes potenciales.",
+          "activity_blog": "Actividad y blog",
+          "create_post": "+ Crear publicación",
+          "job_applications": "Solicitudes de empleo",
+          "browse_jobs": "Buscar empleos"
+        }
+      
     },
     "pt": {
       "meta": { "name": "Português", "flag": "https://flagcdn.com/64x48/br.png" },
@@ -571,7 +630,36 @@
         "proven_results_desc": "Membros premium recebem 3x mais visualizações de perfil",
         "exclusive_status_title": "Status Exclusivo",
         "exclusive_status_desc": "Limitado apenas aos primeiros 500 membros fundadores"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "Voltar para casa",
+          "welcome_message": "Bem-vindo, usuário convidado",
+          "manage_profile": "Gerencie seu perfil criativo e conteúdo",
+          "free_account": "Conta gratuita",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "Usuário convidado",
+          "creative_professional": "Profissional criativo",
+          "welcome_note": "Bem-vindo ao ArtCee! Complete seu perfil para ser descoberto.",
+          "followers": "Seguidores",
+          "portfolio": "Portfólio",
+          "services": "Serviços",
+          "years_exp": "Anos de experiência",
+          "profile_completion": "Conclusão do perfil",
+          "incomplete_profile": "Perfil incompleto",
+          "completion_status": "1/10 concluído – 10%",
+          "required_for_activation": "Necessário para ativação do perfil",
+          "basic_information": "Informações básicas",
+          "basic_information_desc": "Nome, e-mail e especialidade criativa",
+          "location_details": "Detalhes de localização",
+          "location_details_desc": "Cidade e estado/província",
+          "footer_note": "Complete os campos necessários acima para ativar seu perfil e começar a ser descoberto por clientes potenciais.",
+          "activity_blog": "Atividade e blog",
+          "create_post": "+ Criar publicação",
+          "job_applications": "Candidaturas a empregos",
+          "browse_jobs": "Procurar empregos"
+        }
+      
     },
     "hi": {
       "meta": { "name": "हिन्दी", "flag": "https://flagcdn.com/64x48/in.png" },
@@ -762,7 +850,37 @@
         "proven_results_desc": "प्रीमियम सदस्यों को 3x अधिक प्रोफ़ाइल व्यू मिलते हैं",
         "exclusive_status_title": "विशेष स्थिति",
         "exclusive_status_desc": "केवल पहले 500 संस्थापक सदस्यों के लिए सीमित"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "होम पर वापस जाएं",
+          "welcome_message": "स्वागत है, अतिथि उपयोगकर्ता",
+          "manage_profile": "अपनी रचनात्मक प्रोफ़ाइल और सामग्री प्रबंधित करें",
+          "free_account": "मुफ़्त खाता",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "अतिथि उपयोगकर्ता",
+          "creative_professional": "रचनात्मक पेशेवर",
+          "welcome_note": "ArtCee में आपका स्वागत है! खोजे जाने के लिए अपनी प्रोफ़ाइल पूरी करें।",
+          "followers": "अनुयायी",
+          "portfolio": "पोर्टफोलियो",
+          "services": "सेवाएं",
+          "years_exp": "वर्षों का अनुभव",
+          "profile_completion": "प्रोफ़ाइल पूर्णता",
+          "incomplete_profile": "अधूरी प्रोफ़ाइल",
+          "completion_status": "1/10 पूर्ण – 10%",
+          "required_for_activation": "प्रोफ़ाइल सक्रियण के लिए आवश्यक",
+          "basic_information": "मूल जानकारी",
+          "basic_information_desc": "नाम, ईमेल, और रचनात्मक विशेषज्ञता",
+          "location_details": "स्थान विवरण",
+          "location_details_desc": "शहर और राज्य/प्रांत",
+          "footer_note": "अपनी प्रोफ़ाइल सक्रिय करने और संभावित ग्राहकों द्वारा खोजे जाने के लिए ऊपर आवश्यक फ़ील्ड भरें।",
+          "activity_blog": "गतिविधि और ब्लॉग",
+          "create_post": "+ पोस्ट बनाएं",
+          "job_applications": "नौकरी आवेदन",
+          "browse_jobs": "नौकरियां देखें"
+        }
+      
+
     },
     "tl": {
       "meta": { "name": "Tagalog", "flag": "https://flagcdn.com/64x48/ph.png" },
@@ -953,7 +1071,36 @@
         "proven_results_desc": "Nakakakuha ng 3x na mas maraming profile views ang mga premium member",
         "exclusive_status_title": "Eksklusibong Status",
         "exclusive_status_desc": "Limitado lamang sa unang 500 founding members"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "Bumalik sa Home",
+          "welcome_message": "Maligayang pagdating, Bisita",
+          "manage_profile": "Pamahalaan ang iyong malikhaing profile at nilalaman",
+          "free_account": "Libreng Account",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "Bisita",
+          "creative_professional": "Malikhain na Propesyonal",
+          "welcome_note": "Maligayang pagdating sa ArtCee! Kumpletuhin ang iyong profile upang madiskubre.",
+          "followers": "Mga Tagasunod",
+          "portfolio": "Portfolio",
+          "services": "Mga Serbisyo",
+          "years_exp": "Taon ng Karanasan",
+          "profile_completion": "Pagkumpleto ng Profile",
+          "incomplete_profile": "Hindi Kumpletong Profile",
+          "completion_status": "1/10 nakumpleto – 10%",
+          "required_for_activation": "Kinakailangan para sa Pag-activate ng Profile",
+          "basic_information": "Pangunahing Impormasyon",
+          "basic_information_desc": "Pangalan, email, at malikhaing espesyalisasyon",
+          "location_details": "Detalye ng Lokasyon",
+          "location_details_desc": "Lungsod at estado/probinsiya",
+          "footer_note": "Kumpletuhin ang mga kinakailangang patlang sa itaas upang i-activate ang iyong profile at magsimulang madiskubre ng mga potensyal na kliyente.",
+          "activity_blog": "Aktibidad at Blog",
+          "create_post": "+ Gumawa ng Post",
+          "job_applications": "Mga Aplikasyon sa Trabaho",
+          "browse_jobs": "Mag-browse ng Trabaho"
+        }
+      
     },
     "ko": {
       "meta": { "name": "한국어", "flag": "https://flagcdn.com/64x48/kr.png" },
@@ -1144,7 +1291,36 @@
         "proven_results_desc": "프리미엄 회원은 3배 더 많은 프로필 조회수를 얻습니다",
         "exclusive_status_title": "독점적 지위",
         "exclusive_status_desc": "선착순 500명 창립 멤버 한정"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "홈으로 돌아가기",
+          "welcome_message": "환영합니다, 게스트 사용자",
+          "manage_profile": "창의적인 프로필과 콘텐츠 관리",
+          "free_account": "무료 계정",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "게스트 사용자",
+          "creative_professional": "창의적 전문가",
+          "welcome_note": "ArtCee에 오신 것을 환영합니다! 발견되려면 프로필을 완성하세요.",
+          "followers": "팔로워",
+          "portfolio": "포트폴리오",
+          "services": "서비스",
+          "years_exp": "경력 연수",
+          "profile_completion": "프로필 완성도",
+          "incomplete_profile": "미완성 프로필",
+          "completion_status": "1/10 완료 – 10%",
+          "required_for_activation": "프로필 활성화를 위해 필요",
+          "basic_information": "기본 정보",
+          "basic_information_desc": "이름, 이메일, 창의적 전문 분야",
+          "location_details": "위치 정보",
+          "location_details_desc": "도시 및 주/도",
+          "footer_note": "프로필을 활성화하고 잠재 고객에게 발견되려면 위 필수 항목을 작성하세요.",
+          "activity_blog": "활동 및 블로그",
+          "create_post": "+ 게시물 만들기",
+          "job_applications": "구직 신청",
+          "browse_jobs": "구직 검색"
+        }
+      
     },
     "zh": {
       "meta": { "name": "中文", "flag": "https://flagcdn.com/64x48/cn.png" },
@@ -1335,7 +1511,35 @@
         "proven_results_desc": "高级会员获得3倍资料浏览量",
         "exclusive_status_title": "专属身份",
         "exclusive_status_desc": "仅限前500名创始会员"
-      }
+      },
+        "guest": {
+          "back_to_home": "返回首页",
+          "welcome_message": "欢迎，访客用户",
+          "manage_profile": "管理您的创意档案和内容",
+          "free_account": "免费账户",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "访客用户",
+          "creative_professional": "创意专业人士",
+          "welcome_note": "欢迎来到ArtCee！完成您的个人资料以便被发现。",
+          "followers": "关注者",
+          "portfolio": "作品集",
+          "services": "服务",
+          "years_exp": "经验年数",
+          "profile_completion": "个人资料完成度",
+          "incomplete_profile": "资料不完整",
+          "completion_status": "1/10 已完成 – 10%",
+          "required_for_activation": "激活个人资料所需",
+          "basic_information": "基本信息",
+          "basic_information_desc": "姓名、电子邮件和创意专长",
+          "location_details": "位置信息",
+          "location_details_desc": "城市和州/省",
+          "footer_note": "请完成上述必填项以激活您的个人资料，开始被潜在客户发现。",
+          "activity_blog": "活动与博客",
+          "create_post": "+ 创建帖子",
+          "job_applications": "职位申请",
+          "browse_jobs": "浏览职位"
+        }
+      
     },
     "fr": {
       "meta": { "name": "Français", "flag": "https://flagcdn.com/64x48/fr.png" },
@@ -1526,7 +1730,36 @@
         "proven_results_desc": "Les membres premium obtiennent 3x plus de vues de profil",
         "exclusive_status_title": "Statut Exclusif",
         "exclusive_status_desc": "Limité aux 500 premiers membres fondateurs"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "Retour à l'accueil",
+          "welcome_message": "Bienvenue, utilisateur invité",
+          "manage_profile": "Gérez votre profil créatif et votre contenu",
+          "free_account": "Compte gratuit",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "Utilisateur invité",
+          "creative_professional": "Professionnel créatif",
+          "welcome_note": "Bienvenue sur ArtCee ! Complétez votre profil pour être découvert.",
+          "followers": "Abonnés",
+          "portfolio": "Portfolio",
+          "services": "Services",
+          "years_exp": "Années d'expérience",
+          "profile_completion": "Complétion du profil",
+          "incomplete_profile": "Profil incomplet",
+          "completion_status": "1/10 complété – 10%",
+          "required_for_activation": "Requis pour l'activation du profil",
+          "basic_information": "Informations de base",
+          "basic_information_desc": "Nom, e-mail et spécialité créative",
+          "location_details": "Détails de localisation",
+          "location_details_desc": "Ville et état/province",
+          "footer_note": "Complétez les champs requis ci-dessus pour activer votre profil et commencer à être découvert par des clients potentiels.",
+          "activity_blog": "Activité & Blog",
+          "create_post": "+ Créer un post",
+          "job_applications": "Candidatures",
+          "browse_jobs": "Parcourir les offres"
+        }
+      
     },
     "ja": {
       "meta": { "name": "日本語", "flag": "https://flagcdn.com/64x48/jp.png" },
@@ -1717,7 +1950,36 @@
         "proven_results_desc": "プレミアム会員はプロフィール閲覧数が3倍に",
         "exclusive_status_title": "限定ステータス",
         "exclusive_status_desc": "先着500名の創設メンバー限定"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "ホームに戻る",
+          "welcome_message": "ようこそ、ゲストユーザー",
+          "manage_profile": "クリエイティブなプロフィールとコンテンツを管理する",
+          "free_account": "無料アカウント",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "ゲストユーザー",
+          "creative_professional": "クリエイティブプロフェッショナル",
+          "welcome_note": "ArtCeeへようこそ！プロフィールを完成させて発見されましょう。",
+          "followers": "フォロワー",
+          "portfolio": "ポートフォリオ",
+          "services": "サービス",
+          "years_exp": "経験年数",
+          "profile_completion": "プロフィール完成度",
+          "incomplete_profile": "未完成のプロフィール",
+          "completion_status": "1/10 完了 – 10%",
+          "required_for_activation": "プロフィール有効化に必要",
+          "basic_information": "基本情報",
+          "basic_information_desc": "名前、メールアドレス、クリエイティブ専門分野",
+          "location_details": "所在地の詳細",
+          "location_details_desc": "市区町村および都道府県",
+          "footer_note": "プロフィールを有効化し、潜在的なクライアントに見つけてもらうために、上記の必須項目を完了してください。",
+          "activity_blog": "アクティビティ＆ブログ",
+          "create_post": "+ 投稿を作成",
+          "job_applications": "求人応募",
+          "browse_jobs": "求人を探す"
+        }
+      
     },
     "ar": {
       "meta": { "name": "العربية", "flag": "https://flagcdn.com/64x48/sa.png" },
@@ -1908,7 +2170,36 @@
         "proven_results_desc": "يحصل أعضاء البريميوم على 3 أضعاف مشاهدات الملف",
         "exclusive_status_title": "حالة حصرية",
         "exclusive_status_desc": "محدود لأول 500 عضو مؤسس فقط"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "العودة إلى الصفحة الرئيسية",
+          "welcome_message": "مرحبًا، مستخدم زائر",
+          "manage_profile": "إدارة ملفك الإبداعي والمحتوى",
+          "free_account": "حساب مجاني",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "مستخدم زائر",
+          "creative_professional": "محترف مبدع",
+          "welcome_note": "مرحبًا بك في ArtCee! أكمل ملفك الشخصي ليتم اكتشافك.",
+          "followers": "المتابعون",
+          "portfolio": "المعرض",
+          "services": "الخدمات",
+          "years_exp": "سنوات الخبرة",
+          "profile_completion": "اكتمال الملف الشخصي",
+          "incomplete_profile": "ملف شخصي غير مكتمل",
+          "completion_status": "1/10 مكتمل – 10%",
+          "required_for_activation": "مطلوب لتفعيل الملف الشخصي",
+          "basic_information": "معلومات أساسية",
+          "basic_information_desc": "الاسم، البريد الإلكتروني، والتخصص الإبداعي",
+          "location_details": "تفاصيل الموقع",
+          "location_details_desc": "المدينة والولاية/المقاطعة",
+          "footer_note": "أكمل الحقول المطلوبة أعلاه لتفعيل ملفك الشخصي وبدء الاكتشاف من قبل العملاء المحتملين.",
+          "activity_blog": "النشاط والمدونة",
+          "create_post": "+ إنشاء منشور",
+          "job_applications": "طلبات الوظائف",
+          "browse_jobs": "تصفح الوظائف"
+        }
+      
     },
     "de": {
       "meta": { "name": "Deutsch", "flag": "https://flagcdn.com/64x48/de.png" },
@@ -2099,7 +2390,36 @@
         "proven_results_desc": "Premium-Mitglieder erhalten 3x mehr Profilaufrufe",
         "exclusive_status_title": "Exklusiver Status",
         "exclusive_status_desc": "Nur für die ersten 500 Gründungsmitglieder"
-      }
+      },
+      
+        "guest": {
+          "back_to_home": "Zurück zur Startseite",
+          "welcome_message": "Willkommen, Gastbenutzer",
+          "manage_profile": "Verwalte dein kreatives Profil und Inhalte",
+          "free_account": "Kostenloses Konto",
+          "profile_image": "https://i.pravatar.cc/100?img=3",
+          "guest_user": "Gastbenutzer",
+          "creative_professional": "Kreativprofi",
+          "welcome_note": "Willkommen bei ArtCee! Vervollständige dein Profil, um entdeckt zu werden.",
+          "followers": "Follower",
+          "portfolio": "Portfolio",
+          "services": "Dienstleistungen",
+          "years_exp": "Jahre Erfahrung",
+          "profile_completion": "Profilvollständigkeit",
+          "incomplete_profile": "Unvollständiges Profil",
+          "completion_status": "1/10 abgeschlossen – 10%",
+          "required_for_activation": "Für die Profilaktivierung erforderlich",
+          "basic_information": "Grundinformationen",
+          "basic_information_desc": "Name, E-Mail und kreative Spezialität",
+          "location_details": "Standortdetails",
+          "location_details_desc": "Stadt und Bundesland/Provinz",
+          "footer_note": "Fülle die oben erforderlichen Felder aus, um dein Profil zu aktivieren und von potenziellen Kunden entdeckt zu werden.",
+          "activity_blog": "Aktivität & Blog",
+          "create_post": "+ Beitrag erstellen",
+          "job_applications": "Bewerbungen",
+          "browse_jobs": "Jobs durchsuchen"
+        }
+      
     },
     "it": {
       "meta": { "name": "Italiano", "flag": "https://flagcdn.com/64x48/it.png" },
@@ -2291,7 +2611,36 @@
     "proven_results_desc": "I membri Premium ricevono 3 volte più visite al profilo",
     "exclusive_status_title": "Status esclusivo",
     "exclusive_status_desc": "Solo per i primi 500 membri fondatori"
-  }
+  },
+  
+    "guest": {
+      "back_to_home": "Torna alla home",
+      "welcome_message": "Benvenuto, utente ospite",
+      "manage_profile": "Gestisci il tuo profilo creativo e i contenuti",
+      "free_account": "Account gratuito",
+      "profile_image": "https://i.pravatar.cc/100?img=3",
+      "guest_user": "Utente ospite",
+      "creative_professional": "Professionista creativo",
+      "welcome_note": "Benvenuto su ArtCee! Completa il tuo profilo per essere scoperto.",
+      "followers": "Follower",
+      "portfolio": "Portfolio",
+      "services": "Servizi",
+      "years_exp": "Anni di esperienza",
+      "profile_completion": "Completamento del profilo",
+      "incomplete_profile": "Profilo incompleto",
+      "completion_status": "1/10 completato – 10%",
+      "required_for_activation": "Richiesto per l'attivazione del profilo",
+      "basic_information": "Informazioni di base",
+      "basic_information_desc": "Nome, email e specialità creativa",
+      "location_details": "Dettagli della posizione",
+      "location_details_desc": "Città e stato/provincia",
+      "footer_note": "Completa i campi richiesti sopra per attivare il tuo profilo e iniziare a essere scoperto dai potenziali clienti.",
+      "activity_blog": "Attività e blog",
+      "create_post": "+ Crea post",
+      "job_applications": "Candidature",
+      "browse_jobs": "Cerca lavori"
+    }
+  
 
 
     }
