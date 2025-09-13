@@ -420,7 +420,42 @@
     "note_strong": "Note:",
     "note_text": "Rates may vary based on project scope, timeline, and specific requirements. Contact Aria Stone for a custom quote."
   }
+},
+"create_post": {
+  "title": "Create New Post",
+  "close": "Close",
+  "features": {
+    "title": "Free Account Features",
+    "list1": "Unlimited blog posts and content uploads",
+    "list2": "Portfolio showcasing with unlimited images & videos",
+    "list3": "Share your creative process and insights",
+    "list4": "Build your personal brand and attract clients"
+  },
+  "form": {
+    "title_label": "Post Title *",
+    "title_placeholder": "Enter post title...",
+    "type_label": "Post Type",
+    "type_blog": "Blog Article",
+    "type_update": "Project Update",
+    "type_bts": "Behind The Scenes",
+    "type_tutorial": "Tutorial",
+    "type_inspiration": "Inspiration",
+    "brief_label": "Brief Description",
+    "brief_placeholder": "Brief description of your post...",
+    "content_label": "Content *",
+    "content_placeholder": "Write your post content here...",
+    "tags_label": "Tags",
+    "tags_placeholder": "design, branding, tutorial (comma separated)",
+    "featured_image_label": "Featured Image URL",
+    "featured_image_placeholder": "https://example.com/image.jpg"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "publish": "Publish Post"
+  }
 }
+
+
 
       
     },
@@ -834,6 +869,39 @@
               "note_strong": "Nota:",
               "note_text": "Las tarifas pueden variar según el alcance del proyecto, el cronograma y los requisitos específicos. Contacta a Aria Stone para una cotización personalizada."
             }
+          },
+          "create_post":{
+            "title": "Crear Nueva Publicación",
+            "close": "Cerrar",
+            "features": {
+              "title": "Características de la Cuenta Gratuita",
+              "list1": "Publicaciones de blog y cargas de contenido ilimitadas",
+              "list2": "Exhibición de portafolio con imágenes y videos ilimitados",
+              "list3": "Comparte tu proceso creativo y conocimientos",
+              "list4": "Construye tu marca personal y atrae clientes"
+            },
+            "form": {
+              "title_label": "Título de la Publicación *",
+              "title_placeholder": "Ingresa el título de la publicación...",
+              "type_label": "Tipo de Publicación",
+              "type_blog": "Artículo de Blog",
+              "type_update": "Actualización de Proyecto",
+              "type_bts": "Detrás de Escenas",
+              "type_tutorial": "Tutorial",
+              "type_inspiration": "Inspiración",
+              "brief_label": "Descripción Breve",
+              "brief_placeholder": "Breve descripción de tu publicación...",
+              "content_label": "Contenido *",
+              "content_placeholder": "Escribe el contenido de tu publicación aquí...",
+              "tags_label": "Etiquetas",
+              "tags_placeholder": "diseño, branding, tutorial (separados por comas)",
+              "featured_image_label": "URL de la Imagen Destacada",
+              "featured_image_placeholder": "https://ejemplo.com/imagen.jpg"
+            },
+            "actions": {
+              "cancel": "Cancelar",
+              "publish": "Publicar Publicación"
+            }
           }
       
     },
@@ -1246,6 +1314,39 @@
               "starting_rate": "$600",
               "note_strong": "Nota:",
               "note_text": "As taxas podem variar com base no escopo do projeto, cronograma e requisitos específicos. Contate Aria Stone para um orçamento personalizado."
+            }
+          },
+          "create_post":{
+            "title": "Criar Nova Postagem",
+            "close": "Fechar",
+            "features": {
+              "title": "Recursos da Conta Gratuita",
+              "list1": "Postagens de blog e uploads de conteúdo ilimitados",
+              "list2": "Exibição de portfólio com imagens e vídeos ilimitados",
+              "list3": "Compartilhe seu processo criativo e insights",
+              "list4": "Construa sua marca pessoal e atraia clientes"
+            },
+            "form": {
+              "title_label": "Título da Postagem *",
+              "title_placeholder": "Digite o título da postagem...",
+              "type_label": "Tipo de Postagem",
+              "type_blog": "Artigo de Blog",
+              "type_update": "Atualização de Projeto",
+              "type_bts": "Por Trás das Cenas",
+              "type_tutorial": "Tutorial",
+              "type_inspiration": "Inspiração",
+              "brief_label": "Descrição Breve",
+              "brief_placeholder": "Breve descrição da sua postagem...",
+              "content_label": "Conteúdo *",
+              "content_placeholder": "Escreva o conteúdo da sua postagem aqui...",
+              "tags_label": "Tags",
+              "tags_placeholder": "design, branding, tutorial (separados por vírgulas)",
+              "featured_image_label": "URL da Imagem em Destaque",
+              "featured_image_placeholder": "https://exemplo.com/imagem.jpg"
+            },
+            "actions": {
+              "cancel": "Cancelar",
+              "publish": "Publicar Postagem"
             }
           }
       
@@ -1666,6 +1767,39 @@
               "note_strong": "नोट:",
               "note_text": "दरें प्रोजेक्ट स्कोप, समयसीमा और विशिष्ट आवश्यकताओं के आधार पर भिन्न हो सकती हैं। कस्टम कोट के लिए आरिया स्टोन से संपर्क करें।"
             }
+          },
+          "create_post":{
+            "title": "नया पोस्ट बनाएँ",
+            "close": "बंद करें",
+            "features": {
+              "title": "मुफ्त खाते की विशेषताएँ",
+              "list1": "असीमित ब्लॉग पोस्ट और सामग्री अपलोड",
+              "list2": "असीमित छवियों और वीडियो के साथ पोर्टफोलियो प्रदर्शन",
+              "list3": "अपनी रचनात्मक प्रक्रिया और अंतर्दृष्टि साझा करें",
+              "list4": "अपना व्यक्तिगत ब्रांड बनाएँ और ग्राहकों को आकर्षित करें"
+            },
+            "form": {
+              "title_label": "पोस्ट शीर्षक *",
+              "title_placeholder": "पोस्ट शीर्षक दर्ज करें...",
+              "type_label": "पोस्ट प्रकार",
+              "type_blog": "ब्लॉग लेख",
+              "type_update": "परियोजना अपडेट",
+              "type_bts": "पर्दे के पीछे",
+              "type_tutorial": "ट्यूटोरियल",
+              "type_inspiration": "प्रेरणा",
+              "brief_label": "संक्षिप्त विवरण",
+              "brief_placeholder": "आपके पोस्ट का संक्षिप्त विवरण...",
+              "content_label": "सामग्री *",
+              "content_placeholder": "यहाँ अपनी पोस्ट सामग्री लिखें...",
+              "tags_label": "टैग",
+              "tags_placeholder": "डिज़ाइन, ब्रांडिंग, ट्यूटोरियल (अल्पविराम से अलग)",
+              "featured_image_label": "फीचर्ड इमेज URL",
+              "featured_image_placeholder": "https://example.com/image.jpg"
+            },
+            "actions": {
+              "cancel": "रद्द करें",
+              "publish": "पोस्ट प्रकाशित करें"
+            }
           }
       
 
@@ -2080,6 +2214,39 @@
               "note_strong": "Tandaan:",
               "note_text": "Ang mga rate ay maaaring mag-iba batay sa saklaw ng proyekto, timeline, at tiyak na requirements. Makipag-ugnayan kay Aria Stone para sa custom quote."
             }
+          },
+          "create_post":{
+            "title": "Gumawa ng Bagong Post",
+            "close": "Isara",
+            "features": {
+              "title": "Mga Tampok ng Libreng Account",
+              "list1": "Walang limitasyong mga post sa blog at pag-upload ng nilalaman",
+              "list2": "Pagpapakita ng portfolio na may walang limitasyong mga larawan at video",
+              "list3": "Ibahagi ang iyong malikhaing proseso at mga insight",
+              "list4": "Buuin ang iyong personal na brand at makaakit ng mga kliyente"
+            },
+            "form": {
+              "title_label": "Pamagat ng Post *",
+              "title_placeholder": "Ipasok ang pamagat ng post...",
+              "type_label": "Uri ng Post",
+              "type_blog": "Artikulo sa Blog",
+              "type_update": "Update sa Proyekto",
+              "type_bts": "Sa Likod ng mga Eksena",
+              "type_tutorial": "Tutorial",
+              "type_inspiration": "Inspirasyon",
+              "brief_label": "Maikling Paglalarawan",
+              "brief_placeholder": "Maikling paglalarawan ng iyong post...",
+              "content_label": "Nilalaman *",
+              "content_placeholder": "Isulat ang nilalaman ng iyong post dito...",
+              "tags_label": "Mga Tag",
+              "tags_placeholder": "disenyo, branding, tutorial (pinaghihiwalay ng koma)",
+              "featured_image_label": "URL ng Itinatampok na Larawan",
+              "featured_image_placeholder": "https://halimbawa.com/larawan.jpg"
+            },
+            "actions": {
+              "cancel": "Kanselahin",
+              "publish": "I-publish ang Post"
+            }
           }
       
     },
@@ -2493,6 +2660,39 @@
               "note_strong": "참고:",
               "note_text": "요율은 프로젝트 범위, 일정 및 특정 요구사항에 따라 다를 수 있습니다. 맞춤 견적을 위해 Aria Stone에 문의하세요."
             }
+          },
+          "create_post":{
+            "title": "새 게시물 작성",
+            "close": "닫기",
+            "features": {
+              "title": "무료 계정 기능",
+              "list1": "무제한 블로그 게시물 및 콘텐츠 업로드",
+              "list2": "무제한 이미지 및 비디오로 포트폴리오 전시",
+              "list3": "창의적인 과정과 통찰을 공유",
+              "list4": "개인 브랜드를 구축하고 클라이언트를 유치"
+            },
+            "form": {
+              "title_label": "게시물 제목 *",
+              "title_placeholder": "게시물 제목을 입력하세요...",
+              "type_label": "게시물 유형",
+              "type_blog": "블로그 기사",
+              "type_update": "프로젝트 업데이트",
+              "type_bts": "비하인드 스토리",
+              "type_tutorial": "튜토리얼",
+              "type_inspiration": "영감",
+              "brief_label": "간단한 설명",
+              "brief_placeholder": "게시물의 간단한 설명...",
+              "content_label": "콘텐츠 *",
+              "content_placeholder": "여기에 게시물 콘텐츠를 작성하세요...",
+              "tags_label": "태그",
+              "tags_placeholder": "디자인, 브랜딩, 튜토리얼 (쉼표로 구분)",
+              "featured_image_label": "대표 이미지 URL",
+              "featured_image_placeholder": "https://example.com/image.jpg"
+            },
+            "actions": {
+              "cancel": "취소",
+              "publish": "게시물 게시"
+            }
           }
       
     },
@@ -2904,6 +3104,39 @@
               "starting_rate": "$600",
               "note_strong": "注意：",
               "note_text": "费率可能因项目范围、时间表和特定要求而异。请联系 Aria Stone 获取自定义报价。"
+            }
+          },
+          "create_post":{
+            "title": "创建新帖子",
+            "close": "关闭",
+            "features": {
+              "title": "免费账户功能",
+              "list1": "无限博客帖子和内容上传",
+              "list2": "无限图片和视频的作品集展示",
+              "list3": "分享您的创意过程和见解",
+              "list4": "建立您的个人品牌并吸引客户"
+            },
+            "form": {
+              "title_label": "帖子标题 *",
+              "title_placeholder": "输入帖子标题...",
+              "type_label": "帖子类型",
+              "type_blog": "博客文章",
+              "type_update": "项目更新",
+              "type_bts": "幕后故事",
+              "type_tutorial": "教程",
+              "type_inspiration": "灵感",
+              "brief_label": "简要描述",
+              "brief_placeholder": "您的帖子的简要描述...",
+              "content_label": "内容 *",
+              "content_placeholder": "在此编写您的帖子内容...",
+              "tags_label": "标签",
+              "tags_placeholder": "设计，品牌，教程（用逗号分隔）",
+              "featured_image_label": "特色图片URL",
+              "featured_image_placeholder": "https://example.com/image.jpg"
+            },
+            "actions": {
+              "cancel": "取消",
+              "publish": "发布帖子"
             }
           }
       
@@ -3319,6 +3552,39 @@
               "note_text": "Les tarifs peuvent varier en fonction de l'étendue du projet, du calendrier et des exigences spécifiques. Contactez Aria Stone pour un devis personnalisé."
             }
           
+          },
+          "create_post":{
+            "title": "Créer une nouvelle publication",
+            "close": "Fermer",
+            "features": {
+              "title": "Fonctionnalités du compte gratuit",
+              "list1": "Publications de blog et téléchargements de contenu illimités",
+              "list2": "Présentation de portfolio avec images et vidéos illimitées",
+              "list3": "Partagez votre processus créatif et vos idées",
+              "list4": "Construisez votre marque personnelle et attirez des clients"
+            },
+            "form": {
+              "title_label": "Titre de la publication *",
+              "title_placeholder": "Entrez le titre de la publication...",
+              "type_label": "Type de publication",
+              "type_blog": "Article de blog",
+              "type_update": "Mise à jour de projet",
+              "type_bts": "Dans les coulisses",
+              "type_tutorial": "Tutoriel",
+              "type_inspiration": "Inspiration",
+              "brief_label": "Brève description",
+              "brief_placeholder": "Brève description de votre publication...",
+              "content_label": "Contenu *",
+              "content_placeholder": "Écrivez le contenu de votre publication ici...",
+              "tags_label": "Étiquettes",
+              "tags_placeholder": "design, branding, tutoriel (séparés par des virgules)",
+              "featured_image_label": "URL de l'image en vedette",
+              "featured_image_placeholder": "https://exemple.com/image.jpg"
+            },
+            "actions": {
+              "cancel": "Annuler",
+              "publish": "Publier la publication"
+            }
           }
       
     },
@@ -3731,6 +3997,39 @@
               "starting_rate": "$600",
               "note_strong": "注意：",
               "note_text": "料金はプロジェクトの範囲、タイムライン、および特定の要件に基づいて変動する可能性があります。カスタム見積もりについては Aria Stone までお問い合わせください。"
+            }
+          },
+          "create_post":{
+            "title": "新しい投稿を作成",
+            "close": "閉じる",
+            "features": {
+              "title": "無料アカウントの機能",
+              "list1": "無制限のブログ投稿とコンテンツアップロード",
+              "list2": "無制限の画像とビデオでポートフォリオを展示",
+              "list3": "クリエイティブなプロセスと洞察を共有",
+              "list4": "パーソナルブランドを構築し、クライアントを引き付ける"
+            },
+            "form": {
+              "title_label": "投稿タイトル *",
+              "title_placeholder": "投稿タイトルを入力...",
+              "type_label": "投稿タイプ",
+              "type_blog": "ブログ記事",
+              "type_update": "プロジェクト更新",
+              "type_bts": "舞台裏",
+              "type_tutorial": "チュートリアル",
+              "type_inspiration": "インスピレーション",
+              "brief_label": "簡単な説明",
+              "brief_placeholder": "投稿の簡単な説明...",
+              "content_label": "コンテンツ *",
+              "content_placeholder": "ここに投稿コンテンツを記述...",
+              "tags_label": "タグ",
+              "tags_placeholder": "デザイン、ブランディング、チュートリアル（カンマで区切る）",
+              "featured_image_label": "注目画像URL",
+              "featured_image_placeholder": "https://example.com/image.jpg"
+            },
+            "actions": {
+              "cancel": "キャンセル",
+              "publish": "投稿を公開"
             }
           }
       
@@ -4145,6 +4444,39 @@
               "note_strong": "ملاحظة:",
               "note_text": "قد تختلف المعدلات بناءً على نطاق المشروع، الجدول الزمني، والمتطلبات المحددة. اتصل بـ Aria Stone للحصول على عرض أسعار مخصص."
             }
+          },
+          "create_post":{
+            "title": "إنشاء منشور جديد",
+            "close": "إغلاق",
+            "features": {
+              "title": "ميزات الحساب المجاني",
+              "list1": "منشورات مدونة وتحميلات محتوى غير محدودة",
+              "list2": "عرض محفظة بصور وفيديوهات غير محدودة",
+              "list3": "شارك عمليتك الإبداعية ورؤاك",
+              "list4": "ابنِ علامتك التجارية الشخصية واجذب العملاء"
+            },
+            "form": {
+              "title_label": "عنوان المنشور *",
+              "title_placeholder": "أدخل عنوان المنشور...",
+              "type_label": "نوع المنشور",
+              "type_blog": "مقال مدونة",
+              "type_update": "تحديث المشروع",
+              "type_bts": "خلف الكواليس",
+              "type_tutorial": "برنامج تعليمي",
+              "type_inspiration": "إلهام",
+              "brief_label": "وصف موجز",
+              "brief_placeholder": "وصف موجز لمنشورك...",
+              "content_label": "المحتوى *",
+              "content_placeholder": "اكتب محتوى منشورك هنا...",
+              "tags_label": "الوسوم",
+              "tags_placeholder": "تصميم، علامة تجارية، برنامج تعليمي (مفصولة بفواصل)",
+              "featured_image_label": "رابط الصورة المميزة",
+              "featured_image_placeholder": "https://example.com/image.jpg"
+            },
+            "actions": {
+              "cancel": "إلغاء",
+              "publish": "نشر المنشور"
+            }
           }
       
     },
@@ -4557,6 +4889,39 @@
               "starting_rate": "$600",
               "note_strong": "Hinweis:",
               "note_text": "Sätze können je nach Projektumfang, Zeitplan und spezifischen Anforderungen variieren. Kontaktieren Sie Aria Stone für ein individuelles Angebot."
+            }
+          },
+          "create_post":{
+            "title": "Neuen Beitrag erstellen",
+            "close": "Schließen",
+            "features": {
+              "title": "Funktionen des kostenlosen Kontos",
+              "list1": "Unbegrenzte Blogbeiträge und Inhaltsuploads",
+              "list2": "Portfolio-Präsentation mit unbegrenzten Bildern und Videos",
+              "list3": "Teilen Sie Ihren kreativen Prozess und Ihre Einsichten",
+              "list4": "Bauen Sie Ihre persönliche Marke auf und gewinnen Sie Kunden"
+            },
+            "form": {
+              "title_label": "Beitragstitel *",
+              "title_placeholder": "Beitragstitel eingeben...",
+              "type_label": "Beitragstyp",
+              "type_blog": "Blogartikel",
+              "type_update": "Projektupdate",
+              "type_bts": "Hinter den Kulissen",
+              "type_tutorial": "Tutorial",
+              "type_inspiration": "Inspiration",
+              "brief_label": "Kurze Beschreibung",
+              "brief_placeholder": "Kurze Beschreibung Ihres Beitrags...",
+              "content_label": "Inhalt *",
+              "content_placeholder": "Schreiben Sie hier den Inhalt Ihres Beitrags...",
+              "tags_label": "Tags",
+              "tags_placeholder": "Design, Branding, Tutorial (durch Kommas getrennt)",
+              "featured_image_label": "URL des vorgestellten Bildes",
+              "featured_image_placeholder": "https://beispiel.com/bild.jpg"
+            },
+            "actions": {
+              "cancel": "Abbrechen",
+              "publish": "Beitrag veröffentlichen"
             }
           }
       
@@ -4971,6 +5336,39 @@
           "starting_rate": "$600",
           "note_strong": "Nota:",
           "note_text": "Le tariffe possono variare in base all'ambito del progetto, alla scadenza e ai requisiti specifici. Contatta Aria Stone per un preventivo personalizzato."
+        }
+      },
+      "create_post":{
+        "title": "Crea Nuovo Post",
+        "close": "Chiudi",
+        "features": {
+          "title": "Caratteristiche dell'Account Gratuito",
+          "list1": "Post di blog e caricamenti di contenuti illimitati",
+          "list2": "Esposizione del portfolio con immagini e video illimitati",
+          "list3": "Condividi il tuo processo creativo e le tue intuizioni",
+          "list4": "Costruisci il tuo brand personale e attira clienti"
+        },
+        "form": {
+          "title_label": "Titolo del Post *",
+          "title_placeholder": "Inserisci il titolo del post...",
+          "type_label": "Tipo di Post",
+          "type_blog": "Articolo di Blog",
+          "type_update": "Aggiornamento di Progetto",
+          "type_bts": "Dietro le Quinte",
+          "type_tutorial": "Tutorial",
+          "type_inspiration": "Ispirazione",
+          "brief_label": "Breve Descrizione",
+          "brief_placeholder": "Breve descrizione del tuo post...",
+          "content_label": "Contenuto *",
+          "content_placeholder": "Scrivi il contenuto del tuo post qui...",
+          "tags_label": "Tag",
+          "tags_placeholder": "design, branding, tutorial (separati da virgole)",
+          "featured_image_label": "URL dell'Immagine in Evidenza",
+          "featured_image_placeholder": "https://esempio.com/immagine.jpg"
+        },
+        "actions": {
+          "cancel": "Annulla",
+          "publish": "Pubblica Post"
         }
       }
   

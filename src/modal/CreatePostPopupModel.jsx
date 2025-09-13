@@ -1,6 +1,9 @@
 import { XMarkIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { useTranslation } from "../contexts/LanguageProvider";
 
 export default function CreatePostPopupModel({ isOpen, setIsOpen }) {
+  const { t } = useTranslation();
+
   if (!isOpen) return null; // don’t render if closed
 
   return (
@@ -10,80 +13,88 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen }) {
         <button
           onClick={() => setIsOpen(false)}
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+          aria-label={t("create_post.close")}
         >
           <XMarkIcon className="h-6 w-6" />
         </button>
 
         {/* Header */}
-        <h2 className="text-md font-semibold mb-4">Create New Post</h2>
+        <h2 className="text-md font-semibold mb-4">{t("create_post.title")}</h2>
 
         {/* Features */}
         <div className="bg-blue-50 text-sm text-gray-700 border border-blue-200 p-4 rounded-md mb-6">
-          <p className="mb-1 font-semibold">Free Account Features</p>
+          <p className="mb-1 font-semibold">{t("create_post.features.title")}</p>
           <ul className="space-y-1">
-            <li>• Unlimited blog posts and content uploads</li>
-            <li>• Portfolio showcasing with unlimited images & videos</li>
-            <li>• Share your creative process and insights</li>
-            <li>• Build your personal brand and attract clients</li>
+            <li>• {t("create_post.features.list1")}</li>
+            <li>• {t("create_post.features.list2")}</li>
+            <li>• {t("create_post.features.list3")}</li>
+            <li>• {t("create_post.features.list4")}</li>
           </ul>
         </div>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); /* handle publish */ }}>
           {/* Post Title + Post Type in one row */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium">Post Title *</label>
+              <label className="text-sm font-medium">{t("create_post.form.title_label")}</label>
               <input
                 type="text"
-                placeholder="Enter post title..."
+                placeholder={t("create_post.form.title_placeholder")}
                 className="w-full border rounded-md p-2 mt-1 text-sm form-input"
+                required
+                aria-label={t("create_post.form.title_label")}
               />
             </div>
             <div>
-              <label className="text-sm font-medium">Post Type</label>
-              <select className="w-full border rounded-md p-2 mt-1 text-sm form-input">
-                <option>Blog Article</option>
-                <option>Project Update</option>
-                <option>Behind The Scenes</option>
-                <option>Tutorial</option>
-                <option>Inspiration</option>
+              <label className="text-sm font-medium">{t("create_post.form.type_label")}</label>
+              <select className="w-full border rounded-md p-2 mt-1 text-sm form-input" aria-label={t("create_post.form.type_label")}>
+                <option>{t("create_post.form.type_blog")}</option>
+                <option>{t("create_post.form.type_update")}</option>
+                <option>{t("create_post.form.type_bts")}</option>
+                <option>{t("create_post.form.type_tutorial")}</option>
+                <option>{t("create_post.form.type_inspiration")}</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="text-sm font-medium">Brief Description</label>
+            <label className="text-sm font-medium">{t("create_post.form.brief_label")}</label>
             <input
-              placeholder="Brief description of your post..."
+              placeholder={t("create_post.form.brief_placeholder")}
               className="w-full border rounded-md p-2 mt-1 text-sm form-input"
+              aria-label={t("create_post.form.brief_label")}
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">Content *</label>
+            <label className="text-sm font-medium">{t("create_post.form.content_label")}</label>
             <textarea
-              placeholder="Write your post content here..."
+              placeholder={t("create_post.form.content_placeholder")}
               className="w-full border rounded-md p-2 mt-1 text-sm form-input"
               rows="4"
+              required
+              aria-label={t("create_post.form.content_label")}
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">Tags</label>
+            <label className="text-sm font-medium">{t("create_post.form.tags_label")}</label>
             <input
               type="text"
-              placeholder="design, branding, tutorial (comma separated)"
+              placeholder={t("create_post.form.tags_placeholder")}
               className="w-full border rounded-md p-2 mt-1 text-sm form-input"
+              aria-label={t("create_post.form.tags_label")}
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium">Featured Image URL</label>
+            <label className="text-sm font-medium">{t("create_post.form.featured_image_label")}</label>
             <input
               type="text"
-              placeholder="https://example.com/image.jpg"
+              placeholder={t("create_post.form.featured_image_placeholder")}
               className="w-full border rounded-md p-2 mt-1 text-sm form-input"
+              aria-label={t("create_post.form.featured_image_label")}
             />
           </div>
 
@@ -94,13 +105,13 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen }) {
               onClick={() => setIsOpen(false)}
               className="flex-1 px-4 py-2 font-semibold border rounded-md text-xs hover:bg-gray-50"
             >
-              Cancel
+              {t("create_post.actions.cancel")}
             </button>
             <button
               type="submit"
               className="flex-1 px-4 py-2 font-semibold bg-teal-500 text-white rounded-md text-xs hover:bg-teal-600"
             >
-              Publish Post
+              {t("create_post.actions.publish")}
             </button>
           </div>
         </form>
