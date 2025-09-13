@@ -13,7 +13,7 @@ const LoginPage = ({ onClose }) => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
-  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -24,7 +24,9 @@ const LoginPage = ({ onClose }) => {
       console.log("Login success:", response)
 
       toast.success("Login successful 🎉")
+      // show profile completion if needed
       setShowProfileModal(true);
+      // DO NOT call onClose() here — keep the login dialog open while user completes profile
     } catch (error) {
       toast.error(error.message || "Login failed")
       console.error("Login error:", error)
@@ -34,7 +36,6 @@ const LoginPage = ({ onClose }) => {
   }
 
   const handleGoogleSuccess = async (tokenResp) => {
-    
     setGoogleLoading(true)
     try {
       const token =
@@ -42,13 +43,18 @@ const LoginPage = ({ onClose }) => {
 
       console.log("Google credential:", token)
       if (!token) throw new Error("No credential returned from Google")
-
       
-      const response = await login({ googleToken: token }) 
-      console.log("Google login success:", response)
+      // call same login endpoint but send the google credential as 'token' or according to your backend contract
+      const response = await login({ token: token }) 
 
+      console.log("Google login success:", response)
+      // Cookie will be set by login() helper if backend returned the token in response
       toast.success("Signed in with Google 🎉")
-      onClose()
+
+      // Show profile completion modal (do NOT call onClose here, otherwise the modal won't appear)
+      setShowProfileModal(true);
+
+      // Do NOT call onClose() here. Instead, close login dialog when profile modal closes.
     } catch (err) {
       console.error("Google login error:", err)
       toast.error(err.message || "Google sign-in failed")
@@ -64,9 +70,15 @@ const LoginPage = ({ onClose }) => {
 
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: handleGoogleSuccess,
-
-    onError: (error) => console.log("Google Login Failed:", error),
+    onError: handleGoogleError,
   });
+
+  const onProfileModalClose = (opts = {}) => {
+    setShowProfileModal(false);
+    if (opts.closeLogin !== false) {
+      onClose?.();
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-transperant bg-opacity-40 flex items-center justify-center z-50">
@@ -177,8 +189,11 @@ const LoginPage = ({ onClose }) => {
           </Link>
         </p>
       </div>
-      {showProfileModal && <ProfileCompletionModal onClose={() => setShowProfileModal(false)} />}
-
+      {showProfileModal && (
+        <ProfileCompletionModal
+          onClose={() => onProfileModalClose({ closeLogin: true })}
+        />
+      )}
     </div>
   )
 }

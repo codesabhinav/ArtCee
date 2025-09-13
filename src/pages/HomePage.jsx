@@ -348,7 +348,7 @@ export default function Home() {
 
                       <button
                         onClick={() => setOpen(true)}
-                        className="mt-5 w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-md font-medium shadow-md transition"
+                        className="mt-5 w-full bg-teal-500 hover:bg-teal-600 text-xs text-white py-2 rounded-md font-medium shadow-md transition"
                       >
                         {t("home.view_profile")}
                       </button>
@@ -361,14 +361,14 @@ export default function Home() {
 
           <ViewProfilePopupModel isOpen={open} onClose={() => setOpen(false)} />
 
-          <div className="absolute top-20 right-10 flex gap-3">
+          {/* <div className="absolute top-20 right-10 flex gap-3">
             <button className="p-2 bg-white shadow rounded-full hover:bg-gray-100">
               <BiChevronLeft className="w-5 h-5" />
             </button>
             <button className="p-2 bg-white shadow rounded-full hover:bg-gray-100">
               <BiChevronRight className="w-5 h-5" />
             </button>
-          </div>
+          </div> */}
 
           <div className="flex justify-center mt-10">
             <Link
