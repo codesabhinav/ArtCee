@@ -17,42 +17,54 @@ import backgrpoundImg from "../images/background.jpg";
 import { SiSpotlight } from "react-icons/si";
 import { BiChevronLeft, BiChevronRight, BiStar } from "react-icons/bi";
 import ViewProfilePopupModel from "../modal/ViewProfilePopupModel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
+import { getCreativeData } from "../Hooks/useSeller";
+
+const DEFAULT_AVATAR =
+  "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(true);
+  const [professionals, setProfessionals] = useState([]);
 
-  const professionals = [
-    {
-      name: "Luna Solaris",
-      role: "Digital Illustration & Brand Design",
-      rating: 4.9,
-      status: "Available",
-      description:
-        "Award-winning digital artist specializing in brand identity and illustration with 5+ years experience.",
-      skills: ["Adobe Illustrator", "Figma", "+4"],
-    },
-    {
-      name: "Marcus Chen",
-      role: "Video Production & Motion Graphics",
-      rating: 4.8,
-      status: "Busy",
-      description:
-        "Creative director and videographer with expertise in storytelling and motion design.",
-      skills: ["After Effects", "Cinema 4D", "+4"],
-    },
-    {
-      name: "Aria Stone",
-      role: "Photography & Creative Direction",
-      rating: 4.9,
-      status: "Available",
-      description:
-        "Professional photographer and creative director specializing in lifestyle and brand photography.",
-      skills: ["Canon 5D Mark IV", "Adobe Lightroom", "+4"],
-    },
-  ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // call same hook used in CreativeDirectory
+        const data = await getCreativeData();
+        // the CreativeDirectory expects the API to return an array (it does in your sample)
+        if (Array.isArray(data)) {
+          setProfessionals(data.slice(0, 3)); // only first 3
+        } else if (data?.data && Array.isArray(data.data)) {
+          // in case getCreativeData returns the full response
+          setProfessionals(data.data.slice(0, 3));
+        } else {
+          setProfessionals([]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch creatives:", err);
+        setProfessionals([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getAvailabilityBadge = (status) => {
+    const s = (status || "").toLowerCase();
+    if (s === "online") return { label: t("creative.available"), badge: "bg-green-100 text-green-700" };
+    if (s === "busy") return { label: t("creative.busy"), badge: "bg-yellow-100 text-yellow-700" };
+    if (s === "booked") return { label: t("creative.booked"), badge: "bg-orange-100 text-orange-700" };
+    return { label: t("creative.offline"), badge: "bg-gray-100 text-gray-700" };
+  };
+
 
   return (
     <div className="w-full">
@@ -267,8 +279,8 @@ export default function Home() {
       </section>
 
       {/* Featured Professionals */}
-      <section className="relative py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">
+        <div className="max-w-6xl mx-auto px-6">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-gray-900">
               {t("home.featured_title")}
@@ -277,74 +289,76 @@ export default function Home() {
           </div>
 
           <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {professionals.map((pro, idx) => (
-              <div
-                key={idx}
-                className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1"
-              >
-                <div className="relative h-44 bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="w-16 h-16 border-2 border-gray-400 rounded-md flex items-center justify-center text-gray-400">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-8 h-8"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M4 16l4-4-4-4m6 8h10M10 4h10"
-                      />
-                    </svg>
-                  </div>
-                  <div className="absolute top-3 right-3 bg-gray-900 text-white text-sm px-2 py-1 rounded-md flex items-center gap-1">
-                    <BiStar className="w-4 h-4 text-yellow-400" />
-                    {pro.rating}
-                  </div>
-                </div>
+            {loading ? (
+              <p className="text-center py-10 text-gray-500">{t("creative.loading") || "Loading..."}</p>
+            ) : professionals.length === 0 ? (
+              <p className="text-center py-10 text-gray-500">{t("creative.no_creatives")}</p>
+            ) : (
+              professionals.map((pro) => {
+                const profileSrc = pro?.user?.profile?.profile_picture || DEFAULT_AVATAR;
+                const name = pro?.user?.full_name || t("creative.anonymous");
+                const title = pro?.user?.profile?.title || "—";
+                const availability = getAvailabilityBadge(pro?.status);
 
-                <div className="p-5 text-left">
-                  <h4 className="text-sm text-gray-500">{pro.role}</h4>
-                  <h3 className="text-lg font-semibold">{pro.name}</h3>
-
-                  <p className="flex items-center gap-2 mt-2 text-sm text-gray-600">
-                    <span
-                      className={`w-2.5 h-2.5 rounded-full ${
-                        pro.status === "Available"
-                          ? "bg-green-500"
-                          : "bg-red-500"
-                      }`}
-                    ></span>
-                    {pro.status}
-                  </p>
-
-                  <p className="mt-3 text-gray-600 text-sm line-clamp-3">
-                    {pro.description}
-                  </p>
-
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {pro.skills.map((skill, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => setOpen(true)}
-                    className="mt-5 w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-md font-medium shadow-md transition"
+                return (
+                  <div
+                    key={pro.id ?? pro.uuid ?? name}
+                    className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1"
                   >
-                    {t("home.view_profile")}
-                  </button>
-                </div>
-              </div>
-            ))}
+                    <div className="relative h-44 bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
+                      <img
+                        src={profileSrc}
+                        alt={name}
+                        className="object-cover max-h-[180px] w-full"
+                        onError={(e) => {
+                          if (e.currentTarget.src !== DEFAULT_AVATAR) {
+                            e.currentTarget.src = DEFAULT_AVATAR;
+                          }
+                        }}
+                      />
+                      <div className="absolute top-3 right-3 bg-gray-900 text-white text-sm px-2 py-1 rounded-md flex items-center gap-1">
+                        <BiStar className="w-4 h-4 text-yellow-400" />
+                        {typeof pro.rating === "number" ? pro.rating.toFixed(1) : pro.rating ?? "—"}
+                      </div>
+                    </div>
+
+                    <div className="p-5 text-left">
+                      <h4 className="text-sm text-gray-500">{title}</h4>
+                      <h3 className="text-lg font-semibold">{name}</h3>
+
+                      <p className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                        <span
+                          className={`w-2.5 h-2.5 rounded-full ${availability.label === t("creative.available") ? "bg-green-500" : "bg-red-500"
+                            }`}
+                        ></span>
+                        {availability.label}
+                      </p>
+
+                      <p className="mt-3 text-gray-600 text-sm line-clamp-3">
+                        {pro.personal_intro || pro.user?.profile?.bio || t("creative.no_intro")}
+                      </p>
+
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {Array.isArray(pro.user?.skills) && pro.user.skills.slice(0, 5).map((skill) => (
+                          <span key={skill.id ?? skill.name} className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md">
+                            {skill.name}
+                          </span>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => setOpen(true)}
+                        className="mt-5 w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-md font-medium shadow-md transition"
+                      >
+                        {t("home.view_profile")}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
+
           <ViewProfilePopupModel isOpen={open} onClose={() => setOpen(false)} />
 
           <div className="absolute top-20 right-10 flex gap-3">
