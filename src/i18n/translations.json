@@ -694,7 +694,40 @@
     "country": "Country is required",
     "travel_radius": "Travel radius (miles) is required"
   }
+},
+"professional": {
+  "title": "Professional Experience",
+  "subtitle": "Help others understand your level of expertise",
+  "hint": "* Your intro and creative vision are required to showcase your unique perspective",
+  "note_required": "* Your intro and creative vision are required to showcase your unique perspective",
+
+  "years_label": "Years of Experience",
+  "years_placeholder": "0",
+
+  "career_level_label": "Career Level",
+  "career_level_placeholder": "Select career level",
+  "level_entry": "Entry Level (0-2 years)",
+  "level_mid": "Mid Level (3-5 years)",
+  "level_senior": "Senior Level (6-10 years)",
+  "level_expert": "Expert Level (10+ years)",
+
+  "personal_intro_label": "Personal Introduction",
+  "personal_intro_placeholder": "A brief, personal introduction that showcases your personality...",
+
+  "exp_vision_label": "Creative Vision",
+  "exp_vision_placeholder": "Share your creative vision and what drives your artistic work...",
+
+  "error_summary": "Please complete the following required fields:",
+
+  "prev": "Previous",
+  "next": "Next",
+
+  "errors": {
+    "personal_intro": "Personal Introduction is required",
+    "exp_vision": "Creative Vision is required"
+  }
 }
+
 
 
     },
@@ -1383,6 +1416,38 @@
       "country": "El país es obligatorio",
       "travel_radius": "El radio de viaje (millas) es obligatorio"
     }
+  },
+  "professional": {
+    "title": "Experiencia Profesional",
+    "subtitle": "Ayuda a otros a entender tu nivel de experiencia",
+    "hint": "* Tu introducción y visión creativa son necesarias para mostrar tu perspectiva única",
+    "note_required": "* Tu introducción y visión creativa son necesarias para mostrar tu perspectiva única",
+
+    "years_label": "Años de Experiencia",
+    "years_placeholder": "0",
+
+    "career_level_label": "Nivel de Carrera",
+    "career_level_placeholder": "Selecciona el nivel de carrera",
+    "level_entry": "Nivel Inicial (0-2 años)",
+    "level_mid": "Nivel Intermedio (3-5 años)",
+    "level_senior": "Nivel Senior (6-10 años)",
+    "level_expert": "Nivel Experto (10+ años)",
+
+    "personal_intro_label": "Introducción Personal",
+    "personal_intro_placeholder": "Una breve introducción personal que muestre tu personalidad...",
+
+    "exp_vision_label": "Visión Creativa",
+    "exp_vision_placeholder": "Comparte tu visión creativa y qué impulsa tu trabajo artístico...",
+
+    "error_summary": "Por favor, completa los siguientes campos obligatorios:",
+
+    "prev": "Anterior",
+    "next": "Siguiente",
+
+    "errors": {
+      "personal_intro": "La Introducción Personal es obligatoria",
+      "exp_vision": "La Visión Creativa es obligatoria"
+    }
   }
               
     },
@@ -2069,6 +2134,38 @@
       "state": "O estado/província é obrigatório",
       "country": "O país é obrigatório",
       "travel_radius": "O raio de viagem (milhas) é obrigatório"
+    }
+  },
+  "professional": {
+    "title": "Experiência Profissional",
+    "subtitle": "Ajude outros a entender seu nível de expertise",
+    "hint": "* Sua introdução e visão criativa são necessárias para mostrar sua perspectiva única",
+    "note_required": "* Sua introdução e visão criativa são necessárias para mostrar sua perspectiva única",
+
+    "years_label": "Anos de Experiência",
+    "years_placeholder": "0",
+
+    "career_level_label": "Nível de Carreira",
+    "career_level_placeholder": "Selecione o nível de carreira",
+    "level_entry": "Nível Inicial (0-2 anos)",
+    "level_mid": "Nível Intermediário (3-5 anos)",
+    "level_senior": "Nível Sênior (6-10 anos)",
+    "level_expert": "Nível Especialista (10+ anos)",
+
+    "personal_intro_label": "Introdução Pessoal",
+    "personal_intro_placeholder": "Uma breve introdução pessoal que mostre sua personalidade...",
+
+    "exp_vision_label": "Visão Criativa",
+    "exp_vision_placeholder": "Compartilhe sua visão criativa e o que impulsiona seu trabalho artístico...",
+
+    "error_summary": "Por favor, preencha os seguintes campos obrigatórios:",
+
+    "prev": "Anterior",
+    "next": "Próximo",
+
+    "errors": {
+      "personal_intro": "A Introdução Pessoal é obrigatória",
+      "exp_vision": "A Visão Criativa é obrigatória"
     }
   }
                 
@@ -2786,7 +2883,39 @@
       "country": "देश आवश्यक है",
       "travel_radius": "यात्रा त्रिज्या (मील) आवश्यक है"
     }
-  }     
+  } ,
+  "professional": {
+    "title": "पेशेवर अनुभव",
+    "subtitle": "दूसरों को अपनी विशेषज्ञता का स्तर समझने में मदद करें",
+    "hint": "* आपका परिचय और रचनात्मक दृष्टिकोण आपकी अद्वितीय दृष्टि प्रदर्शित करने के लिए आवश्यक हैं",
+    "note_required": "* आपका परिचय और रचनात्मक दृष्टिकोण आपकी अद्वितीय दृष्टि प्रदर्शित करने के लिए आवश्यक हैं",
+
+    "years_label": "अनुभव के वर्ष",
+    "years_placeholder": "0",
+
+    "career_level_label": "करियर स्तर",
+    "career_level_placeholder": "करियर स्तर चुनें",
+    "level_entry": "प्रारंभिक स्तर (0-2 वर्ष)",
+    "level_mid": "मध्य स्तर (3-5 वर्ष)",
+    "level_senior": "वरिष्ठ स्तर (6-10 वर्ष)",
+    "level_expert": "विशेषज्ञ स्तर (10+ वर्ष)",
+
+    "personal_intro_label": "व्यक्तिगत परिचय",
+    "personal_intro_placeholder": "एक संक्षिप्त व्यक्तिगत परिचय जो आपकी व्यक्तित्व को दर्शाता है...",
+
+    "exp_vision_label": "रचनात्मक दृष्टिकोण",
+    "exp_vision_placeholder": "अपना रचनात्मक दृष्टिकोण और आपके कलात्मक कार्य को प्रेरित करने वाली चीजें साझा करें...",
+
+    "error_summary": "कृपया निम्नलिखित आवश्यक फ़ील्ड्स को पूरा करें:",
+
+    "prev": "पिछला",
+    "next": "अगला",
+
+    "errors": {
+      "personal_intro": "व्यक्तिगत परिचय आवश्यक है",
+      "exp_vision": "रचनात्मक दृष्टिकोण आवश्यक है"
+    }
+  }    
     },
     "tl": {
       "meta": { "name": "Tagalog", "flag": "https://flagcdn.com/64x48/ph.png" },
@@ -3471,6 +3600,38 @@
       "state": "Kailangan ang Estado/Probinsya",
       "country": "Kailangan ang Bansa",
       "travel_radius": "Kailangan ang Radius ng Pagbiyahe (milya)"
+    }
+  },
+  "professional": {
+    "title": "Propesyonal na Karanasan",
+    "subtitle": "Tulungan ang iba na maunawaan ang iyong antas ng kadalubhasaan",
+    "hint": "* Ang iyong panimula at malikhaing pananaw ay kinakailangan upang ipakita ang iyong natatanging perspektibo",
+    "note_required": "* Ang iyong panimula at malikhaing pananaw ay kinakailangan upang ipakita ang iyong natatanging perspektibo",
+
+    "years_label": "Mga Taon ng Karanasan",
+    "years_placeholder": "0",
+
+    "career_level_label": "Antas ng Karera",
+    "career_level_placeholder": "Pumili ng antas ng karera",
+    "level_entry": "Entry Level (0-2 taon)",
+    "level_mid": "Mid Level (3-5 taon)",
+    "level_senior": "Senior Level (6-10 taon)",
+    "level_expert": "Expert Level (10+ taon)",
+
+    "personal_intro_label": "Pansariling Panimula",
+    "personal_intro_placeholder": "Isang maikling pansariling panimula na nagpapakita ng iyong personalidad...",
+
+    "exp_vision_label": "Malikhaing Pananaw",
+    "exp_vision_placeholder": "Ibahagi ang iyong malikhaing pananaw at kung ano ang nagtutulak sa iyong artistikong gawa...",
+
+    "error_summary": "Mangyaring kumpletuhin ang mga sumusunod na kinakailangang field:",
+
+    "prev": "Nakaraan",
+    "next": "Susunod",
+
+    "errors": {
+      "personal_intro": "Kailangan ang Pansariling Panimula",
+      "exp_vision": "Kailangan ang Malikhaing Pananaw"
     }
   }
                 
@@ -4161,6 +4322,38 @@
       "country": "국가가 필요합니다",
       "travel_radius": "여행 반경 (마일)이 필요합니다"
     }
+  },
+  "professional": {
+    "title": "전문 경력",
+    "subtitle": "다른 사람들이 당신의 전문성 수준을 이해하도록 도와주세요",
+    "hint": "* 당신의 소개와 창의적 비전은 당신의 독특한 관점을 보여주기 위해 필요합니다",
+    "note_required": "* 당신의 소개와 창의적 비전은 당신의 독특한 관점을 보여주기 위해 필요합니다",
+
+    "years_label": "경력 연수",
+    "years_placeholder": "0",
+
+    "career_level_label": "경력 수준",
+    "career_level_placeholder": "경력 수준 선택",
+    "level_entry": "초급 수준 (0-2년)",
+    "level_mid": "중급 수준 (3-5년)",
+    "level_senior": "고급 수준 (6-10년)",
+    "level_expert": "전문가 수준 (10년 이상)",
+
+    "personal_intro_label": "개인 소개",
+    "personal_intro_placeholder": "당신의 개성을 보여주는 간단한 개인 소개...",
+
+    "exp_vision_label": "창의적 비전",
+    "exp_vision_placeholder": "당신의 창의적 비전과 예술적 작업을 이끄는 원동력을 공유하세요...",
+
+    "error_summary": "다음 필수 필드를 작성해 주세요:",
+
+    "prev": "이전",
+    "next": "다음",
+
+    "errors": {
+      "personal_intro": "개인 소개가 필요합니다",
+      "exp_vision": "창의적 비전이 필요합니다"
+    }
   }
             
     },
@@ -4846,6 +5039,38 @@
       "state": "州/省为必填项",
       "country": "国家为必填项",
       "travel_radius": "旅行半径（英里）为必填项"
+    }
+  },
+  "professional": {
+    "title": "职业经验",
+    "subtitle": "帮助他人了解你的专业水平",
+    "hint": "* 你的简介和创意愿景是展示你独特视角的必填项",
+    "note_required": "* 你的简介和创意愿景是展示你独特视角的必填项",
+
+    "years_label": "经验年数",
+    "years_placeholder": "0",
+
+    "career_level_label": "职业水平",
+    "career_level_placeholder": "选择职业水平",
+    "level_entry": "初级 (0-2年)",
+    "level_mid": "中级 (3-5年)",
+    "level_senior": "高级 (6-10年)",
+    "level_expert": "专家级 (10年以上)",
+
+    "personal_intro_label": "个人简介",
+    "personal_intro_placeholder": "一个简短的个人简介，展示你的个性...",
+
+    "exp_vision_label": "创意愿景",
+    "exp_vision_placeholder": "分享你的创意愿景以及驱动你艺术工作的动力...",
+
+    "error_summary": "请填写以下必填字段：",
+
+    "prev": "上一页",
+    "next": "下一页",
+
+    "errors": {
+      "personal_intro": "个人简介为必填项",
+      "exp_vision": "创意愿景为必填项"
     }
   }
                 
@@ -5535,6 +5760,38 @@
       "country": "Le pays est requis",
       "travel_radius": "Le rayon de déplacement (miles) est requis"
     }
+  },
+  "professional": {
+    "title": "Expérience Professionnelle",
+    "subtitle": "Aidez les autres à comprendre votre niveau d'expertise",
+    "hint": "* Votre introduction et votre vision créative sont requises pour mettre en valeur votre perspective unique",
+    "note_required": "* Votre introduction et votre vision créative sont requises pour mettre en valeur votre perspective unique",
+
+    "years_label": "Années d'Expérience",
+    "years_placeholder": "0",
+
+    "career_level_label": "Niveau de Carrière",
+    "career_level_placeholder": "Sélectionnez le niveau de carrière",
+    "level_entry": "Niveau Débutant (0-2 ans)",
+    "level_mid": "Niveau Intermédiaire (3-5 ans)",
+    "level_senior": "Niveau Senior (6-10 ans)",
+    "level_expert": "Niveau Expert (10+ ans)",
+
+    "personal_intro_label": "Introduction Personnelle",
+    "personal_intro_placeholder": "Une brève introduction personnelle qui met en valeur votre personnalité...",
+
+    "exp_vision_label": "Vision Créative",
+    "exp_vision_placeholder": "Partagez votre vision créative et ce qui motive votre travail artistique...",
+
+    "error_summary": "Veuillez remplir les champs obligatoires suivants :",
+
+    "prev": "Précédent",
+    "next": "Suivant",
+
+    "errors": {
+      "personal_intro": "L'Introduction Personnelle est requise",
+      "exp_vision": "La Vision Créative est requise"
+    }
   }
                 
               
@@ -6223,6 +6480,38 @@
       "country": "国は必須です",
       "travel_radius": "移動範囲（マイル）は必須です"
     }
+  },
+  "professional": {
+    "title": "職務経験",
+    "subtitle": "他の人があなたの専門知識のレベルを理解するのを助けてください",
+    "hint": "* あなたの紹介と創造的ビジョンは、独自の視点を示すために必要です",
+    "note_required": "* あなたの紹介と創造的ビジョンは、独自の視点を示すために必要です",
+
+    "years_label": "経験年数",
+    "years_placeholder": "0",
+
+    "career_level_label": "キャリアレベル",
+    "career_level_placeholder": "キャリアレベルを選択",
+    "level_entry": "初級レベル (0-2年)",
+    "level_mid": "中級レベル (3-5年)",
+    "level_senior": "上級レベル (6-10年)",
+    "level_expert": "専門家レベル (10年以上)",
+
+    "personal_intro_label": "自己紹介",
+    "personal_intro_placeholder": "あなたの個性を示す簡単な自己紹介...",
+
+    "exp_vision_label": "創造的ビジョン",
+    "exp_vision_placeholder": "あなたの創造的ビジョンと芸術的活動を推進するものを共有してください...",
+
+    "error_summary": "以下の必須フィールドを入力してください：",
+
+    "prev": "前へ",
+    "next": "次へ",
+
+    "errors": {
+      "personal_intro": "自己紹介は必須です",
+      "exp_vision": "創造的ビジョンは必須です"
+    }
   }
                 
               
@@ -6908,6 +7197,38 @@
       "state": "الولاية/المقاطعة مطلوبة",
       "country": "الدولة مطلوبة",
       "travel_radius": "نطاق السفر (أميال) مطلوب"
+    }
+  },
+  "professional": {
+    "title": "الخبرة المهنية",
+    "subtitle": "ساعد الآخرين على فهم مستوى خبرتك",
+    "hint": "* مقدمتك ورؤيتك الإبداعية مطلوبة لعرض وجهة نظرك الفريدة",
+    "note_required": "* مقدمتك ورؤيتك الإبداعية مطلوبة لعرض وجهة نظرك الفريدة",
+
+    "years_label": "سنوات الخبرة",
+    "years_placeholder": "0",
+
+    "career_level_label": "مستوى الوظيفة",
+    "career_level_placeholder": "اختر مستوى الوظيفة",
+    "level_entry": "مستوى المبتدئين (0-2 سنوات)",
+    "level_mid": "مستوى متوسط (3-5 سنوات)",
+    "level_senior": "مستوى أولي (6-10 سنوات)",
+    "level_expert": "مستوى خبير (10+ سنوات)",
+
+    "personal_intro_label": "مقدمة شخصية",
+    "personal_intro_placeholder": "مقدمة شخصية قصيرة تعرض شخصيتك...",
+
+    "exp_vision_label": "رؤية إبداعية",
+    "exp_vision_placeholder": "شارك رؤيتك الإبداعية وما يدفع عملك الفني...",
+
+    "error_summary": "يرجى إكمال الحقول المطلوبة التالية:",
+
+    "prev": "السابق",
+    "next": "التالي",
+
+    "errors": {
+      "personal_intro": "المقدمة الشخصية مطلوبة",
+      "exp_vision": "الرؤية الإبداعية مطلوبة"
     }
   }
                 
@@ -7596,6 +7917,38 @@
       "country": "Land ist erforderlich",
       "travel_radius": "Reiseradius (Meilen) ist erforderlich"
     }
+  },
+  "professional": {
+    "title": "Berufserfahrung",
+    "subtitle": "Helfen Sie anderen, Ihr Fachwissen zu verstehen",
+    "hint": "* Ihre Einführung und kreative Vision sind erforderlich, um Ihre einzigartige Perspektive zu präsentieren",
+    "note_required": "* Ihre Einführung und kreative Vision sind erforderlich, um Ihre einzigartige Perspektive zu präsentieren",
+
+    "years_label": "Jahre der Erfahrung",
+    "years_placeholder": "0",
+
+    "career_level_label": "Karrierestufe",
+    "career_level_placeholder": "Karrierestufe auswählen",
+    "level_entry": "Einstiegsniveau (0-2 Jahre)",
+    "level_mid": "Mittleres Niveau (3-5 Jahre)",
+    "level_senior": "Senior-Niveau (6-10 Jahre)",
+    "level_expert": "Expertenniveau (10+ Jahre)",
+
+    "personal_intro_label": "Persönliche Vorstellung",
+    "personal_intro_placeholder": "Eine kurze persönliche Vorstellung, die Ihre Persönlichkeit zeigt...",
+
+    "exp_vision_label": "Kreative Vision",
+    "exp_vision_placeholder": "Teilen Sie Ihre kreative Vision und was Ihre künstlerische Arbeit antreibt...",
+
+    "error_summary": "Bitte füllen Sie die folgenden erforderlichen Felder aus:",
+
+    "prev": "Zurück",
+    "next": "Weiter",
+
+    "errors": {
+      "personal_intro": "Persönliche Vorstellung ist erforderlich",
+      "exp_vision": "Kreative Vision ist erforderlich"
+    }
   }
                 
     },
@@ -8280,6 +8633,38 @@
       "state": "Lo stato/provincia è obbligatorio",
       "country": "Il paese è obbligatorio",
       "travel_radius": "Il raggio di viaggio (miglia) è obbligatorio"
+    }
+  },
+  "professional": {
+    "title": "Esperienza Professionale",
+    "subtitle": "Aiuta gli altri a comprendere il tuo livello di competenza",
+    "hint": "* La tua introduzione e visione creativa sono richieste per mostrare la tua prospettiva unica",
+    "note_required": "* La tua introduzione e visione creativa sono richieste per mostrare la tua prospettiva unica",
+
+    "years_label": "Anni di Esperienza",
+    "years_placeholder": "0",
+
+    "career_level_label": "Livello di Carriera",
+    "career_level_placeholder": "Seleziona il livello di carriera",
+    "level_entry": "Livello Base (0-2 anni)",
+    "level_mid": "Livello Intermedio (3-5 anni)",
+    "level_senior": "Livello Senior (6-10 anni)",
+    "level_expert": "Livello Esperto (10+ anni)",
+
+    "personal_intro_label": "Introduzione Personale",
+    "personal_intro_placeholder": "Una breve introduzione personale che mostri la tua personalità...",
+
+    "exp_vision_label": "Visione Creativa",
+    "exp_vision_placeholder": "Condividi la tua visione creativa e ciò che guida il tuo lavoro artistico...",
+
+    "error_summary": "Per favore, completa i seguenti campi obbligatori:",
+
+    "prev": "Precedente",
+    "next": "Avanti",
+
+    "errors": {
+      "personal_intro": "L'Introduzione Personale è obbligatoria",
+      "exp_vision": "La Visione Creativa è obbligatoria"
     }
   }
             
