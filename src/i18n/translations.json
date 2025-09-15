@@ -808,7 +808,40 @@
   "step_profile_activation": "Profile creation and activation",
   "prev": "Previous",
   "create_profile": "Create Profile"
+},
+"age_verification": {
+  "title": "Age Verification",
+  "close": "Close",
+  "heading": "Age Verification Required",
+  "subheading": "We need to verify your age to comply with privacy regulations and ensure appropriate protections.",
+  "privacy_title": "Privacy First:",
+  "privacy_body": "Your age information is used only for compliance and account protection. We follow strict GDPR guidelines.",
+  "choose_method": "Choose Verification Method",
+  "method_dob": {
+    "title": "Date of Birth (Recommended)",
+    "desc": "More secure and accurate"
+  },
+  "method_decl": {
+    "title": "Age Declaration",
+    "desc": "Simply enter your current age"
+  },
+  "enter_dob": "Enter Your Date of Birth",
+  "enter_age": "Enter Your Age",
+  "month_placeholder": "Month",
+  "day_placeholder": "Day",
+  "year_placeholder": "Year",
+  "age_placeholder": "Enter your age",
+  "months": "January|February|March|April|May|June|July|August|September|October|November|December",
+  "errors": {
+    "invalid_dob": "Please select a valid date of birth.",
+    "enter_age": "Please enter your age.",
+    "underage": "You must be at least 18 years old."
+  },
+  "success": "Age verified successfully!",
+  "cancel": "Cancel",
+  "verify": "Verify Age"
 }
+
 
 
 
@@ -1616,6 +1649,38 @@
     "step_profile_activation": "Creación y activación del perfil",
     "prev": "Anterior",
     "create_profile": "Crear Perfil"
+  },
+  "age_verification": {
+    "title": "Verificación de Edad",
+    "close": "Cerrar",
+    "heading": "Se Requiere Verificación de Edad",
+    "subheading": "Necesitamos verificar tu edad para cumplir con las regulaciones de privacidad y garantizar las protecciones adecuadas.",
+    "privacy_title": "Privacidad Primero:",
+    "privacy_body": "Tu información de edad se utiliza únicamente para cumplimiento y protección de la cuenta. Seguimos estrictas directrices del RGPD.",
+    "choose_method": "Elige el Método de Verificación",
+    "method_dob": {
+      "title": "Fecha de Nacimiento (Recomendado)",
+      "desc": "Más seguro y preciso"
+    },
+    "method_decl": {
+      "title": "Declaración de Edad",
+      "desc": "Simplemente ingresa tu edad actual"
+    },
+    "enter_dob": "Ingresa Tu Fecha de Nacimiento",
+    "enter_age": "Ingresa Tu Edad",
+    "month_placeholder": "Mes",
+    "day_placeholder": "Día",
+    "year_placeholder": "Año",
+    "age_placeholder": "Ingresa tu edad",
+    "months": "Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre",
+    "errors": {
+      "invalid_dob": "Por favor, selecciona una fecha de nacimiento válida.",
+      "enter_age": "Por favor, ingresa tu edad.",
+      "underage": "Debes tener al menos 18 años."
+    },
+    "success": "¡Edad verificada con éxito!",
+    "cancel": "Cancelar",
+    "verify": "Verificar Edad"
   }
               
     },
@@ -2417,6 +2482,38 @@
     "step_profile_activation": "Criação e ativação do perfil",
     "prev": "Anterior",
     "create_profile": "Criar Perfil"
+  },
+  "age_verification": {
+    "title": "Verificação de Idade",
+    "close": "Fechar",
+    "heading": "Verificação de Idade Necessária",
+    "subheading": "Precisamos verificar sua idade para cumprir as regulamentações de privacidade e garantir as proteções adequadas.",
+    "privacy_title": "Privacidade em Primeiro Lugar:",
+    "privacy_body": "Suas informações de idade são usadas apenas para conformidade e proteção da conta. Seguimos diretrizes rigorosas do GDPR.",
+    "choose_method": "Escolha o Método de Verificação",
+    "method_dob": {
+      "title": "Data de Nascimento (Recomendado)",
+      "desc": "Mais seguro e preciso"
+    },
+    "method_decl": {
+      "title": "Declaração de Idade",
+      "desc": "Basta inserir sua idade atual"
+    },
+    "enter_dob": "Insira Sua Data de Nascimento",
+    "enter_age": "Insira Sua Idade",
+    "month_placeholder": "Mês",
+    "day_placeholder": "Dia",
+    "year_placeholder": "Ano",
+    "age_placeholder": "Insira sua idade",
+    "months": "Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro",
+    "errors": {
+      "invalid_dob": "Por favor, selecione uma data de nascimento válida.",
+      "enter_age": "Por favor, insira sua idade.",
+      "underage": "Você deve ter pelo menos 18 anos."
+    },
+    "success": "Idade verificada com sucesso!",
+    "cancel": "Cancelar",
+    "verify": "Verificar Idade"
   }
                 
     },
@@ -3247,6 +3344,38 @@
     "step_profile_activation": "प्रोफाइल निर्माण और सक्रियण",
     "prev": "पिछला",
     "create_profile": "प्रोफाइल बनाएँ"
+  },
+  "age_verification": {
+    "title": "आयु सत्यापन",
+    "close": "बंद करें",
+    "heading": "आयु सत्यापन आवश्यक",
+    "subheading": "हमें गोपनीयता नियमों का पालन करने और उचित सुरक्षा सुनिश्चित करने के लिए आपकी आयु सत्यापित करने की आवश्यकता है।",
+    "privacy_title": "गोपनीयता पहले:",
+    "privacy_body": "आपकी आयु जानकारी केवल अनुपालन और खाता सुरक्षा के लिए उपयोग की जाती है। हम सख्त GDPR दिशानिर्देशों का पालन करते हैं।",
+    "choose_method": "सत्यापन विधि चुनें",
+    "method_dob": {
+      "title": "जन्म तिथि (अनुशंसित)",
+      "desc": "अधिक सुरक्षित और सटीक"
+    },
+    "method_decl": {
+      "title": "आयु घोषणा",
+      "desc": "बस अपनी वर्तमान आयु दर्ज करें"
+    },
+    "enter_dob": "अपनी जन्म तिथि दर्ज करें",
+    "enter_age": "अपनी आयु दर्ज करें",
+    "month_placeholder": "माह",
+    "day_placeholder": "दिन",
+    "year_placeholder": "वर्ष",
+    "age_placeholder": "अपनी आयु दर्ज करें",
+    "months": "जनवरी|फरवरी|मार्च|अप्रैल|मई|जून|जुलाई|अगस्त|सितंबर|अक्टूबर|नवंबर|दिसंबर",
+    "errors": {
+      "invalid_dob": "कृपया एक मान्य जन्म तिथि चुनें।",
+      "enter_age": "कृपया अपनी आयु दर्ज करें।",
+      "underage": "आपकी आयु कम से कम 18 वर्ष होनी चाहिए।"
+    },
+    "success": "आयु सत्यापन सफलतापूर्वक पूरा हुआ!",
+    "cancel": "रद्द करें",
+    "verify": "आयु सत्यापित करें"
   }
     },
     "tl": {
@@ -4047,6 +4176,38 @@
     "step_profile_activation": "Paglikha at pag-activate ng profile",
     "prev": "Nakaraan",
     "create_profile": "Lumikha ng Profile"
+  },
+  "age_verification": {
+    "title": "Pag-verify ng Edad",
+    "close": "Isara",
+    "heading": "Kailangan ang Pag-verify ng Edad",
+    "subheading": "Kailangan naming i-verify ang iyong edad upang sumunod sa mga regulasyon sa privacy at tiyakin ang nararapat na proteksyon.",
+    "privacy_title": "Privacy Una:",
+    "privacy_body": "Ang impormasyon ng iyong edad ay ginagamit lamang para sa pagsunod at proteksyon ng account. Sinusunod natin ang mahigpit na alituntunin ng GDPR.",
+    "choose_method": "Pumili ng Paraan ng Pag-verify",
+    "method_dob": {
+      "title": "Petsa ng Kapanganakan (Inirerekomenda)",
+      "desc": "Mas ligtas at tumpak"
+    },
+    "method_decl": {
+      "title": "Deklarasyon ng Edad",
+      "desc": "Ilagay lamang ang iyong kasalukuyang edad"
+    },
+    "enter_dob": "Ilagay ang Iyong Petsa ng Kapanganakan",
+    "enter_age": "Ilagay ang Iyong Edad",
+    "month_placeholder": "Buwan",
+    "day_placeholder": "Araw",
+    "year_placeholder": "Taon",
+    "age_placeholder": "Ilagay ang iyong edad",
+    "months": "Enero|Pebrero|Marso|Abril|Mayo|Hunyo|Hulyo|Agosto|Setyembre|Oktubre|Nobyembre|Disyembre",
+    "errors": {
+      "invalid_dob": "Mangyaring pumili ng wastong petsa ng kapanganakan.",
+      "enter_age": "Mangyaring ilagay ang iyong edad.",
+      "underage": "Kailangan mong maging hindi bababa sa 18 taong gulang."
+    },
+    "success": "Matagumpay na na-verify ang edad!",
+    "cancel": "Kanselahin",
+    "verify": "I-verify ang Edad"
   }
                 
                    
@@ -4850,6 +5011,38 @@
     "step_profile_activation": "프로필 생성 및 활성화",
     "prev": "이전",
     "create_profile": "프로필 생성"
+  },
+  "age_verification": {
+    "title": "연령 인증",
+    "close": "닫기",
+    "heading": "연령 인증 필요",
+    "subheading": "개인정보 보호 규정을 준수하고 적절한 보호를 보장하기 위해 귀하의 연령을 확인해야 합니다.",
+    "privacy_title": "개인정보 우선:",
+    "privacy_body": "귀하의 연령 정보는 규정 준수 및 계정 보호를 위해서만 사용됩니다. 우리는 엄격한 GDPR 지침을 따릅니다.",
+    "choose_method": "인증 방법 선택",
+    "method_dob": {
+      "title": "생년월일 (추천)",
+      "desc": "더 안전하고 정확함"
+    },
+    "method_decl": {
+      "title": "연령 선언",
+      "desc": "현재 연령을 입력하기만 하면 됩니다"
+    },
+    "enter_dob": "생년월일을 입력하세요",
+    "enter_age": "연령을 입력하세요",
+    "month_placeholder": "월",
+    "day_placeholder": "일",
+    "year_placeholder": "년",
+    "age_placeholder": "연령을 입력하세요",
+    "months": "1월|2월|3월|4월|5월|6월|7월|8월|9월|10월|11월|12월",
+    "errors": {
+      "invalid_dob": "유효한 생년월일을 선택해 주세요.",
+      "enter_age": "연령을 입력해 주세요.",
+      "underage": "최소 18세 이상이어야 합니다."
+    },
+    "success": "연령 인증이 성공적으로 완료되었습니다!",
+    "cancel": "취소",
+    "verify": "연령 인증"
   }
             
     },
@@ -5650,6 +5843,38 @@
     "step_profile_activation": "个人资料创建和激活",
     "prev": "上一页",
     "create_profile": "创建个人资料"
+  },
+  "age_verification": {
+    "title": "年龄验证",
+    "close": "关闭",
+    "heading": "需要年龄验证",
+    "subheading": "我们需要验证你的年龄以遵守隐私法规并确保适当的保护措施。",
+    "privacy_title": "隐私优先：",
+    "privacy_body": "你的年龄信息仅用于合规性和账户保护。我们严格遵循GDPR准则。",
+    "choose_method": "选择验证方法",
+    "method_dob": {
+      "title": "出生日期（推荐）",
+      "desc": "更安全且准确"
+    },
+    "method_decl": {
+      "title": "年龄声明",
+      "desc": "只需输入你当前的年龄"
+    },
+    "enter_dob": "输入你的出生日期",
+    "enter_age": "输入你的年龄",
+    "month_placeholder": "月",
+    "day_placeholder": "日",
+    "year_placeholder": "年",
+    "age_placeholder": "输入你的年龄",
+    "months": "一月|二月|三月|四月|五月|六月|七月|八月|九月|十月|十一月|十二月",
+    "errors": {
+      "invalid_dob": "请选择一个有效的出生日期。",
+      "enter_age": "请输入你的年龄。",
+      "underage": "你必须年满18岁。"
+    },
+    "success": "年龄验证成功！",
+    "cancel": "取消",
+    "verify": "验证年龄"
   }
                 
               
@@ -6452,6 +6677,38 @@
     "step_profile_activation": "Création et activation du profil",
     "prev": "Précédent",
     "create_profile": "Créer un profil"
+  },
+  "age_verification": {
+    "title": "Vérification de l'âge",
+    "close": "Fermer",
+    "heading": "Vérification de l'âge requise",
+    "subheading": "Nous devons vérifier votre âge pour respecter les réglementations sur la confidentialité et garantir des protections appropriées.",
+    "privacy_title": "Confidentialité d'abord :",
+    "privacy_body": "Vos informations d'âge sont utilisées uniquement pour la conformité et la protection du compte. Nous suivons des directives strictes du RGPD.",
+    "choose_method": "Choisissez la méthode de vérification",
+    "method_dob": {
+      "title": "Date de naissance (recommandé)",
+      "desc": "Plus sécurisé et précis"
+    },
+    "method_decl": {
+      "title": "Déclaration d'âge",
+      "desc": "Entrez simplement votre âge actuel"
+    },
+    "enter_dob": "Entrez votre date de naissance",
+    "enter_age": "Entrez votre âge",
+    "month_placeholder": "Mois",
+    "day_placeholder": "Jour",
+    "year_placeholder": "Année",
+    "age_placeholder": "Entrez votre âge",
+    "months": "Janvier|Février|Mars|Avril|Mai|Juin|Juillet|Août|Septembre|Octobre|Novembre|Décembre",
+    "errors": {
+      "invalid_dob": "Veuillez sélectionner une date de naissance valide.",
+      "enter_age": "Veuillez entrer votre âge.",
+      "underage": "Vous devez avoir au moins 18 ans."
+    },
+    "success": "Âge vérifié avec succès !",
+    "cancel": "Annuler",
+    "verify": "Vérifier l'âge"
   }
                 
               
@@ -7254,6 +7511,38 @@
     "step_profile_activation": "プロフィールの作成と有効化",
     "prev": "前へ",
     "create_profile": "プロフィールを作成"
+  },
+  "age_verification": {
+    "title": "年齢認証",
+    "close": "閉じる",
+    "heading": "年齢認証が必要です",
+    "subheading": "プライバシー規制を遵守し、適切な保護を確保するために、年齢を確認する必要があります。",
+    "privacy_title": "プライバシー第一：",
+    "privacy_body": "あなたの年齢情報は、コンプライアンスとアカウント保護のためにのみ使用されます。私たちは厳格なGDPRガイドラインに従います。",
+    "choose_method": "認証方法を選択",
+    "method_dob": {
+      "title": "生年月日（推奨）",
+      "desc": "より安全で正確"
+    },
+    "method_decl": {
+      "title": "年齢申告",
+      "desc": "現在の年齢を入力するだけ"
+    },
+    "enter_dob": "生年月日を入力してください",
+    "enter_age": "年齢を入力してください",
+    "month_placeholder": "月",
+    "day_placeholder": "日",
+    "year_placeholder": "年",
+    "age_placeholder": "年齢を入力してください",
+    "months": "1月|2月|3月|4月|5月|6月|7月|8月|9月|10月|11月|12月",
+    "errors": {
+      "invalid_dob": "有効な生年月日を選択してください。",
+      "enter_age": "年齢を入力してください。",
+      "underage": "18歳以上である必要があります。"
+    },
+    "success": "年齢認証が成功しました！",
+    "cancel": "キャンセル",
+    "verify": "年齢を認証"
   }
                 
               
@@ -8054,7 +8343,39 @@
     "step_profile_activation": "إنشاء وتفعيل الملف الشخصي",
     "prev": "السابق",
     "create_profile": "إنشاء الملف الشخصي"
-  } 
+  } ,
+  "age_verification": {
+    "title": "التحقق من العمر",
+    "close": "إغلاق",
+    "heading": "التحقق من العمر مطلوب",
+    "subheading": "نحتاج إلى التحقق من عمرك للامتثال للوائح الخصوصية وضمان الحماية المناسبة.",
+    "privacy_title": "الخصوصية أولاً:",
+    "privacy_body": "معلومات عمرك تُستخدم فقط للامتثال وحماية الحساب. نحن نتبع إرشادات GDPR الصارمة.",
+    "choose_method": "اختر طريقة التحقق",
+    "method_dob": {
+      "title": "تاريخ الميلاد (موصى به)",
+      "desc": "أكثر أمانًا ودقة"
+    },
+    "method_decl": {
+      "title": "إعلان العمر",
+      "desc": "أدخل عمرك الحالي فقط"
+    },
+    "enter_dob": "أدخل تاريخ ميلادك",
+    "enter_age": "أدخل عمرك",
+    "month_placeholder": "الشهر",
+    "day_placeholder": "اليوم",
+    "year_placeholder": "السنة",
+    "age_placeholder": "أدخل عمرك",
+    "months": "يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر",
+    "errors": {
+      "invalid_dob": "يرجى اختيار تاريخ ميلاد صالح.",
+      "enter_age": "يرجى إدخال عمرك.",
+      "underage": "يجب أن يكون عمرك 18 عامًا على الأقل."
+    },
+    "success": "تم التحقق من العمر بنجاح!",
+    "cancel": "إلغاء",
+    "verify": "التحقق من العمر"
+  }
                 
                     
     },
@@ -8855,6 +9176,38 @@
     "step_profile_activation": "Erstellung und Aktivierung des Profils",
     "prev": "Zurück",
     "create_profile": "Profil erstellen"
+  },
+  "age_verification": {
+    "title": "Altersüberprüfung",
+    "close": "Schließen",
+    "heading": "Altersüberprüfung erforderlich",
+    "subheading": "Wir müssen Ihr Alter überprüfen, um Datenschutzbestimmungen einzuhalten und angemessenen Schutz zu gewährleisten.",
+    "privacy_title": "Datenschutz zuerst:",
+    "privacy_body": "Ihre Altersinformationen werden ausschließlich für die Einhaltung von Vorschriften und den Kontoschutz verwendet. Wir befolgen strenge DSGVO-Richtlinien.",
+    "choose_method": "Wählen Sie die Überprüfungsmethode",
+    "method_dob": {
+      "title": "Geburtsdatum (empfohlen)",
+      "desc": "Sicherer und genauer"
+    },
+    "method_decl": {
+      "title": "Altersangabe",
+      "desc": "Geben Sie einfach Ihr aktuelles Alter ein"
+    },
+    "enter_dob": "Geben Sie Ihr Geburtsdatum ein",
+    "enter_age": "Geben Sie Ihr Alter ein",
+    "month_placeholder": "Monat",
+    "day_placeholder": "Tag",
+    "year_placeholder": "Jahr",
+    "age_placeholder": "Geben Sie Ihr Alter ein",
+    "months": "Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember",
+    "errors": {
+      "invalid_dob": "Bitte wählen Sie ein gültiges Geburtsdatum.",
+      "enter_age": "Bitte geben Sie Ihr Alter ein.",
+      "underage": "Sie müssen mindestens 18 Jahre alt sein."
+    },
+    "success": "Alter erfolgreich verifiziert!",
+    "cancel": "Abbrechen",
+    "verify": "Alter verifizieren"
   }
                 
     },
@@ -9654,6 +10007,38 @@
     "step_profile_activation": "Creazione e attivazione del profilo",
     "prev": "Precedente",
     "create_profile": "Crea Profilo"
+  },
+  "age_verification": {
+    "title": "Verifica dell'età",
+    "close": "Chiudi",
+    "heading": "Verifica dell'età richiesta",
+    "subheading": "Dobbiamo verificare la tua età per rispettare le normative sulla privacy e garantire protezioni adeguate.",
+    "privacy_title": "Privacy al primo posto:",
+    "privacy_body": "Le informazioni sulla tua età vengono utilizzate solo per la conformità e la protezione dell'account. Seguiamo rigide linee guida GDPR.",
+    "choose_method": "Scegli il metodo di verifica",
+    "method_dob": {
+      "title": "Data di nascita (consigliato)",
+      "desc": "Più sicuro e preciso"
+    },
+    "method_decl": {
+      "title": "Dichiarazione dell'età",
+      "desc": "Inserisci semplicemente la tua età attuale"
+    },
+    "enter_dob": "Inserisci la tua data di nascita",
+    "enter_age": "Inserisci la tua età",
+    "month_placeholder": "Mese",
+    "day_placeholder": "Giorno",
+    "year_placeholder": "Anno",
+    "age_placeholder": "Inserisci la tua età",
+    "months": "Gennaio|Febbraio|Marzo|Aprile|Maggio|Giugno|Luglio|Agosto|Settembre|Ottobre|Novembre|Dicembre",
+    "errors": {
+      "invalid_dob": "Seleziona una data di nascita valida.",
+      "enter_age": "Inserisci la tua età.",
+      "underage": "Devi avere almeno 18 anni."
+    },
+    "success": "Età verificata con successo!",
+    "cancel": "Annulla",
+    "verify": "Verifica età"
   }
             
           
