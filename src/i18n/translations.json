@@ -726,7 +726,93 @@
     "personal_intro": "Personal Introduction is required",
     "exp_vision": "Creative Vision is required"
   }
+},
+"services_skills": {
+  "title": "Services & Skills",
+  "subtitle": "What services do you offer and what are your skills?",
+  "loading": "Loading...",
+  "category_prefix": "",
+  "category_other": "Other",
+  "prev": "Previous",
+  "next": "Next",
+  "error_loading": "Unable to load skills. Please try again later.",
+
+  "errors": {
+    "select_one": "Please select at least one option"
+  }
+},
+"portfolio_social": {
+  "title": "Portfolio & Social Presence",
+  "subtitle": "Upload your best work and connect your social profiles",
+  "note_required": "* A profile image or video is required to help others discover and connect with you",
+  "portfolio_label": "Profile Image/Video",
+  "upload_cta": "Click to upload or drag and drop",
+  "upload_hint": "Images and videos up to 50MB",
+  "remove_label": "Remove uploaded file",
+  "or": "OR",
+  "url_label": "Enter Image/Video URL",
+  "url_placeholder": "https://yourimage.com/photo.jpg or video URL",
+  "website": "Website",
+  "website_placeholder": "https://yourwebsite.com",
+  "instagram": "Instagram",
+  "instagram_placeholder": "@yourusername",
+  "linkedin": "LinkedIn",
+  "linkedin_placeholder": "linkedin.com/in/yourprofile",
+  "behance": "Behance",
+  "behance_placeholder": "behance.net/yourprofile",
+  "dribbble": "Dribbble",
+  "dribbble_placeholder": "dribbble.com/yourprofile",
+  "error_summary_title": "Please complete the following required fields:",
+  "prev": "Previous",
+  "next": "Next",
+  "errors": {
+    "file_size": "File must be under 50MB",
+    "invalid_url": "Invalid URL or unable to fetch file",
+    "portfolio_required": "Profile Image/Video is required",
+    "website_required": "Website is required",
+    "instagram_required": "Instagram is required",
+    "linkedin_required": "LinkedIn is required",
+    "behance_required": "Behance is required",
+    "dribbble_required": "Dribbble is required"
+  }
+},
+"rates_pricing": {
+  "title": "Rates & Pricing",
+  "subtitle": "Set your rates to attract the right clients",
+  "hourly_label": "Hourly Rate",
+  "daily_label": "Daily Rate",
+  "project_label": "Project Rate",
+  "placeholder": "0",
+  "currency_label": "Currency",
+  "negotiable_label": "Rates are negotiable",
+  "prev": "Previous",
+  "next": "Next",
+  "errors": {
+    "at_least_one": "Please enter at least one rate."
+  }
+},
+"profile_settings": {
+  "title": "Almost There!",
+  "subtitle": "Customize your profile settings and privacy",
+  "sections_title": "Profile Sections to Display",
+  "education": "Education & Training",
+  "pricing": "Pricing Information",
+  "client_reviews": "Client Reviews",
+  "endorsements": "Professional Endorsements",
+  "ready_title": "Ready to Create, Connect, and Collaborate?",
+  "ready_subtitle": "Your profile will help other creatives and clients discover your amazing work!",
+  "next_steps_title": "Next Steps",
+  "step_age_verification": "Age verification and privacy consent",
+  "step_gdpr": "GDPR-compliant data processing",
+  "step_email_verification": "Email verification for security",
+  "step_profile_activation": "Profile creation and activation",
+  "prev": "Previous",
+  "create_profile": "Create Profile"
 }
+
+
+
+
 
 
 
@@ -1448,6 +1534,88 @@
       "personal_intro": "La Introducción Personal es obligatoria",
       "exp_vision": "La Visión Creativa es obligatoria"
     }
+  },
+  "services_skills": {
+    "title": "Servicios y Habilidades",
+    "subtitle": "¿Qué servicios ofreces y cuáles son tus habilidades?",
+    "loading": "Cargando...",
+    "category_prefix": "",
+    "category_other": "Otro",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "error_loading": "No se pudieron cargar las habilidades. Por favor, intenta de nuevo más tarde.",
+
+    "errors": {
+      "select_one": "Por favor, selecciona al menos una opción"
+    }
+  },
+  "portfolio_social": {
+    "title": "Portafolio y Presencia en Redes Sociales",
+    "subtitle": "Sube tu mejor trabajo y conecta tus perfiles sociales",
+    "note_required": "* Es requerida una imagen o video de perfil para ayudar a otros a descubrirte y conectarse contigo",
+    "portfolio_label": "Imagen/Video de Perfil",
+    "upload_cta": "Haz clic para subir o arrastra y suelta",
+    "upload_hint": "Imágenes y videos de hasta 50MB",
+    "remove_label": "Eliminar archivo subido",
+    "or": "O",
+    "url_label": "Ingresa la URL de la Imagen/Video",
+    "url_placeholder": "https://tufoto.com/foto.jpg o URL de video",
+    "website": "Sitio Web",
+    "website_placeholder": "https://tusitioweb.com",
+    "instagram": "Instagram",
+    "instagram_placeholder": "@tuusuario",
+    "linkedin": "LinkedIn",
+    "linkedin_placeholder": "linkedin.com/in/tuperfil",
+    "behance": "Behance",
+    "behance_placeholder": "behance.net/tuperfil",
+    "dribbble": "Dribbble",
+    "dribbble_placeholder": "dribbble.com/tuperfil",
+    "error_summary_title": "Por favor, completa los siguientes campos obligatorios:",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "errors": {
+      "file_size": "El archivo debe ser menor a 50MB",
+      "invalid_url": "URL no válida o no se pudo obtener el archivo",
+      "portfolio_required": "Es requerida una Imagen/Video de Perfil",
+      "website_required": "El Sitio Web es requerido",
+      "instagram_required": "Instagram es requerido",
+      "linkedin_required": "LinkedIn es requerido",
+      "behance_required": "Behance es requerido",
+      "dribbble_required": "Dribbble es requerido"
+    }
+  } ,
+  "rates_pricing": {
+    "title": "Tarifas y Precios",
+    "subtitle": "Establece tus tarifas para atraer a los clientes adecuados",
+    "hourly_label": "Tarifa por Hora",
+    "daily_label": "Tarifa Diaria",
+    "project_label": "Tarifa por Proyecto",
+    "placeholder": "0",
+    "currency_label": "Moneda",
+    "negotiable_label": "Las tarifas son negociables",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "errors": {
+      "at_least_one": "Por favor, introduce al menos una tarifa."
+    }
+  },
+  "profile_settings": {
+    "title": "¡Casi Listo!",
+    "subtitle": "Personaliza la configuración y privacidad de tu perfil",
+    "sections_title": "Secciones del Perfil para Mostrar",
+    "education": "Educación y Formación",
+    "pricing": "Información de Precios",
+    "client_reviews": "Reseñas de Clientes",
+    "endorsements": "Respaldo Profesional",
+    "ready_title": "¿Listo para Crear, Conectar y Colaborar?",
+    "ready_subtitle": "¡Tu perfil ayudará a otros creativos y clientes a descubrir tu increíble trabajo!",
+    "next_steps_title": "Próximos Pasos",
+    "step_age_verification": "Verificación de edad y consentimiento de privacidad",
+    "step_gdpr": "Procesamiento de datos conforme al RGPD",
+    "step_email_verification": "Verificación de correo electrónico para seguridad",
+    "step_profile_activation": "Creación y activación del perfil",
+    "prev": "Anterior",
+    "create_profile": "Crear Perfil"
   }
               
     },
@@ -2167,6 +2335,88 @@
       "personal_intro": "A Introdução Pessoal é obrigatória",
       "exp_vision": "A Visão Criativa é obrigatória"
     }
+  },
+  "services_skills": {
+    "title": "Serviços e Habilidades",
+    "subtitle": "Quais serviços você oferece e quais são suas habilidades?",
+    "loading": "Carregando...",
+    "category_prefix": "",
+    "category_other": "Outro",
+    "prev": "Anterior",
+    "next": "Próximo",
+    "error_loading": "Não foi possível carregar as habilidades. Por favor, tente novamente mais tarde.",
+
+    "errors": {
+      "select_one": "Por favor, selecione pelo menos uma opção"
+    }
+  },
+  "portfolio_social": {
+    "title": "Portfólio e Presença Social",
+    "subtitle": "Carregue seu melhor trabalho e conecte seus perfis sociais",
+    "note_required": "* Uma imagem ou vídeo de perfil é necessária para ajudar outros a descobri-lo e se conectar com você",
+    "portfolio_label": "Imagem/Vídeo de Perfil",
+    "upload_cta": "Clique para carregar ou arraste e solte",
+    "upload_hint": "Imagens e vídeos de até 50MB",
+    "remove_label": "Remover arquivo carregado",
+    "or": "OU",
+    "url_label": "Insira a URL da Imagem/Vídeo",
+    "url_placeholder": "https://suaimagem.com/foto.jpg ou URL do vídeo",
+    "website": "Site",
+    "website_placeholder": "https://seusite.com",
+    "instagram": "Instagram",
+    "instagram_placeholder": "@seuusuario",
+    "linkedin": "LinkedIn",
+    "linkedin_placeholder": "linkedin.com/in/seuperfil",
+    "behance": "Behance",
+    "behance_placeholder": "behance.net/seuperfil",
+    "dribbble": "Dribbble",
+    "dribbble_placeholder": "dribbble.com/seuperfil",
+    "error_summary_title": "Por favor, preencha os seguintes campos obrigatórios:",
+    "prev": "Anterior",
+    "next": "Próximo",
+    "errors": {
+      "file_size": "O arquivo deve ter menos de 50MB",
+      "invalid_url": "URL inválida ou não foi possível obter o arquivo",
+      "portfolio_required": "Imagem/Vídeo de Perfil é necessário",
+      "website_required": "Site é necessário",
+      "instagram_required": "Instagram é necessário",
+      "linkedin_required": "LinkedIn é necessário",
+      "behance_required": "Behance é necessário",
+      "dribbble_required": "Dribbble é necessário"
+    }
+  },
+  "rates_pricing": {
+    "title": "Taxas e Preços",
+    "subtitle": "Defina suas taxas para atrair os clientes certos",
+    "hourly_label": "Taxa Horária",
+    "daily_label": "Taxa Diária",
+    "project_label": "Taxa por Projeto",
+    "placeholder": "0",
+    "currency_label": "Moeda",
+    "negotiable_label": "As taxas são negociáveis",
+    "prev": "Anterior",
+    "next": "Próximo",
+    "errors": {
+      "at_least_one": "Por favor, insira pelo menos uma taxa."
+    }
+  },
+  "profile_settings": {
+    "title": "Quase Lá!",
+    "subtitle": "Personalize as configurações e privacidade do seu perfil",
+    "sections_title": "Seções do Perfil para Exibir",
+    "education": "Educação e Treinamento",
+    "pricing": "Informações de Preços",
+    "client_reviews": "Avaliações de Clientes",
+    "endorsements": "Endossos Profissionais",
+    "ready_title": "Pronto para Criar, Conectar e Colaborar?",
+    "ready_subtitle": "Seu perfil ajudará outros criativos e clientes a descobrir seu trabalho incrível!",
+    "next_steps_title": "Próximos Passos",
+    "step_age_verification": "Verificação de idade e consentimento de privacidade",
+    "step_gdpr": "Processamento de dados em conformidade com o GDPR",
+    "step_email_verification": "Verificação de e-mail para segurança",
+    "step_profile_activation": "Criação e ativação do perfil",
+    "prev": "Anterior",
+    "create_profile": "Criar Perfil"
   }
                 
     },
@@ -2915,7 +3165,89 @@
       "personal_intro": "व्यक्तिगत परिचय आवश्यक है",
       "exp_vision": "रचनात्मक दृष्टिकोण आवश्यक है"
     }
-  }    
+  },
+  "services_skills": {
+    "title": "सेवाएँ और कौशल",
+    "subtitle": "आप कौन सी सेवाएँ प्रदान करते हैं और आपके कौशल क्या हैं?",
+    "loading": "लोड हो रहा है...",
+    "category_prefix": "",
+    "category_other": "अन्य",
+    "prev": "पिछला",
+    "next": "अगला",
+    "error_loading": "कौशल लोड करने में असमर्थ। कृपया बाद में पुनः प्रयास करें।",
+
+    "errors": {
+      "select_one": "कृपया कम से कम एक विकल्प चुनें"
+    }
+  } ,
+  "portfolio_social": {
+    "title": "पोर्टफोलियो और सामाजिक उपस्थिति",
+    "subtitle": "अपना सर्वश्रेष्ठ काम अपलोड करें और अपने सामाजिक प्रोफाइल जोड़ें",
+    "note_required": "* दूसरों को आपको खोजने और आपसे जुड़ने में मदद करने के लिए प्रोफाइल छवि या वीडियो आवश्यक है",
+    "portfolio_label": "प्रोफाइल छवि/वीडियो",
+    "upload_cta": "अपलोड करने के लिए क्लिक करें या ड्रैग और ड्रॉप करें",
+    "upload_hint": "50MB तक की छवियाँ और वीडियो",
+    "remove_label": "अपलोड की गई फ़ाइल हटाएँ",
+    "or": "या",
+    "url_label": "छवि/वीडियो URL दर्ज करें",
+    "url_placeholder": "https://yourimage.com/photo.jpg या वीडियो URL",
+    "website": "वेबसाइट",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "इंस्टाग्राम",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "लिंक्डइन",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "बिहांस",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "ड्रिबल",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "कृपया निम्नलिखित आवश्यक फ़ील्ड्स को पूरा करें:",
+    "prev": "पिछला",
+    "next": "अगला",
+    "errors": {
+      "file_size": "फ़ाइल 50MB से कम होनी चाहिए",
+      "invalid_url": "अमान्य URL या फ़ाइल प्राप्त करने में असमर्थ",
+      "portfolio_required": "प्रोफाइल छवि/वीडियो आवश्यक है",
+      "website_required": "वेबसाइट आवश्यक है",
+      "instagram_required": "इंस्टाग्राम आवश्यक है",
+      "linkedin_required": "लिंक्डइन आवश्यक है",
+      "behance_required": "बिहांस आवश्यक है",
+      "dribbble_required": "ड्रिबल आवश्यक है"
+    }
+  },
+  "rates_pricing": {
+    "title": "दरें और मूल्य निर्धारण",
+    "subtitle": "सही ग्राहकों को आकर्षित करने के लिए अपनी दरें निर्धारित करें",
+    "hourly_label": "प्रति घंटा दर",
+    "daily_label": "दैनिक दर",
+    "project_label": "प्रोजेक्ट दर",
+    "placeholder": "0",
+    "currency_label": "मुद्रा",
+    "negotiable_label": "दरें परक्राम्य हैं",
+    "prev": "पिछला",
+    "next": "अगला",
+    "errors": {
+      "at_least_one": "कृपया कम से कम एक दर दर्ज करें।"
+    }
+  } ,
+  "profile_settings": {
+    "title": "लगभग तैयार!",
+    "subtitle": "अपने प्रोफाइल सेटिंग्स और गोपनीयता को अनुकूलित करें",
+    "sections_title": "प्रदर्शित करने के लिए प्रोफाइल अनुभाग",
+    "education": "शिक्षा और प्रशिक्षण",
+    "pricing": "मूल्य निर्धारण जानकारी",
+    "client_reviews": "ग्राहक समीक्षाएँ",
+    "endorsements": "पेशेवर समर्थन",
+    "ready_title": "बनाने, जुड़ने और सहयोग करने के लिए तैयार हैं?",
+    "ready_subtitle": "आपका प्रोफाइल अन्य रचनात्मक लोगों और ग्राहकों को आपके शानदार काम की खोज में मदद करेगा!",
+    "next_steps_title": "अगले कदम",
+    "step_age_verification": "आयु सत्यापन और गोपनीयता सहमति",
+    "step_gdpr": "GDPR-अनुपालन डेटा प्रोसेसिंग",
+    "step_email_verification": "सुरक्षा के लिए ईमेल सत्यापन",
+    "step_profile_activation": "प्रोफाइल निर्माण और सक्रियण",
+    "prev": "पिछला",
+    "create_profile": "प्रोफाइल बनाएँ"
+  }
     },
     "tl": {
       "meta": { "name": "Tagalog", "flag": "https://flagcdn.com/64x48/ph.png" },
@@ -3633,6 +3965,88 @@
       "personal_intro": "Kailangan ang Pansariling Panimula",
       "exp_vision": "Kailangan ang Malikhaing Pananaw"
     }
+  },
+  "services_skills": {
+    "title": "Mga Serbisyo at Kasanayan",
+    "subtitle": "Anong mga serbisyo ang inaalok mo at ano ang iyong mga kasanayan?",
+    "loading": "Naglo-load...",
+    "category_prefix": "",
+    "category_other": "Iba pa",
+    "prev": "Nakaraan",
+    "next": "Susunod",
+    "error_loading": "Hindi ma-load ang mga kasanayan. Mangyaring subukang muli mamaya.",
+
+    "errors": {
+      "select_one": "Mangyaring pumili ng kahit isang opsyon"
+    }
+  },
+  "portfolio_social": {
+    "title": "Portfolio at Social Presence",
+    "subtitle": "I-upload ang iyong pinakamahusay na gawa at ikonekta ang iyong mga social profile",
+    "note_required": "* Kinakailangan ang profile image o video upang matulungan ang iba na makakita at makakonekta sa iyo",
+    "portfolio_label": "Larawan/Video ng Profile",
+    "upload_cta": "I-click upang i-upload o i-drag at i-drop",
+    "upload_hint": "Mga larawan at video hanggang 50MB",
+    "remove_label": "Alisin ang na-upload na file",
+    "or": "O",
+    "url_label": "Ilagay ang URL ng Larawan/Video",
+    "url_placeholder": "https://yourimage.com/photo.jpg o URL ng video",
+    "website": "Website",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "Instagram",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "LinkedIn",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "Behance",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "Dribbble",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "Mangyaring kumpletuhin ang mga sumusunod na kinakailangang field:",
+    "prev": "Nakaraan",
+    "next": "Susunod",
+    "errors": {
+      "file_size": "Ang file ay dapat na mas mababa sa 50MB",
+      "invalid_url": "Di-wastong URL o hindi ma-fetch ang file",
+      "portfolio_required": "Kinakailangan ang Larawan/Video ng Profile",
+      "website_required": "Kinakailangan ang Website",
+      "instagram_required": "Kinakailangan ang Instagram",
+      "linkedin_required": "Kinakailangan ang LinkedIn",
+      "behance_required": "Kinakailangan ang Behance",
+      "dribbble_required": "Kinakailangan ang Dribbble"
+    }
+  },
+  "rates_pricing": {
+    "title": "Mga Rate at Pagpepresyo",
+    "subtitle": "Itakda ang iyong mga rate upang maakit ang tamang mga kliyente",
+    "hourly_label": "Orasang Rate",
+    "daily_label": "Arawang Rate",
+    "project_label": "Rate ng Proyekto",
+    "placeholder": "0",
+    "currency_label": "Pera",
+    "negotiable_label": "Ang mga rate ay maaaring makipag-ayos",
+    "prev": "Nakaraan",
+    "next": "Susunod",
+    "errors": {
+      "at_least_one": "Mangyaring maglagay ng kahit isang rate."
+    }
+  },
+  "profile_settings": {
+    "title": "Halos Naroon Na!",
+    "subtitle": "I-customize ang mga setting at privacy ng iyong profile",
+    "sections_title": "Mga Seksyon ng Profile na Ipapakita",
+    "education": "Edukasyon at Pagsasanay",
+    "pricing": "Impormasyon sa Pagpepresyo",
+    "client_reviews": "Mga Review ng Kliyente",
+    "endorsements": "Mga Propesyonal na Endorsement",
+    "ready_title": "Handa na bang Lumikha, Magkonekta, at Makipagtulungan?",
+    "ready_subtitle": "Ang iyong profile ay makakatulong sa iba pang mga malikhaing tao at kliyente na matuklasan ang iyong kamangha-manghang gawa!",
+    "next_steps_title": "Susunod na Hakbang",
+    "step_age_verification": "Pag-verify ng edad at pahintulot sa privacy",
+    "step_gdpr": "Pagproseso ng data na sumusunod sa GDPR",
+    "step_email_verification": "Pag-verify ng email para sa seguridad",
+    "step_profile_activation": "Paglikha at pag-activate ng profile",
+    "prev": "Nakaraan",
+    "create_profile": "Lumikha ng Profile"
   }
                 
                    
@@ -4354,6 +4768,88 @@
       "personal_intro": "개인 소개가 필요합니다",
       "exp_vision": "창의적 비전이 필요합니다"
     }
+  },
+  "services_skills": {
+    "title": "서비스 및 기술",
+    "subtitle": "어떤 서비스를 제공하며, 어떤 기술을 가지고 있나요?",
+    "loading": "로딩 중...",
+    "category_prefix": "",
+    "category_other": "기타",
+    "prev": "이전",
+    "next": "다음",
+    "error_loading": "기술을 로드할 수 없습니다. 나중에 다시 시도해 주세요.",
+
+    "errors": {
+      "select_one": "최소한 하나의 옵션을 선택해 주세요"
+    }
+  },
+  "portfolio_social": {
+    "title": "포트폴리오 및 소셜 미디어",
+    "subtitle": "최고의 작품을 업로드하고 소셜 프로필을 연결하세요",
+    "note_required": "* 다른 사람들이 당신을 발견하고 연결할 수 있도록 프로필 이미지 또는 비디오가 필요합니다",
+    "portfolio_label": "프로필 이미지/비디오",
+    "upload_cta": "클릭하여 업로드하거나 드래그 앤 드롭",
+    "upload_hint": "이미지 및 비디오 최대 50MB",
+    "remove_label": "업로드된 파일 제거",
+    "or": "또는",
+    "url_label": "이미지/비디오 URL 입력",
+    "url_placeholder": "https://yourimage.com/photo.jpg 또는 비디오 URL",
+    "website": "웹사이트",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "인스타그램",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "링크드인",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "비핸스",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "드리블",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "다음 필수 필드를 작성해 주세요:",
+    "prev": "이전",
+    "next": "다음",
+    "errors": {
+      "file_size": "파일은 50MB 미만이어야 합니다",
+      "invalid_url": "잘못된 URL이거나 파일을 가져올 수 없습니다",
+      "portfolio_required": "프로필 이미지/비디오가 필요합니다",
+      "website_required": "웹사이트가 필요합니다",
+      "instagram_required": "인스타그램이 필요합니다",
+      "linkedin_required": "링크드인이 필요합니다",
+      "behance_required": "비핸스가 필요합니다",
+      "dribbble_required": "드리블이 필요합니다"
+    }
+  },
+  "rates_pricing": {
+    "title": "요금 및 가격",
+    "subtitle": "적합한 클라이언트를 유치하기 위해 요금을 설정하세요",
+    "hourly_label": "시간당 요금",
+    "daily_label": "일일 요금",
+    "project_label": "프로젝트 요금",
+    "placeholder": "0",
+    "currency_label": "통화",
+    "negotiable_label": "요금은 협의 가능합니다",
+    "prev": "이전",
+    "next": "다음",
+    "errors": {
+      "at_least_one": "최소한 하나의 요금을 입력해 주세요."
+    }
+  },
+  "profile_settings": {
+    "title": "거의 다 왔습니다!",
+    "subtitle": "프로필 설정과 개인정보 보호를 사용자 맞춤으로 설정하세요",
+    "sections_title": "표시할 프로필 섹션",
+    "education": "교육 및 훈련",
+    "pricing": "가격 정보",
+    "client_reviews": "클라이언트 리뷰",
+    "endorsements": "전문적 추천",
+    "ready_title": "창작, 연결, 협업할 준비가 되셨나요?",
+    "ready_subtitle": "당신의 프로필은 다른 창작자와 클라이언트가 당신의 멋진 작업을 발견하는 데 도움이 될 것입니다!",
+    "next_steps_title": "다음 단계",
+    "step_age_verification": "연령 인증 및 개인정보 동의",
+    "step_gdpr": "GDPR 준수 데이터 처리",
+    "step_email_verification": "보안을 위한 이메일 인증",
+    "step_profile_activation": "프로필 생성 및 활성화",
+    "prev": "이전",
+    "create_profile": "프로필 생성"
   }
             
     },
@@ -5072,6 +5568,88 @@
       "personal_intro": "个人简介为必填项",
       "exp_vision": "创意愿景为必填项"
     }
+  },
+  "services_skills": {
+    "title": "服务与技能",
+    "subtitle": "你提供哪些服务，你的技能是什么？",
+    "loading": "加载中...",
+    "category_prefix": "",
+    "category_other": "其他",
+    "prev": "上一页",
+    "next": "下一页",
+    "error_loading": "无法加载技能。请稍后再试。",
+
+    "errors": {
+      "select_one": "请至少选择一个选项"
+    }
+  },
+  "portfolio_social": {
+    "title": "作品集与社交媒体",
+    "subtitle": "上传你的最佳作品并连接你的社交档案",
+    "note_required": "* 需要上传个人资料图片或视频，以帮助他人发现并与你联系",
+    "portfolio_label": "个人资料图片/视频",
+    "upload_cta": "点击上传或拖放",
+    "upload_hint": "图片和视频最大50MB",
+    "remove_label": "删除已上传的文件",
+    "or": "或",
+    "url_label": "输入图片/视频URL",
+    "url_placeholder": "https://yourimage.com/photo.jpg 或视频URL",
+    "website": "网站",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "Instagram",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "领英",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "Behance",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "Dribbble",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "请填写以下必填字段：",
+    "prev": "上一页",
+    "next": "下一页",
+    "errors": {
+      "file_size": "文件必须小于50MB",
+      "invalid_url": "无效的URL或无法获取文件",
+      "portfolio_required": "个人资料图片/视频是必填项",
+      "website_required": "网站是必填项",
+      "instagram_required": "Instagram是必填项",
+      "linkedin_required": "领英是必填项",
+      "behance_required": "Behance是必填项",
+      "dribbble_required": "Dribbble是必填项"
+    }
+  },
+  "rates_pricing": {
+    "title": "费率与定价",
+    "subtitle": "设定你的费率以吸引合适的客户",
+    "hourly_label": "小时费率",
+    "daily_label": "日费率",
+    "project_label": "项目费率",
+    "placeholder": "0",
+    "currency_label": "货币",
+    "negotiable_label": "费率可协商",
+    "prev": "上一页",
+    "next": "下一页",
+    "errors": {
+      "at_least_one": "请至少输入一个费率。"
+    }
+  },
+  "profile_settings": {
+    "title": "快完成了！",
+    "subtitle": "自定义你的个人资料设置和隐私",
+    "sections_title": "要显示的个人资料部分",
+    "education": "教育与培训",
+    "pricing": "定价信息",
+    "client_reviews": "客户评价",
+    "endorsements": "专业背书",
+    "ready_title": "准备好创作、连接和合作了吗？",
+    "ready_subtitle": "你的个人资料将帮助其他创意人士和客户发现你的精彩作品！",
+    "next_steps_title": "后续步骤",
+    "step_age_verification": "年龄验证和隐私同意",
+    "step_gdpr": "符合GDPR的数据处理",
+    "step_email_verification": "为安全进行电子邮件验证",
+    "step_profile_activation": "个人资料创建和激活",
+    "prev": "上一页",
+    "create_profile": "创建个人资料"
   }
                 
               
@@ -5792,6 +6370,88 @@
       "personal_intro": "L'Introduction Personnelle est requise",
       "exp_vision": "La Vision Créative est requise"
     }
+  },
+  "services_skills": {
+    "title": "Services et Compétences",
+    "subtitle": "Quels services proposez-vous et quelles sont vos compétences ?",
+    "loading": "Chargement...",
+    "category_prefix": "",
+    "category_other": "Autre",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "error_loading": "Impossible de charger les compétences. Veuillez réessayer plus tard.",
+
+    "errors": {
+      "select_one": "Veuillez sélectionner au moins une option"
+    }
+  },
+  "portfolio_social": {
+    "title": "Portfolio et Présence sur les Réseaux Sociaux",
+    "subtitle": "Téléchargez vos meilleurs travaux et connectez vos profils sociaux",
+    "note_required": "* Une image ou une vidéo de profil est requise pour aider les autres à vous découvrir et à se connecter avec vous",
+    "portfolio_label": "Image/Vidéo de Profil",
+    "upload_cta": "Cliquez pour télécharger ou glisser-déposer",
+    "upload_hint": "Images et vidéos jusqu'à 50 Mo",
+    "remove_label": "Supprimer le fichier téléchargé",
+    "or": "OU",
+    "url_label": "Entrez l'URL de l'Image/Vidéo",
+    "url_placeholder": "https://yourimage.com/photo.jpg ou URL de la vidéo",
+    "website": "Site Web",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "Instagram",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "LinkedIn",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "Behance",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "Dribbble",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "Veuillez remplir les champs obligatoires suivants :",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "errors": {
+      "file_size": "Le fichier doit être inférieur à 50 Mo",
+      "invalid_url": "URL invalide ou impossible de récupérer le fichier",
+      "portfolio_required": "Une Image/Vidéo de Profil est requise",
+      "website_required": "Le Site Web est requis",
+      "instagram_required": "Instagram est requis",
+      "linkedin_required": "LinkedIn est requis",
+      "behance_required": "Behance est requis",
+      "dribbble_required": "Dribbble est requis"
+    }
+  },
+  "rates_pricing": {
+    "title": "Tarifs et Prix",
+    "subtitle": "Fixez vos tarifs pour attirer les bons clients",
+    "hourly_label": "Tarif Horaire",
+    "daily_label": "Tarif Journalier",
+    "project_label": "Tarif par Projet",
+    "placeholder": "0",
+    "currency_label": "Devise",
+    "negotiable_label": "Les tarifs sont négociables",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "errors": {
+      "at_least_one": "Veuillez entrer au moins un tarif."
+    }
+  },
+  "profile_settings": {
+    "title": "Presque terminé !",
+    "subtitle": "Personnalisez les paramètres et la confidentialité de votre profil",
+    "sections_title": "Sections du profil à afficher",
+    "education": "Éducation et Formation",
+    "pricing": "Informations sur les tarifs",
+    "client_reviews": "Avis des clients",
+    "endorsements": "Recommandations professionnelles",
+    "ready_title": "Prêt à créer, connecter et collaborer ?",
+    "ready_subtitle": "Votre profil aidera d'autres créatifs et clients à découvrir votre travail exceptionnel !",
+    "next_steps_title": "Prochaines étapes",
+    "step_age_verification": "Vérification de l'âge et consentement à la confidentialité",
+    "step_gdpr": "Traitement des données conforme au RGPD",
+    "step_email_verification": "Vérification de l'email pour la sécurité",
+    "step_profile_activation": "Création et activation du profil",
+    "prev": "Précédent",
+    "create_profile": "Créer un profil"
   }
                 
               
@@ -6512,6 +7172,88 @@
       "personal_intro": "自己紹介は必須です",
       "exp_vision": "創造的ビジョンは必須です"
     }
+  },
+  "services_skills": {
+    "title": "サービスとスキル",
+    "subtitle": "どのようなサービスを提供し、どのようなスキルを持っていますか？",
+    "loading": "読み込み中...",
+    "category_prefix": "",
+    "category_other": "その他",
+    "prev": "前へ",
+    "next": "次へ",
+    "error_loading": "スキルを読み込めませんでした。後でもう一度お試しください。",
+
+    "errors": {
+      "select_one": "少なくとも1つのオプションを選択してください"
+    }
+  },
+  "portfolio_social": {
+    "title": "ポートフォリオとソーシャルプレゼンス",
+    "subtitle": "最高の作品をアップロードし、ソーシャルプロフィールを接続してください",
+    "note_required": "* 他の人があなたを発見し、つながるのを助けるために、プロフィール画像またはビデオが必要です",
+    "portfolio_label": "プロフィール画像/ビデオ",
+    "upload_cta": "クリックしてアップロードするか、ドラッグアンドドロップ",
+    "upload_hint": "画像およびビデオは最大50MB",
+    "remove_label": "アップロードされたファイルを削除",
+    "or": "または",
+    "url_label": "画像/ビデオのURLを入力",
+    "url_placeholder": "https://yourimage.com/photo.jpg またはビデオURL",
+    "website": "ウェブサイト",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "インスタグラム",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "リンクトイン",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "ビハンス",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "ドリブル",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "以下の必須フィールドを入力してください：",
+    "prev": "前へ",
+    "next": "次へ",
+    "errors": {
+      "file_size": "ファイルは50MB未満でなければなりません",
+      "invalid_url": "無効なURLまたはファイルを取得できません",
+      "portfolio_required": "プロフィール画像/ビデオが必要です",
+      "website_required": "ウェブサイトが必要です",
+      "instagram_required": "インスタグラムが必要です",
+      "linkedin_required": "リンクトインが必要です",
+      "behance_required": "ビハンスが必要です",
+      "dribbble_required": "ドリブルが必要です"
+    }
+  },
+  "rates_pricing": {
+    "title": "料金と価格",
+    "subtitle": "適切なクライアントを引き付けるために料金を設定してください",
+    "hourly_label": "時間料金",
+    "daily_label": "日次料金",
+    "project_label": "プロジェクト料金",
+    "placeholder": "0",
+    "currency_label": "通貨",
+    "negotiable_label": "料金は交渉可能です",
+    "prev": "前へ",
+    "next": "次へ",
+    "errors": {
+      "at_least_one": "少なくとも1つの料金を入力してください。"
+    }
+  },
+  "profile_settings": {
+    "title": "もうすぐ完成です！",
+    "subtitle": "プロフィールの設定とプライバシーをカスタマイズしてください",
+    "sections_title": "表示するプロフィールセクション",
+    "education": "教育とトレーニング",
+    "pricing": "価格情報",
+    "client_reviews": "クライアントのレビュー",
+    "endorsements": "専門的推薦",
+    "ready_title": "創作、接続、コラボレーションの準備はできていますか？",
+    "ready_subtitle": "あなたのプロフィールは、他のクリエイターやクライアントがあなたの素晴らしい作品を発見するのに役立ちます！",
+    "next_steps_title": "次のステップ",
+    "step_age_verification": "年齢認証とプライバシー同意",
+    "step_gdpr": "GDPRに準拠したデータ処理",
+    "step_email_verification": "セキュリティのためのメール認証",
+    "step_profile_activation": "プロフィールの作成と有効化",
+    "prev": "前へ",
+    "create_profile": "プロフィールを作成"
   }
                 
               
@@ -7230,7 +7972,89 @@
       "personal_intro": "المقدمة الشخصية مطلوبة",
       "exp_vision": "الرؤية الإبداعية مطلوبة"
     }
-  }
+  },
+  "services_skills": {
+    "title": "الخدمات والمهارات",
+    "subtitle": "ما الخدمات التي تقدمها وما هي مهاراتك؟",
+    "loading": "جارٍ التحميل...",
+    "category_prefix": "",
+    "category_other": "أخرى",
+    "prev": "السابق",
+    "next": "التالي",
+    "error_loading": "غير قادر على تحميل المهارات. يرجى المحاولة مرة أخرى لاحقًا.",
+
+    "errors": {
+      "select_one": "يرجى اختيار خيار واحد على الأقل"
+    }
+  },
+  "portfolio_social": {
+    "title": "المحفظة والتواجد الاجتماعي",
+    "subtitle": "قم برفع أفضل أعمالك وربط ملفاتك الاجتماعية",
+    "note_required": "* صورة أو فيديو شخصي مطلوب لمساعدة الآخرين على اكتشافك والتواصل معك",
+    "portfolio_label": "صورة/فيديو الملف الشخصي",
+    "upload_cta": "انقر للرفع أو اسحب وأسقط",
+    "upload_hint": "الصور والفيديوهات حتى 50 ميغابايت",
+    "remove_label": "إزالة الملف المرفوع",
+    "or": "أو",
+    "url_label": "أدخل رابط الصورة/الفيديو",
+    "url_placeholder": "https://yourimage.com/photo.jpg أو رابط الفيديو",
+    "website": "موقع الويب",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "إنستغرام",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "لينكدإن",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "بيهانس",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "دريبل",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "يرجى إكمال الحقول المطلوبة التالية:",
+    "prev": "السابق",
+    "next": "التالي",
+    "errors": {
+      "file_size": "يجب أن يكون الملف أقل من 50 ميغابايت",
+      "invalid_url": "رابط غير صالح أو غير قادر على جلب الملف",
+      "portfolio_required": "صورة/فيديو الملف الشخصي مطلوب",
+      "website_required": "موقع الويب مطلوب",
+      "instagram_required": "إنستغرام مطلوب",
+      "linkedin_required": "لينكدإن مطلوب",
+      "behance_required": "بيهانس مطلوب",
+      "dribbble_required": "دريبل مطلوب"
+    }
+  },
+  "rates_pricing": {
+    "title": "الأسعار والتسعير",
+    "subtitle": "حدد أسعارك لجذب العملاء المناسبين",
+    "hourly_label": "السعر بالساعة",
+    "daily_label": "السعر اليومي",
+    "project_label": "سعر المشروع",
+    "placeholder": "0",
+    "currency_label": "العملة",
+    "negotiable_label": "الأسعار قابلة للتفاوض",
+    "prev": "السابق",
+    "next": "التالي",
+    "errors": {
+      "at_least_one": "يرجى إدخال سعر واحد على الأقل."
+    }
+  },
+  "profile_settings": {
+    "title": "على وشك الانتهاء!",
+    "subtitle": "خصص إعدادات ملفك الشخصي والخصوصية",
+    "sections_title": "أقسام الملف الشخصي للعرض",
+    "education": "التعليم والتدريب",
+    "pricing": "معلومات التسعير",
+    "client_reviews": "تقييمات العملاء",
+    "endorsements": "التأييدات المهنية",
+    "ready_title": "هل أنت جاهز للإبداع والتواصل والتعاون؟",
+    "ready_subtitle": "سوف يساعد ملفك الشخصي المبدعين والعملاء الآخرين على اكتشاف عملك المذهل!",
+    "next_steps_title": "الخطوات التالية",
+    "step_age_verification": "التحقق من العمر وموافقة الخصوصية",
+    "step_gdpr": "معالجة البيانات المتوافقة مع GDPR",
+    "step_email_verification": "التحقق من البريد الإلكتروني للأمان",
+    "step_profile_activation": "إنشاء وتفعيل الملف الشخصي",
+    "prev": "السابق",
+    "create_profile": "إنشاء الملف الشخصي"
+  } 
                 
                     
     },
@@ -7949,6 +8773,88 @@
       "personal_intro": "Persönliche Vorstellung ist erforderlich",
       "exp_vision": "Kreative Vision ist erforderlich"
     }
+  },
+  "services_skills": {
+    "title": "Dienstleistungen und Fähigkeiten",
+    "subtitle": "Welche Dienstleistungen bieten Sie an und welche Fähigkeiten haben Sie?",
+    "loading": "Laden...",
+    "category_prefix": "",
+    "category_other": "Andere",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "error_loading": "Fähigkeiten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+
+    "errors": {
+      "select_one": "Bitte wählen Sie mindestens eine Option aus"
+    }
+  },
+  "portfolio_social": {
+    "title": "Portfolio und Soziale Präsenz",
+    "subtitle": "Laden Sie Ihre besten Arbeiten hoch und verbinden Sie Ihre sozialen Profile",
+    "note_required": "* Ein Profilbild oder -video ist erforderlich, um anderen zu helfen, Sie zu entdecken und sich mit Ihnen zu vernetzen",
+    "portfolio_label": "Profilbild/Video",
+    "upload_cta": "Klicken Sie zum Hochladen oder Drag-and-Drop",
+    "upload_hint": "Bilder und Videos bis zu 50 MB",
+    "remove_label": "Hochgeladene Datei entfernen",
+    "or": "ODER",
+    "url_label": "Geben Sie die Bild/Video-URL ein",
+    "url_placeholder": "https://yourimage.com/photo.jpg oder Video-URL",
+    "website": "Website",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "Instagram",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "LinkedIn",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "Behance",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "Dribbble",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "Bitte füllen Sie die folgenden erforderlichen Felder aus:",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "errors": {
+      "file_size": "Die Datei muss unter 50 MB sein",
+      "invalid_url": "Ungültige URL oder die Datei konnte nicht abgerufen werden",
+      "portfolio_required": "Ein Profilbild/Video ist erforderlich",
+      "website_required": "Website ist erforderlich",
+      "instagram_required": "Instagram ist erforderlich",
+      "linkedin_required": "LinkedIn ist erforderlich",
+      "behance_required": "Behance ist erforderlich",
+      "dribbble_required": "Dribbble ist erforderlich"
+    }
+  },
+  "rates_pricing": {
+    "title": "Preise und Tarife",
+    "subtitle": "Legen Sie Ihre Tarife fest, um die richtigen Kunden anzuziehen",
+    "hourly_label": "Stundensatz",
+    "daily_label": "Tageshonorar",
+    "project_label": "Projektsatz",
+    "placeholder": "0",
+    "currency_label": "Währung",
+    "negotiable_label": "Die Tarife sind verhandelbar",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "errors": {
+      "at_least_one": "Bitte geben Sie mindestens einen Tarif ein."
+    }
+  },
+  "profile_settings": {
+    "title": "Fast geschafft!",
+    "subtitle": "Passen Sie Ihre Profileinstellungen und Datenschutz an",
+    "sections_title": "Anzuzeigende Profilabschnitte",
+    "education": "Ausbildung und Schulung",
+    "pricing": "Preisinformationen",
+    "client_reviews": "Kundenbewertungen",
+    "endorsements": "Professionelle Empfehlungen",
+    "ready_title": "Bereit zum Kreieren, Vernetzen und Zusammenarbeiten?",
+    "ready_subtitle": "Ihr Profil hilft anderen Kreativen und Kunden, Ihre großartige Arbeit zu entdecken!",
+    "next_steps_title": "Nächste Schritte",
+    "step_age_verification": "Altersüberprüfung und Einwilligung zum Datenschutz",
+    "step_gdpr": "Datenschutzkonforme Datenverarbeitung",
+    "step_email_verification": "E-Mail-Verifizierung für Sicherheit",
+    "step_profile_activation": "Erstellung und Aktivierung des Profils",
+    "prev": "Zurück",
+    "create_profile": "Profil erstellen"
   }
                 
     },
@@ -8666,6 +9572,88 @@
       "personal_intro": "L'Introduzione Personale è obbligatoria",
       "exp_vision": "La Visione Creativa è obbligatoria"
     }
+  },
+  "services_skills": {
+    "title": "Servizi e Competenze",
+    "subtitle": "Quali servizi offri e quali sono le tue competenze?",
+    "loading": "Caricamento...",
+    "category_prefix": "",
+    "category_other": "Altro",
+    "prev": "Precedente",
+    "next": "Avanti",
+    "error_loading": "Impossibile caricare le competenze. Riprova più tardi.",
+
+    "errors": {
+      "select_one": "Per favore, seleziona almeno un'opzione"
+    }
+  },
+  "portfolio_social": {
+    "title": "Portfolio e Presenza sui Social",
+    "subtitle": "Carica i tuoi migliori lavori e collega i tuoi profili social",
+    "note_required": "* È richiesta un'immagine o un video del profilo per aiutare gli altri a scoprirti e connettersi con te",
+    "portfolio_label": "Immagine/Video del Profilo",
+    "upload_cta": "Clicca per caricare o trascina e rilascia",
+    "upload_hint": "Immagini e video fino a 50 MB",
+    "remove_label": "Rimuovi il file caricato",
+    "or": "O",
+    "url_label": "Inserisci l'URL dell'Immagine/Video",
+    "url_placeholder": "https://yourimage.com/photo.jpg o URL del video",
+    "website": "Sito Web",
+    "website_placeholder": "https://yourwebsite.com",
+    "instagram": "Instagram",
+    "instagram_placeholder": "@yourusername",
+    "linkedin": "LinkedIn",
+    "linkedin_placeholder": "linkedin.com/in/yourprofile",
+    "behance": "Behance",
+    "behance_placeholder": "behance.net/yourprofile",
+    "dribbble": "Dribbble",
+    "dribbble_placeholder": "dribbble.com/yourprofile",
+    "error_summary_title": "Per favore, completa i seguenti campi obbligatori:",
+    "prev": "Precedente",
+    "next": "Avanti",
+    "errors": {
+      "file_size": "Il file deve essere inferiore a 50 MB",
+      "invalid_url": "URL non valido o impossibile recuperare il file",
+      "portfolio_required": "L'Immagine/Video del Profilo è obbligatoria",
+      "website_required": "Il Sito Web è obbligatorio",
+      "instagram_required": "Instagram è obbligatorio",
+      "linkedin_required": "LinkedIn è obbligatorio",
+      "behance_required": "Behance è obbligatorio",
+      "dribbble_required": "Dribbble è obbligatorio"
+    }
+  },
+  "rates_pricing": {
+    "title": "Tariffe e Prezzi",
+    "subtitle": "Imposta le tue tariffe per attirare i clienti giusti",
+    "hourly_label": "Tariffa Oraria",
+    "daily_label": "Tariffa Giornaliera",
+    "project_label": "Tariffa per Progetto",
+    "placeholder": "0",
+    "currency_label": "Valuta",
+    "negotiable_label": "Le tariffe sono negoziabili",
+    "prev": "Precedente",
+    "next": "Avanti",
+    "errors": {
+      "at_least_one": "Per favore, inserisci almeno una tariffa."
+    }
+  },
+  "profile_settings": {
+    "title": "Ci siamo quasi!",
+    "subtitle": "Personalizza le impostazioni e la privacy del tuo profilo",
+    "sections_title": "Sezioni del Profilo da Visualizzare",
+    "education": "Istruzione e Formazione",
+    "pricing": "Informazioni sui Prezzi",
+    "client_reviews": "Recensioni dei Clienti",
+    "endorsements": "Riconoscimenti Professionali",
+    "ready_title": "Pronto a Creare, Connetterti e Collaborare?",
+    "ready_subtitle": "Il tuo profilo aiuterà altri creativi e clienti a scoprire il tuo lavoro straordinario!",
+    "next_steps_title": "Prossimi Passi",
+    "step_age_verification": "Verifica dell'età e consenso alla privacy",
+    "step_gdpr": "Elaborazione dei dati conforme al GDPR",
+    "step_email_verification": "Verifica dell'email per la sicurezza",
+    "step_profile_activation": "Creazione e attivazione del profilo",
+    "prev": "Precedente",
+    "create_profile": "Crea Profilo"
   }
             
           
