@@ -840,7 +840,38 @@
   "success": "Age verified successfully!",
   "cancel": "Cancel",
   "verify": "Verify Age"
+},
+"login": {
+  "welcome_back": "Welcome Back",
+  "subtitle": "Sign in to your ArtCee account",
+  "email_label": "Email",
+  "email_placeholder": "Enter your email",
+  "password_label": "Password",
+  "password_placeholder": "Enter your password",
+  "remember_me": "Remember me",
+  "forgot_password": "Forgot password?",
+  "sign_in": "Sign In",
+  "signing_in": "Signing in...",
+  "or_continue": "OR CONTINUE WITH",
+  "sign_in_google": "Sign in with Google",
+  "no_account": "Don’t have an account?",
+  "sign_up": "Sign up",
+  "success": "Login successful 🎉",
+  "error": "Login failed",
+  "google_success": "Signed in with Google 🎉",
+  "google_error": "Google sign-in failed",
+  "google_no_token": "No credential returned from Google"
+},
+"register": {
+  "back": "Back",
+  "skip_for_now": "Skip for now",
+  "registration_success": "Registration successful!",
+  "registration_failed": "Registration failed!",
+  "geocode_failed": "Could not determine your location (reverse geocoding failed).",
+  "geolocation_failed": "Could not access your location. Please enable location permissions or fill location manually."
 }
+
+
 
 
 
@@ -1681,6 +1712,35 @@
     "success": "¡Edad verificada con éxito!",
     "cancel": "Cancelar",
     "verify": "Verificar Edad"
+  },
+  "login": {
+    "welcome_back": "Bienvenido de nuevo",
+    "subtitle": "Inicia sesión en tu cuenta de ArtCee",
+    "email_label": "Correo electrónico",
+    "email_placeholder": "Ingresa tu correo electrónico",
+    "password_label": "Contraseña",
+    "password_placeholder": "Ingresa tu contraseña",
+    "remember_me": "Recuérdame",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "sign_in": "Iniciar sesión",
+    "signing_in": "Iniciando sesión...",
+    "or_continue": "O CONTINÚA CON",
+    "sign_in_google": "Iniciar sesión con Google",
+    "no_account": "¿No tienes una cuenta?",
+    "sign_up": "Regístrate",
+    "success": "Inicio de sesión exitoso 🎉",
+    "error": "Error en el inicio de sesión",
+    "google_success": "Sesión iniciada con Google 🎉",
+    "google_error": "Error en el inicio de sesión con Google",
+    "google_no_token": "No se devolvió ninguna credencial de Google"
+  },
+  "register": {
+    "back": "Volver",
+    "skip_for_now": "Omitir por ahora",
+    "registration_success": "¡Registro exitoso!",
+    "registration_failed": "¡Registro fallido!",
+    "geocode_failed": "No se pudo determinar tu ubicación (geocodificación inversa fallida).",
+    "geolocation_failed": "No se pudo acceder a tu ubicación. Por favor, habilita los permisos de ubicación o completa la ubicación manualmente."
   }
               
     },
@@ -2514,6 +2574,35 @@
     "success": "Idade verificada com sucesso!",
     "cancel": "Cancelar",
     "verify": "Verificar Idade"
+  },
+  "login": {
+    "welcome_back": "Bem-vindo de volta",
+    "subtitle": "Faça login na sua conta ArtCee",
+    "email_label": "E-mail",
+    "email_placeholder": "Digite seu e-mail",
+    "password_label": "Senha",
+    "password_placeholder": "Digite sua senha",
+    "remember_me": "Lembrar-me",
+    "forgot_password": "Esqueceu sua senha?",
+    "sign_in": "Entrar",
+    "signing_in": "Entrando...",
+    "or_continue": "OU CONTINUE COM",
+    "sign_in_google": "Entrar com Google",
+    "no_account": "Não tem uma conta?",
+    "sign_up": "Cadastre-se",
+    "success": "Login bem-sucedido 🎉",
+    "error": "Falha no login",
+    "google_success": "Conectado com Google 🎉",
+    "google_error": "Falha no login com Google",
+    "google_no_token": "Nenhuma credencial retornada pelo Google"
+  },
+  "register": {
+    "back": "Voltar",
+    "skip_for_now": "Pular por agora",
+    "registration_success": "Registro bem-sucedido!",
+    "registration_failed": "Registro falhou!",
+    "geocode_failed": "Não foi possível determinar sua localização (geocodificação reversa falhou).",
+    "geolocation_failed": "Não foi possível acessar sua localização. Por favor, habilite as permissões de localização ou preencha a localização manualmente."
   }
                 
     },
@@ -3376,6 +3465,35 @@
     "success": "आयु सत्यापन सफलतापूर्वक पूरा हुआ!",
     "cancel": "रद्द करें",
     "verify": "आयु सत्यापित करें"
+  },
+  "login": {
+    "welcome_back": "वापस स्वागत है",
+    "subtitle": "अपने ArtCee खाते में साइन इन करें",
+    "email_label": "ईमेल",
+    "email_placeholder": "अपना ईमेल दर्ज करें",
+    "password_label": "पासवर्ड",
+    "password_placeholder": "अपना पासवर्ड दर्ज करें",
+    "remember_me": "मुझे याद रखें",
+    "forgot_password": "पासवर्ड भूल गए?",
+    "sign_in": "साइन इन करें",
+    "signing_in": "साइन इन हो रहा है...",
+    "or_continue": "या इसके साथ जारी रखें",
+    "sign_in_google": "Google के साथ साइन इन करें",
+    "no_account": "खाता नहीं है?",
+    "sign_up": "साइन अप करें",
+    "success": "लॉगिन सफल 🎉",
+    "error": "लॉगिन विफल",
+    "google_success": "Google के साथ साइन इन सफल 🎉",
+    "google_error": "Google साइन इन विफल",
+    "google_no_token": "Google से कोई क्रेडेंशियल वापस नहीं आया"
+  },
+  "register": {
+    "back": "वापस",
+    "skip_for_now": "अभी के लिए छोड़ें",
+    "registration_success": "पंजीकरण सफल!",
+    "registration_failed": "पंजीकरण विफल!",
+    "geocode_failed": "आपका स्थान निर्धारित नहीं किया जा सका (रिवर्स जियोकॉडिंग विफल)।",
+    "geolocation_failed": "आपके स्थान तक पहुंच नहीं हो सकी। कृपया स्थान अनुमतियाँ सक्षम करें या स्थान को मैन्युअल रूप से भरें।"
   }
     },
     "tl": {
@@ -4208,6 +4326,35 @@
     "success": "Matagumpay na na-verify ang edad!",
     "cancel": "Kanselahin",
     "verify": "I-verify ang Edad"
+  },
+  "login": {
+    "welcome_back": "Maligayang Pagbabalik",
+    "subtitle": "Mag-sign in sa iyong ArtCee account",
+    "email_label": "Email",
+    "email_placeholder": "Ipasok ang iyong email",
+    "password_label": "Password",
+    "password_placeholder": "Ipasok ang iyong password",
+    "remember_me": "Tandaan ako",
+    "forgot_password": "Nakalimutan ang password?",
+    "sign_in": "Mag-sign In",
+    "signing_in": "Nag-sign in...",
+    "or_continue": "O MAGPATULOY SA",
+    "sign_in_google": "Mag-sign in gamit ang Google",
+    "no_account": "Walang account?",
+    "sign_up": "Mag-sign up",
+    "success": "Tagumpay ang pag-login 🎉",
+    "error": "Nabigo ang pag-login",
+    "google_success": "Nag-sign in gamit ang Google 🎉",
+    "google_error": "Nabigo ang pag-sign in gamit ang Google",
+    "google_no_token": "Walang kredensyal na ibinalik mula sa Google"
+  },
+  "register": {
+    "back": "Bumalik",
+    "skip_for_now": "Laktawan muna",
+    "registration_success": "Tagumpay ang pagpaparehistro!",
+    "registration_failed": "Nabigo ang pagpaparehistro!",
+    "geocode_failed": "Hindi matukoy ang iyong lokasyon (nabigo ang reverse geocoding).",
+    "geolocation_failed": "Hindi ma-access ang iyong lokasyon. Mangyaring paganahin ang mga pahintulot sa lokasyon o punan ang lokasyon nang manu-mano."
   }
                 
                    
@@ -5043,6 +5190,35 @@
     "success": "연령 인증이 성공적으로 완료되었습니다!",
     "cancel": "취소",
     "verify": "연령 인증"
+  },
+  "login": {
+    "welcome_back": "다시 오신 것을 환영합니다",
+    "subtitle": "ArtCee 계정에 로그인하세요",
+    "email_label": "이메일",
+    "email_placeholder": "이메일을 입력하세요",
+    "password_label": "비밀번호",
+    "password_placeholder": "비밀번호를 입력하세요",
+    "remember_me": "나를 기억하세요",
+    "forgot_password": "비밀번호를 잊으셨나요?",
+    "sign_in": "로그인",
+    "signing_in": "로그인 중...",
+    "or_continue": "또는 다음으로 계속",
+    "sign_in_google": "Google로 로그인",
+    "no_account": "계정이 없으신가요?",
+    "sign_up": "가입하기",
+    "success": "로그인 성공 🎉",
+    "error": "로그인 실패",
+    "google_success": "Google로 로그인 성공 🎉",
+    "google_error": "Google 로그인 실패",
+    "google_no_token": "Google에서 자격 증명이 반환되지 않았습니다"
+  },
+  "register": {
+    "back": "뒤로",
+    "skip_for_now": "지금은 건너뛰기",
+    "registration_success": "등록 성공!",
+    "registration_failed": "등록 실패!",
+    "geocode_failed": "위치를 확인할 수 없습니다 (역지오코딩 실패).",
+    "geolocation_failed": "위치에 접근할 수 없습니다. 위치 권한을 활성화하거나 위치를 수동으로 입력해 주세요."
   }
             
     },
@@ -5875,6 +6051,35 @@
     "success": "年龄验证成功！",
     "cancel": "取消",
     "verify": "验证年龄"
+  },
+  "login": {
+    "welcome_back": "欢迎回来",
+    "subtitle": "登录你的 ArtCee 账户",
+    "email_label": "电子邮件",
+    "email_placeholder": "输入你的电子邮件",
+    "password_label": "密码",
+    "password_placeholder": "输入你的密码",
+    "remember_me": "记住我",
+    "forgot_password": "忘记密码？",
+    "sign_in": "登录",
+    "signing_in": "正在登录...",
+    "or_continue": "或继续使用",
+    "sign_in_google": "使用 Google 登录",
+    "no_account": "没有账户？",
+    "sign_up": "注册",
+    "success": "登录成功 🎉",
+    "error": "登录失败",
+    "google_success": "使用 Google 登录成功 🎉",
+    "google_error": "Google 登录失败",
+    "google_no_token": "Google 未返回任何凭据"
+  },
+  "register": {
+    "back": "返回",
+    "skip_for_now": "暂时跳过",
+    "registration_success": "注册成功！",
+    "registration_failed": "注册失败！",
+    "geocode_failed": "无法确定你的位置（反向地理编码失败）。",
+    "geolocation_failed": "无法访问你的位置。请启用位置权限或手动填写位置。"
   }
                 
               
@@ -6709,6 +6914,35 @@
     "success": "Âge vérifié avec succès !",
     "cancel": "Annuler",
     "verify": "Vérifier l'âge"
+  },
+  "login": {
+    "welcome_back": "Bon retour",
+    "subtitle": "Connectez-vous à votre compte ArtCee",
+    "email_label": "Email",
+    "email_placeholder": "Entrez votre email",
+    "password_label": "Mot de passe",
+    "password_placeholder": "Entrez votre mot de passe",
+    "remember_me": "Se souvenir de moi",
+    "forgot_password": "Mot de passe oublié ?",
+    "sign_in": "Se connecter",
+    "signing_in": "Connexion en cours...",
+    "or_continue": "OU CONTINUER AVEC",
+    "sign_in_google": "Se connecter avec Google",
+    "no_account": "Vous n'avez pas de compte ?",
+    "sign_up": "S'inscrire",
+    "success": "Connexion réussie 🎉",
+    "error": "Échec de la connexion",
+    "google_success": "Connexion avec Google réussie 🎉",
+    "google_error": "Échec de la connexion avec Google",
+    "google_no_token": "Aucune information d'identification retournée par Google"
+  },
+  "register": {
+    "back": "Retour",
+    "skip_for_now": "Passer pour l'instant",
+    "registration_success": "Inscription réussie !",
+    "registration_failed": "Inscription échouée !",
+    "geocode_failed": "Impossible de déterminer votre emplacement (géocodage inverse échoué).",
+    "geolocation_failed": "Impossible d'accéder à votre emplacement. Veuillez activer les autorisations de localisation ou remplir l'emplacement manuellement."
   }
                 
               
@@ -7543,6 +7777,35 @@
     "success": "年齢認証が成功しました！",
     "cancel": "キャンセル",
     "verify": "年齢を認証"
+  },
+  "login": {
+    "welcome_back": "おかえりなさい",
+    "subtitle": "ArtCeeアカウントにサインインしてください",
+    "email_label": "メール",
+    "email_placeholder": "メールアドレスを入力してください",
+    "password_label": "パスワード",
+    "password_placeholder": "パスワードを入力してください",
+    "remember_me": "ログイン情報を記憶",
+    "forgot_password": "パスワードを忘れましたか？",
+    "sign_in": "サインイン",
+    "signing_in": "サインイン中...",
+    "or_continue": "または以下で続行",
+    "sign_in_google": "Googleでサインイン",
+    "no_account": "アカウントをお持ちではありませんか？",
+    "sign_up": "サインアップ",
+    "success": "ログイン成功 🎉",
+    "error": "ログイン失敗",
+    "google_success": "Googleでサインイン成功 🎉",
+    "google_error": "Googleでのサインイン失敗",
+    "google_no_token": "Googleから認証情報が返されませんでした"
+  },
+  "register": {
+    "back": "戻る",
+    "skip_for_now": "今はスキップ",
+    "registration_success": "登録成功！",
+    "registration_failed": "登録失敗！",
+    "geocode_failed": "位置を特定できませんでした（リバースジオコーディング失敗）。",
+    "geolocation_failed": "位置情報にアクセスできませんでした。位置情報の許可を有効にするか、位置を手動で入力してください。"
   }
                 
               
@@ -8375,6 +8638,35 @@
     "success": "تم التحقق من العمر بنجاح!",
     "cancel": "إلغاء",
     "verify": "التحقق من العمر"
+  },
+  "login": {
+    "welcome_back": "مرحبًا بعودتك",
+    "subtitle": "تسجيل الدخول إلى حساب ArtCee الخاص بك",
+    "email_label": "البريد الإلكتروني",
+    "email_placeholder": "أدخل بريدك الإلكتروني",
+    "password_label": "كلمة المرور",
+    "password_placeholder": "أدخل كلمة المرور الخاصة بك",
+    "remember_me": "تذكرني",
+    "forgot_password": "هل نسيت كلمة المرور؟",
+    "sign_in": "تسجيل الدخول",
+    "signing_in": "جارٍ تسجيل الدخول...",
+    "or_continue": "أو تابع باستخدام",
+    "sign_in_google": "تسجيل الدخول باستخدام Google",
+    "no_account": "ليس لديك حساب؟",
+    "sign_up": "اشترك",
+    "success": "تسجيل الدخول ناجح 🎉",
+    "error": "فشل تسجيل الدخول",
+    "google_success": "تم تسجيل الدخول باستخدام Google 🎉",
+    "google_error": "فشل تسجيل الدخول باستخدام Google",
+    "google_no_token": "لم يتم إرجاع أي بيانات اعتماد من Google"
+  },
+  "register": {
+    "back": "رجوع",
+    "skip_for_now": "تخطَ في الوقت الحالي",
+    "registration_success": "التسجيل ناجح!",
+    "registration_failed": "فشل التسجيل!",
+    "geocode_failed": "تعذر تحديد موقعك (فشل الترميز الجغرافي العكسي).",
+    "geolocation_failed": "تعذر الوصول إلى موقعك. يرجى تمكين أذونات الموقع أو ملء الموقع يدويًا."
   }
                 
                     
@@ -9208,6 +9500,35 @@
     "success": "Alter erfolgreich verifiziert!",
     "cancel": "Abbrechen",
     "verify": "Alter verifizieren"
+  },
+  "login": {
+    "welcome_back": "Willkommen zurück",
+    "subtitle": "Melden Sie sich bei Ihrem ArtCee-Konto an",
+    "email_label": "E-Mail",
+    "email_placeholder": "Geben Sie Ihre E-Mail ein",
+    "password_label": "Passwort",
+    "password_placeholder": "Geben Sie Ihr Passwort ein",
+    "remember_me": "Angemeldet bleiben",
+    "forgot_password": "Passwort vergessen?",
+    "sign_in": "Anmelden",
+    "signing_in": "Anmeldung läuft...",
+    "or_continue": "ODER WEITER MIT",
+    "sign_in_google": "Mit Google anmelden",
+    "no_account": "Haben Sie kein Konto?",
+    "sign_up": "Registrieren",
+    "success": "Anmeldung erfolgreich 🎉",
+    "error": "Anmeldung fehlgeschlagen",
+    "google_success": "Mit Google erfolgreich angemeldet 🎉",
+    "google_error": "Anmeldung mit Google fehlgeschlagen",
+    "google_no_token": "Keine Anmeldeinformationen von Google zurückgegeben"
+  },
+  "register": {
+    "back": "Zurück",
+    "skip_for_now": "Vorerst überspringen",
+    "registration_success": "Registrierung erfolgreich!",
+    "registration_failed": "Registrierung fehlgeschlagen!",
+    "geocode_failed": "Ihr Standort konnte nicht bestimmt werden (Reverse-Geocoding fehlgeschlagen).",
+    "geolocation_failed": "Auf Ihren Standort konnte nicht zugegriffen werden. Bitte aktivieren Sie die Standortberechtigungen oder geben Sie den Standort manuell ein."
   }
                 
     },
@@ -10039,6 +10360,35 @@
     "success": "Età verificata con successo!",
     "cancel": "Annulla",
     "verify": "Verifica età"
+  },
+  "login": {
+    "welcome_back": "Bentornato",
+    "subtitle": "Accedi al tuo account ArtCee",
+    "email_label": "Email",
+    "email_placeholder": "Inserisci la tua email",
+    "password_label": "Password",
+    "password_placeholder": "Inserisci la tua password",
+    "remember_me": "Ricordami",
+    "forgot_password": "Password dimenticata?",
+    "sign_in": "Accedi",
+    "signing_in": "Accesso in corso...",
+    "or_continue": "O CONTINUA CON",
+    "sign_in_google": "Accedi con Google",
+    "no_account": "Non hai un account?",
+    "sign_up": "Registrati",
+    "success": "Accesso riuscito 🎉",
+    "error": "Accesso fallito",
+    "google_success": "Accesso con Google riuscito 🎉",
+    "google_error": "Accesso con Google fallito",
+    "google_no_token": "Nessuna credenziale restituita da Google"
+  },
+  "register": {
+    "back": "Indietro",
+    "skip_for_now": "Salta per ora",
+    "registration_success": "Registrazione riuscita!",
+    "registration_failed": "Registrazione fallita!",
+    "geocode_failed": "Impossibile determinare la tua posizione (geocodifica inversa fallita).",
+    "geolocation_failed": "Impossibile accedere alla tua posizione. Abilita i permessi di localizzazione o inserisci la posizione manualmente."
   }
             
           
