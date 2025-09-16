@@ -1,6 +1,37 @@
 import service from "../Helper/Axios";
 import Cookies from 'js-cookie';
 
+// export function login(formData) {
+//   return service
+//     .post(`auth/login`, formData)
+//     .then((res) => {
+//       const root = res.data ?? {};
+//       const payload = root.data ?? root;
+
+//       const token = payload?.token;
+//       if (token) {
+//         Cookies.set("token", token, {
+//           expires: 365,
+//           secure: true,
+//           sameSite: "Strict",
+//         });
+//       }
+
+//       return res.data;
+//     })
+//     .catch((error) => {
+//       let errorMessage = "Failed to login";
+//       if (error.response?.data?.errors) {
+//         const errors = Object.values(error.response.data.errors).flat();
+//         errorMessage = errors.length > 0 ? errors[0] : errorMessage;
+//       } else if (error.response?.data?.message) {
+//         errorMessage = error.response.data.message;
+//       }
+//       throw new Error(errorMessage);
+//     });
+// }
+
+
 export function login(formData) {
   return service
     .post(`auth/login`, formData)
@@ -15,6 +46,14 @@ export function login(formData) {
           secure: true,
           sameSite: "Strict",
         });
+
+        // 🔔 Notify the app that user logged in
+        window.dispatchEvent(new Event("authChanged"));
+        try {
+          localStorage.setItem("authEvent", Date.now().toString());
+        } catch (e) {
+          console.warn("Could not write auth event to localStorage", e);
+        }
       }
 
       return res.data;
