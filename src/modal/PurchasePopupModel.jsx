@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTimes, FaCrown, FaLock } from "react-icons/fa";
 import SuccessPopupModel from "./SuccessPopupModel";
 import { getPlanShow } from "../Hooks/useSeller";
@@ -147,7 +147,6 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country }) => {
     }
   }, [isOpen]);
 
-  // fetch plan details when modal opens & planId provided
   useEffect(() => {
     if (!isOpen || !planId) return;
 
@@ -156,7 +155,6 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country }) => {
       setLoadingPlanDetails(true);
       setPlanDetailsError(null);
       try {
-        // getPlanShow can accept (id, params)
         const res = await getPlanShow(planId, { location: country });
         let payload = res;
         if (res?.data && res.data?.data) payload = res.data.data;
@@ -180,7 +178,6 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country }) => {
 
   if (!isOpen) return null;
 
-  // basic validation before letting the user open the CardElement payment
   const validate = () => {
     let newErrors = {};
     if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = "Valid email required";
@@ -211,7 +208,7 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country }) => {
     setSubmitError(errMsg || "Payment failed");
   };
 
-  const prefill = useMemo(() => ({ name: form.name, email: form.email, address: form.address, city: form.city, state: form.state, zip: form.zip }), [form]);
+  const prefill = form;
 
   return (
     <Elements stripe={stripePromise}>
@@ -234,15 +231,14 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country }) => {
 
               <div className="flex justify-between items-end border-b pb-3 mb-3">
                 <div>
-                  <p className="text-3xl font-bold">{planDetails?.pricing?.[0]?.price || planDetails?.price || "$47"}</p>
-                  <p className="text-sm text-orange-500">{planDetails?.description}</p>
+                  <p className="text-3xl font-bold">{planDetails?.pricing?.price || planDetails?.price || "$47"}</p>
                 </div>
                 <p className="text-xs text-gray-500 text-right">Limited time – only {planDetails?.remaining || "152"} spots remaining!</p>
               </div>
 
               {planDetailsError && <p className="text-xs text-red-500 mb-2">{planDetailsError}</p>}
               {planDetails?.features && (
-                <ul className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
+                <ul className="grid grid-cols-2 gap-y-2 text-xs text-gray-700">
                   {planDetails.features.map((f) => <li key={f.id}>✅ {f.name}</li>)}
                 </ul>
               )}

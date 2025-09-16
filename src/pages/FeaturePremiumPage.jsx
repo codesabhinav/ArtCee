@@ -249,7 +249,7 @@ const FeaturePremiumPage = () => {
 
         {/* Pricing Section: dynamic plan cards based on fetched plans */}
         <div className="flex justify-center">
-          <div className="grid md:grid-cols-2 gap-10 m-10 max-w-6xl justify-items-center">
+          <div className="grid md:grid-cols-2 gap-10 m-10 max-w-6xl justify-items-center ">
             {/* If permission denied, show message */}
             {permissionDenied ? (
               <div className="col-span-2 p-6 text-center border rounded-lg">

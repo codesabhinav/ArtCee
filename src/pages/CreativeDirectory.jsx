@@ -1,4 +1,3 @@
-// CreativeDirectory.jsx
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -35,6 +34,10 @@ const CreativeDirectory = () => {
   const [selectedFilters, setSelectedFilters] = useState({});
   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
 
+  // NEW: budget and industries states
+  const [budgetRange, setBudgetRange] = useState({ min: 0, max: 10000 });
+  const [selectedIndustries, setSelectedIndustries] = useState([]);
+
   const sortOptions = [
     t("creative.sort_highest_rated"),
     t("creative.sort_price_low_high"),
@@ -58,6 +61,7 @@ const CreativeDirectory = () => {
     (async () => {
       try {
         const meta = await getCreativeFilters();
+        // meta here is the API "data" object containing industries, budged_range, etc.
         setFiltersMeta(meta || {});
 
         const cfg = [];
@@ -99,11 +103,20 @@ const CreativeDirectory = () => {
         cfg.forEach((f) => (defaults[f.label] = f.options[0]));
         setSelectedFilters(defaults);
         setDefaultSelectedFilters(defaults);
+
+        // NEW: initialize budgetRange and selectedIndustries from meta if available
+        if (meta.budged_range) {
+          setBudgetRange({
+            min: typeof meta.budged_range.min === "number" ? meta.budged_range.min : 0,
+            max: typeof meta.budged_range.max === "number" ? meta.budged_range.max : 10000,
+            sliderValue: typeof meta.budged_range.max === "number" ? meta.budged_range.max : 10000,
+          });
+        }
+        setSelectedIndustries([]); // default empty
       } catch (err) {
         console.error("Failed to load filters:", err);
       }
     })();
-    // we intentionally depend on t so labels update when language changes
   }, [t]);
 
   const buildApiParams = () => {
@@ -123,7 +136,18 @@ const CreativeDirectory = () => {
     if (sort && filterLabelToKeyMap["__order_by_map__"]) {
       const orderMap = filterLabelToKeyMap["__order_by_map__"];
       const mapped = orderMap[sort];
-      if (mapped) params.order_by = mapped;
+      if (mapped) params.order_by_rate = mapped;
+    }
+
+    // include budget range using exact keys the API expects
+    if (budgetRange && (budgetRange.min != null || budgetRange.max != null)) {
+      if (Number.isFinite(Number(budgetRange.min))) params["budged_range[min]"] = Number(budgetRange.min);
+      if (Number.isFinite(Number(budgetRange.max))) params["budged_range[max]"] = Number(budgetRange.max);
+    }
+
+
+    if (Array.isArray(selectedIndustries) && selectedIndustries.length > 0) {
+      params.industries = selectedIndustries;
     }
 
     return params;
@@ -144,11 +168,11 @@ const CreativeDirectory = () => {
       }
     };
 
-    if (filtersConfigDynamic.length > 0) {
+    if (filtersConfigDynamic.length > 0 || Object.keys(filtersMeta).length > 0) {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic]);
+  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, budgetRange, selectedIndustries, filtersMeta]);
 
   const clearFilter = (label) => {
     setSelectedFilters((prev) => ({
@@ -159,6 +183,15 @@ const CreativeDirectory = () => {
 
   const clearAllFilters = () => {
     setSelectedFilters(defaultSelectedFilters);
+    setSelectedIndustries([]);
+    if (filtersMeta?.budged_range) {
+      setBudgetRange({
+        min: typeof filtersMeta.budged_range.min === "number" ? filtersMeta.budged_range.min : 0,
+        max: typeof filtersMeta.budged_range.max === "number" ? filtersMeta.budged_range.max : 10000,
+      });
+    } else {
+      setBudgetRange({ min: 0, max: 10000 });
+    }
   };
 
   const getLocationText = (creative) => {
@@ -177,82 +210,71 @@ const CreativeDirectory = () => {
     return { label: t("creative.offline"), badge: "bg-gray-100 text-gray-700" };
   };
 
+  // Handlers for industries
+  const toggleIndustry = (id) => {
+    setSelectedIndustries((prev) => {
+      const s = new Set(prev.map(String));
+      if (s.has(String(id))) {
+        s.delete(String(id));
+      } else {
+        s.add(String(id));
+      }
+      return Array.from(s);
+    });
+  };
+
   const SidebarFilters = () => (
     <div className="w-full md:w-64 shrink-0 border rounded-lg p-4 bg-white shadow-sm">
       <h2 className="font-semibold mb-4">{t("creative.advanced_filters")}</h2>
 
       <div className="mb-4">
         <p className="font-medium text-sm">{t("creative.budget_range")}</p>
+
+        {/* OLD DESIGN: single range input (controls max). */}
         <input
           type="range"
           min={filtersMeta?.budged_range?.min ?? 0}
           max={filtersMeta?.budged_range?.max ?? 10000}
           className="w-full mt-3 accent-teal-500"
+          value={budgetRange.sliderValue ?? (budgetRange.max ?? (filtersMeta?.budged_range?.max ?? 10000))}
+          onChange={(e) => {
+            const val = Number(e.target.value);
+            setBudgetRange((b) => ({ ...b, sliderValue: val, max: val }));
+          }}
         />
+
+        <RangeSlider value={value} onInput={setValue} />
         <div className="flex justify-between text-xs text-gray-500 mt-1">
-          <span>${filtersMeta?.budged_range?.min ?? 0}</span>
-          <span>${filtersMeta?.budged_range?.max ?? 10000}+ </span>
+          {/* left always shows available API min */}
+          <span>${filtersMeta?.budged_range?.min ?? budgetRange.min ?? 0}</span>
+          {/* right shows the selected max value (slider) */}
+          <span>${(budgetRange.sliderValue ?? budgetRange.max ?? filtersMeta?.budged_range?.max ?? 10000)}+ </span>
         </div>
       </div>
 
-       <div className="mb-4">
+      <div className="mb-4">
         <p className="font-medium text-sm">{t("creative.industries")}</p>
         <div className="mt-2 space-y-2 text-xs">
           {filtersMeta?.industries
-            ? Object.values(filtersMeta.industries).map((ind, i) => (
-                <label key={i} className="flex items-center space-x-2">
-                  <input type="checkbox" className="accent-teal-500" />
-                  <span>{ind}</span>
-                </label>
-              ))
+            ? Object.entries(filtersMeta.industries).map(([id, label]) => (
+              <label key={id} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  className="accent-teal-500"
+                  checked={selectedIndustries.map(String).includes(String(id))}
+                  onChange={() => toggleIndustry(id)}
+                />
+                <span>{label}</span>
+              </label>
+            ))
             : ["Industries", "Services", "Skills"].map((ind, i) => (
-                <label key={i} className="flex items-center space-x-2">
-                  <input type="checkbox" className="accent-teal-500" />
-                  <span>{ind}</span>
-                </label>
-              ))}
+              <label key={i} className="flex items-center space-x-2">
+                <input type="checkbox" className="accent-teal-500" />
+                <span>{ind}</span>
+              </label>
+            ))}
         </div>
-      </div> 
-
-
-
-{/* <div className="mb-4">
-  <p className="font-medium text-sm">{t("creative.industries")}</p>
-  <div className="mt-2 space-y-2 text-xs">
-    {/*
-      1) defaultIndustries: fallback from translations JSON (prefer array via returnObjects)
-      2) If filtersMeta.industries present, we try to localize each API label via translation mapping (`creative.industry_map`)
-         - if no mapping exists, show the original API label (defaultValue)
-    */}
-    {/* {filtersMeta?.industries ? (
-      Object.values(filtersMeta.industries).map((ind, i) => {
-        // try to translate API-provided label using map in JSON: creative.industry_map[apiLabel]
-        const localized = t(`creative.industry_map.${ind}`, { defaultValue: ind });
-        return (
-          <label key={i} className="flex items-center space-x-2">
-            <input type="checkbox" className="accent-teal-500" />
-            <span>{localized}</span>
-          </label>
-        );
-      })
-    ) : (
-      (() => { */}
-        {/* // read an array from translations. If your t() supports returnObjects, pass that.
-        const arr = t("creative.default_industries", { returnObjects: true });
-        const defaultIndustries = Array.isArray(arr)
-          ? arr
-          : (typeof arr === "string" ? arr.split(",").map(s => s.trim()) : ["Industries", "Services", "Skills"]);
-        return defaultIndustries.map((ind, i) => (
-          <label key={i} className="flex items-center space-x-2">
-            <input type="checkbox" className="accent-teal-500" />
-            <span>{ind}</span>
-          </label>
-        ));
-      })()
-    )}
-  </div>
-</div> */}
-
+      </div>
 
       {filtersConfigDynamic.map((filter, idx) => (
         <div key={idx} className="mb-3">
@@ -269,7 +291,11 @@ const CreativeDirectory = () => {
 
   const ActiveFilterChips = () => {
     const active = Object.entries(selectedFilters).filter(([label, val]) => val && !val.startsWith(t("creative.all")));
-    if (active.length === 0) return null;
+    const industryLabels = (filtersMeta?.industries && selectedIndustries.length > 0)
+      ? selectedIndustries.map((id) => filtersMeta.industries[id] || id)
+      : [];
+
+    if (active.length === 0 && industryLabels.length === 0 && (budgetRange.min == null && budgetRange.max == null)) return null;
 
     return (
       <div className="flex flex-wrap gap-2 items-center">
@@ -279,6 +305,19 @@ const CreativeDirectory = () => {
             <button onClick={() => clearFilter(label)} className="ml-2 text-gray-600">✕</button>
           </div>
         ))}
+
+        {industryLabels.map((lab) => (
+          <div key={lab} className="flex items-center bg-gray-100 px-3 py-2 rounded-md text-xs">
+            <span>{t("creative.industries")}: <strong className="ml-1">{lab}</strong></span>
+          </div>
+        ))}
+
+        {(budgetRange.min !== undefined || budgetRange.max !== undefined) && (
+          <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md text-xs">
+            <span>{t("creative.budget_range")}: <strong className="ml-1">${budgetRange.min} - ${budgetRange.max}</strong></span>
+          </div>
+        )}
+
         <button onClick={clearAllFilters} className="ml-2 text-xs border px-3 py-1.5 rounded-md font-semibold hover:bg-gray-100">
           {t("creative.clear_all")}
         </button>
@@ -305,7 +344,7 @@ const CreativeDirectory = () => {
 
   return (
     <div className="bg-white min-h-screen w-full">
-      <div className="md:max-w-[80%] justify-center mx-auto">
+      <div className="md:max-w-[80%] justify-center mx-auto pb-5">
         {/* Top Navigation */}
         <div className="flex flex-wrap items-center justify-between px-2 md:px-0 py-4 gap-3">
           <Link
@@ -357,13 +396,13 @@ const CreativeDirectory = () => {
           {/* Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full">
             {loading ? (
-              <p className="text-gray-500"><SpinnerProvider/></p>
+              <p className="text-gray-500"><SpinnerProvider /></p>
             ) : creatives.length === 0 ? (
               <p className="text-gray-500">{t("creative.no_creatives")}</p>
             ) : (
               creatives.map((creative) => {
                 const availability = getAvailability(creative);
-                const rating = typeof creative?.rating === "number" ? creative.rating.toFixed(1) : "—";
+                const rating = typeof creative?.user.rating === "number" ? creative.user.rating.toFixed(1) : "—";
                 const reviews = creative?.total_reviews ?? 0;
                 const name = creative?.user?.full_name || t("creative.anonymous");
                 const title = creative?.user?.profile?.title || "—";
@@ -373,7 +412,7 @@ const CreativeDirectory = () => {
                   String(creative.experience_in_level).slice(1)
                   : "—";
                 const workStyle =
-                  creative?.on_site_active === "1" && creative?.is_remote_active === "0" 
+                  creative?.on_site_active === "1" && creative?.is_remote_active === "0"
                     ? t("creative.on_site")
                     : creative?.is_remote_active === "1" && creative?.on_site_active === "0"
                       ? t("creative.remote_ok")

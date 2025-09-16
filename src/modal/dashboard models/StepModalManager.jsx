@@ -4,6 +4,10 @@ import LocationModal from "./LocationModal";
 import PersonalIntroModal from "./PersonalIntroModal";
 import UploadProfileModal from "./UploadProfileModal";
 import EmailVerifyModal from "./EmailVerifyModal";
+import ProfessionalBioModal from "./ProfessionalBioModal";
+import SkillsModal from "./SkillsModal";
+import PortfolioModal from "./PortfolioModal";
+import SocialLinksModal from "./SocialLinksModal";
 
 const STEP_COMPONENTS = {
     BASIC_INFO: BasicInfoModal,
@@ -11,10 +15,10 @@ const STEP_COMPONENTS = {
     PERSONAL_INTRO: PersonalIntroModal,
     PROFILE_IMAGE_VID: UploadProfileModal,
     EMAIL_VERIFY: EmailVerifyModal,
-    PERSONAL_BIO: "Professional Bio",
-    SERVICE_SKILL_ADDED: "Services & Skills",
-    PORTIFLIO_WORK: "Portfolio Work",
-    SOCAIL_LINK: "Social Media Links",
+    PERSONAL_BIO: ProfessionalBioModal,
+    SERVICE_SKILL_ADDED: SkillsModal,
+    PORTIFLIO_WORK: PortfolioModal,
+    SOCAIL_LINK: SocialLinksModal,
     PRICING_INFO: "Pricing Information",
 };
 

@@ -112,7 +112,7 @@ const BusinessDirectory = () => {
     if (sort && filterLabelToKeyMap["__order_by_map__"]) {
       const orderMap = filterLabelToKeyMap["__order_by_map__"];
       const mapped = orderMap[sort];
-      if (mapped) params.order_by = mapped;
+      if (mapped) params.order_by_rate = mapped;
     }
 
     return params;
@@ -238,14 +238,14 @@ const BusinessDirectory = () => {
             </span>
           </div>
 
-          {loading && <p className="text-gray-500"><SpinnerProvider /></p>}
+          {loading && <div className="text-gray-500"><SpinnerProvider /></div>}
           {error && <p className="text-red-500">{error}</p>}
 
           {/* Grid container */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {businesses.map((biz) => {
               const user = biz.user;
-              const profile = biz.profile;
+              const profile = biz.user.profile;
 
               return (
                 <div
@@ -267,7 +267,7 @@ const BusinessDirectory = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                       <h2 className="font-bold text-base md:text-lg">{user?.full_name}</h2>
                       <span className="text-xs md:text-sm text-gray-500 flex items-center gap-1">
-                        <FaStar className="text-orange-600" /> {biz.rating} ({biz.total_reviews})
+                        {user.rating} <FaStar className="text-orange-600" /> 
                       </span>
                     </div>
 
@@ -280,8 +280,8 @@ const BusinessDirectory = () => {
                     {/* Meta */}
                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-500">
                       <p className="flex items-center">
-                        <FaMapMarkerAlt className="mr-2" /> {user?.location.city.name},{" "}
-                        {user?.location.state.name}, {user?.location.country.name}
+                        <FaMapMarkerAlt className="mr-2" /> {user?.location.city?.name},
+                        {user?.location.state?.name}, {user?.location.country?.name}
                       </p>
                       <p className="flex items-center">
                         <FaPhoneAlt className="mr-2" /> {user.profile?.phone || "-"}

@@ -28,6 +28,7 @@ import { Star } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
 import UploadProfileModal from "../modal/dashboard models/UploadProfileModal";
+import PortfolioModal from "../modal/dashboard models/PortfolioModal";
 
 const GuestDashboardPage = () => {
   const { t } = useTranslation();
@@ -42,6 +43,7 @@ const GuestDashboardPage = () => {
   const [meta, setMeta] = useState(null);
   const [page, setPage] = useState(1);
   const [isPhotoOpen, setPhotoIsOpen] = useState(false);
+  const [isPortfolioOpen, setPortfolioOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -83,9 +85,9 @@ const GuestDashboardPage = () => {
 
   // safe location extraction
   const sellerUser = user?.seller?.user ?? null;
-  const city = sellerUser?.location?.city?.name ?? null;
-  const state = sellerUser?.location?.state?.name ?? null;
-  const country = sellerUser?.location?.country?.name ?? null;
+  const city = user?.location?.city?.name ?? null;
+  const state = user?.location?.state?.name ?? null;
+  const country = user?.location?.country?.name ?? null;
 
   const data = payload?.data ?? {};
   const uuid = user?.uuid || user?.id || null;
@@ -456,7 +458,7 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6">
               <h3 className="font-semibold mb-3">Quick Actions</h3>
               <ul className="space-y-2 text-xs font-bold">
-                <li className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                <li onClick={() => setPortfolioOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
                   <span className="flex items-center gap-2"><BiCloudUpload className="h-4 w-4" /> Upload New Work</span>
                 </li>
                 <li onClick={() => setIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
@@ -477,6 +479,8 @@ const GuestDashboardPage = () => {
       <CreatePostPopupModel isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <UploadProfileModal isOpen={isPhotoOpen} onClose={() => setPhotoIsOpen(false)} uuid={uuid} />
+
+      <PortfolioModal isOpen={isPortfolioOpen} onClose={() => setPortfolioOpen(false)} />
 
       <StepModalManager
         stepKey={activeStep}

@@ -32,10 +32,10 @@ const PersonalIntroModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
             };
 
             setForm({
-                experience_in_year: initialData.seller.experience_in_year ?? "",
-                experience_in_level: levelMap[initialData.seller.experience_in_level] || "Entry Level (0-2 years)",
-                personal_intro: initialData.seller.personal_intro ?? "",
-                exp_vision: initialData.seller.exp_vision ?? "",
+                experience_in_year: initialData.experience_in_year ?? "",
+                experience_in_level: levelMap[initialData.experience_in_level] || "Entry Level (0-2 years)",
+                personal_intro: initialData.personal_intro ?? "",
+                exp_vision: initialData.exp_vision ?? "",
             });
             setError(null);
         }

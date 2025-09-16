@@ -55,3 +55,45 @@ export async function uploadProfileMedia({ uuid, file, onProgress }) {
     throw new Error(msg);
   }
 }
+
+export async function updateProfessionalBio(params) {
+  try {
+    const res = await service.put(`seller/bio/store`, params);
+    return res.data?.data ?? res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to update intro";
+    throw new Error(msg);
+  }
+}
+
+export async function updateSkills(id, payload) {
+  try {
+    const res = await service.put(`seller/user/update-skills/${id}`, payload);
+    return res.data?.data ?? res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to update skils";
+    throw new Error(msg);
+  }
+}
+
+export async function updatePortfolio(formData) {
+  try {
+    const res = await service.post("seller/portfolio/store", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data?.data ?? res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to update portfolio";
+    throw new Error(msg);
+  }
+}
+
+export async function updateSocialLinks(id, payload) {
+  try {
+    const res = await service.put(`seller/user/update-social-links/${id}`, payload);
+    return res.data?.data ?? res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to update links";
+    throw new Error(msg);
+  }
+}
