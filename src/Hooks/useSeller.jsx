@@ -2,7 +2,6 @@ import service from "../Helper/Axios";
 import Cookies from 'js-cookie';
 
 export function getCreativeData(params = {}) {
-  // params can include { search, level, availability, working_style, union_status, order_by, ... }
   return service
     .get(`site/seller/creative`, { params })
     .then((res) => res.data?.data || [])
@@ -13,7 +12,6 @@ export function getCreativeData(params = {}) {
 }
 
 export function getBusinessData(params = {}) {
-  // params can include { search, type, locations, order_by, ... }
   return service
     .get(`site/seller/business`, { params })
     .then((res) => res.data?.data || [])
@@ -105,4 +103,44 @@ export function createPost(formData) {
         "Failed to create post";
       throw new Error(message);
     });
+}
+
+export function getPostData(page = 1) {
+  return service
+    .get(`seller/posts?page=${page}`)
+    .then((res) => {
+      if (res.data?.status === "success") {
+        return {
+          posts: res.data.data || [],
+          meta: res.data.meta || null,
+          links: res.data.links || null,
+        };
+      }
+      return { posts: [], meta: null, links: null };
+    })
+    .catch((error) => {
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch post data";
+      throw new Error(errorMessage);
+    });
+}
+
+export async function getPlans(params = {}) {
+  try {
+    const res = await service.get("site/plans", { params });
+    return res.data;
+  } catch (err) {
+    throw new Error(err?.response?.data?.message || "Failed to fetch plans");
+  }
+}
+
+export async function getPlanShow(id, params = {}) {
+  try {
+    const res = await service.get(`site/plans/${id}`, { params });
+    return res.data;
+  } catch (err) {
+    const msg =
+      err?.response?.data?.message || err?.message || `Failed to fetch plans ${id}`;
+    throw new Error(msg);
+  }
 }

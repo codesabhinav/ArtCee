@@ -3,8 +3,10 @@ import { AiOutlineEye } from "react-icons/ai";
 import { FaArrowLeft, FaCrown, FaUsers, FaHeart, FaEye, FaChartLine, FaBolt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import PurchasePopupModel from "../modal/PurchasePopupModel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
+import Cookies from "js-cookie";
+import { getPlans } from "../Hooks/useSeller";
 
 const FeaturePremiumPage = () => {
   const { t } = useTranslation();
@@ -13,6 +15,106 @@ const FeaturePremiumPage = () => {
   const joined = 347;
   const spotsLeft = 153;
   const foundingRemainingText = t("premium.founding_spots_remaining", { remaining: spotsLeft });
+
+  const [plans, setPlans] = useState([]);
+  const [location, setLocation] = useState(null);
+  const [permissionDenied, setPermissionDenied] = useState(false);
+  const [loadingPlans, setLoadingPlans] = useState(false);
+  const [plansError, setPlansError] = useState(null);
+
+  const normalizePlansResponse = (res) => {
+    if (!res) return [];
+    if (res.data && Array.isArray(res.data.data)) return res.data.data;
+    if (res.data && Array.isArray(res.data)) return res.data;
+    if (Array.isArray(res)) return res;
+    if (res.status && Array.isArray(res.data)) return res.data;
+    return [];
+  };
+
+  useEffect(() => {
+    const cookieCountry = Cookies.get("user_country");
+    if (cookieCountry) {
+      setLocation(cookieCountry);
+      return;
+    }
+
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const { latitude, longitude } = pos.coords;
+          try {
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`
+            );
+            const data = await res.json();
+            const city = data?.address?.city || data?.address?.town || data?.address?.village || "";
+            const state = data?.address?.state || "";
+            const country = data?.address?.country || "";
+
+            if (country) {
+              // Save cookies for future visits
+              Cookies.set("user_city", city, { expires: 7 });
+              Cookies.set("user_state", state, { expires: 7 });
+              Cookies.set("user_country", country, { expires: 30 });
+              setLocation(country);
+            } else {
+              setPermissionDenied(true);
+            }
+          } catch (err) {
+            console.error("Reverse geocoding failed", err);
+            setPermissionDenied(true);
+          }
+        },
+        (err) => {
+          console.warn("Geolocation error:", err);
+          setPermissionDenied(true);
+        },
+        {
+          timeout: 8000,
+          maximumAge: 60 * 1000,
+        }
+      );
+    } else {
+      setPermissionDenied(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    async function loadPlans(loc) {
+      setLoadingPlans(true);
+      setPlansError(null);
+      try {
+        const res = await getPlans({ location: loc });
+        const normalized = normalizePlansResponse(res);
+        setPlans(normalized);
+      } catch (err) {
+        const msg = err?.message || err?.response?.data?.message || "Failed to fetch plans";
+        setPlansError(msg);
+      } finally {
+        setLoadingPlans(false);
+      }
+    }
+
+    if (location && !permissionDenied) {
+      loadPlans(location);
+    }
+  }, [location, permissionDenied]);
+
+  const renderFeatures = (plan) => {
+    if (!plan.features || plan.features.length === 0) return null;
+    return (
+      <ul className="mt-4 space-y-2 text-sm text-gray-700 text-left">
+        {plan.features.map((f) => (
+          <li key={f.id} className="flex items-start gap-2">
+            <span className="text-green-500">✔</span>
+            <div>
+              <div className="font-semibold text-xs">{f.name}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <div className="bg-white min-h-screen w-full">
@@ -145,78 +247,88 @@ const FeaturePremiumPage = () => {
           </div>
         </div>
 
-        {/* Pricing Section */}
+        {/* Pricing Section: dynamic plan cards based on fetched plans */}
         <div className="flex justify-center">
           <div className="grid md:grid-cols-2 gap-10 m-10 max-w-6xl justify-items-center">
-            {/* Founding Member */}
-            <div className="border-2 border-orange-400 rounded-xl p-8 shadow-sm flex flex-col w-full md:w-[400px]">
-              <div className="flex justify-between items-center">
-                <h4 className="flex items-center font-light text-md text-black">
-                  <span className="mr-4 text-orange-400"><FaCrown /></span> {t("premium.founding_member")}
-                </h4>
-                <span className="bg-orange-400 text-white text-xs px-2 py-1 rounded-md font-semibold">
-                  {t("premium.limited_time")}
-                </span>
-              </div>
-
-              <div className="mt-4 items-center flex flex-col">
-                <p className="text-3xl font-bold text-gray-900">
-                  {t("premium.price_founding", { price: "$47" })} <span className="line-through text-gray-400 font-light text-xs">{t("premium.price_strike", { old: "$97" })}</span>
-                </p>
-                <p className="text-xs font-light text-gray-500">
-                  {t("premium.price_one_time")}
-                </p>
-                <p className="text-xs text-orange-500 font-light mt-1">
-                  {t("premium.save_with_founding")}
+            {/* If permission denied, show message */}
+            {permissionDenied ? (
+              <div className="col-span-2 p-6 text-center border rounded-lg">
+                <p className="text-sm text-gray-600">
+                  {("Location permission denied. Plans are not available.")}
                 </p>
               </div>
+            ) : (
+              <>
+                {/* show loading / error / no plans */}
+                {loadingPlans && (
+                  <div className="col-span-2 p-6 text-center">
+                    <p className="text-sm text-gray-600">{("Loading plans...")}</p>
+                  </div>
+                )}
 
-              <ul className="mt-6 space-y-2 text-xs text-gray-700 text-left">
-                <li>✅ {t("premium.everything_in_premium")}</li>
-                <li>⭐ {t("premium.permanent_founding_badge")}</li>
-                <li>👑 {t("premium.forever_premium_access")}</li>
-                <li>⚡ {t("premium.early_access")}</li>
-                <li>🤝 {t("premium.exclusive_community")}</li>
-              </ul>
+                {plansError && (
+                  <div className="col-span-2 p-6 text-center text-red-500">
+                    <p>{plansError}</p>
+                  </div>
+                )}
 
-              <div className="mt-6 bg-orange-50 text-orange-400 border border-orange-400 text-xs text-center py-3 rounded-md font-light">
-                {foundingRemainingText}
-              </div>
+                {!loadingPlans && !plansError && plans.length === 0 && (
+                  <div className="col-span-2 p-6 text-center border rounded-lg">
+                    <p className="text-sm text-gray-600">
+                      {(
+                        "No plans found for your location."
+                      )}
+                    </p>
+                    <div className="mt-3">
+                      <button
+                        onClick={() => {
+                          setShowLocationPrompt(true);
+                          setUserEnteredLocation("");
+                        }}
+                        className="px-4 py-2 bg-teal-500 text-white rounded"
+                      >
+                        {t("premium.enter_location", "Enter location")}
+                      </button>
+                    </div>
+                  </div>
+                )}
 
-              <button onClick={() => setSelectedPlan("founding")} className="mt-4 bg-orange-500 hover:bg-orange-600 text-xs text-white w-full py-3 rounded-md font-semibold flex items-center justify-center">
-                <span className="mr-4"><FaCrown /></span> {t("premium.become_founding")}
-              </button>
-            </div>
+                {/* Render each plan */}
+                {plans.map((plan) => (
+                  <div key={plan.id} className="border-2 rounded-xl p-8 shadow-sm flex flex-col w-full md:w-[400px] hover:shadow-md transition border-orange-400">
+                    <div className="flex justify-between items-center">
+                      <h4 className="flex items-center font-light text-md text-black">
+                        <span className="mr-4 text-orange-400"><FaCrown /></span> {plan.title}
+                      </h4>
+                      {plan.onetime_payment === "1" && (
+                        <span className="bg-orange-400 text-white text-xs px-2 py-1 rounded-md font-semibold">
+                          {("One-time")}
+                        </span>
+                      )}
+                    </div>
 
-            {/* Premium Monthly */}
-            <div className="border-2 border-teal-400 rounded-xl p-8 shadow-sm flex flex-col w-full md:w-[400px]">
-              <div className="flex justify-between items-center">
-                <h4 className="flex items-center font-bold text-md text-black font-light">
-                  <span className="mr-4 text-teal-400"><FaCrown /></span> {t("premium.premium_monthly")}
-                </h4>
-              </div>
+                    <div className="mt-4 items-center flex flex-col">
+                      <p className="text-3xl font-bold text-gray-900">
+                        {plan.pricing?.price ? `${plan.pricing.price}` : ("Free")}
+                      </p>
+                      {plan.billing_cycle && <p className="text-xs font-light text-gray-500">{plan.billing_cycle}</p>}
+                      {plan.description && <p className="text-xs text-gray-500 mt-2 text-center">{plan.description}</p>}
+                    </div>
 
-              <div className="mt-4 flex flex-col items-center">
-                <p className="text-3xl font-bold text-gray-900">{t("premium.price_monthly", { price: "$29" })}</p>
-                <p className="text-xs font-light text-gray-500">{t("premium.per_month")}</p>
-              </div>
+                    {renderFeatures(plan)}
 
-              <ul className="mt-6 space-y-2 text-xs text-gray-700 text-left">
-                <li>📌 {t("premium.featured_profile")}</li>
-                <li>👥 {t("premium.follow_other_creatives")}</li>
-                <li>❤️ {t("premium.like_support")}</li>
-                <li>💼 {t("premium.premium_job_posting")}</li>
-                <li>📊 {t("premium.analytics_dashboard")}</li>
-              </ul>
-
-              <div className="mt-4 bg-blue-50 text-black font-light border border-teal-400 text-xs text-center p-2 rounded-md">
-                ✅ {t("premium.money_back")}
-              </div>
-
-              <button onClick={() => setSelectedPlan("premium")} className="mt-6 bg-teal-500 hover:bg-teal-600 text-white w-full py-3 rounded-md font-bold text-xs flex items-center justify-center">
-                <span className="mr-4 "><FaCrown /></span> {t("premium.start_premium_monthly")}
-              </button>
-            </div>
+                    <div className="mt-6">
+                      <button
+                        onClick={() => setSelectedPlan(plan.id)}
+                        className="mt-4 bg-orange-500 hover:bg-orange-600 text-xs text-white w-full py-3 rounded-md font-semibold flex items-center justify-center"
+                      >
+                        <span className="mr-4"><FaCrown /></span> {("Select plan")}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
 
@@ -273,7 +385,8 @@ const FeaturePremiumPage = () => {
       <PurchasePopupModel
         isOpen={!!selectedPlan}
         onClose={() => setSelectedPlan(null)}
-        planType={selectedPlan}
+        planId={selectedPlan}
+        country={location}
       />
     </div>
   );

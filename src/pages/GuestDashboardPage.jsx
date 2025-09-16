@@ -1,3 +1,4 @@
+// GuestDashboardPage.jsx
 import {
   BriefcaseIcon,
   CameraIcon,
@@ -22,8 +23,11 @@ import { Link, useNavigate } from "react-router-dom";
 import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
 import SpinnerProvider from "../components/SpinnerProvider";
-import { getGuestDashboardData } from "../Hooks/useSeller";
+import { getGuestDashboardData, getPostData } from "../Hooks/useSeller";
 import { Star } from "lucide-react";
+import StepModalManager from "../modal/dashboard models/StepModalManager";
+import ProfileSteps from "../components/ProfileSteps";
+import UploadProfileModal from "../modal/dashboard models/UploadProfileModal";
 
 const GuestDashboardPage = () => {
   const { t } = useTranslation();
@@ -32,6 +36,12 @@ const GuestDashboardPage = () => {
   const [error, setError] = useState(null);
   const [payload, setPayload] = useState(null);
   const navigate = useNavigate();
+  const [activeStep, setActiveStep] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [meta, setMeta] = useState(null);
+  const [page, setPage] = useState(1);
+  const [isPhotoOpen, setPhotoIsOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -44,7 +54,7 @@ const GuestDashboardPage = () => {
       })
       .catch((err) => {
         if (!mounted) return;
-        setError(err.message || "Failed to load dashboard");
+        setError(err?.message || "Failed to load dashboard");
         setPayload(null);
       })
       .finally(() => {
@@ -57,17 +67,33 @@ const GuestDashboardPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+    getPostData(page)
+      .then(({ posts, meta }) => {
+        setPosts(posts);
+        setMeta(meta);
+      })
+      .catch((err) => console.error(err.message))
+      .finally(() => setLoading(false));
+  }, [page]);
+
   const user = payload?.user ?? {};
-  const profile = user?.profile ?? user?.seller?.profile ?? payload?.data?.profile ?? null;
-  const city = user?.seller?.user.location.city.name ?? null;
-  const state = user?.seller?.user.location.state.name ?? null;
-  const country = user?.seller?.user.location.country.name ?? null;
+  const profile = payload?.data?.profile ?? user?.profile ?? user?.seller?.profile ?? null;
+
+  // safe location extraction
+  const sellerUser = user?.seller?.user ?? null;
+  const city = sellerUser?.location?.city?.name ?? null;
+  const state = sellerUser?.location?.state?.name ?? null;
+  const country = sellerUser?.location?.country?.name ?? null;
+
   const data = payload?.data ?? {};
+  const uuid = user?.uuid || user?.id || null;
 
   const fullName = user?.full_name || profile?.title || "Guest User";
   const roleDisplay = user?.role?.[0]?.display_name || "Creative Professional";
   const avatar = profile?.profile_picture || "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
-  const bio = user?.seller?.personal_intro;
+  const bio = profile?.bio || "";
   const title = profile?.title || "Creative Professional";
   const followers = data?.following_count ?? 0;
   const portfolioCount = data?.portfolio_count ?? 0;
@@ -81,7 +107,7 @@ const GuestDashboardPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-sm text-gray-600"> <SpinnerProvider/> </div>
+        <div className="text-sm text-gray-600"> <SpinnerProvider /> </div>
       </div>
     );
   }
@@ -93,6 +119,11 @@ const GuestDashboardPage = () => {
       </div>
     );
   }
+
+  const openStepModal = (stepKey) => {
+    setActiveStep(stepKey);
+    setModalOpen(true);
+  };
 
   return (
     <div className="bg-white min-h-screen w-full">
@@ -134,8 +165,8 @@ const GuestDashboardPage = () => {
                   <h2 className="text-base sm:text-lg font-bold">{fullName}</h2>
                   <p className="text-gray-500 text-sm">{title}</p>
                   <div className="flex flex-row">
-                    <p className="text-xs text-gray-500 mt-1 flex flex-row items-center gap-1"> <FaMapMarkerAlt/> {city}, {state}, {country}</p>
-                    <p className="text-xs text-gray-500 mx-5 mt-1 flex flex-row items-center gap-1"> <Star className="h-3 w-3"/> {rating}/5 </p>
+                    <p className="text-xs text-gray-500 mt-1 flex flex-row items-center gap-1"> <FaMapMarkerAlt /> {city}, {state}, {country}</p>
+                    <p className="text-xs text-gray-500 mx-5 mt-1 flex flex-row items-center gap-1"> <Star className="h-3 w-3" /> {rating}/5 </p>
                   </div>
                 </div>
               </div>
@@ -174,9 +205,8 @@ const GuestDashboardPage = () => {
                 </span>
               </div>
 
-              
               <p className="text-xs text-gray-500 mb-4">
-                {data.progress_percentage ?? 0}/100 completed – {progress}% 
+                {data.progress_percentage ?? 0}/100 completed – {progress}%
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
                 <div
@@ -185,88 +215,8 @@ const GuestDashboardPage = () => {
                 />
               </div>
 
-              <h4 className="font-semibold text-xs my-3"> Required for Profile Activation </h4>
-              <ul className="space-y-2 mb-6">
-                {data.total_activities?.map((act) => {
-                  const done = (data.completed_activities || []).includes(act);
-                  // map key to readable label
-                  const label = {
-                    BASIC_INFO: "Basic Information",
-                    LOCATION: "Location Details",
-                    PERSONAL_INTRO: "Personal Intro & Vision",
-                    PROFILE_IMAGE_VID: "Profile Image/Video",
-                    EMAIL_VERIFY: "Email Verification",
-                    PERSONAL_BIO: "Professional Bio",
-                    SERVICE_SKILL_ADDED: "Services & Skills",
-                    PORTIFLIO_WORK: "Portfolio Work",
-                    SOCAIL_LINK: "Social Media Links",
-                    PRICING_INFO: "Pricing Information",
-                  }[act] || act;
-
-                  return (
-                    <li
-                      key={act}
-                      className={`flex items-center justify-between border px-4 py-2 rounded-md ${
-                        done ? "border-green-500 bg-green-50" : ""
-                      }`}
-                    >
-                      <div className="flex items-center  gap-3">
-                        {done ? (
-                          <FaCheckCircle className="text-green-500 mt-1 text-xs" />
-                        ) : (
-                          <FaRegCircle className="text-gray-400 mt-1 text-xs" />
-                        )}
-                        <div>
-                          <p className="text-xs font-medium">{label}</p>
-                          <p className="text-xs text-gray-500">
-                            {done ? "Completed" : "Pending"}
-                          </p>
-                        </div>
-                      </div>
-                      <FaChevronRight className="text-gray-400 text-xs" />
-                    </li>
-                  );
-                })}
-              </ul>
-
-              {/* Optional Enhancements: keep static group but could be dynamic later */}
-              <h4 className="font-semibold text-xs mb-3">Optional Enhancements</h4>
-              <ul className="space-y-2 mb-4">
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-xs" />
-                    <div>
-                      <p className="text-xs font-medium">Professional Bio</p>
-                      <p className="text-xs text-gray-500">Detailed professional biography</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-xs" />
-                    <div>
-                      <p className="text-xs font-medium">Services & Skills</p>
-                      <p className="text-xs text-gray-500">Services offered and skill categories</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
-                <li className="flex items-center justify-between border px-4 py-2 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <FaRegCircle className="text-gray-400 mt-1 text-xs" />
-                    <div>
-                      <p className="text-xs font-medium">Portfolio Work</p>
-                      <p className="text-xs text-gray-500">Showcase your best creative work</p>
-                    </div>
-                  </div>
-                  <FaChevronRight className="text-gray-400 text-xs" />
-                </li>
-              </ul>
-
-              <div className="bg-yellow-50 text-yellow-700 text-xs px-4 py-3 rounded-md">
-                Complete the required fields above to activate your profile and start getting discovered by potential clients.
-              </div>
+              {/* ProfileSteps component */}
+              <ProfileSteps data={data} openStepModal={openStepModal} />
             </div>
 
             {/* Activity & Blog Section */}
@@ -283,22 +233,48 @@ const GuestDashboardPage = () => {
                 </button>
               </div>
 
-              <div className="text-center py-6">
-                <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
-                  <PencilIcon className="h-7 w-7" />
+              {/* If posts exist, show them; otherwise show empty state */}
+              {!loading && posts.length > 0 ? (
+                <div className="grid gap-6">
+                  {posts.map((post) => (
+                    <div key={post.id} className="flex gap-4 border p-4 rounded-lg">
+                      <img
+                        src={post.image || post.image_url}
+                        alt={post.title}
+                        className="w-24 h-24 object-cover rounded-md"
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-sm">{post.title}</h4>
+                        <p className="text-xs text-gray-600">{post.dsc}</p>
+                        <p className="text-xs text-gray-600 line-clamp-3">{post.content}</p>
+                      </div>
+                      <div className="text-[10px] px-2 py-1 bg-yellow-100 max-h-[22px] text-yellow-600 rounded-md">
+                        {post.type}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <p className="text-sm font-medium">Start sharing your creative journey</p>
-                <p className="text-xs text-gray-500 mb-4">
-                  Create blog posts to showcase your work, share insights, and attract potential clients
-                </p>
-                <button
-                  onClick={() => setIsOpen(true)}
-                  className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto"
-                >
-                  + Create Your First Post
-                </button>
-              </div>
+              ) : (
+                !loading && (
+                  <div className="text-center py-6">
+                    <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
+                      <PencilIcon className="h-7 w-7" />
+                    </div>
+                    <p className="text-sm font-medium">
+                      Start sharing your creative journey
+                    </p>
+                    <p className="text-xs text-gray-500 mb-4">
+                      Create blog posts to showcase your work, share insights, and
+                      attract potential clients
+                    </p>
+                    <button className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto">
+                      + Create Your First Post
+                    </button>
+                  </div>
+                )
+              )}
             </div>
+
 
             {/* Job Applications Section */}
             <div className="bg-white border rounded-lg p-6 mt-6">
@@ -489,7 +465,7 @@ const GuestDashboardPage = () => {
                 <li onClick={() => navigate("/jobs")} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
                   <span className="flex items-center gap-2"><BriefcaseIcon className="h-4 w-4" /> Browse Jobs</span>
                 </li>
-                <li className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                <li onClick={() => setPhotoIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
                   <span className="flex items-center gap-2"><CameraIcon className="h-4 w-4" /> Update Profile Photo</span>
                 </li>
               </ul>
@@ -497,7 +473,25 @@ const GuestDashboardPage = () => {
           </div>
         </div>
       </div>
+
       <CreatePostPopupModel isOpen={isOpen} setIsOpen={setIsOpen} />
+
+      <UploadProfileModal isOpen={isPhotoOpen} onClose={() => setPhotoIsOpen(false)} uuid={uuid} />
+
+      <StepModalManager
+        stepKey={activeStep}
+        isOpen={modalOpen}
+        onClose={() => { setModalOpen(false); setActiveStep(null); }}
+        initialData={{
+          ...user,
+          ...profile,
+          ...payload?.data
+        }}
+        onSaved={(serverResponse) => {
+          console.log("saved", serverResponse);
+          // you may want to re-fetch dashboard data here
+        }}
+      />
     </div>
   );
 };

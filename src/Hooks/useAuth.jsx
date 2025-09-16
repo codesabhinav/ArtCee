@@ -119,12 +119,24 @@ export function getCountries(search = "") {
     });
 }
 
-export function getPlans() {
+export function sendOtp() {
   return service
-    .get(`site/plans`)
-    .then((res) => res.data?.data)
-    .catch((error) => {
-      const errorMessage = error.response?.message || "Failed to load plans";
-      throw new Error(errorMessage);
+    .get("auth/send/opt")
+    .then((res) => res.data)
+    .catch((err) => {
+      const msg = err?.response?.data?.message || err?.message || "Failed to send OTP";
+      throw new Error(msg);
+    });
+}
+
+export function verifyOtp(payload) {
+  return service
+    .post("auth/verify/opt", payload, {
+      headers: { "Content-Type": "application/json" },
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      const msg = err?.response?.data?.message || err?.message || "Failed to verify OTP";
+      throw new Error(msg);
     });
 }
