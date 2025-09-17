@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateLocation } from "../../Hooks/useDashboard";
+import toast from "react-hot-toast";
+import { getGuestDashboardData } from "../../Hooks/useSeller";
 
 const LocationModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
   const [form, setForm] = useState({ country: "", state: "", city: "" });
@@ -31,6 +33,12 @@ const LocationModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     try {
       const res = await updateLocation(initialData.uuid || initialData.id, form);
       onSaved?.(res);
+       try {
+      await getGuestDashboardData();
+    } catch (refreshErr) {
+      console.warn("Failed to refresh guest dashboard data:", refreshErr);
+    }
+    toast.success( "Data updated");
       onClose();
     } catch (err) {
       setErr(err.message || "Failed to update location");

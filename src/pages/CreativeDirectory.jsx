@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -41,19 +33,12 @@ const CreativeDirectory = () => {
   const [filterLabelToKeyMap, setFilterLabelToKeyMap] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
-
-  
   const [budgetRange, setBudgetRange] = useState({ min: 0, max: 10000 });
   const [selectedIndustries, setSelectedIndustries] = useState([]);
+  const [selectedUuid, setSelectedUuid] = useState(null);
 
-  const sortOptions = [
-    t("creative.sort_highest_rated"),
-    t("creative.sort_price_low_high"),
-    t("creative.sort_price_high_low"),
-    t("creative.sort_most_experience"),
-    t("creative.sort_name_az"),
-  ];
-  const [sort, setSort] = useState(sortOptions[0]);
+  const [sortOptions, setSortOptions] = useState([]);
+  const [sort, setSort] = useState("");
 
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
@@ -100,8 +85,16 @@ const CreativeDirectory = () => {
 
         if (meta.order_by_rate) {
           const map = {};
-          Object.entries(meta.order_by_rate).forEach(([k, v]) => (map[v] = k));
+          Object.entries(meta.order_by_rate).forEach(([k, v]) => {
+            map[v] = k;
+          });
           labelToKey["__order_by_map__"] = map;
+
+          const apiSortOptions = Object.values(meta.order_by_rate);
+          setSortOptions(apiSortOptions);
+          if (!sort) {
+            setSort(apiSortOptions.length > 0 ? apiSortOptions[0] : "");
+          }
         }
 
         setFiltersConfigDynamic(cfg);
@@ -133,7 +126,7 @@ const CreativeDirectory = () => {
 
     Object.entries(selectedFilters).forEach(([label, chosenLabel]) => {
       if (!chosenLabel) return;
-      if (chosenLabel.startsWith(t("creative.all"))) return; 
+      if (chosenLabel.startsWith(t("creative.all"))) return;
       const filterObj = filtersConfigDynamic.find((f) => f.label === label);
       if (!filterObj) return;
       const apiKeyFromLabel = filterLabelToKeyMap[chosenLabel];
@@ -143,16 +136,14 @@ const CreativeDirectory = () => {
 
     if (sort && filterLabelToKeyMap["__order_by_map__"]) {
       const orderMap = filterLabelToKeyMap["__order_by_map__"];
-      const mapped = orderMap[sort];
+      const mapped = orderMap[sort]; // map API label -> API key
       if (mapped) params.order_by_rate = mapped;
     }
 
-    
     if (budgetRange && (budgetRange.min != null || budgetRange.max != null)) {
       if (Number.isFinite(Number(budgetRange.min))) params["budged_range[min]"] = Number(budgetRange.min);
       if (Number.isFinite(Number(budgetRange.max))) params["budged_range[max]"] = Number(budgetRange.max);
     }
-
 
     if (Array.isArray(selectedIndustries) && selectedIndustries.length > 0) {
       params.industries = selectedIndustries;
@@ -179,7 +170,6 @@ const CreativeDirectory = () => {
     if (filtersConfigDynamic.length > 0 || Object.keys(filtersMeta).length > 0) {
       fetchData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, budgetRange, selectedIndustries, filtersMeta]);
 
   const clearFilter = (label) => {
@@ -211,12 +201,23 @@ const CreativeDirectory = () => {
   };
 
   const getAvailability = (creative) => {
-    const status = (creative?.status || "").toLowerCase();
-    if (status === "online") return { label: t("creative.available"), badge: "bg-green-100 text-green-700" };
-    if (status === "busy") return { label: t("creative.busy"), badge: "bg-yellow-100 text-yellow-700" };
-    if (status === "booked") return { label: t("creative.booked"), badge: "bg-orange-100 text-orange-700" };
-    return { label: t("creative.offline"), badge: "bg-gray-100 text-gray-700" };
+    const rawLabel = creative?.availability_label ?? creative?.status ?? "";
+    const label = String(rawLabel).trim();
+    const lower = label.toLowerCase();
+
+    if (lower.includes("avail") || lower.includes("available") || lower === "online") {
+      return { label: label || t("creative.available"), badge: "bg-green-100 text-green-700" };
+    }
+    if (lower.includes("busy")) {
+      return { label: label || t("creative.busy"), badge: "bg-yellow-100 text-yellow-700" };
+    }
+    if (lower.includes("book") || lower.includes("booked")) {
+      return { label: label || t("creative.booked"), badge: "bg-orange-100 text-orange-700" };
+    }
+
+    return { label: label || t("creative.offline"), badge: "bg-gray-100 text-gray-700" };
   };
+
 
   // Handlers for industries
   const toggleIndustry = (id) => {
@@ -232,7 +233,7 @@ const CreativeDirectory = () => {
   };
 
   const SidebarFilters = () => (
-    <div className="w-full md:w-64 shrink-0 border rounded-lg p-4 bg-white shadow-sm">
+    <div className="w-full md:w-64 shrink-0 border rounded-lg p-4 bg-white shadow-sm ">
       <h2 className="font-semibold mb-4">{t("creative.advanced_filters")}</h2>
 
       <div className="mb-4">
@@ -352,23 +353,29 @@ const CreativeDirectory = () => {
 
   return (
     <div className="bg-white min-h-screen w-full">
-      <div className="md:max-w-[80%] justify-center mx-auto pb-5">
-        {/* Top Navigation */}
-        <div className="flex flex-wrap items-center justify-between px-2 md:px-0 py-4 gap-3">
+      <div className="md:max-w-[80%] mx-auto">
+        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
+          {/* Back to Home Link */}
           <Link
             to="/home"
-            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 py-2 flex items-center"
+            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
           >
-            <FaArrowLeft className="mr-2" /> {t("creative.back_to_home")}
+            <FaArrowLeft className="mr-2 text-xs" /> {t("creative.back_to_home") || "Back to Home"}
           </Link>
-          <h1 className="text-center text-lg md:text-xl font-bold flex-1">{t("creative.title")}</h1>
-          <button className="px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
-            {t("creative.count_creatives", { count: creatives.length })}
+
+          {/* Title */}
+          <h1 className="text-center align-center text-sm sm:text-lg md:text-xl font-bold flex-1">
+            {t("creative.title")}
+          </h1>
+
+          {/* Button */}
+          <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
+            {creatives.length} Creatives
           </button>
         </div>
 
         {/* Search + Sort */}
-        <div className="px-2 md:px-0 py-4 space-y-3 border-b">
+        <div className="px-4  md:px-0 py-4 space-y-3 border-b">
           <input
             type="text"
             value={search}
@@ -385,13 +392,13 @@ const CreativeDirectory = () => {
               />
             </div>
 
-            <div className="ml-2">
+            <div className="">
               <ActiveFilterChips />
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:space-x-6 my-5">
+        <div className="flex flex-col md:flex-row md:space-x-6 my-5 p-4 lg:p-0">
           {/* Sidebar (Desktop) */}
           <div className="hidden md:block">
             <SidebarFilters />
@@ -402,7 +409,8 @@ const CreativeDirectory = () => {
           </div>
 
           {/* Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 w-full">
+          <div className="grid grid-cols-1  sm:grid-cols-1
+           lg:grid-cols-2 gap-6 w-full">
             {loading ? (
               <p className="text-gray-500"><SpinnerProvider /></p>
             ) : creatives.length === 0 ? (
@@ -414,6 +422,7 @@ const CreativeDirectory = () => {
                 const reviews = creative?.total_reviews ?? 0;
                 const name = creative?.user?.full_name || t("creative.anonymous");
                 const title = creative?.user?.profile?.title || "—";
+                const uuid = creative?.user?.uuid || "";
                 const years = creative?.experience_in_year ?? "0";
                 const level = creative?.experience_in_level
                   ? String(creative.experience_in_level).charAt(0).toUpperCase() +
@@ -487,7 +496,10 @@ const CreativeDirectory = () => {
 
                     {/* Button */}
                     <button
-                      onClick={() => setOpen(true)}
+                      onClick={() => {
+                        setSelectedUuid(uuid);
+                        setOpen(true);
+                      }}
                       className="w-full mt-4 bg-teal-500 text-white text-xs font-semibold py-2 rounded-md hover:bg-teal-600"
                     >
                       {t("creative.view_profile")}
@@ -498,15 +510,16 @@ const CreativeDirectory = () => {
             )}
           </div>
 
-          <ViewProfilePopupModel isOpen={open} onClose={() => setOpen(false)} />
+          <ViewProfilePopupModel isOpen={open} onClose={() => {
+            setOpen(false);
+            setSelectedUuid(null);
+          }}
+            uuid={selectedUuid} />
         </div>
       </div>
     </div>
   );
-};
+}
+
 
 export default CreativeDirectory;
-
-
-
-

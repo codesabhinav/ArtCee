@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updatePersonalIntro } from "../../Hooks/useDashboard";
 import CustomDropdown from "../../components/CustomDropdown";
+import toast from "react-hot-toast";
+import { getGuestDashboardData } from "../../Hooks/useSeller";
 
 const levelOptions = [
     "Entry Level (0-2 years)",
@@ -88,6 +90,12 @@ const PersonalIntroModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
 
             const res = await updatePersonalIntro(id, payload);
             onSaved?.(res);
+            try {
+      await getGuestDashboardData();
+    } catch (refreshErr) {
+      console.warn("Failed to refresh guest dashboard data:", refreshErr);
+    }
+    toast.success( "Data updated");
             onClose();
         } catch (err) {
             setError(err.message || "Failed to update personal intro");

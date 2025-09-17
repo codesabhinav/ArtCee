@@ -29,7 +29,7 @@ export default function Home() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [professionals, setProfessionals] = useState([]);
-
+  const [selectedUuid, setSelectedUuid] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -144,14 +144,14 @@ export default function Home() {
         ></div>
 
         <div className="relative z-10 max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-extrabold text-center">
+          <h2 className=" text-2xl lg:text-3xl font-extrabold text-center">
             {t("home.value_title")}
           </h2>
           <p className="text-center mt-4 text-gray-500 max-w-2xl mx-auto">
             {t("home.value_subtitle")}
           </p>
 
-          <div className="grid md:grid-cols-3 gap-8 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
             {/* For Creatives */}
             <div className="bg-white p-8 rounded-xl shadow-md border hover:border-teal-500 hover:shadow-lg transition group">
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-teal-500 text-white shadow-md mb-4">
@@ -225,16 +225,16 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-white">
+      <section className="py-14  lg:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900">
             {t("home.how_it_works_title")}
           </h2>
           <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
             {t("home.how_it_works_subtitle")}
           </p>
 
-          <div className="grid md:grid-cols-4 gap-10 mt-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-16">
             <div className="group">
               <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-teal-500 text-white text-3xl shadow-md">
                 <FaSearch />
@@ -279,16 +279,16 @@ export default function Home() {
       </section>
 
       {/* Featured Professionals */}
-      <section className="py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">
+      <section className="py-14  lg:py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900">
+            <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
               {t("home.featured_title")}
             </h2>
             <p className="mt-2 text-gray-600">{t("home.featured_subtitle")}</p>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <div className="mt-12 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {loading ? (
               <p className="text-center py-10 text-gray-500">{t("creative.loading") || "Loading..."}</p>
             ) : professionals.length === 0 ? (
@@ -299,6 +299,7 @@ export default function Home() {
                 const name = pro?.user?.full_name || t("creative.anonymous");
                 const title = pro?.user?.profile?.title || "—";
                 const availability = getAvailabilityBadge(pro?.status);
+                const uuid = pro?.user?.uuid || "";
 
                 return (
                   <div
@@ -347,7 +348,11 @@ export default function Home() {
                       </div>
 
                       <button
-                        onClick={() => setOpen(true)}
+                        onClick={() => {
+                          setSelectedUuid(uuid);
+                          setOpen(true);
+                        }}
+
                         className="mt-5 w-full bg-teal-500 hover:bg-teal-600 text-xs text-white py-2 rounded-md font-medium shadow-md transition"
                       >
                         {t("home.view_profile")}
@@ -359,16 +364,10 @@ export default function Home() {
             )}
           </div>
 
-          <ViewProfilePopupModel isOpen={open} onClose={() => setOpen(false)} />
-
-          {/* <div className="absolute top-20 right-10 flex gap-3">
-            <button className="p-2 bg-white shadow rounded-full hover:bg-gray-100">
-              <BiChevronLeft className="w-5 h-5" />
-            </button>
-            <button className="p-2 bg-white shadow rounded-full hover:bg-gray-100">
-              <BiChevronRight className="w-5 h-5" />
-            </button>
-          </div> */}
+          <ViewProfilePopupModel isOpen={open} onClose={() => {
+            setOpen(false);
+            setSelectedUuid(null);
+          }} uuid={selectedUuid} />
 
           <div className="flex justify-center mt-10">
             <Link
@@ -387,9 +386,9 @@ export default function Home() {
       <section className="relative w-full">
         <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-cyan-50 -z-10" />
 
-        <div className="max-w-5xl mx-auto px-6 py-20 space-y-24 text-center">
+        <div className="max-w-5xl mx-auto px-6 py-14 lg:py-20 space-y-24 text-center">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
               {t("home.spotlight_title")}
             </h2>
             <p className="mt-3 text-gray-600 max-w-2xl mx-auto">

@@ -1,7 +1,7 @@
 // FeaturePremiumPage.jsx
 import { AiOutlineEye } from "react-icons/ai";
 import { FaArrowLeft, FaCrown, FaUsers, FaHeart, FaEye, FaChartLine, FaBolt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PurchasePopupModel from "../modal/PurchasePopupModel";
 import { useEffect, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
@@ -11,6 +11,8 @@ import { getPlans } from "../Hooks/useSeller";
 const FeaturePremiumPage = () => {
   const { t } = useTranslation();
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const navigate = useNavigate();
+
 
   const joined = 347;
   const spotsLeft = 153;
@@ -118,21 +120,26 @@ const FeaturePremiumPage = () => {
 
   return (
     <div className="bg-white min-h-screen w-full">
-      <div className="md:max-w-[80%] justify-center mx-auto pb-5">
-        {/* Header */}
-        <div className="flex flex-wrap items-center justify-between px-2 md:px-0 py-4 border-b">
+      <div className="md:max-w-[80%] mx-auto">
+        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4">
+          {/* Back to Home Link */}
           <Link
-            to="/guest-dashboard"
-            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-4 py-2 flex items-center"
+            to="/login"
+            className="text-black font-medium text-xs sm:text-sm md:text-base hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
           >
-            <FaArrowLeft className="mr-2" /> {t("premium.back_to_dashboard")}
+            <FaArrowLeft className="mr-2 text-xs sm:text-sm md:text-base" /> {t("premium.back_to_dashboard") || "Back to Home"}
           </Link>
-          <h1 className="flex-1 text-center text-xl font-bold">{t("premium.upgrade_title")}</h1>
-          <button className="px-4 py-2 text-xs bg-orange-500 text-white font-bold rounded-md">
+
+          {/* Title */}
+          <h1 className="text-center align-center text-md sm:text-lg md:text-xl font-bold flex-1">
+            {t("premium.upgrade_title")}
+          </h1>
+
+          {/* Button */}
+          <button className="px-4 py-2 text-xs hidden md:block bg-orange-500 text-white font-bold rounded-md">
             {t("premium.limited_time")}
           </button>
         </div>
-
         {/* Crown Icon */}
         <div className="flex justify-center mt-20">
           <div className="w-18 h-18 rounded-full bg-gradient-to-r from-teal-500 to-orange-400 flex items-center justify-center">
@@ -142,7 +149,7 @@ const FeaturePremiumPage = () => {
 
         {/* Title & Subtitle */}
         <div className="text-center mt-6">
-          <h2 className="text-2xl md:text-3xl font-bold">{t("premium.hero_title")}</h2>
+          <h2 className="text-xl md:text-3xl font-bold">{t("premium.hero_title")}</h2>
           <p className="mt-2 font-light text-gray-600 max-w-xl mx-auto">
             {t("premium.hero_subtitle")}
           </p>
@@ -189,7 +196,6 @@ const FeaturePremiumPage = () => {
             </ul>
           </div>
 
-          {/* Premium */}
           <div className="border-2 border-orange-400 rounded-lg p-6 shadow-lg relative">
             <h4 className="font-light mb-4">{t("premium.premium_title")}</h4>
             <ul className="space-y-2 text-sm text-gray-700">

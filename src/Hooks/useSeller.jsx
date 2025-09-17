@@ -144,3 +144,14 @@ export async function getPlanShow(id, params = {}) {
     throw new Error(msg);
   }
 }
+
+export async function getProfileData(uuid) {
+  try {
+    const res = await service.get(`site/profile/${uuid}`);
+    return res.data;
+  } catch (err) {
+    const msg =
+      err?.response?.data?.message || err?.message || `Failed to fetch profile ${uuid}`;
+    throw new Error(msg);
+  }
+}

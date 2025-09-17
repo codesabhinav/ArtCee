@@ -82,6 +82,7 @@
 
 
 // src/components/StepProgress.jsx
+import React, { useRef } from "react";
 import {
   UserIcon,
   MapPinIcon,
@@ -105,24 +106,27 @@ const stepsConfig = [
 
 const StepProgress = ({ currentStep = 1 }) => {
   const { t } = useTranslation();
+  const trackRef = useRef(null);
 
-  const percent = Math.min(
-    100,
-    Math.max(0, (currentStep / stepsConfig.length) * 100)
-  );
+  const percent = Math.min(100, Math.max(0, (currentStep / stepsConfig.length) * 100));
+
+  // Scroll the horizontal track on small screens.
+  const scrollBy = (direction = "right") => {
+    const el = trackRef.current;
+    if (!el) return;
+    const amount = el.clientWidth * 0.6;
+    const target = direction === "right" ? el.scrollLeft + amount : el.scrollLeft - amount;
+    el.scrollTo({ left: target, behavior: "smooth" });
+  };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4">
+    <div className="w-full max-w-5xl mx-auto ">
       {/* Title */}
-      <h1 className="text-2xl font-bold text-center">
-        {t("join.title")}
-      </h1>
-      <p className="text-center text-gray-600 my-3 font-light text-sm">
-        {t("join.subtitle")}
-      </p>
+      <h1 className="text-2xl font-bold text-center">{t("join.title")}</h1>
+      <p className="text-center text-gray-600 my-3 font-light text-sm">{t("join.subtitle")}</p>
 
       {/* Progress bar */}
-      <div className="relative w-full bg-gray-200 rounded-full h-1.5 mb-10">
+      <div className="relative w-full bg-gray-200 rounded-full h-1.5 mb-6">
         <div
           className="bg-black h-1.5 rounded-full transition-all"
           style={{ width: `${percent}%` }}
@@ -133,48 +137,50 @@ const StepProgress = ({ currentStep = 1 }) => {
         />
       </div>
 
-      {/* Steps with icons */}
-      <div className="flex justify-between">
-        {stepsConfig.map((step, index) => {
-          const Icon = step.icon;
-          const stepNumber = index + 1;
-          const isActive = stepNumber === currentStep;
-          const isCompleted = stepNumber < currentStep;
+      {/* Steps with icons in a single scrollable row */}
+      <div className="relative">
+        <div
+          ref={trackRef}
+          className="flex overflow-x-auto scrollbar snap-x snap-mandatory space-x-6 md:justify-between md:overflow-visible md:snap-none"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
+          {stepsConfig.map((step, index) => {
+            const Icon = step.icon;
+            const stepNumber = index + 1;
+            const isActive = stepNumber === currentStep;
+            const isCompleted = stepNumber < currentStep;
 
-          return (
-            <div
-              key={step.id}
-              className="flex flex-col items-center text-center w-20"
-            >
+            return (
               <div
-                className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
-                  isActive
-                    ? "bg-teal-400 border-teal-500 text-white"
-                    : isCompleted
-                    ? "border-green-500 text-green-600"
-                    : "bg-gray-100 border-gray-300 text-gray-500"
-                }`}
-                aria-current={isActive ? "step" : undefined}
-                aria-label={t(`join.steps.${step.key}`)}
-                title={t(`join.steps.${step.key}`)}
+                key={step.id}
+                className="snap-center flex-shrink-0 flex flex-col items-center text-center min-w-[5.5rem] md:min-w-0"
               >
-                <Icon className="w-5 h-5" />
-              </div>
+                <div
+                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
+                    isActive
+                      ? "bg-teal-400 border-teal-500 text-white"
+                      : isCompleted
+                      ? "border-green-500 text-green-600 bg-transparent"
+                      : "bg-gray-100 border-gray-300 text-gray-500"
+                  }`}
+                  aria-current={isActive ? "step" : undefined}
+                  aria-label={t(`join.steps.${step.key}`)}
+                  title={t(`join.steps.${step.key}`)}
+                >
+                  <Icon className="w-5 h-5" />
+                </div>
 
-              <span
-                className={`mt-2 text-xs font-medium ${
-                  isActive
-                    ? "text-teal-500"
-                    : isCompleted
-                    ? "text-green-600"
-                    : "text-gray-500"
-                }`}
-              >
-                {t(`join.steps.${step.key}`)}
-              </span>
-            </div>
-          );
-        })}
+                <span
+                  className={`mt-2 text-xs font-medium ${
+                    isActive ? "text-teal-500" : isCompleted ? "text-green-600" : "text-gray-500"
+                  }`}
+                >
+                  {t(`join.steps.${step.key}`)}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

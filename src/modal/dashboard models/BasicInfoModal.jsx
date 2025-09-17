@@ -94,6 +94,8 @@ import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateBasicInfo } from "../../Hooks/useDashboard";
 import { useTranslation } from "../../contexts/LanguageProvider";
+import { getGuestDashboardData } from "../../Hooks/useSeller";
+import toast from "react-hot-toast";
 
 const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
   const { t } = useTranslation();
@@ -127,7 +129,8 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors(null);
-
+ 
+    
     if (!form.full_name.trim()) {
       return setErrors(t("basic_info.errors.full_name_required"));
     }
@@ -140,14 +143,21 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
       const payload = { ...form };
       const res = await updateBasicInfo(initialData.uuid || initialData.id, payload);
       onSaved?.(res);
+   try {
+      await getGuestDashboardData();
+    } catch (refreshErr) {
+      console.warn("Failed to refresh guest dashboard data:", refreshErr);
+    }
+    toast.success( "Data updated");
       onClose();
     } catch (err) {
       setErrors(err?.message || t("basic_info.errors.update_failed"));
     } finally {
       setLoading(false);
     }
-  };
 
+       
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-lg overflow-auto max-h-[90vh]">

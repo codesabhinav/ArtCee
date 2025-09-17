@@ -68,6 +68,12 @@ const UploadProfileModal = ({ isOpen, onClose, uuid, onUploaded }) => {
       await getGuestDashboardData();
 
       onUploaded?.(result);
+        try {
+      await getGuestDashboardData();
+    } catch (refreshErr) {
+      console.warn("Failed to refresh guest dashboard data:", refreshErr);
+    }
+    toast.success( "Data updated");
       onClose();
     } catch (err) {
       setError(err.message || "Upload failed");
