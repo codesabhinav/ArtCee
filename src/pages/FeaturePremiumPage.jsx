@@ -14,7 +14,7 @@ const FeaturePremiumPage = () => {
 
   const joined = 347;
   const spotsLeft = 153;
-  const foundingRemainingText = t("premium.founding_spots_remaining", { remaining: spotsLeft });
+  // const foundingRemainingText = t("premium.founding_spots_remaining", { remaining: spotsLeft });
 
   const [plans, setPlans] = useState([]);
   const [location, setLocation] = useState(null);
@@ -281,10 +281,10 @@ const FeaturePremiumPage = () => {
                     </p>
                     <div className="mt-3">
                       <button
-                        onClick={() => {
-                          setShowLocationPrompt(true);
-                          setUserEnteredLocation("");
-                        }}
+                        // onClick={() => {
+                        //   setShowLocationPrompt(true);
+                        //   setUserEnteredLocation("");
+                        // }}
                         className="px-4 py-2 bg-teal-500 text-white rounded"
                       >
                         {t("premium.enter_location", "Enter location")}

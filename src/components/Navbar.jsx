@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import {
   FaUser,
   FaBriefcase,
@@ -14,6 +14,8 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import Cookies from "js-cookie";
 
+
+
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,6 +23,8 @@ const Navbar = () => {
   const { t, languages, lang, setLang } = useTranslation();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const langDropdownRef = useRef(null);
+  const navigate = useNavigate();
+
 
   const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get("token"));
 
@@ -160,11 +164,12 @@ const Navbar = () => {
                 to="/guest-dashboard"
                 className="flex items-center px-3 py-1.5 rounded-md bg-red-500 text-white hover:bg-red-600 transition text-xs font-semibold"
               >
-                <FaUser className="mr-2" /> Profile
+                <FaUser className="mr-2" />  {t("nav.my_account")}
               </Link>
             ) : (
               <button
-                onClick={() => setShowModal(true)}
+                // onClick={() => setShowModal(true)}
+                onClick={() => navigate("/login")}
                 className="flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition text-xs font-semibold"
               >
                 <FaUser className="mr-2" /> {t("nav.sign_in")}

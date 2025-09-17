@@ -369,9 +369,9 @@ const BusinessDirectory = () => {
   const debounceTimer = useRef(null);
 
   const [filtersMeta, setFiltersMeta] = useState({});
-  const [filtersConfigDynamic, setFiltersConfigDynamic] = useState([]); // { key, label, options: [] }
-  const [filterLabelToKeyMap, setFilterLabelToKeyMap] = useState({}); // maps displayed label -> api key
-  const [selectedFilters, setSelectedFilters] = useState({}); // keyed by filter.key (e.g. { type: "All Types", locations: "All Locations" })
+  const [filtersConfigDynamic, setFiltersConfigDynamic] = useState([]); 
+  const [filterLabelToKeyMap, setFilterLabelToKeyMap] = useState({}); 
+  const [selectedFilters, setSelectedFilters] = useState({}); 
   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
 
   const [showingCount, setShowingCount] = useState(0);

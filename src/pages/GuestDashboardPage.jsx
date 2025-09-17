@@ -13,11 +13,9 @@ import {
 } from "react-icons/bi";
 import {
   FaArrowLeft,
-  FaCheckCircle,
   FaChevronRight,
   FaCrown,
   FaMapMarkerAlt,
-  FaRegCircle,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import CreatePostPopupModel from "../modal/CreatePostPopupModel";
@@ -28,7 +26,8 @@ import { Star } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
 import UploadProfileModal from "../modal/dashboard models/UploadProfileModal";
-import PortfolioModal from "../modal/dashboard models/PortfolioModal";
+import Cookies from "js-cookie";
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 const GuestDashboardPage = () => {
   const { t } = useTranslation();
@@ -43,7 +42,6 @@ const GuestDashboardPage = () => {
   const [meta, setMeta] = useState(null);
   const [page, setPage] = useState(1);
   const [isPhotoOpen, setPhotoIsOpen] = useState(false);
-  const [isPortfolioOpen, setPortfolioOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -56,7 +54,7 @@ const GuestDashboardPage = () => {
       })
       .catch((err) => {
         if (!mounted) return;
-        setError(err?.message || "Failed to load dashboard");
+        setError(err?.message || t("guest.load_error"));
         setPayload(null);
       })
       .finally(() => {
@@ -67,7 +65,7 @@ const GuestDashboardPage = () => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     setLoading(true);
@@ -76,27 +74,27 @@ const GuestDashboardPage = () => {
         setPosts(posts);
         setMeta(meta);
       })
-      .catch((err) => console.error(err.message))
+      .catch((err) => console.error(err?.message || t("guest.posts_load_error")))
       .finally(() => setLoading(false));
-  }, [page]);
+  }, [page, t]);
 
   const user = payload?.user ?? {};
   const profile = payload?.data?.profile ?? user?.profile ?? user?.seller?.profile ?? null;
 
   // safe location extraction
   const sellerUser = user?.seller?.user ?? null;
-  const city = user?.location?.city?.name ?? null;
-  const state = user?.location?.state?.name ?? null;
-  const country = user?.location?.country?.name ?? null;
+  const city = sellerUser?.location?.city?.name ?? null;
+  const state = sellerUser?.location?.state?.name ?? null;
+  const country = sellerUser?.location?.country?.name ?? null;
 
   const data = payload?.data ?? {};
   const uuid = user?.uuid || user?.id || null;
 
-  const fullName = user?.full_name || profile?.title || "Guest User";
-  const roleDisplay = user?.role?.[0]?.display_name || "Creative Professional";
+  const fullName = user?.full_name || profile?.title || t("guest.default_name");
+  const roleDisplay = user?.role?.[0]?.display_name || t("guest.default_role");
   const avatar = profile?.profile_picture || "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
   const bio = profile?.bio || "";
-  const title = profile?.title || "Creative Professional";
+  const title = profile?.title || t("guest.default_title");
   const followers = data?.following_count ?? 0;
   const portfolioCount = data?.portfolio_count ?? 0;
   const servicesCount = data?.services_count ?? 0;
@@ -127,6 +125,19 @@ const GuestDashboardPage = () => {
     setModalOpen(true);
   };
 
+  // --- Logout handler (new) ---
+  const handleLogout = () => {
+    // remove token cookie
+    Cookies.remove("token");
+
+    // notify other parts of app (Navbar listens for this)
+    window.dispatchEvent(new Event("authChanged"));
+
+    // redirect to home
+    navigate("/home");
+  };
+  // --- end logout ---
+
   return (
     <div className="bg-white min-h-screen w-full">
       <div className="md:max-w-[80%] mx-auto px-4 pb-2 sm:px-6">
@@ -140,15 +151,24 @@ const GuestDashboardPage = () => {
           </Link>
 
           <div className="flex flex-col flex-1 text-start sm:ml-4">
-            <h1 className="text-lg sm:text-xl font-bold"> Welcome, {fullName}</h1>
+            <h1 className="text-lg sm:text-xl font-bold">{t("guest.welcome")}, {fullName}</h1>
             <p className="text-sm font-light text-gray-600">
               {t("guest.manage_profile")}
             </p>
           </div>
 
-          <span className="px-4 py-1 text-xs bg-gray-100 text-gray-500 font-medium rounded-md w-fit sm:ml-auto">
-            {t("guest.free_account")}
-          </span>
+          <div className="flex items-center gap-4">
+           
+
+            {/* Logout button (added) */}
+            <button
+              onClick={handleLogout}
+              className="px-3 py-1.5 text-xs bg-red-500 text-white rounded-md hover:bg-red-600 inline-flex items-center"
+            >
+              <RiLogoutCircleRLine className="mr-2" size={18} />
+              {t("nav.logout")}
+            </button>
+          </div>
         </div>
 
         {/* Content Grid */}
@@ -167,33 +187,37 @@ const GuestDashboardPage = () => {
                   <h2 className="text-base sm:text-lg font-bold">{fullName}</h2>
                   <p className="text-gray-500 text-sm">{title}</p>
                   <div className="flex flex-row">
-                    <p className="text-xs text-gray-500 mt-1 flex flex-row items-center gap-1"> <FaMapMarkerAlt /> {city}, {state}, {country}</p>
-                    <p className="text-xs text-gray-500 mx-5 mt-1 flex flex-row items-center gap-1"> <Star className="h-3 w-3" /> {rating}/5 </p>
+                    <p className="text-xs text-gray-500 mt-1 flex flex-row items-center gap-1">
+                      <FaMapMarkerAlt /> {city ?? t("guest.unknown")}, {state ?? t("guest.unknown")}, {country ?? t("guest.unknown")}
+                    </p>
+                    <p className="text-xs text-gray-500 mx-5 mt-1 flex flex-row items-center gap-1">
+                      <Star className="h-3 w-3" /> {rating}/{t("guest.rating_scale")}
+                    </p>
                   </div>
                 </div>
               </div>
 
               <div className="text-xs text-gray-600 text-center sm:text-left mt-4 line-clamp-2">
-                {bio}
+                {bio || t("guest.no_bio")}
               </div>
 
               {/* Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 text-center mt-6 gap-4">
                 <div>
                   <p className="font-bold">{followers}</p>
-                  <p className="text-xs text-gray-500">Followers</p>
+                  <p className="text-xs text-gray-500">{t("guest.stats.followers")}</p>
                 </div>
                 <div>
                   <p className="font-bold">{portfolioCount}</p>
-                  <p className="text-xs text-gray-500">Portfolio</p>
+                  <p className="text-xs text-gray-500">{t("guest.stats.portfolio")}</p>
                 </div>
                 <div>
                   <p className="font-bold">{servicesCount}</p>
-                  <p className="text-xs text-gray-500">Services</p>
+                  <p className="text-xs text-gray-500">{t("guest.stats.services")}</p>
                 </div>
                 <div>
                   <p className="font-bold">{yearsExp}</p>
-                  <p className="text-xs text-gray-500">Years Exp</p>
+                  <p className="text-xs text-gray-500">{t("guest.stats.years")}</p>
                 </div>
               </div>
             </div>
@@ -201,14 +225,14 @@ const GuestDashboardPage = () => {
             {/* Profile Completion */}
             <div className="bg-white border rounded-lg p-6 mt-6">
               <div className="flex flex-col sm:flex-row sm:items-center  mb-3 gap-2">
-                <h3 className="font-regular text-sm">Profile Completion</h3>
+                <h3 className="font-regular text-sm">{t("guest.profile_completion_title")}</h3>
                 <span className="text-xs font-medium bg-yellow-100 text-yellow-600 px-3 py-1 rounded-md w-fit">
-                  {progress >= 100 ? "Complete" : "Incomplete Profile"}
+                  {progress >= 100 ? t("guest.profile_complete") : t("guest.profile_incomplete")}
                 </span>
               </div>
 
               <p className="text-xs text-gray-500 mb-4">
-                {data.progress_percentage ?? 0}/100 completed – {progress}%
+                {data.progress_percentage ?? 0}/100 {t("guest.completed_of")} – {progress}%
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
                 <div
@@ -225,13 +249,13 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
                 <h3 className="text-sm flex items-center gap-2">
-                  <PencilIcon className="h-5 w-5" /> Activity & Blog
+                  <PencilIcon className="h-5 w-5" /> {t("guest.activity_blog_title")}
                 </h3>
                 <button
                   onClick={() => setIsOpen(true)}
                   className="bg-teal-500 text-white px-4 py-2 text-xs rounded-md hover:bg-teal-600 w-full sm:w-auto"
                 >
-                  + Create Post
+                  + {t("guest.create_post")}
                 </button>
               </div>
 
@@ -262,33 +286,27 @@ const GuestDashboardPage = () => {
                     <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
                       <PencilIcon className="h-7 w-7" />
                     </div>
-                    <p className="text-sm font-medium">
-                      Start sharing your creative journey
-                    </p>
-                    <p className="text-xs text-gray-500 mb-4">
-                      Create blog posts to showcase your work, share insights, and
-                      attract potential clients
-                    </p>
+                    <p className="text-sm font-medium">{t("guest.posts_empty_title")}</p>
+                    <p className="text-xs text-gray-500 mb-4">{t("guest.posts_empty_desc")}</p>
                     <button className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto">
-                      + Create Your First Post
+                      + {t("guest.create_your_first_post")}
                     </button>
                   </div>
                 )
               )}
             </div>
 
-
             {/* Job Applications Section */}
             <div className="bg-white border rounded-lg p-6 mt-6">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
                 <h3 className="text-sm flex items-center gap-2">
-                  <BriefcaseIcon className="h-5 w-5" /> Job Applications
+                  <BriefcaseIcon className="h-5 w-5" /> {t("guest.job_applications_title")}
                 </h3>
                 <button
                   onClick={() => navigate("/jobs")}
                   className="border px-3 py-1 text-xs rounded-md hover:bg-gray-100 w-full sm:w-auto"
                 >
-                  Browse Jobs
+                  {t("guest.browse_jobs")}
                 </button>
               </div>
 
@@ -296,13 +314,13 @@ const GuestDashboardPage = () => {
                 <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
                   <BriefcaseIcon className="h-7 w-7" />
                 </div>
-                <p className="text-sm font-medium">No applications yet</p>
-                <p className="text-xs text-gray-500 mb-4">Start applying to creative jobs to track your progress here</p>
+                <p className="text-sm font-medium">{t("guest.no_applications")}</p>
+                <p className="text-xs text-gray-500 mb-4">{t("guest.no_applications_desc")}</p>
                 <button
                   onClick={() => navigate("/jobs")}
                   className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto"
                 >
-                  Browse Available Jobs
+                  {t("guest.browse_available_jobs")}
                 </button>
               </div>
             </div>
@@ -316,63 +334,63 @@ const GuestDashboardPage = () => {
                 <div className="bg-orange-500 text-white w-12 h-12 flex items-center justify-center rounded-full mb-3">
                   <FaCrown className="text-2xl" />
                 </div>
-                <h3 className="font-bold text-md mb-1">Unlock Social Features</h3>
-                <p className="text-xs text-gray-500 mb-4">Get featured placement and unlock follow/like interactions</p>
+                <h3 className="font-bold text-md mb-1">{t("guest.unlock_title")}</h3>
+                <p className="text-xs text-gray-500 mb-4">{t("guest.unlock_subtitle")}</p>
               </div>
 
               <ul className="text-xs space-y-2 text-left">
-                <li className="text-green-600">✔ Featured in Directory</li>
-                <li className="text-green-600">✔ Follow Other Creatives</li>
-                <li className="text-green-600">✔ Like & Support Content</li>
-                <li className="text-green-600">✔ Story-First Spotlight</li>
-                <li className="text-orange-500">★ Founding Member Badge</li>
+                <li className="text-green-600">✔ {t("guest.upgrade.featured")}</li>
+                <li className="text-green-600">✔ {t("guest.upgrade.follow")}</li>
+                <li className="text-green-600">✔ {t("guest.upgrade.like")}</li>
+                <li className="text-green-600">✔ {t("guest.upgrade.story")}</li>
+                <li className="text-orange-500">★ {t("guest.upgrade.badge")}</li>
               </ul>
 
               <div className="mt-4 text-xs bg-orange-50 text-orange-600 border border-orange-600 px-3 py-2 rounded-md">
-                Limited Time: Founding Member pricing – Save $50!
+                {t("guest.upgrade_limited")}
               </div>
 
               <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 bg-orange-500 text-white py-2 rounded-md font-medium">
-                Become Founding Member – $47
+                {t("guest.founding_member_cta")}
               </button>
               <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 border border-teal-500 text-teal-600 py-2 rounded-md font-medium hover:bg-gray-200">
-                Premium Monthly – $29/mo
+                {t("guest.premium_monthly_cta")}
               </button>
             </div>
 
             {/* Account Includes */}
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-normal text-sm mb-3">Your Free Account Includes</h3>
+              <h3 className="font-normal text-sm mb-3">{t("guest.account_includes_title")}</h3>
               <ul className="space-y-3 text-xs">
                 <li className="flex justify-between items-center">
                   <span className="flex items-center  gap-2">
-                    <BiCloudUpload className="text-teal-500 h-4 w-4" /> Portfolio Uploads
+                    <BiCloudUpload className="text-teal-500 h-4 w-4" /> {t("guest.includes.portfolio_uploads")}
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Unlimited</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.includes.unlimited")}</span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
-                    <BiImage className="text-teal-500 h-4 w-4" /> Images & Videos
+                    <BiImage className="text-teal-500 h-4 w-4" /> {t("guest.includes.images_videos")}
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Unlimited</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.includes.unlimited")}</span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
-                    <PencilIcon className="text-teal-500 h-4 w-4" /> Blog Posts
+                    <PencilIcon className="text-teal-500 h-4 w-4" /> {t("guest.includes.blog_posts")}
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Unlimited</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.includes.unlimited")}</span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
-                    <BriefcaseIcon className="text-teal-500 h-4 w-4" /> Job Applications
+                    <BriefcaseIcon className="text-teal-500 h-4 w-4" /> {t("guest.includes.job_applications")}
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Unlimited</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.includes.unlimited")}</span>
                 </li>
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
-                    <BiSearch className="text-teal-500 h-4 w-4" /> Directory Listing
+                    <BiSearch className="text-teal-500 h-4 w-4" /> {t("guest.includes.directory_listing")}
                   </span>
-                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">Included</span>
+                  <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.includes.included")}</span>
                 </li>
               </ul>
             </div>
@@ -380,37 +398,37 @@ const GuestDashboardPage = () => {
             {/* Current Plan */}
             <div className="bg-white border rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-normal text-sm">Current Plan: {payload?.data?.subcription?.plan_id ? "Paid" : "Free Account"}</h3>
+                <h3 className="font-normal text-sm">{t("guest.current_plan_title")}: {payload?.data?.subcription?.plan_id ? t("guest.plan_paid") : t("guest.plan_free")}</h3>
                 <span className="text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-1 rounded-xl">
-                  {payload?.data?.subcription?.status === "active" ? "Active" : "Inactive"}
+                  {payload?.data?.subcription?.status === "active" ? t("guest.plan_active") : t("guest.plan_inactive")}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-6 text-xs">
                 <div>
-                  <p className="text-black font-medium mb-2">Billing Information</p>
-                  <p className="text-gray-500">Price:</p>
+                  <p className="text-black font-medium mb-2">{t("guest.billing.title")}</p>
+                  <p className="text-gray-500">{t("guest.billing.price")}</p>
                   <p className="font-medium mb-2">{payload?.data?.subcription?.plan_id ? "$" + payload?.data?.subcription?.plan_id : "$0"}</p>
 
-                  <p className="text-gray-500">Billing Cycle:</p>
-                  <p className="font-medium mb-2">{payload?.data?.subcription?.status === "active" ? "Paid" : "Free"}</p>
+                  <p className="text-gray-500">{t("guest.billing.cycle")}</p>
+                  <p className="font-medium mb-2">{payload?.data?.subcription?.status === "active" ? t("guest.billing.paid") : t("guest.billing.free")}</p>
 
-                  <p className="text-gray-500">Member Since:</p>
+                  <p className="text-gray-500">{t("guest.billing.member_since")}</p>
                   <p className="font-medium">{memberSince}</p>
 
                   <button onClick={() => navigate("/featured")} className="w-full mt-4 bg-teal-500 text-white py-1.5 rounded-md text-xs font-semibold">
-                    Upgrade to Premium
+                    {t("guest.upgrade_button")}
                   </button>
-                  <p className="text-[10px] text-gray-500 mt-1 text-center">Unlock social features and premium placement</p>
+                  <p className="text-[10px] text-gray-500 mt-1 text-center">{t("guest.upgrade_hint")}</p>
                 </div>
 
                 <div>
-                  <p className="text-black font-medium mb-2">Plan Features</p>
+                  <p className="text-black font-medium mb-2">{t("guest.plan_features_title")}</p>
                   <ul className="space-y-2 text-xs">
-                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> Basic Profile</li>
-                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> Unlimited Portfolio Uploads</li>
-                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> Job Applications</li>
-                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> Basic Directory Listing</li>
+                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.basic_profile")}</li>
+                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.unlimited_portfolio")}</li>
+                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.job_applications")}</li>
+                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.directory_listing")}</li>
                   </ul>
                 </div>
               </div>
@@ -420,55 +438,55 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6 mt-6">
               <div className="flex items-center gap-2 mb-4">
                 <StarIcon className="h-5 w-5" />
-                <h3 className="font-normal text-sm">Account Usage</h3>
+                <h3 className="font-normal text-sm">{t("guest.account_usage_title")}</h3>
               </div>
 
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div className="bg-gray-50 rounded-md py-4">
                   <p className="text-2xl font-bold text-teal-500">{payload?.data?.profile_views ?? 342}</p>
-                  <p className="text-xs text-gray-500">Profile Views</p>
-                  <p className="text-[11px] text-orange-500 font-medium">+23 this month</p>
+                  <p className="text-xs text-gray-500">{t("guest.usage.profile_views")}</p>
+                  <p className="text-[11px] text-orange-500 font-medium">+23 {t("guest.usage.this_month")}</p>
                 </div>
                 <div className="bg-gray-50 rounded-md py-4">
                   <p className="text-2xl font-bold text-orange-500">{portfolioCount}</p>
-                  <p className="text-xs text-gray-500">Portfolio Items</p>
-                  <p className="text-[11px] text-teal-400">Unlimited uploads</p>
+                  <p className="text-xs text-gray-500">{t("guest.usage.portfolio_items")}</p>
+                  <p className="text-[11px] text-teal-400">{t("guest.usage.unlimited_uploads")}</p>
                 </div>
                 <div className="bg-gray-50 rounded-md py-4">
                   <p className="text-2xl font-bold text-teal-500">{payload?.data?.orders_count ?? 12}</p>
-                  <p className="text-xs text-gray-500">Job Applications</p>
-                  <p className="text-[11px] text-orange-500 font-medium">+3 this week</p>
+                  <p className="text-xs text-gray-500">{t("guest.usage.job_applications")}</p>
+                  <p className="text-[11px] text-orange-500 font-medium">+3 {t("guest.usage.this_week")}</p>
                 </div>
               </div>
             </div>
 
             {/* Profile Stats */}
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-semibold text-sm mb-3">Profile Stats</h3>
+              <h3 className="font-semibold text-sm mb-3">{t("guest.profile_stats_title")}</h3>
               <ul className="space-y-2 text-xs font-light">
-                <li className="flex justify-between"><span>Profile Views</span><span className="font-bold">{payload?.data?.profile_views ?? 42}</span></li>
-                <li className="flex justify-between"><span>Portfolio Items</span><span className="font-bold">{portfolioCount}</span></li>
-                <li className="flex justify-between"><span>Blog Posts</span><span className="font-bold">{payload?.data?.blog_posts_count ?? 0}</span></li>
-                <li className="flex justify-between"><span>Job Applications</span><span className="font-bold">{payload?.data?.orders_count ?? 0}</span></li>
-                <li className="flex justify-between"><span>Member Since</span><span className="font-bold">{memberSince}</span></li>
+                <li className="flex justify-between"><span>{t("guest.stats.profile_views")}</span><span className="font-bold">{payload?.data?.profile_views ?? 42}</span></li>
+                <li className="flex justify-between"><span>{t("guest.stats.portfolio_items")}</span><span className="font-bold">{portfolioCount}</span></li>
+                <li className="flex justify-between"><span>{t("guest.stats.blog_posts")}</span><span className="font-bold">{payload?.data?.blog_posts_count ?? 0}</span></li>
+                <li className="flex justify-between"><span>{t("guest.stats.job_applications")}</span><span className="font-bold">{payload?.data?.orders_count ?? 0}</span></li>
+                <li className="flex justify-between"><span>{t("guest.stats.member_since")}</span><span className="font-bold">{memberSince}</span></li>
               </ul>
             </div>
 
             {/* Quick Actions */}
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="font-semibold mb-3">Quick Actions</h3>
+              <h3 className="font-semibold mb-3">{t("guest.quick_actions_title")}</h3>
               <ul className="space-y-2 text-xs font-bold">
-                <li onClick={() => setPortfolioOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2"><BiCloudUpload className="h-4 w-4" /> Upload New Work</span>
+                <li className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                  <span className="flex items-center gap-2"><BiCloudUpload className="h-4 w-4" /> {t("guest.quick.upload_work")}</span>
                 </li>
                 <li onClick={() => setIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2"><PencilIcon className="h-4 w-4" /> Write Blog Post</span>
+                  <span className="flex items-center gap-2"><PencilIcon className="h-4 w-4" /> {t("guest.quick.write_blog")}</span>
                 </li>
                 <li onClick={() => navigate("/jobs")} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2"><BriefcaseIcon className="h-4 w-4" /> Browse Jobs</span>
+                  <span className="flex items-center gap-2"><BriefcaseIcon className="h-4 w-4" /> {t("guest.quick.browse_jobs")}</span>
                 </li>
                 <li onClick={() => setPhotoIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2"><CameraIcon className="h-4 w-4" /> Update Profile Photo</span>
+                  <span className="flex items-center gap-2"><CameraIcon className="h-4 w-4" /> {t("guest.quick.update_photo")}</span>
                 </li>
               </ul>
             </div>
@@ -479,8 +497,6 @@ const GuestDashboardPage = () => {
       <CreatePostPopupModel isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <UploadProfileModal isOpen={isPhotoOpen} onClose={() => setPhotoIsOpen(false)} uuid={uuid} />
-
-      <PortfolioModal isOpen={isPortfolioOpen} onClose={() => setPortfolioOpen(false)} />
 
       <StepModalManager
         stepKey={activeStep}
