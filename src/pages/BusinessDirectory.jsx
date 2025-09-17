@@ -1,3 +1,346 @@
+// // BusinessDirectory.jsx
+// import { useEffect, useState, useRef } from "react";
+// import {
+//   FaArrowLeft,
+//   FaMapMarkerAlt,
+//   FaPhoneAlt,
+//   FaEnvelope,
+//   FaGlobe,
+//   FaStar,
+// } from "react-icons/fa";
+// import { Link } from "react-router-dom";
+// import { getBusinessData, getBusinessFilters } from "../Hooks/useSeller";
+// import CustomDropdown from "../components/CustomDropdown";
+// import SpinnerProvider from "../components/SpinnerProvider";
+
+// const BusinessDirectory = () => {
+//   const [businesses, setBusinesses] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   const [search, setSearch] = useState("");
+//   const [debouncedSearch, setDebouncedSearch] = useState("");
+//   const debounceTimer = useRef(null);
+
+//   const [filtersMeta, setFiltersMeta] = useState({});
+//   const [filtersConfigDynamic, setFiltersConfigDynamic] = useState([]);
+//   const [filterLabelToKeyMap, setFilterLabelToKeyMap] = useState({});
+//   const [selectedFilters, setSelectedFilters] = useState({});
+//   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
+
+//   const [showingCount, setShowingCount] = useState(0);
+
+//   const [sortOptions, setSortOptions] = useState(["Highest Rated", "Newest", "Lowest Price"]);
+//   const [sort, setSort] = useState("Highest Rated");
+
+//   useEffect(() => {
+//     if (debounceTimer.current) clearTimeout(debounceTimer.current);
+//     debounceTimer.current = setTimeout(() => {
+//       setDebouncedSearch(search.trim());
+//     }, 500);
+//     return () => {
+//       if (debounceTimer.current) clearTimeout(debounceTimer.current);
+//     };
+//   }, [search]);
+
+//   useEffect(() => {
+//     (async () => {
+//       try {
+//         const meta = await getBusinessFilters();
+//         setFiltersMeta(meta || {});
+
+//         const cfg = [];
+//         const labelToKey = {};
+
+//         const humanLabel = (key) => {
+//           if (key === "type") return "Type";
+//           if (key === "locations") return "Location";
+//           return key;
+//         };
+
+//         if (meta.type) {
+//           const opts = Object.values(meta.type);
+//           cfg.push({ label: humanLabel("type"), options: ["All Types", ...opts], key: "type" });
+//           Object.entries(meta.type).forEach(([k, v]) => (labelToKey[v] = k)); // label -> key
+//         }
+
+//         if (meta.locations) {
+//           const opts = Object.values(meta.locations);
+//           cfg.push({ label: humanLabel("locations"), options: ["All Locations", ...opts], key: "locations" });
+//           Object.entries(meta.locations).forEach(([k, v]) => (labelToKey[v] = k));
+//         }
+
+//         if (meta.order_by_rate) {
+//           const map = {};
+//           const sortLabels = [];
+//           Object.entries(meta.order_by_rate).forEach(([k, v]) => {
+//             map[v] = k;
+//             sortLabels.push(v);
+//           });
+//           labelToKey["__order_by_map__"] = map;
+//           setSortOptions(sortLabels.length > 0 ? sortLabels : sortOptions);
+//           setSort(sortLabels.length > 0 ? sortLabels[0] : sort);
+//         }
+
+//         setFiltersConfigDynamic(cfg);
+//         setFilterLabelToKeyMap(labelToKey);
+
+//         const defaults = {};
+//         cfg.forEach((f) => (defaults[f.label] = f.options[0]));
+//         setSelectedFilters(defaults);
+//         setDefaultSelectedFilters(defaults);
+//       } catch (err) {
+//         console.error("Failed to load business filters:", err);
+//       }
+//     })();
+//   }, []);
+
+//   const buildApiParams = () => {
+//     const params = {};
+//     if (debouncedSearch) params.search = debouncedSearch;
+
+//     Object.entries(selectedFilters).forEach(([label, chosenLabel]) => {
+//       if (!chosenLabel) return;
+//       if (chosenLabel.startsWith("All")) return;
+//       const filterObj = filtersConfigDynamic.find((f) => f.label === label);
+//       if (!filterObj) return;
+//       const apiKeyFromLabel = filterLabelToKeyMap[chosenLabel];
+//       if (!apiKeyFromLabel) return;
+//       params[filterObj.key] = apiKeyFromLabel;
+//     });
+
+//     if (sort && filterLabelToKeyMap["__order_by_map__"]) {
+//       const orderMap = filterLabelToKeyMap["__order_by_map__"];
+//       const mapped = orderMap[sort];
+//       if (mapped) params.order_by_rate = mapped;
+//     }
+
+//     return params;
+//   };
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         setLoading(true);
+//         const params = buildApiParams();
+//         const data = await getBusinessData(params);
+//         setBusinesses(Array.isArray(data) ? data : []);
+//         setShowingCount(Array.isArray(data) ? data.length : 0);
+//       } catch (err) {
+//         console.error("Failed to fetch businesses:", err);
+//         setError(err.message || "Failed to fetch businesses");
+//         setBusinesses([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     if (filtersConfigDynamic.length > 0) {
+//       fetchData();
+//     } else {
+//       (async () => {
+//         try {
+//           setLoading(true);
+//           const data = await getBusinessData({ search: debouncedSearch });
+//           setBusinesses(Array.isArray(data) ? data : []);
+//           setShowingCount(Array.isArray(data) ? data.length : 0);
+//         } catch (err) {
+//           setError(err.message || "Failed to fetch businesses");
+//           setBusinesses([]);
+//         } finally {
+//           setLoading(false);
+//         }
+//       })();
+//     }
+//   }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic]);
+
+//   const clearFilter = (label) => {
+//     setSelectedFilters((prev) => ({ ...prev, [label]: defaultSelectedFilters[label] || (prev[label] && prev[label].startsWith("All") ? prev[label] : "") }));
+//   };
+
+//   const clearAllFilters = () => {
+//     setSelectedFilters(defaultSelectedFilters);
+//   };
+
+//   return (
+//     <div className="bg-white min-h-screen w-full">
+//       <div className="md:max-w-[80%] mx-auto">
+//         {/* Header */}
+//         <div className="flex md:flex-row md:items-center md:justify-between md:px-0 px-4 py-4 gap-3 md:gap-0">
+//           <Link
+//             to="/home"
+//             className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-4 py-2 flex items-center justify-center md:justify-start"
+//           >
+//             <FaArrowLeft className="mr-2" />Back to Home
+//           </Link>
+
+//           <h1 className="text-center text-lg md:text-xl font-bold">
+//             Business Directory
+//           </h1>
+
+//           <button className="px-4 md:px-6 py-2 text-xs bg-teal-500 text-white rounded-md mx-auto md:mx-0">
+//             Industry Partners
+//           </button>
+//         </div>
+
+//         {/* Search + Filters */}
+//         <div className="md:px-0 px-4 py-4 space-y-4 border-b">
+//           <input
+//             type="text"
+//             placeholder="Search businesses, services, or specializations..."
+//             className="form-input w-full"
+//             value={search}
+//             onChange={(e) => setSearch(e.target.value)}
+//           />
+
+//           <div className="grid grid-cols-1 sm:grid-cols-2 md:flex md:space-x-3 gap-3">
+//             {/* Type dropdown - populated from API if available */}
+//             <CustomDropdown
+//               options={
+//                 filtersConfigDynamic.find((f) => f.key === "type")?.options ||
+//                 ["All Types", "CPA", "Law Firm", "Consulting"]
+//               }
+//               value={selectedFilters["Type"] || (filtersConfigDynamic.find((f) => f.key === "type")?.options?.[0] ?? "All Types")}
+//               setValue={(val) =>
+//                 setSelectedFilters((prev) => ({ ...prev, Type: val }))
+//               }
+//             />
+
+//             {/* Location dropdown - populated from API if available */}
+//             <CustomDropdown
+//               options={
+//                 filtersConfigDynamic.find((f) => f.key === "locations")?.options ||
+//                 ["All Locations", "New York, NY", "Los Angeles, CA", "Miami, FL"]
+//               }
+//               value={selectedFilters["Location"] || (filtersConfigDynamic.find((f) => f.key === "locations")?.options?.[0] ?? "All Locations")}
+//               setValue={(val) =>
+//                 setSelectedFilters((prev) => ({ ...prev, Location: val }))
+//               }
+//             />
+
+//             {/* Sort dropdown - derived from API order_by_rate */}
+//             <CustomDropdown
+//               options={sortOptions}
+//               value={sort}
+//               setValue={(val) => setSort(val)}
+//             />
+//           </div>
+//         </div>
+
+//         {/* Results */}
+//         <div className="px-4 md:px-0 py-6">
+//           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+//             <p className="text-sm text-gray-500">
+//               Showing {showingCount} business
+//             </p>
+//             <span className="bg-orange-400 font-bold text-white text-xs px-3 py-1 rounded-md text-center sm:text-left">
+//               Verified Partners
+//             </span>
+//           </div>
+
+//           {loading && <div className="text-gray-500"><SpinnerProvider /></div>}
+//           {error && <p className="text-red-500">{error}</p>}
+
+//           {/* Grid container */}
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//             {businesses.map((biz) => {
+//               const user = biz.user;
+//               const profile = biz.user.profile;
+
+//               return (
+//                 <div
+//                   key={biz.id}
+//                   className="bg-white border rounded-xl shadow-sm p-5 flex items-start gap-4"
+//                 >
+//                   {/* Image */}
+//                   <img
+//                     src={
+//                       profile?.profile_picture ||
+//                       "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80"
+//                     }
+//                     alt={user?.full_name}
+//                     className="w-20 h-20 rounded-lg object-cover shrink-0"
+//                   />
+
+//                   {/* Content */}
+//                   <div className="flex-1">
+//                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+//                       <h2 className="font-bold text-base md:text-lg">{user?.full_name}</h2>
+//                       <span className="text-xs md:text-sm text-gray-500 flex items-center gap-1">
+//                         {user.rating} <FaStar className="text-orange-600" /> 
+//                       </span>
+//                     </div>
+
+//                     <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-md inline-block mt-1">
+//                       {biz?.type || "Business"}
+//                     </span>
+
+//                     <p className="text-xs text-gray-600 mt-2">{biz.personal_intro}</p>
+
+//                     {/* Meta */}
+//                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-500">
+//                       <p className="flex items-center">
+//                         <FaMapMarkerAlt className="mr-2" /> {user?.location.city?.name},
+//                         {user?.location.state?.name}, {user?.location.country?.name}
+//                       </p>
+//                       <p className="flex items-center">
+//                         <FaPhoneAlt className="mr-2" /> {user.profile?.phone || "-"}
+//                       </p>
+//                       <p className="flex items-center">
+//                         <FaEnvelope className="mr-2" /> {user?.email}
+//                       </p>
+//                     </div>
+
+//                     {/* Price */}
+//                     <p className="mt-3 text-gray-800 font-medium text-sm">
+//                       💲 Hourly: ${biz.hourly_rate} | Daily: ${biz.daily_rate} | Project: ${biz.project_rate}
+//                     </p>
+
+//                     {/* Social Links */}
+//                     <div className="mt-3 flex gap-2 flex-wrap">
+//                       {user?.social_links?.map((link) => (
+//                         <a
+//                           key={link.id}
+//                           href={link.url}
+//                           target="_blank"
+//                           rel="noopener noreferrer"
+//                           className="text-xs bg-gray-100 px-2 py-1 rounded-md text-blue-600"
+//                         >
+//                           {link.platform}
+//                         </a>
+//                       ))}
+//                     </div>
+
+//                     {/* Footer */}
+//                     <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:space-x-3 justify-between">
+//                       <a
+//                         href={
+//                           user?.social_links?.find((l) => l.platform === "website")?.url || "#"
+//                         }
+//                         className="px-3 py-2 border rounded-md text-xs flex items-center justify-center gap-2 hover:bg-gray-100"
+//                       >
+//                         <FaGlobe /> <span>Website</span>
+//                       </a>
+//                       <button className="sm:ml-auto px-3 py-2 bg-teal-500 text-white font-semibold text-xs rounded-md hover:bg-teal-600">
+//                         View Details
+//                       </button>
+//                     </div>
+//                   </div>
+//                 </div>
+//               );
+//             })}
+//           </div>
+//         </div>
+
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default BusinessDirectory;
+
+
+
 // BusinessDirectory.jsx
 import { useEffect, useState, useRef } from "react";
 import {
@@ -12,8 +355,11 @@ import { Link } from "react-router-dom";
 import { getBusinessData, getBusinessFilters } from "../Hooks/useSeller";
 import CustomDropdown from "../components/CustomDropdown";
 import SpinnerProvider from "../components/SpinnerProvider";
+import { useTranslation } from "../contexts/LanguageProvider";
 
 const BusinessDirectory = () => {
+  const { t } = useTranslation();
+
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,16 +369,21 @@ const BusinessDirectory = () => {
   const debounceTimer = useRef(null);
 
   const [filtersMeta, setFiltersMeta] = useState({});
-  const [filtersConfigDynamic, setFiltersConfigDynamic] = useState([]);
-  const [filterLabelToKeyMap, setFilterLabelToKeyMap] = useState({});
-  const [selectedFilters, setSelectedFilters] = useState({});
+  const [filtersConfigDynamic, setFiltersConfigDynamic] = useState([]); // { key, label, options: [] }
+  const [filterLabelToKeyMap, setFilterLabelToKeyMap] = useState({}); // maps displayed label -> api key
+  const [selectedFilters, setSelectedFilters] = useState({}); // keyed by filter.key (e.g. { type: "All Types", locations: "All Locations" })
   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
 
   const [showingCount, setShowingCount] = useState(0);
 
-  const [sortOptions, setSortOptions] = useState(["Highest Rated", "Newest", "Lowest Price"]);
-  const [sort, setSort] = useState("Highest Rated");
+  const [sortOptions, setSortOptions] = useState([
+    t("filters.sort.highest_rated"),
+    t("filters.sort.newest"),
+    t("filters.sort.lowest_price"),
+  ]);
+  const [sort, setSort] = useState(t("filters.sort.highest_rated"));
 
+  /* debounce search */
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
@@ -43,6 +394,7 @@ const BusinessDirectory = () => {
     };
   }, [search]);
 
+  /* load filters metadata from API and build dynamic config */
   useEffect(() => {
     (async () => {
       try {
@@ -53,59 +405,83 @@ const BusinessDirectory = () => {
         const labelToKey = {};
 
         const humanLabel = (key) => {
-          if (key === "type") return "Type";
-          if (key === "locations") return "Location";
-          return key;
+          if (key === "type") return t("filters.labels.type");
+          if (key === "locations") return t("filters.labels.location");
+          // fallback: capitalize key
+          return key.charAt(0).toUpperCase() + key.slice(1);
         };
 
-        if (meta.type) {
+        // type
+        if (meta?.type) {
           const opts = Object.values(meta.type);
-          cfg.push({ label: humanLabel("type"), options: ["All Types", ...opts], key: "type" });
-          Object.entries(meta.type).forEach(([k, v]) => (labelToKey[v] = k)); // label -> key
+          cfg.push({
+            label: humanLabel("type"),
+            options: [t("filters.all_types"), ...opts],
+            key: "type",
+          });
+          Object.entries(meta.type).forEach(([k, v]) => (labelToKey[v] = k));
         }
 
-        if (meta.locations) {
+        // locations
+        if (meta?.locations) {
           const opts = Object.values(meta.locations);
-          cfg.push({ label: humanLabel("locations"), options: ["All Locations", ...opts], key: "locations" });
+          cfg.push({
+            label: humanLabel("locations"),
+            options: [t("filters.all_locations"), ...opts],
+            key: "locations",
+          });
           Object.entries(meta.locations).forEach(([k, v]) => (labelToKey[v] = k));
         }
 
-        if (meta.order_by_rate) {
+        // order_by_rate -> populate sortOptions and map
+        if (meta?.order_by_rate) {
           const map = {};
           const sortLabels = [];
           Object.entries(meta.order_by_rate).forEach(([k, v]) => {
-            map[v] = k;
+            map[v] = k; // display label -> api key
             sortLabels.push(v);
           });
           labelToKey["__order_by_map__"] = map;
-          setSortOptions(sortLabels.length > 0 ? sortLabels : sortOptions);
-          setSort(sortLabels.length > 0 ? sortLabels[0] : sort);
+          if (sortLabels.length > 0) {
+            setSortOptions(sortLabels);
+            setSort(sortLabels[0]);
+          }
         }
 
         setFiltersConfigDynamic(cfg);
         setFilterLabelToKeyMap(labelToKey);
 
+        // prepare selected defaults by key (not by human label)
         const defaults = {};
-        cfg.forEach((f) => (defaults[f.label] = f.options[0]));
+        cfg.forEach((f) => {
+          defaults[f.key] = f.options[0];
+        });
         setSelectedFilters(defaults);
         setDefaultSelectedFilters(defaults);
       } catch (err) {
         console.error("Failed to load business filters:", err);
       }
     })();
+    // run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* build params for API from selectedFilters (keys) and sort */
   const buildApiParams = () => {
     const params = {};
     if (debouncedSearch) params.search = debouncedSearch;
 
-    Object.entries(selectedFilters).forEach(([label, chosenLabel]) => {
+    filtersConfigDynamic.forEach((filterObj) => {
+      const chosenLabel = selectedFilters[filterObj.key];
       if (!chosenLabel) return;
-      if (chosenLabel.startsWith("All")) return;
-      const filterObj = filtersConfigDynamic.find((f) => f.label === label);
-      if (!filterObj) return;
+      // skip "All ..." selections
+      if (typeof chosenLabel === "string" && chosenLabel.startsWith(t("filters.all_prefix") || "All")) return;
+      // map displayed label back to API key
       const apiKeyFromLabel = filterLabelToKeyMap[chosenLabel];
-      if (!apiKeyFromLabel) return;
+      if (!apiKeyFromLabel) {
+        // If no mapping, don't include param
+        return;
+      }
       params[filterObj.key] = apiKeyFromLabel;
     });
 
@@ -118,6 +494,7 @@ const BusinessDirectory = () => {
     return params;
   };
 
+  /* fetch businesses when controls change */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -126,10 +503,12 @@ const BusinessDirectory = () => {
         const data = await getBusinessData(params);
         setBusinesses(Array.isArray(data) ? data : []);
         setShowingCount(Array.isArray(data) ? data.length : 0);
+        setError(null);
       } catch (err) {
         console.error("Failed to fetch businesses:", err);
-        setError(err.message || "Failed to fetch businesses");
+        setError(err.message || t("business.fetch_error"));
         setBusinesses([]);
+        setShowingCount(0);
       } finally {
         setLoading(false);
       }
@@ -144,22 +523,46 @@ const BusinessDirectory = () => {
           const data = await getBusinessData({ search: debouncedSearch });
           setBusinesses(Array.isArray(data) ? data : []);
           setShowingCount(Array.isArray(data) ? data.length : 0);
+          setError(null);
         } catch (err) {
-          setError(err.message || "Failed to fetch businesses");
+          setError(err.message || t("business.fetch_error"));
           setBusinesses([]);
+          setShowingCount(0);
         } finally {
           setLoading(false);
         }
       })();
     }
+    // react to these changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic]);
 
-  const clearFilter = (label) => {
-    setSelectedFilters((prev) => ({ ...prev, [label]: defaultSelectedFilters[label] || (prev[label] && prev[label].startsWith("All") ? prev[label] : "") }));
+  /* clear filter by filter key */
+  const clearFilter = (key) => {
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [key]: defaultSelectedFilters[key] ?? (prev[key] && prev[key].startsWith(t("filters.all_prefix") || "All") ? prev[key] : ""),
+    }));
   };
 
   const clearAllFilters = () => {
     setSelectedFilters(defaultSelectedFilters);
+  };
+
+  /* when user selects a value that is not currently in options, add it to that filter's options so dropdown can show it */
+  const handleSetFilterValue = (filterKey, value) => {
+    // if value is not present in options for that filter, append it
+    setFiltersConfigDynamic((prev) =>
+      prev.map((f) => {
+        if (f.key !== filterKey) return f;
+        if (!f.options.includes(value)) {
+          return { ...f, options: [...f.options, value] };
+        }
+        return f;
+      })
+    );
+
+    setSelectedFilters((prev) => ({ ...prev, [filterKey]: value }));
   };
 
   return (
@@ -171,15 +574,15 @@ const BusinessDirectory = () => {
             to="/home"
             className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-4 py-2 flex items-center justify-center md:justify-start"
           >
-            <FaArrowLeft className="mr-2" />Back to Home
+            <FaArrowLeft className="mr-2" />{t("business.back_to_home")}
           </Link>
 
           <h1 className="text-center text-lg md:text-xl font-bold">
-            Business Directory
+            {t("business.directory_title")}
           </h1>
 
           <button className="px-4 md:px-6 py-2 text-xs bg-teal-500 text-white rounded-md mx-auto md:mx-0">
-            Industry Partners
+            {t("business.industry_partners")}
           </button>
         </div>
 
@@ -187,38 +590,40 @@ const BusinessDirectory = () => {
         <div className="md:px-0 px-4 py-4 space-y-4 border-b">
           <input
             type="text"
-            placeholder="Search businesses, services, or specializations..."
+            placeholder={t("filters.search_placeholder")}
             className="form-input w-full"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:flex md:space-x-3 gap-3">
-            {/* Type dropdown - populated from API if available */}
-            <CustomDropdown
-              options={
-                filtersConfigDynamic.find((f) => f.key === "type")?.options ||
-                ["All Types", "CPA", "Law Firm", "Consulting"]
-              }
-              value={selectedFilters["Type"] || (filtersConfigDynamic.find((f) => f.key === "type")?.options?.[0] ?? "All Types")}
-              setValue={(val) =>
-                setSelectedFilters((prev) => ({ ...prev, Type: val }))
-              }
-            />
+            {/* Render dynamic filters (Type, Location, etc.) */}
+            {filtersConfigDynamic.length > 0 ? (
+              filtersConfigDynamic.map((f) => (
+                <CustomDropdown
+                  key={f.key}
+                  options={f.options}
+                  value={selectedFilters[f.key] ?? f.options[0]}
+                  setValue={(val) => handleSetFilterValue(f.key, val)}
+                />
+              ))
+            ) : (
+              // fallback hard-coded dropdowns when API doesn't provide filters yet
+              <>
+                <CustomDropdown
+                  options={[t("filters.all_types"), "CPA", "Law Firm", "Consulting"]}
+                  value={selectedFilters["type"] ?? t("filters.all_types")}
+                  setValue={(val) => handleSetFilterValue("type", val)}
+                />
+                <CustomDropdown
+                  options={[t("filters.all_locations"), "New York, NY", "Los Angeles, CA", "Miami, FL"]}
+                  value={selectedFilters["locations"] ?? t("filters.all_locations")}
+                  setValue={(val) => handleSetFilterValue("locations", val)}
+                />
+              </>
+            )}
 
-            {/* Location dropdown - populated from API if available */}
-            <CustomDropdown
-              options={
-                filtersConfigDynamic.find((f) => f.key === "locations")?.options ||
-                ["All Locations", "New York, NY", "Los Angeles, CA", "Miami, FL"]
-              }
-              value={selectedFilters["Location"] || (filtersConfigDynamic.find((f) => f.key === "locations")?.options?.[0] ?? "All Locations")}
-              setValue={(val) =>
-                setSelectedFilters((prev) => ({ ...prev, Location: val }))
-              }
-            />
-
-            {/* Sort dropdown - derived from API order_by_rate */}
+            {/* Sort dropdown */}
             <CustomDropdown
               options={sortOptions}
               value={sort}
@@ -231,21 +636,25 @@ const BusinessDirectory = () => {
         <div className="px-4 md:px-0 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
             <p className="text-sm text-gray-500">
-              Showing {showingCount} business
+              {t("business.showing")} {showingCount}{" "}
+              {showingCount === 1 ? t("business.business") : t("business.businesses")}
             </p>
             <span className="bg-orange-400 font-bold text-white text-xs px-3 py-1 rounded-md text-center sm:text-left">
-              Verified Partners
+              {t("business.verified_partners")}
             </span>
           </div>
 
           {loading && <div className="text-gray-500"><SpinnerProvider /></div>}
           {error && <p className="text-red-500">{error}</p>}
+          {!loading && businesses.length === 0 && !error && (
+            <p className="text-gray-500">{t("business.no_results")}</p>
+          )}
 
           {/* Grid container */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {businesses.map((biz) => {
-              const user = biz.user;
-              const profile = biz.user.profile;
+              const user = biz.user || {};
+              const profile = user.profile || {};
 
               return (
                 <div
@@ -258,7 +667,7 @@ const BusinessDirectory = () => {
                       profile?.profile_picture ||
                       "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80"
                     }
-                    alt={user?.full_name}
+                    alt={user?.full_name || t("business.business")}
                     className="w-20 h-20 rounded-lg object-cover shrink-0"
                   />
 
@@ -267,12 +676,12 @@ const BusinessDirectory = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                       <h2 className="font-bold text-base md:text-lg">{user?.full_name}</h2>
                       <span className="text-xs md:text-sm text-gray-500 flex items-center gap-1">
-                        {user.rating} <FaStar className="text-orange-600" /> 
+                        {user.rating ?? "-"} <FaStar className="text-orange-600" />
                       </span>
                     </div>
 
                     <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-md inline-block mt-1">
-                      {biz?.type || "Business"}
+                      {biz?.type || t("business.business")}
                     </span>
 
                     <p className="text-xs text-gray-600 mt-2">{biz.personal_intro}</p>
@@ -280,27 +689,29 @@ const BusinessDirectory = () => {
                     {/* Meta */}
                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-500">
                       <p className="flex items-center">
-                        <FaMapMarkerAlt className="mr-2" /> {user?.location.city?.name},
-                        {user?.location.state?.name}, {user?.location.country?.name}
+                        <FaMapMarkerAlt className="mr-2" />{" "}
+                        {user?.location?.city?.name || "-"}
+                        {user?.location?.state?.name ? `, ${user.location.state.name}` : ""}
+                        {user?.location?.country?.name ? `, ${user.location.country.name}` : ""}
                       </p>
                       <p className="flex items-center">
-                        <FaPhoneAlt className="mr-2" /> {user.profile?.phone || "-"}
+                        <FaPhoneAlt className="mr-2" /> {profile?.phone || "-"}
                       </p>
                       <p className="flex items-center">
-                        <FaEnvelope className="mr-2" /> {user?.email}
+                        <FaEnvelope className="mr-2" /> {user?.email || "-"}
                       </p>
                     </div>
 
                     {/* Price */}
                     <p className="mt-3 text-gray-800 font-medium text-sm">
-                      💲 Hourly: ${biz.hourly_rate} | Daily: ${biz.daily_rate} | Project: ${biz.project_rate}
+                      {t("price.hourly")}: {biz.hourly_rate != null ? `$${biz.hourly_rate}` : "-"} | {t("price.daily")}: {biz.daily_rate != null ? `$${biz.daily_rate}` : "-"} | {t("price.project")}: {biz.project_rate != null ? `$${biz.project_rate}` : "-"}
                     </p>
 
                     {/* Social Links */}
                     <div className="mt-3 flex gap-2 flex-wrap">
-                      {user?.social_links?.map((link) => (
+                      {(user?.social_links || []).map((link) => (
                         <a
-                          key={link.id}
+                          key={link.id || link.url}
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -315,14 +726,14 @@ const BusinessDirectory = () => {
                     <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:space-x-3 justify-between">
                       <a
                         href={
-                          user?.social_links?.find((l) => l.platform === "website")?.url || "#"
+                          (user?.social_links || []).find((l) => l.platform === "website")?.url || "#"
                         }
                         className="px-3 py-2 border rounded-md text-xs flex items-center justify-center gap-2 hover:bg-gray-100"
                       >
-                        <FaGlobe /> <span>Website</span>
+                        <FaGlobe /> <span>{t("business.website")}</span>
                       </a>
                       <button className="sm:ml-auto px-3 py-2 bg-teal-500 text-white font-semibold text-xs rounded-md hover:bg-teal-600">
-                        View Details
+                        {t("business.view_details")}
                       </button>
                     </div>
                   </div>

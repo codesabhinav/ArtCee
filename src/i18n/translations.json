@@ -8,7 +8,8 @@
         "spotlight": "Spotlight",
         "perspective": "The Perspective",
         "dashboard": "Dashboard",
-        "sign_in": "Sign In"
+        "sign_in": "Sign In",
+        "logout"  :"logout"
       },
       "apply_job_modal": {
     "apply_title": "Apply for {{title}}",
@@ -51,12 +52,45 @@
     "business": "Business"
   },
   
+
+  
   "filters": {
-    "type_label": "Type",
+     "type_label": "Type",
     "location_label": "Location",
+    "search_placeholder": "Search businesses, services, or specializations...",
+    "all_prefix": "All",
     "all_types": "All Types",
-    "all_locations": "All Locations"
+    "all_locations": "All Locations",
+    "sort": {
+      "highest_rated": "Highest Rated",
+      "newest": "Newest",
+      "lowest_price": "Lowest Price"
+    },
+    "labels": {
+      "type": "Type",
+      "location": "Location"
+    }
   },
+  "business": {
+    "directory_title": "Business Directory",
+    "back_to_home": "Back to Home",
+    "industry_partners": "Industry Partners",
+    "showing": "Showing",
+    "business": "business",
+    "businesses": "businesses",
+    "verified_partners": "Verified Partners",
+    "no_results": "No businesses found.",
+    "website": "Website",
+    "view_details": "View Details",
+    "fetch_error": "Failed to fetch businesses"
+  },
+  "price": {
+    "hourly": "Hourly",
+    "daily": "Daily",
+    "project": "Project"
+  },
+
+
   "sort": {
     "highest_rated": "Highest Rated",
     "newest": "Newest",
@@ -155,6 +189,8 @@
         "name_az": "Name A-Z"
       }
     }
+    
+
   },
   "modals": {
     "view_job": {
@@ -1318,7 +1354,8 @@
         "spotlight": "Destacados",
         "perspective": "La Perspectiva",
         "dashboard": "Panel",
-        "sign_in": "Iniciar sesión"
+        "sign_in": "Iniciar sesión",
+        "logout": "cerrar sesión"
       },  
       "apply_job_modal": {
     "apply_title": "Postular a {{title}}",
@@ -1363,8 +1400,37 @@
   "filters": {
     "type_label": "Tipo",
     "location_label": "Ubicación",
+    "search_placeholder": "Buscar negocios, servicios o especializaciones...",
+    "all_prefix": "Todos",
     "all_types": "Todos los Tipos",
-    "all_locations": "Todas las Ubicaciones"
+    "all_locations": "Todas las Ubicaciones",
+    "sort": {
+      "highest_rated": "Mejor Calificado",
+      "newest": "Más Reciente",
+      "lowest_price": "Precio Más Bajo"
+    },
+    "labels": {
+      "type": "Tipo",
+      "location": "Ubicación"
+    }
+  },
+  "business": {
+    "directory_title": "Directorio de Negocios",
+    "back_to_home": "Volver a la Página Principal",
+    "industry_partners": "Socios de la Industria",
+    "showing": "Mostrando",
+    "business": "negocio",
+    "businesses": "negocios",
+    "verified_partners": "Socios Verificados",
+    "no_results": "No se encontraron negocios.",
+    "website": "Sitio Web",
+    "view_details": "Ver Detalles",
+    "fetch_error": "No se pudieron obtener los negocios"
+  },
+  "price": {
+    "hourly": "Por Hora",
+    "daily": "Diario",
+    "project": "Proyecto"
   },
   "sort": {
     "highest_rated": "Mejor Calificados",
@@ -2608,7 +2674,8 @@
         "spotlight": "Destaque",
         "perspective": "A Perspectiva",
         "dashboard": "Painel",
-        "sign_in": "Entrar"
+        "sign_in": "Entrar",
+         "logout": "sair"
       },
       "apply_job_modal": {
     "apply_title": "Candidatar-se a {{title}}",
@@ -2650,12 +2717,40 @@
     "view_details": "Ver Detalhes",
     "business": "Empresa"
   },
-
-  "filters": {
+"filters": {
     "type_label": "Tipo",
     "location_label": "Localização",
+    "search_placeholder": "Pesquisar negócios, serviços ou especializações...",
+    "all_prefix": "Todos",
     "all_types": "Todos os Tipos",
-    "all_locations": "Todas as Localizações"
+    "all_locations": "Todas as Localizações",
+    "sort": {
+      "highest_rated": "Melhor Avaliado",
+      "newest": "Mais Recente",
+      "lowest_price": "Preço Mais Baixo"
+    },
+    "labels": {
+      "type": "Tipo",
+      "location": "Localização"
+    }
+  },
+  "business": {
+    "directory_title": "Diretório de Negócios",
+    "back_to_home": "Voltar para a Página Inicial",
+    "industry_partners": "Parceiros da Indústria",
+    "showing": "Mostrando",
+    "business": "negócio",
+    "businesses": "negócios",
+    "verified_partners": "Parceiros Verificados",
+    "no_results": "Nenhum negócio encontrado.",
+    "website": "Site",
+    "view_details": "Ver Detalhes",
+    "fetch_error": "Falha ao buscar negócios"
+  },
+  "price": {
+    "hourly": "Por Hora",
+    "daily": "Diário",
+    "project": "Projeto"
   },
   "sort": {
     "highest_rated": "Mais bem avaliados",
@@ -3896,7 +3991,8 @@
         "spotlight": "स्पॉटलाइट",
         "perspective": "द पर्सपेक्टिव",
         "dashboard": "डैशबोर्ड",
-        "sign_in": "साइन इन"
+        "sign_in": "साइन इन",
+        "logout": "लॉगआउट"
       },
       "apply_job_modal": {
     "apply_title": "{{title}} के लिए आवेदन करें",
@@ -3938,11 +4034,40 @@
     "view_details": "विवरण देखें",
     "business": "व्यवसाय"
   },
-  "filters": {
+ "filters": {
     "type_label": "प्रकार",
     "location_label": "स्थान",
+    "search_placeholder": "व्यवसाय, सेवाएँ या विशेषज्ञता खोजें...",
+    "all_prefix": "सभी",
     "all_types": "सभी प्रकार",
-    "all_locations": "सभी स्थान"
+    "all_locations": "सभी स्थान",
+    "sort": {
+      "highest_rated": "सर्वोच्च रेटेड",
+      "newest": "नवीनतम",
+      "lowest_price": "सबसे कम कीमत"
+    },
+    "labels": {
+      "type": "प्रकार",
+      "location": "स्थान"
+    }
+  },
+  "business": {
+    "directory_title": "व्यवसाय निर्देशिका",
+    "back_to_home": "होम पर वापस",
+    "industry_partners": "उद्योग भागीदार",
+    "showing": "दिखा रहा है",
+    "business": "व्यवसाय",
+    "businesses": "व्यवसाय",
+    "verified_partners": "सत्यापित भागीदार",
+    "no_results": "कोई व्यवसाय नहीं मिला।",
+    "website": "वेबसाइट",
+    "view_details": "विवरण देखें",
+    "fetch_error": "व्यवसाय प्राप्त करने में विफल"
+  },
+  "price": {
+    "hourly": "प्रति घंटा",
+    "daily": "दैनिक",
+    "project": "परियोजना"
   },
   "sort": {
     "highest_rated": "उच्चतम रेटेड",
@@ -5191,7 +5316,8 @@
         "spotlight": "Spotlight",
         "perspective": "Ang Perspektibo",
         "dashboard": "Dashboard",
-        "sign_in": "Mag-sign in"
+        "sign_in": "Mag-sign in",
+        "logout": "mag-logout"
       },
       "apply_job_modal": {
     "apply_title": "Mag-apply para sa {{title}}",
@@ -5236,8 +5362,37 @@
   "filters": {
     "type_label": "Uri",
     "location_label": "Lokasyon",
+    "search_placeholder": "Maghanap ng mga negosyo, serbisyo, o espesyalisasyon...",
+    "all_prefix": "Lahat",
     "all_types": "Lahat ng Uri",
-    "all_locations": "Lahat ng Lokasyon"
+    "all_locations": "Lahat ng Lokasyon",
+    "sort": {
+      "highest_rated": "Pinakamataas ang Rating",
+      "newest": "Pinakabago",
+      "lowest_price": "Pinakamababang Presyo"
+    },
+    "labels": {
+      "type": "Uri",
+      "location": "Lokasyon"
+    }
+  },
+  "business": {
+    "directory_title": "Direktoryo ng Negosyo",
+    "back_to_home": "Bumalik sa Home",
+    "industry_partners": "Mga Kasosyo sa Industriya",
+    "showing": "Nagpapakita",
+    "business": "negosyo",
+    "businesses": "mga negosyo",
+    "verified_partners": "Mga Na-verify na Kasosyo",
+    "no_results": "Walang natagpuang negosyo.",
+    "website": "Website",
+    "view_details": "Tingnan ang mga Detalye",
+    "fetch_error": "Nabigo sa pagkuha ng mga negosyo"
+  },
+  "price": {
+    "hourly": "Oras-oras",
+    "daily": "Araw-araw",
+    "project": "Proyekto"
   },
   "sort": {
     "highest_rated": "Pinakamataas ang Rating",
@@ -6480,7 +6635,8 @@
         "spotlight": "스포트라이트",
         "perspective": "관점",
         "dashboard": "대시보드",
-        "sign_in": "로그인"
+        "sign_in": "로그인",
+        "logout": "로그아웃"
       },
        "apply_job_modal": {
     "apply_title": "{{title}}에 지원하기",
@@ -6525,8 +6681,37 @@
   "filters": {
     "type_label": "유형",
     "location_label": "위치",
+    "search_placeholder": "비즈니스, 서비스 또는 전문 분야 검색...",
+    "all_prefix": "모두",
     "all_types": "모든 유형",
-    "all_locations": "모든 위치"
+    "all_locations": "모든 위치",
+    "sort": {
+      "highest_rated": "최고 평점",
+      "newest": "최신",
+      "lowest_price": "최저 가격"
+    },
+    "labels": {
+      "type": "유형",
+      "location": "위치"
+    }
+  },
+  "business": {
+    "directory_title": "비즈니스 디렉토리",
+    "back_to_home": "홈으로 돌아가기",
+    "industry_partners": "산업 파트너",
+    "showing": "표시 중",
+    "business": "비즈니스",
+    "businesses": "비즈니스",
+    "verified_partners": "검증된 파트너",
+    "no_results": "비즈니스를 찾을 수 없습니다.",
+    "website": "웹사이트",
+    "view_details": "세부 정보 보기",
+    "fetch_error": "비즈니스 가져오기에 실패했습니다"
+  },
+  "price": {
+    "hourly": "시간당",
+    "daily": "일일",
+    "project": "프로젝트"
   },
   "sort": {
     "highest_rated": "평점 높은 순",
@@ -7768,7 +7953,8 @@
         "spotlight": "聚焦",
         "perspective": "观点",
         "dashboard": "仪表盘",
-        "sign_in": "登录"
+        "sign_in": "登录",
+        "logout": "退出"
       },
       "apply_job_modal": {
     "apply_title": "申请 {{title}}",
@@ -7813,8 +7999,37 @@
   "filters": {
     "type_label": "类型",
     "location_label": "位置",
+    "search_placeholder": "搜索企业、服务或专业领域...",
+    "all_prefix": "全部",
     "all_types": "所有类型",
-    "all_locations": "所有地点"
+    "all_locations": "所有位置",
+    "sort": {
+      "highest_rated": "评分最高",
+      "newest": "最新",
+      "lowest_price": "最低价格"
+    },
+    "labels": {
+      "type": "类型",
+      "location": "位置"
+    }
+  },
+  "business": {
+    "directory_title": "企业目录",
+    "back_to_home": "返回主页",
+    "industry_partners": "行业合作伙伴",
+    "showing": "显示",
+    "business": "企业",
+    "businesses": "企业",
+    "verified_partners": "已验证的合作伙伴",
+    "no_results": "未找到企业。",
+    "website": "网站",
+    "view_details": "查看详情",
+    "fetch_error": "获取企业失败"
+  },
+  "price": {
+    "hourly": "按小时",
+    "daily": "按天",
+    "project": "项目"
   },
   "sort": {
     "highest_rated": "评分最高",
@@ -9056,7 +9271,8 @@
         "spotlight": "À la une",
         "perspective": "La Perspective",
         "dashboard": "Tableau de bord",
-        "sign_in": "Se connecter"
+        "sign_in": "Se connecter",
+        "logout": "déconnexion"
       },
        "apply_job_modal": {
     "apply_title": "Postuler pour {{title}}",
@@ -9098,11 +9314,40 @@
     "view_details": "Voir les détails",
     "business": "Entreprise"
   },
-  "filters": {
+ "filters": {
     "type_label": "Type",
-    "location_label": "Lieu",
-    "all_types": "Tous les types",
-    "all_locations": "Tous les lieux"
+    "location_label": "Emplacement",
+    "search_placeholder": "Rechercher des entreprises, services ou spécialisations...",
+    "all_prefix": "Tous",
+    "all_types": "Tous les Types",
+    "all_locations": "Tous les Emplacements",
+    "sort": {
+      "highest_rated": "Les Mieux Notés",
+      "newest": "Les Plus Récents",
+      "lowest_price": "Prix le Plus Bas"
+    },
+    "labels": {
+      "type": "Type",
+      "location": "Emplacement"
+    }
+  },
+  "business": {
+    "directory_title": "Répertoire des Entreprises",
+    "back_to_home": "Retour à l'Accueil",
+    "industry_partners": "Partenaires de l'Industrie",
+    "showing": "Affichage",
+    "business": "entreprise",
+    "businesses": "entreprises",
+    "verified_partners": "Partenaires Vérifiés",
+    "no_results": "Aucune entreprise trouvée.",
+    "website": "Site Web",
+    "view_details": "Voir les Détails",
+    "fetch_error": "Échec de la récupération des entreprises"
+  },
+  "price": {
+    "hourly": "Horaire",
+    "daily": "Journalier",
+    "project": "Projet"
   },
   "sort": {
     "highest_rated": "Les mieux notés",
@@ -10346,7 +10591,8 @@
         "spotlight": "スポットライト",
         "perspective": "パースペクティブ",
         "dashboard": "ダッシュボード",
-        "sign_in": "サインイン"
+        "sign_in": "サインイン",
+        "logout": "ログアウト"
       },
       "apply_job_modal": {
     "apply_title": "{{title}} に応募する",
@@ -10388,11 +10634,40 @@
     "view_details": "詳細を見る",
     "business": "事業者"
   },
-  "filters": {
-    "type_label": "種類",
+ "filters": {
+    "type_label": "タイプ",
     "location_label": "場所",
-    "all_types": "すべての種類",
-    "all_locations": "すべての場所"
+    "search_placeholder": "ビジネス、サービス、または専門分野を検索...",
+    "all_prefix": "すべて",
+    "all_types": "すべてのタイプ",
+    "all_locations": "すべての場所",
+    "sort": {
+      "highest_rated": "最高評価",
+      "newest": "最新",
+      "lowest_price": "最低価格"
+    },
+    "labels": {
+      "type": "タイプ",
+      "location": "場所"
+    }
+  },
+  "business": {
+    "directory_title": "ビジネスディレクトリ",
+    "back_to_home": "ホームに戻る",
+    "industry_partners": "業界パートナー",
+    "showing": "表示中",
+    "business": "ビジネス",
+    "businesses": "ビジネス",
+    "verified_partners": "検証済みのパートナー",
+    "no_results": "ビジネスが見つかりませんでした。",
+    "website": "ウェブサイト",
+    "view_details": "詳細を見る",
+    "fetch_error": "ビジネスの取得に失敗しました"
+  },
+  "price": {
+    "hourly": "時間ごと",
+    "daily": "日ごと",
+    "project": "プロジェクト"
   },
   "sort": {
     "highest_rated": "評価が高い順",
@@ -11635,7 +11910,8 @@
         "spotlight": "الأضواء",
         "perspective": "المنظور",
         "dashboard": "لوحة القيادة",
-        "sign_in": "تسجيل الدخول"
+        "sign_in": "تسجيل الدخول",
+        "logout": "تسجيل الخروج"
       },
       "apply_job_modal": {
     "apply_title": "التقديم على {{title}}",
@@ -11680,8 +11956,37 @@
   "filters": {
     "type_label": "النوع",
     "location_label": "الموقع",
+    "search_placeholder": "ابحث عن الشركات، الخدمات، أو التخصصات...",
+    "all_prefix": "الكل",
     "all_types": "جميع الأنواع",
-    "all_locations": "جميع المواقع"
+    "all_locations": "جميع المواقع",
+    "sort": {
+      "highest_rated": "الأعلى تقييمًا",
+      "newest": "الأحدث",
+      "lowest_price": "أقل سعر"
+    },
+    "labels": {
+      "type": "النوع",
+      "location": "الموقع"
+    }
+  },
+  "business": {
+    "directory_title": "دليل الشركات",
+    "back_to_home": "العودة إلى الصفحة الرئيسية",
+    "industry_partners": "شركاء الصناعة",
+    "showing": "يتم عرض",
+    "business": "شركة",
+    "businesses": "شركات",
+    "verified_partners": "شركاء موثقون",
+    "no_results": "لم يتم العثور على شركات.",
+    "website": "موقع إلكتروني",
+    "view_details": "عرض التفاصيل",
+    "fetch_error": "فشل في جلب الشركات"
+  },
+  "price": {
+    "hourly": "ساعي",
+    "daily": "يومي",
+    "project": "مشروع"
   },
   "sort": {
     "highest_rated": "الأعلى تقييماً",
@@ -12926,7 +13231,8 @@
         "spotlight": "Spotlight",
         "perspective": "Perspektive",
         "dashboard": "Dashboard",
-        "sign_in": "Anmelden"
+        "sign_in": "Anmelden",
+        "logout": "abmelden"
       },
       "apply_job_modal": {
     "apply_title": "Bewerben für {{title}}",
@@ -12971,8 +13277,37 @@
   "filters": {
     "type_label": "Typ",
     "location_label": "Standort",
+    "search_placeholder": "Suche nach Unternehmen, Dienstleistungen oder Spezialisierungen...",
+    "all_prefix": "Alle",
     "all_types": "Alle Typen",
-    "all_locations": "Alle Standorte"
+    "all_locations": "Alle Standorte",
+    "sort": {
+      "highest_rated": "Höchstbewertet",
+      "newest": "Neueste",
+      "lowest_price": "Niedrigster Preis"
+    },
+    "labels": {
+      "type": "Typ",
+      "location": "Standort"
+    }
+  },
+  "business": {
+    "directory_title": "Unternehmensverzeichnis",
+    "back_to_home": "Zurück zur Startseite",
+    "industry_partners": "Branchenpartner",
+    "showing": "Anzeige",
+    "business": "Unternehmen",
+    "businesses": "Unternehmen",
+    "verified_partners": "Verifizierte Partner",
+    "no_results": "Keine Unternehmen gefunden.",
+    "website": "Website",
+    "view_details": "Details anzeigen",
+    "fetch_error": "Fehler beim Abrufen der Unternehmen"
+  },
+  "price": {
+    "hourly": "Stündlich",
+    "daily": "Täglich",
+    "project": "Projekt"
   },
   "sort": {
     "highest_rated": "Bestbewertet",
@@ -14201,10 +14536,7 @@
       "valid_email_required": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
       "update_failed": "Fehler beim Aktualisieren der grundlegenden Informationen"
     }
-  }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-
-
-      
+  }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
     },
     "it": {
       "meta": { "name": "Italiano", "flag": "https://flagcdn.com/64x48/it.png" },
@@ -14215,7 +14547,8 @@
         "spotlight": "In evidenza",
         "perspective": "La Prospettiva",
         "dashboard": "Dashboard",
-        "sign_in": "Accedi"
+        "sign_in": "Accedi",
+        "logout": "disconnettersi"
       },
       "apply_job_modal": {
     "apply_title": "Candidati per {{title}}",
@@ -14260,8 +14593,37 @@
   "filters": {
     "type_label": "Tipo",
     "location_label": "Posizione",
-    "all_types": "Tutti i tipi",
-    "all_locations": "Tutte le posizioni"
+    "search_placeholder": "Cerca aziende, servizi o specializzazioni...",
+    "all_prefix": "Tutti",
+    "all_types": "Tutti i Tipi",
+    "all_locations": "Tutte le Posizioni",
+    "sort": {
+      "highest_rated": "Più Votati",
+      "newest": "Più Recenti",
+      "lowest_price": "Prezzo Più Basso"
+    },
+    "labels": {
+      "type": "Tipo",
+      "location": "Posizione"
+    }
+  },
+  "business": {
+    "directory_title": "Elenco delle Aziende",
+    "back_to_home": "Torna alla Home",
+    "industry_partners": "Partner del Settore",
+    "showing": "Mostra",
+    "business": "azienda",
+    "businesses": "aziende",
+    "verified_partners": "Partner Verificati",
+    "no_results": "Nessuna azienda trovata.",
+    "website": "Sito Web",
+    "view_details": "Visualizza Dettagli",
+    "fetch_error": "Impossibile recuperare le aziende"
+  },
+  "price": {
+    "hourly": "Orario",
+    "daily": "Giornaliero",
+    "project": "Progetto"
   },
   "sort": {
     "highest_rated": "Punteggio più alto",
@@ -15446,27 +15808,27 @@
     "footer_summary": "Esplora le tue nuove funzionalità premium e inizia a farti scoprire",
     "footer_contact_prefix": "Domande sui tuoi benefici come Membro Fondatore?"
   },
-  "login": {
-    "welcome_back": "Bentornato",
-    "subtitle": "Accedi al tuo account ArtCee",
-    "email_label": "Email",
-    "email_placeholder": "Inserisci la tua email",
-    "password_label": "Password",
-    "password_placeholder": "Inserisci la tua password",
-    "remember_me": "Ricordami",
-    "forgot_password": "Password dimenticata?",
-    "sign_in": "Accedi",
-    "signing_in": "Accesso in corso...",
-    "or_continue": "O CONTINUA CON",
-    "sign_in_google": "Accedi con Google",
-    "no_account": "Non hai un account?",
-    "sign_up": "Registrati",
-    "success": "Accesso riuscito 🎉",
-    "error": "Accesso fallito",
-    "google_success": "Accesso con Google riuscito 🎉",
-    "google_error": "Accesso con Google fallito",
-    "google_no_token": "Nessuna credenziale restituita da Google"
-  },
+ "login": {
+      "welcome_back": "Bentornato",
+      "subtitle": "Accedi al tuo account ArtCee",
+      "email_label": "Email",
+      "email_placeholder": "Inserisci la tua email",
+      "password_label": "Password",
+      "password_placeholder": "Inserisci la tua password",
+      "remember_me": "Resta connesso",
+      "forgot_password": "Password dimenticata?",
+      "sign_in": "Accedi",
+      "signing_in": "Accesso in corso...",
+      "or_continue": "O CONTINUA CON",
+      "sign_in_google": "Accedi con Google",
+      "no_account": "Non hai un account?",
+      "sign_up": "Registrati",
+      "success": "Accesso riuscito 🎉",
+      "error": "Accesso fallito",
+      "google_success": "Accesso con Google riuscito 🎉",
+      "google_error": "Accesso con Google fallito",
+      "google_no_token": "Nessuna credenziale restituita da Google"
+    },
   "basic_info": {
     "title": "Informazioni di Base",
     "close": "Chiudi",
