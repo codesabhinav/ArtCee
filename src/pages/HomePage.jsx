@@ -318,7 +318,7 @@ export default function Home() {
                       />
                       <div className="absolute top-3 right-3 bg-gray-900 text-white text-sm px-2 py-1 rounded-md flex items-center gap-1">
                         <BiStar className="w-4 h-4 text-yellow-400" />
-                        {typeof pro.rating === "number" ? pro.rating.toFixed(1) : pro.rating ?? "—"}
+                        {typeof pro.user.rating === "number" ? pro.user.rating.toFixed(1) : pro.user.rating ?? "—"}
                       </div>
                     </div>
 

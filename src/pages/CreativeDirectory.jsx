@@ -243,7 +243,7 @@ const CreativeDirectory = () => {
           }}
         />
 
-        <RangeSlider value={value} onInput={setValue} />
+        {/* <RangeSlider value={value} onInput={setValue} /> */}
         <div className="flex justify-between text-xs text-gray-500 mt-1">
           {/* left always shows available API min */}
           <span>${filtersMeta?.budged_range?.min ?? budgetRange.min ?? 0}</span>
