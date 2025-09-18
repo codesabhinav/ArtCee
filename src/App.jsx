@@ -44,6 +44,7 @@ function App() {
               <Route path="projects/create" element={<CreateProjectPage />} />
               <Route path="projects/:projectId" element={<ProjectDetailPage />} />
               <Route path="profile" element={<ProfilePage />} />
+               
             </Route>
             
             <Route path="*" element={<NotFoundPage />} />

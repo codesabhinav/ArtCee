@@ -153,45 +153,94 @@
 // export default ProfessionalStep;
 
 // src/components/ProfessionalStep.jsx
+// src/components/signup components/ProfessionalStep.jsx
 import { BriefcaseIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useTranslation } from "../../contexts/LanguageProvider";
 
+/**
+ * ProfessionalStep (local-state variant)
+ * - Uses local state so typing into textareas/inputs doesn't lose focus if parent re-renders
+ * - Syncs fields to parent on blur and syncs whole block before Next/Prev
+ * - Keeps same validation & UI text as before
+ */
 const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
   const { t } = useTranslation();
+
+  const [local, setLocal] = useState({
+    experience_in_year: formData.experience_in_year ?? "",
+    experience_in_level: formData.experience_in_level ?? "",
+    personal_intro: formData.personal_intro ?? "",
+    exp_vision: formData.exp_vision ?? "",
+  });
+
   const [errors, setErrors] = useState({});
   const [showTopAlert, setShowTopAlert] = useState(false);
 
-  const validate = () => {
+  // keep local synced if parent updates (initial load or external updates)
+  useEffect(() => {
+    setLocal({
+      experience_in_year: formData.experience_in_year ?? "",
+      experience_in_level: formData.experience_in_level ?? "",
+      personal_intro: formData.personal_intro ?? "",
+      exp_vision: formData.exp_vision ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    formData.experience_in_year,
+    formData.experience_in_level,
+    formData.personal_intro,
+    formData.exp_vision,
+  ]);
+
+  const validateLocal = () => {
     const newErrors = {};
-    if (!formData.personal_intro?.trim())
+    if (!String(local.personal_intro).trim())
       newErrors.personal_intro = t("professional.errors.personal_intro");
-    if (!formData.exp_vision?.trim())
+    if (!String(local.exp_vision).trim())
       newErrors.exp_vision = t("professional.errors.exp_vision");
 
     setErrors(newErrors);
-    setShowTopAlert(Object.keys(newErrors).length > 0); // show orange alert
+    setShowTopAlert(Object.keys(newErrors).length > 0);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // merge local into parent formData
+  const syncToParent = (overrides = {}) => {
+    setFormData((prev) => ({
+      ...prev,
+      experience_in_year:
+        overrides.experience_in_year ?? (local.experience_in_year === "" ? "" : local.experience_in_year),
+      experience_in_level: overrides.experience_in_level ?? local.experience_in_level,
+      personal_intro: overrides.personal_intro ?? local.personal_intro,
+      exp_vision: overrides.exp_vision ?? local.exp_vision,
+    }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setLocal((p) => ({ ...p, [name]: value }));
+    if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
+  };
 
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+  // sync a single field on blur to keep parent reasonably up-to-date
+  const handleBlurSync = (field) => {
+    syncToParent({ [field]: local[field] });
   };
 
   const handleNext = (e) => {
     e.preventDefault();
-    if (validate()) {
+    if (validateLocal()) {
+      syncToParent();
       onNext();
     }
+  };
+
+  const handlePrev = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    syncToParent();
+    onPrev();
   };
 
   return (
@@ -199,21 +248,15 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
       {/* Header */}
       <div className="flex flex-col items-center mb-4">
         <BriefcaseIcon className="h-10 w-10 text-orange-400 mb-2" />
-        <h2 className="text-xl font-semibold">
-          {t("professional.title")}
-        </h2>
-        <p className="text-gray-500 text-sm text-center">
-          {t("professional.subtitle")}
-        </p>
+        <h2 className="text-xl font-semibold">{t("professional.title")}</h2>
+        <p className="text-gray-500 text-sm text-center">{t("professional.subtitle")}</p>
       </div>
 
-      {showTopAlert && (
+      {showTopAlert ? (
         <div className="bg-orange-50 border border-orange-200 text-orange-600 px-4 py-3 rounded-md text-xs mb-4 text-center">
           {t("professional.note_required")}
         </div>
-      )}
-
-      {!showTopAlert && (
+      ) : (
         <div className="bg-orange-50 border border-orange-200 text-orange-600 px-4 py-3 rounded-md text-xs mb-4 text-center">
           {t("professional.hint")}
         </div>
@@ -229,8 +272,9 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
             <input
               type="number"
               name="experience_in_year"
-              value={formData.experience_in_year ?? ""}
+              value={local.experience_in_year ?? ""}
               onChange={handleChange}
+              onBlur={() => handleBlurSync("experience_in_year")}
               className="mt-1 block w-full bg-gray-100 border placeholder:text-sm rounded-md p-2"
               placeholder={t("professional.years_placeholder")}
             />
@@ -242,8 +286,9 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
             </label>
             <select
               name="experience_in_level"
-              value={formData.experience_in_level ?? ""}
+              value={local.experience_in_level ?? ""}
               onChange={handleChange}
+              onBlur={() => handleBlurSync("experience_in_level")}
               className="mt-1 block w-full bg-gray-100 border placeholder:text-sm rounded-md p-2"
             >
               <option value="">{t("professional.career_level_placeholder")}</option>
@@ -263,8 +308,9 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
           <textarea
             name="personal_intro"
             rows="3"
-            value={formData.personal_intro ?? ""}
+            value={local.personal_intro ?? ""}
             onChange={handleChange}
+            onBlur={() => handleBlurSync("personal_intro")}
             className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
               errors.personal_intro ? "border-red-400" : "border-gray-300"
             } rounded-md p-2`}
@@ -280,8 +326,9 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
           <textarea
             name="exp_vision"
             rows="3"
-            value={formData.exp_vision ?? ""}
+            value={local.exp_vision ?? ""}
             onChange={handleChange}
+            onBlur={() => handleBlurSync("exp_vision")}
             className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
               errors.exp_vision ? "border-red-400" : "border-gray-300"
             } rounded-md p-2`}
@@ -305,7 +352,7 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
         <div className="flex justify-between py-3">
           <button
             type="button"
-            onClick={onPrev}
+            onClick={handlePrev}
             className="flex items-center px-4 py-2 text-xs border rounded-md text-black hover:bg-gray-100"
           >
             <FaArrowLeft className="mr-2" /> {t("professional.prev")}

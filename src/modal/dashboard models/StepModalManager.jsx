@@ -8,6 +8,7 @@ import ProfessionalBioModal from "./ProfessionalBioModal";
 import SkillsModal from "./SkillsModal";
 import PortfolioModal from "./PortfolioModal";
 import SocialLinksModal from "./SocialLinksModal";
+import PricingModal from "./PricingModal"
 
 const STEP_COMPONENTS = {
     BASIC_INFO: BasicInfoModal,
@@ -19,10 +20,10 @@ const STEP_COMPONENTS = {
     SERVICE_SKILL_ADDED: SkillsModal,
     PORTIFLIO_WORK: PortfolioModal,
     SOCAIL_LINK: SocialLinksModal,
-    PRICING_INFO: "Pricing Information",
+    PRICING_INFO: PricingModal,
 };
 
-const StepModalManager = ({ stepKey, isOpen, onClose, initialData, onSaved }) => {
+const StepModalManager = ({ stepKey, isOpen, onClose, initialData, onSaved, uuid }) => {
     if (!isOpen || !stepKey) return null;
 
     const Comp = STEP_COMPONENTS[stepKey];
@@ -38,7 +39,7 @@ const StepModalManager = ({ stepKey, isOpen, onClose, initialData, onSaved }) =>
         );
     }
 
-    return <Comp isOpen={isOpen} onClose={onClose} initialData={initialData} onSaved={onSaved} />;
+    return <Comp isOpen={isOpen} onClose={onClose} initialData={initialData} onSaved={onSaved} uuid={uuid} />;
 };
 
 export default StepModalManager;

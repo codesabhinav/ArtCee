@@ -8,19 +8,17 @@ import { createPost } from "../Hooks/useSeller";
 export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
   const { t } = useTranslation();
 
-  // form state
   const [title, setTitle] = useState("");
-  const [type, setType] = useState("BLOG_ARTICLE"); // default API value
-  const [brief, setBrief] = useState(""); // "dsc" in API
+  const [type, setType] = useState("BLOG_ARTICLE");
+  const [brief, setBrief] = useState("");
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState(""); // comma-separated
-  const [imageUrl, setImageUrl] = useState(""); // API expects image_url (string) in screenshot
+  const [tags, setTags] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   if (!isOpen) return null;
 
-  // Dropdown options as readable label + api value
   const typeOptions = [
     { label: t("create_post.form.type_blog") || "Blog Article", value: "BLOG_ARTICLE" },
     { label: t("create_post.form.type_update") || "Project Update", value: "PROJECT_UPDATE" },
@@ -29,8 +27,6 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
     { label: t("create_post.form.type_inspiration") || "Inspiration", value: "INSPIRATION" },
   ];
 
-  // CustomDropdown expects options as array of strings in your code sample.
-  // We'll render a simple wrapper that sets `type` to the selected option's value.
   const dropdownLabels = typeOptions.map((o) => o.label);
 
   function labelToValue(label) {
@@ -42,7 +38,6 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
     e.preventDefault();
     setError(null);
 
-    // basic validation
     if (!title?.trim()) {
       setError(t("create_post.errors.title_required") || "Title is required");
       return;
@@ -54,22 +49,17 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
 
     setLoading(true);
     try {
-      // Build form-data similar to Postman fields: title,type,dsc,image_url,tags
       const fd = new FormData();
       fd.append("title", title);
-      fd.append("type", type); // API expects e.g. BLOG_ARTICLE
+      fd.append("type", type);
       fd.append("dsc", brief);
       fd.append("content", content);
-      fd.append("tags", tags); // comma separated string `tag1,tag2`
-      // In your screenshot image_url is a text field (URL); if you want file upload, replace with file input and append('image', file)
+      fd.append("tags", tags);
       fd.append("image_url", imageUrl);
 
       const res = await createPost(fd);
-      // res likely contains { status: 'success', data: { ... } }
       console.log("Post created:", res);
-      // optionally call parent to refresh list
       if (typeof onSuccess === "function") onSuccess(res);
-      // close & reset
       setIsOpen(false);
       setTitle("");
       setBrief("");
@@ -134,7 +124,7 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
               <CustomDropdown
                 options={dropdownLabels}
                 value={typeOptions.find((o) => o.value === type)?.label}
-                onChange={(selectedLabel) => {
+                setValue={(selectedLabel) => {
                   const v = labelToValue(selectedLabel);
                   setType(v);
                 }}

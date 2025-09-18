@@ -13,8 +13,14 @@ const levelOptions = [
     "Expert Level (10+ years)",
 ];
 
+const typeOptions = [
+    "creative",
+    "business"
+];
+
 const PersonalIntroModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     const [form, setForm] = useState({
+        type: "",
         experience_in_year: "",
         experience_in_level: "Entry Level (0-2 years)",
         personal_intro: "",
@@ -34,6 +40,7 @@ const PersonalIntroModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
             };
 
             setForm({
+                type: initialData.type ?? "Select Type",
                 experience_in_year: initialData.experience_in_year ?? "",
                 experience_in_level: levelMap[initialData.experience_in_level] || "Entry Level (0-2 years)",
                 personal_intro: initialData.personal_intro ?? "",
@@ -82,6 +89,7 @@ const PersonalIntroModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
             }[form.experience_in_level];
 
             const payload = {
+                type: form.type,
                 experience_in_year: form.experience_in_year,
                 experience_in_level: levelValue,
                 personal_intro: form.personal_intro,
@@ -119,7 +127,17 @@ const PersonalIntroModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
                 <form className="p-6 space-y-4" onSubmit={handleSubmit}>
                     {error && <div className="text-xs text-red-600">{error}</div>}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Type
+                            </label>
+                            <CustomDropdown
+                                options={typeOptions}
+                                value={form.type}
+                                setValue={(val) => setForm((prev) => ({ ...prev, type: val }))}
+                            />
+                        </div>
                         <div>
                             <label className="block text-xs font-medium text-gray-700 mb-1">
                                 Years of Experience

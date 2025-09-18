@@ -71,7 +71,7 @@ export function getJobsDataFilters() {
 
 export function applyToJob(payload = {}) {
   return service
-    .post(`site/jobs/apply`, payload)
+    .post(`seller/job/apply`, payload)
     .then((res) => res.data || {})
     .catch((error) => {
       const errorMessage =
@@ -97,10 +97,14 @@ export function createPost(formData) {
     })
     .then((res) => res.data)
     .catch((error) => {
-      const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to create post";
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to create post";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+
       throw new Error(message);
     });
 }
@@ -153,5 +157,25 @@ export async function getProfileData(uuid) {
     const msg =
       err?.response?.data?.message || err?.message || `Failed to fetch profile ${uuid}`;
     throw new Error(msg);
+  }
+}
+
+ 
+export async function JobsData(params = {}) {
+  try {
+  
+    const res = await service.get("seller/jobs", { params });
+
+
+    const root = res.data ?? {};
+    const jobsArray = Array.isArray(root.data) ? root.data : [];
+    const meta = root.meta ?? null;
+    const links = root.links ?? null;
+
+    return { jobs: jobsArray, meta, links };
+  } catch (err) {
+    const message =
+      err?.response?.data?.message || err?.message || "Failed to fetch jobs data";
+    throw new Error(message);
   }
 }

@@ -1,11 +1,10 @@
-// GuestDashboardPage.jsx
 import {
   BriefcaseIcon,
   CameraIcon,
   PencilIcon,
   StarIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   BiCloudUpload,
   BiImage,
@@ -13,7 +12,6 @@ import {
 } from "react-icons/bi";
 import {
   FaArrowLeft,
-  FaChevronRight,
   FaCrown,
   FaMapMarkerAlt,
 } from "react-icons/fa";
@@ -21,13 +19,15 @@ import { Link, useNavigate } from "react-router-dom";
 import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
 import SpinnerProvider from "../components/SpinnerProvider";
-import { getGuestDashboardData, getPostData } from "../Hooks/useSeller";
+import { getGuestDashboardData, getPostData, JobsData } from "../Hooks/useSeller";
 import { Star } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
 import UploadProfileModal from "../modal/dashboard models/UploadProfileModal";
 import Cookies from "js-cookie";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import toast from "react-hot-toast";
+import PortfolioModal from "../modal/dashboard models/PortfolioModal";
 
 const GuestDashboardPage = () => {
   const { t } = useTranslation();
@@ -42,30 +42,58 @@ const GuestDashboardPage = () => {
   const [meta, setMeta] = useState(null);
   const [page, setPage] = useState(1);
   const [isPhotoOpen, setPhotoIsOpen] = useState(false);
+  const [isWorkOpen, setWorkOpen] = useState(false);
+
+  const [jobsList, setJobsList] = useState([]);
+  const [jobsLoading, setJobsLoading] = useState(false);
+  const [jobsError, setJobsError] = useState(null);
+
+  const fetchDashboard = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await getGuestDashboardData();
+      setPayload(res || {});
+    } catch (err) {
+      setError(err?.message || t("guest.load_error"));
+      setPayload(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
-    getGuestDashboardData()
-      .then((res) => {
-        if (!mounted) return;
-        setPayload(res || {});
-        setError(null);
-      })
-      .catch((err) => {
-        if (!mounted) return;
-        setError(err?.message || t("guest.load_error"));
-        setPayload(null);
-      })
-      .finally(() => {
-        if (!mounted) return;
-        setLoading(false);
-      });
+    // fetch dashboard when component mounts
+    fetchDashboard();
 
     return () => {
       mounted = false;
     };
-  }, [t]);
+  }, [fetchDashboard]);
+
+  // fetch jobs on page load
+  useEffect(() => {
+    let mounted = true;
+    setJobsLoading(true);
+    setJobsError(null);
+
+    JobsData({ page: 1 })
+      .then(({ jobs }) => {
+        if (!mounted) return;
+        setJobsList(jobs || []);
+      })
+      .catch((err) => {
+        if (!mounted) return;
+        setJobsError(err?.message || "Failed to load jobs");
+      })
+      .finally(() => {
+        if (!mounted) return;
+        setJobsLoading(false);
+      });
+
+    return () => { mounted = false; };
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -79,30 +107,43 @@ const GuestDashboardPage = () => {
   }, [page, t]);
 
   const user = payload?.user ?? {};
-  const profile = payload?.data?.profile ?? user?.profile ?? user?.seller?.profile ?? null;
+  const seller = payload?.seller ?? null;
+  const sellerUser = seller?.user ?? user?.seller?.user ?? null;
+  const profile = payload?.data?.profile ?? user?.profile ?? sellerUser?.profile ?? null;
 
-  // safe location extraction
-  const sellerUser = user?.seller?.user ?? null;
-  const city = sellerUser?.location?.city?.name ?? null;
-  const state = sellerUser?.location?.state?.name ?? null;
-  const country = sellerUser?.location?.country?.name ?? null;
+  // location (prefer user.location, fall back to seller.user.location)
+  const location = user?.location ?? sellerUser?.location ?? null;
+  const city = location?.city?.name ?? null;
+  const state = location?.state?.name ?? null;
+  const country = location?.country?.name ?? null;
 
   const data = payload?.data ?? {};
-  const uuid = user?.uuid || user?.id || null;
+  const uuid = user?.uuid ?? user?.id ?? null;
 
-  const fullName = user?.full_name || profile?.title || t("guest.default_name");
-  const roleDisplay = user?.role?.[0]?.display_name || t("guest.default_role");
-  const avatar = profile?.profile_picture || "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
-  const bio = profile?.bio || "";
-  const title = profile?.title || t("guest.default_title");
-  const followers = data?.following_count ?? 0;
+  const fullName = user?.full_name ?? profile?.title ?? t("guest.default_name");
+  const roleDisplay = (user?.role && user.role[0]?.display_name) ?? t("guest.default_role");
+  const avatar = profile?.profile_picture ?? "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
+  const bio = profile?.bio ?? "";
+  const title = profile?.title ?? t("guest.default_title");
+
+  const followers = data?.followers_count ?? 0;      // API has followers_count
+  const following = data?.follow_count ?? 0;        // API has follow_count (people the user follows)
   const portfolioCount = data?.portfolio_count ?? 0;
   const servicesCount = data?.services_count ?? 0;
-  const yearsExp = user?.seller?.experience_in_year ?? data?.experience_in_year ?? 0;
+  const postsCount = data?.post_count ?? 0;
+  const jobsCount = data?.jobs_count ?? 0;
+  const ordersCount = data?.orders_count ?? 0;
+
+  const yearsExp = seller?.experience_in_year ?? sellerUser?.seller?.experience_in_year ?? user?.seller?.experience_in_year ?? data?.experience_in_year ?? 0;
+  const experienceLevel = seller?.experience_in_level ?? null;
+  const availability = seller?.availability ?? null;
+
   const progress = data?.progress_percentage ?? 0;
-  const rating = user?.seller?.rating ?? 0;
+  const rating = user?.rating ?? seller?.avg_rating ?? user?.seller?.rating ?? 0;
   const totalReviews = profile?.total_reviews ?? 0;
-  const memberSince = new Date(user?.created_at || profile?.created_at || Date.now()).toLocaleDateString();
+
+  const memberSince = new Date(user?.created_at ?? profile?.created_at ?? Date.now()).toLocaleDateString();
+
 
   if (loading) {
     return (
@@ -125,18 +166,33 @@ const GuestDashboardPage = () => {
     setModalOpen(true);
   };
 
-  // --- Logout handler (new) ---
+  // --- Logout handler ---
   const handleLogout = () => {
-    // remove token cookie
     Cookies.remove("token");
-
-    // notify other parts of app (Navbar listens for this)
     window.dispatchEvent(new Event("authChanged"));
-
-    // redirect to home
     navigate("/home");
   };
-  // --- end logout ---
+
+  // open external apply link (or fallback)
+  const handleApply = (job, opt = null) => {
+    const option = opt || (Array.isArray(job.apply_options) ? job.apply_options[0] : null);
+    if (option?.link) {
+      window.open(option.link, "_blank", "noopener,noreferrer");
+      return;
+    }
+    console.warn("No apply link for job", job?.id);
+  };
+
+  // onSaved handler passed to step modals: refresh dashboard when called
+  const handleModalSaved = async (serverResponse) => {
+    try {
+      await fetchDashboard();
+      // optional toast returned from modal already shown there; but we can show one:
+      // toast.success("Profile updated");
+    } catch (err) {
+      console.warn("Failed to refresh dashboard after modal save:", err);
+    }
+  };
 
   return (
     <div className="bg-white min-h-screen w-full">
@@ -158,9 +214,6 @@ const GuestDashboardPage = () => {
           </div>
 
           <div className="flex items-center gap-4">
-           
-
-            {/* Logout button (added) */}
             <button
               onClick={handleLogout}
               className="px-3 py-1.5 text-xs bg-red-500 text-white rounded-md hover:bg-red-600 inline-flex items-center"
@@ -172,7 +225,7 @@ const GuestDashboardPage = () => {
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 mb-2">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 mt-6 mb-2">
           {/* Left Side */}
           <div className="col-span-2 space-y-6">
             {/* Profile Card */}
@@ -241,16 +294,16 @@ const GuestDashboardPage = () => {
                 />
               </div>
 
-              {/* ProfileSteps component */}
               <ProfileSteps data={data} openStepModal={openStepModal} />
             </div>
 
-            {/* Activity & Blog Section */}
+            {/* Activity & Blog (posts) */}
             <div className="bg-white border rounded-lg p-6">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
-                <h3 className="text-sm flex items-center gap-2">
+                <h3 className="text-sm flex items-center gap-2 justify-center text-center sm:justify-start sm:text-left w-full sm:w-auto">
                   <PencilIcon className="h-5 w-5" /> {t("guest.activity_blog_title")}
                 </h3>
+
                 <button
                   onClick={() => setIsOpen(true)}
                   className="bg-teal-500 text-white px-4 py-2 text-xs rounded-md hover:bg-teal-600 w-full sm:w-auto"
@@ -259,25 +312,36 @@ const GuestDashboardPage = () => {
                 </button>
               </div>
 
-              {/* If posts exist, show them; otherwise show empty state */}
               {!loading && posts.length > 0 ? (
-                <div className="grid gap-6">
+                <div className="grid grid-cols-1 gap-6">
                   {posts.map((post) => (
-                    <div key={post.id} className="flex gap-4 border p-4 rounded-lg">
+                    <article key={post.id} className="flex flex-col sm:flex-row gap-4 border p-4 rounded-lg items-center sm:items-start">
                       <img
-                        src={post.image || post.image_url}
-                        alt={post.title}
-                        className="w-24 h-24 object-cover rounded-md"
+                        src={post.image || post.image_url || ""}
+                        alt={post.title || t("guest.untitled")}
+                        loading="lazy"
+                        className="w-24 h-24 object-cover rounded-md flex-shrink-0 mx-auto sm:mx-0"
                       />
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-sm">{post.title}</h4>
-                        <p className="text-xs text-gray-600">{post.dsc}</p>
-                        <p className="text-xs text-gray-600 line-clamp-3">{post.content}</p>
+
+                      <div className="flex-1 min-w-0 text-center sm:text-left">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                          <div className="min-w-0">
+                            <h4 className="font-semibold text-sm truncate">{post.title}</h4>
+                            <p className="text-xs text-gray-600 mt-1 truncate">{post.dsc}</p>
+                          </div>
+
+                          <div className="mt-2 sm:mt-0">
+                            <span className="inline-block text-[10px] px-2 py-1 bg-yellow-100 max-h-[22px] text-yellow-600 rounded-md whitespace-nowrap mx-auto sm:mx-0">
+                              {post.type}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-gray-600 mt-2 line-clamp-3">
+                          {post.content}
+                        </p>
                       </div>
-                      <div className="text-[10px] px-2 py-1 bg-yellow-100 max-h-[22px] text-yellow-600 rounded-md">
-                        {post.type}
-                      </div>
-                    </div>
+                    </article>
                   ))}
                 </div>
               ) : (
@@ -296,7 +360,7 @@ const GuestDashboardPage = () => {
               )}
             </div>
 
-            {/* Job Applications Section */}
+            {/* Job Applications Section (dynamic) */}
             <div className="bg-white border rounded-lg p-6 mt-6">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
                 <h3 className="text-sm flex items-center gap-2">
@@ -310,19 +374,71 @@ const GuestDashboardPage = () => {
                 </button>
               </div>
 
-              <div className="text-center py-6">
-                <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
-                  <BriefcaseIcon className="h-7 w-7" />
+              {jobsLoading ? (
+                <div className="text-sm text-gray-600">Loading jobs…</div>
+              ) : jobsError ? (
+                <div className="text-sm text-red-500">{jobsError}</div>
+              ) : jobsList.length === 0 ? (
+                <div className="text-center py-6">
+                  <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
+                    <BriefcaseIcon className="h-7 w-7" />
+                  </div>
+                  <p className="text-sm font-medium">{t("guest.no_jobs_title") || "No jobs available"}</p>
+                  <p className="text-xs text-gray-500 mb-4">{t("guest.no_jobs_desc") || "Check back later or browse all jobs."}</p>
+                  <button
+                    onClick={() => navigate("/jobs")}
+                    className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto"
+                  >
+                    {t("guest.browse_available_jobs")}
+                  </button>
                 </div>
-                <p className="text-sm font-medium">{t("guest.no_applications")}</p>
-                <p className="text-xs text-gray-500 mb-4">{t("guest.no_applications_desc")}</p>
-                <button
-                  onClick={() => navigate("/jobs")}
-                  className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto"
-                >
-                  {t("guest.browse_available_jobs")}
-                </button>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  {jobsList.map((job) => (
+                    <div key={job.id} className="border rounded-md p-3 flex items-start gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="min-w-0">
+                            <h4 className="font-semibold text-sm truncate">{job.title}</h4>
+                            <p className="text-xs text-gray-600 truncate">{job.location} • {job.schedule_type}</p>
+                          </div>
+                          <div className="ml-2">
+                            <span className="text-[10px] px-2 py-1 bg-yellow-100 text-yellow-600 rounded-md">
+                              {job.via || "Source"}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-gray-600 mt-2 line-clamp-3 hidden sm:block">
+                          {job.description?.slice(0, 200)}{job.description && job.description.length > 200 ? "…" : ""}
+                        </p>
+
+                        {/* apply buttons */}
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {Array.isArray(job.apply_options) && job.apply_options.length > 0 ? (
+                            job.apply_options.slice(0, 3).map((opt) => (
+                              <button
+                                key={opt.id}
+                                onClick={() => handleApply(job, opt)}
+                                className="text-xs px-3 py-1 border rounded-md hover:bg-gray-50"
+                              >
+                                {opt.title}
+                              </button>
+                            ))
+                          ) : (
+                            <button
+                              onClick={() => handleApply(job)}
+                              className="text-xs px-3 py-1 bg-teal-500 text-white rounded-md"
+                            >
+                              Apply
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -441,7 +557,7 @@ const GuestDashboardPage = () => {
                 <h3 className="font-normal text-sm">{t("guest.account_usage_title")}</h3>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="grid lg:grid-cols-3 gap-4 break-words text-center">
                 <div className="bg-gray-50 rounded-md py-4">
                   <p className="text-2xl font-bold text-teal-500">{payload?.data?.profile_views ?? 342}</p>
                   <p className="text-xs text-gray-500">{t("guest.usage.profile_views")}</p>
@@ -476,7 +592,7 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6">
               <h3 className="font-semibold mb-3">{t("guest.quick_actions_title")}</h3>
               <ul className="space-y-2 text-xs font-bold">
-                <li className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                <li onClick={() => setWorkOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
                   <span className="flex items-center gap-2"><BiCloudUpload className="h-4 w-4" /> {t("guest.quick.upload_work")}</span>
                 </li>
                 <li onClick={() => setIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
@@ -494,9 +610,16 @@ const GuestDashboardPage = () => {
         </div>
       </div>
 
-      <CreatePostPopupModel isOpen={isOpen} setIsOpen={setIsOpen} />
+      <CreatePostPopupModel isOpen={isOpen} setIsOpen={setIsOpen} onSuccess={handleModalSaved}/>
 
-      <UploadProfileModal isOpen={isPhotoOpen} onClose={() => setPhotoIsOpen(false)} uuid={uuid} />
+      <UploadProfileModal isOpen={isPhotoOpen} onClose={() => setPhotoIsOpen(false)} uuid={uuid} onSaved={handleModalSaved}/>
+
+      <PortfolioModal isOpen={isWorkOpen} onClose={() => setWorkOpen(false)} initialData={{
+        ...user,
+        ...profile,
+        ...payload?.data,
+        ...seller,
+      }} onSaved={handleModalSaved} />
 
       <StepModalManager
         stepKey={activeStep}
@@ -505,12 +628,11 @@ const GuestDashboardPage = () => {
         initialData={{
           ...user,
           ...profile,
-          ...payload?.data
+          ...payload?.data,
+          ...seller,
         }}
-        onSaved={(serverResponse) => {
-          console.log("saved", serverResponse);
-          // you may want to re-fetch dashboard data here
-        }}
+        uuid={uuid}
+        onSaved={handleModalSaved}
       />
     </div>
   );

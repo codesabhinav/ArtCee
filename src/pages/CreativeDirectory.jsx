@@ -54,7 +54,6 @@ const CreativeDirectory = () => {
     (async () => {
       try {
         const meta = await getCreativeFilters();
-        // meta here is the API "data" object containing industries, budged_range, etc.
         setFiltersMeta(meta || {});
 
         const cfg = [];
@@ -219,7 +218,6 @@ const CreativeDirectory = () => {
   };
 
 
-  // Handlers for industries
   const toggleIndustry = (id) => {
     setSelectedIndustries((prev) => {
       const s = new Set(prev.map(String));
@@ -239,7 +237,6 @@ const CreativeDirectory = () => {
       <div className="mb-4">
         <p className="font-medium text-sm">{t("creative.budget_range")}</p>
 
-        {/* OLD DESIGN: single range input (controls max). */}
         <input
           type="range"
           min={filtersMeta?.budged_range?.min ?? 0}
@@ -352,172 +349,174 @@ const CreativeDirectory = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen w-full">
-      <div className="md:max-w-[80%] mx-auto">
-        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
-          {/* Back to Home Link */}
-          <Link
-            to="/home"
-            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
-          >
-            <FaArrowLeft className="mr-2 text-xs" /> {t("creative.back_to_home") || "Back to Home"}
-          </Link>
+      <div className="bg-white min-h-screen w-full">
+        <div className="md:max-w-[80%] mx-auto">
+          <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
+            {/* Back to Home Link */}
+            <Link
+              to="/home"
+              className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
+            >
+              <FaArrowLeft className="mr-2 text-xs" /> {t("creative.back_to_home") || "Back to Home"}
+            </Link>
 
-          {/* Title */}
-          <h1 className="text-center align-center text-sm sm:text-lg md:text-xl font-bold flex-1">
-            {t("creative.title")}
-          </h1>
+            {/* Title */}
+            <h1 className="text-center align-center text-sm sm:text-lg md:text-xl font-bold flex-1">
+              {t("creative.title")}
+            </h1>
 
-          {/* Button */}
-          <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
-            {creatives.length} Creatives
-          </button>
-        </div>
+            {/* Button */}
+            <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
+              {creatives.length} Creatives
+            </button>
+          </div>
 
-        {/* Search + Sort */}
-        <div className="px-4  md:px-0 py-4 space-y-3 border-b">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={t("creative.search_placeholder")}
-            className="flex-1 form-input w-full"
-          />
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
-            <div className="w-48">
-              <CustomDropdown
-                options={sortOptions}
-                value={sort}
-                setValue={setSort}
-              />
+          {/* Search + Sort */}
+          <div className="px-4  md:px-0 py-4 space-y-3 border-b">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t("creative.search_placeholder")}
+              className="flex-1 form-input w-full"
+            />
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
+              <div className="w-48">
+                <CustomDropdown
+                  options={sortOptions}
+                  value={sort}
+                  setValue={setSort}
+                />
+              </div>
+
+              <div className="">
+                <ActiveFilterChips />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:space-x-6 my-5 p-4 lg:p-0">
+            {/* Sidebar (Desktop) */}
+            <div className="hidden md:block">
+              <SidebarFilters />
+            </div>
+            {/* Sidebar (Mobile) */}
+            <div className="md:hidden mb-4">
+              <SidebarFilters />
             </div>
 
-            <div className="">
-              <ActiveFilterChips />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row md:space-x-6 my-5 p-4 lg:p-0">
-          {/* Sidebar (Desktop) */}
-          <div className="hidden md:block">
-            <SidebarFilters />
-          </div>
-          {/* Sidebar (Mobile) */}
-          <div className="md:hidden mb-4">
-            <SidebarFilters />
-          </div>
-
-          {/* Cards Grid */}
-          <div className="grid grid-cols-1  sm:grid-cols-1
+            {/* Cards Grid */}
+            <div className="grid grid-cols-1  sm:grid-cols-1
            lg:grid-cols-2 gap-6 w-full">
-            {loading ? (
-              <p className="text-gray-500"><SpinnerProvider /></p>
-            ) : creatives.length === 0 ? (
-              <p className="text-gray-500">{t("creative.no_creatives")}</p>
-            ) : (
-              creatives.map((creative) => {
-                const availability = getAvailability(creative);
-                const rating = typeof creative?.user.rating === "number" ? creative.user.rating.toFixed(1) : "—";
-                const reviews = creative?.total_reviews ?? 0;
-                const name = creative?.user?.full_name || t("creative.anonymous");
-                const title = creative?.user?.profile?.title || "—";
-                const uuid = creative?.user?.uuid || "";
-                const years = creative?.experience_in_year ?? "0";
-                const level = creative?.experience_in_level
-                  ? String(creative.experience_in_level).charAt(0).toUpperCase() +
-                  String(creative.experience_in_level).slice(1)
-                  : "—";
-                const workStyle =
-                  creative?.on_site_active === "1" && creative?.is_remote_active === "0"
-                    ? t("creative.on_site")
-                    : creative?.is_remote_active === "1" && creative?.on_site_active === "0"
-                      ? t("creative.remote_ok")
-                      : t("creative.remote_ok_on_site");
+              {loading ? (
+                <p className="text-gray-500"><SpinnerProvider /></p>
+              ) : creatives.length === 0 ? (
+                <p className="text-gray-500">{t("creative.no_creatives")}</p>
+              ) : (
+                creatives.map((creative) => {
+                  const availability = getAvailability(creative);
+                  const rating = typeof creative?.user.rating === "number" ? creative.user.rating.toFixed(1) : "—";
+                  const reviews = creative?.total_reviews ?? 0;
+                  const name = creative?.user?.full_name || t("creative.anonymous");
+                  const title = creative?.user?.profile?.title || "—";
+                  const uuid = creative?.user?.uuid || "";
+                  const years = creative?.experience_in_year ?? "0";
+                  const level = creative?.experience_in_level
+                    ? String(creative.experience_in_level).charAt(0).toUpperCase() +
+                    String(creative.experience_in_level).slice(1)
+                    : "—";
+                  const workStyle =
+                    creative?.on_site_active === "1" && creative?.is_remote_active === "0"
+                      ? t("creative.on_site")
+                      : creative?.is_remote_active === "1" && creative?.on_site_active === "0"
+                        ? t("creative.remote_ok")
+                        : t("creative.remote_ok_on_site");
 
-                const profileSrc = creative?.user?.profile?.profile_picture || DEFAULT_AVATAR;
+                  const profileSrc = creative?.user?.profile?.profile_picture || DEFAULT_AVATAR;
 
-                return (
-                  <div
-                    key={creative.id}
-                    className="border rounded-xl p-4 shadow-sm bg-white"
-                  >
-                    {/* Header */}
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center bg-black text-white text-xs px-2 py-1 rounded-md">
-                        <FaStar className="mr-1" /> {rating}
-                        {Number(reviews) > 0 && <span className="ml-1 opacity-80">({reviews})</span>}
-                      </span>
-                      <span className={`flex items-center text-xs px-2 py-1 rounded-md ${availability.badge}`}>
-                        ● {availability.label}
-                      </span>
-                    </div>
-
-                    {/* Profile */}
-                    <div className="flex items-center mt-4">
-                      <img
-                        src={profileSrc}
-                        alt={name}
-                        className="w-14 h-14 rounded-full object-cover border"
-                        onError={(e) => {
-                          if (e.currentTarget.src !== DEFAULT_AVATAR) {
-                            e.currentTarget.src = DEFAULT_AVATAR;
-                          }
-                        }}
-                      />
-                      <div className="ml-3">
-                        <h3 className="font-bold text-sm">{name}</h3>
-                        <p className="text-xs text-gray-600">{title}</p>
-                      </div>
-                    </div>
-
-                    {/* Bio */}
-                    <p className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
-                      {creative?.personal_intro || t("creative.no_intro")}
-                    </p>
-
-                    {/* Meta */}
-                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 text-xs text-gray-500">
-                      <p className="flex items-center">
-                        <FaMapMarkerAlt className="mr-2" /> {getLocationText(creative)}
-                      </p>
-                      <p className="flex items-center">
-                        <FaClock className="mr-2" /> {years}+ {t("creative.years")}
-                      </p>
-                      <p className="flex items-center">
-                        <FaBriefcase className="mr-2" /> {level} {t("creative.level")}
-                      </p>
-                      <p className="flex items-center">
-                        <FaGlobe className="mr-2" /> {workStyle}
-                      </p>
-                    </div>
-
-                    <SkillChips skills={creative?.user?.skills} />
-
-                    {/* Button */}
-                    <button
-                      onClick={() => {
-                        setSelectedUuid(uuid);
-                        setOpen(true);
-                      }}
-                      className="w-full mt-4 bg-teal-500 text-white text-xs font-semibold py-2 rounded-md hover:bg-teal-600"
+                  return (
+                    <div
+                      key={creative.id}
+                      className="border rounded-xl p-4 shadow-sm bg-white"
                     >
-                      {t("creative.view_profile")}
-                    </button>
-                  </div>
-                );
-              })
-            )}
-          </div>
+                      {/* Header */}
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center bg-black text-white text-xs px-2 py-1 rounded-md">
+                          <FaStar className="mr-1" /> {rating}
+                          {Number(reviews) > 0 && <span className="ml-1 opacity-80">({reviews})</span>}
+                        </span>
+                        <span className={`flex items-center text-xs px-2 py-1 rounded-md ${availability.badge}`}>
+                          ● {availability.label}
+                        </span>
+                      </div>
 
-          <ViewProfilePopupModel isOpen={open} onClose={() => {
-            setOpen(false);
-            setSelectedUuid(null);
-          }}
-            uuid={selectedUuid} />
+                      {/* Profile */}
+                      <div className="flex items-center mt-4">
+                        <img
+                          src={profileSrc}
+                          alt={name}
+                          className="w-14 h-14 rounded-full object-cover border"
+                          onError={(e) => {
+                            if (e.currentTarget.src !== DEFAULT_AVATAR) {
+                              e.currentTarget.src = DEFAULT_AVATAR;
+                            }
+                          }}
+                        />
+                        <div className="ml-3">
+                          <h3 className="font-bold text-sm">{name}</h3>
+                          <p className="text-xs text-gray-600">{title}</p>
+                        </div>
+                      </div>
+
+                      {/* Bio */}
+                      <p className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
+                        {creative?.personal_intro || t("creative.no_intro")}
+                      </p>
+
+                      {/* Meta */}
+                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 text-xs text-gray-500">
+                        <p className="flex items-center">
+                          <FaMapMarkerAlt className="mr-2" /> {getLocationText(creative)}
+                        </p>
+                        <p className="flex items-center">
+                          <FaClock className="mr-2" /> {years}+ {t("creative.years")}
+                        </p>
+                        <p className="flex items-center">
+                          <FaBriefcase className="mr-2" /> {level} {t("creative.level")}
+                        </p>
+                        <p className="flex items-center">
+                          <FaGlobe className="mr-2" /> {workStyle}
+                        </p>
+                      </div>
+
+                      <SkillChips skills={creative?.user?.skills} />
+
+                      {/* Button */}
+                      <button
+                        onClick={() => {
+                          setSelectedUuid(uuid);
+                          setOpen(true);
+                        }}
+                        className="w-full mt-4 bg-teal-500 text-white text-xs font-semibold py-2 rounded-md hover:bg-teal-600"
+                      >
+                        {t("creative.view_profile")}
+                      </button>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+
+          </div>
         </div>
+        <ViewProfilePopupModel isOpen={open} onClose={() => {
+        setOpen(false);
+        setSelectedUuid(null);
+      }}
+        uuid={selectedUuid} />
       </div>
-    </div>
+      
   );
 }
 

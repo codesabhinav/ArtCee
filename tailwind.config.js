@@ -69,6 +69,9 @@ export default {
           '50%': { transform: 'translateY(-5px)' },
         },
       },
+          screens: {
+        'xl2': '1285px',
+      },
     },
   },
   plugins: [

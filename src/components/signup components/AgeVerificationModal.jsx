@@ -260,6 +260,7 @@
 
 
 // src/components/AgeVerificationModal.jsx
+// src/components/modals/AgeVerificationModal.jsx
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaUser, FaShieldAlt, FaCalendarAlt, FaUserCheck } from "react-icons/fa";
@@ -269,76 +270,100 @@ const safeSplitDOB = (dob) => (typeof dob === "string" && dob.length ? dob.split
 
 const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFormData }) => {
   const { t } = useTranslation();
-  const [method, setMethod] = useState("dob"); // "dob" or "declaration"
+
+
+  const [method, setMethod] = useState("dob"); 
+  const [localYear, setLocalYear] = useState("");
+  const [localMonth, setLocalMonth] = useState("");
+  const [localDay, setLocalDay] = useState("");
+  const [localAge, setLocalAge] = useState("");
   const [error, setError] = useState("");
 
+  const months = (t("age_verification.months") || "January|February|March|April|May|June|July|August|September|October|November|December").split("|");
+
   useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
+    if (!isOpen) return;
+
+    const dtype = formData?.date_of_birth_type || "date";
+    setMethod(dtype === "age" ? "declaration" : "dob");
+
+    const [y, m, d] = safeSplitDOB(formData?.date_of_birth || "");
+    setLocalYear(y || "");
+    setLocalMonth(m || "");
+    setLocalDay(d || "");
+    setLocalAge(formData?.age ? String(formData.age) : "");
+    setError("");
+  }, [isOpen, formData]);
+
+  // prevent body scroll while modal is open
+  useEffect(() => {
+    if (isOpen) document.body.classList.add("overflow-hidden");
+    else document.body.classList.remove("overflow-hidden");
+    return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  // Calculate age from formData.date_of_birth (expects "YYYY-MM-DD")
-  const calculateAge = () => {
-    if (!formData.date_of_birth) return null;
-    const parts = safeSplitDOB(formData.date_of_birth).map(Number);
-    const [year, month, day] = parts;
+  const calculateAgeFromLocal = () => {
+    const year = Number(localYear);
+    const month = Number(localMonth);
+    const day = Number(localDay);
     if (!year || !month || !day) return null;
 
     const birthDate = new Date(year, month - 1, day);
     const today = new Date();
 
-    let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+    let age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      calculatedAge--;
-    }
-
-    return calculatedAge;
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    return age;
   };
 
-  // Validation + update formData
   const handleVerify = async () => {
-    let userAge = 0;
+    setError("");
+    let userAge = null;
 
     if (method === "dob") {
-      userAge = calculateAge();
-      if (!userAge) {
+      userAge = calculateAgeFromLocal();
+      if (userAge === null || userAge < 0) {
         const msg = t("age_verification.errors.invalid_dob");
         setError(msg);
         toast.error(msg);
         return;
       }
+
+      const monthStr = String(localMonth).padStart(2, "0");
+      const dayStr = String(localDay).padStart(2, "0");
+      const dobString = `${localYear}-${monthStr}-${dayStr}`;
+
+
       setFormData((prev) => ({
         ...prev,
         date_of_birth_type: "date",
-        age: userAge.toString(),
+        date_of_birth: dobString,
+        age: String(userAge),
       }));
     } else {
-      if (!formData.age) {
+     
+      if (!localAge) {
         const msg = t("age_verification.errors.enter_age");
         setError(msg);
         toast.error(msg);
         return;
       }
-      userAge = parseInt(formData.age, 10);
-      if (Number.isNaN(userAge)) {
+      const parsed = parseInt(localAge, 10);
+      if (Number.isNaN(parsed)) {
         const msg = t("age_verification.errors.enter_age");
         setError(msg);
         toast.error(msg);
         return;
       }
+      userAge = parsed;
+
       setFormData((prev) => ({
         ...prev,
         date_of_birth_type: "age",
-        age: userAge.toString(),
+        age: String(userAge),
         date_of_birth: "",
       }));
     }
@@ -356,10 +381,14 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
     onClose();
   };
 
-  // months from translations: pipe-separated string (so they can be localized easily)
-  const months = (t("age_verification.months") || "January|February|March|April|May|June|July|August|September|October|November|December").split("|");
-
-  const [dobY, dobM, dobD] = safeSplitDOB(formData.date_of_birth);
+  const selectMethod = (m, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setMethod(m);
+    setError("");
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
@@ -367,10 +396,19 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         {/* Header */}
         <div className="flex justify-between items-start">
           <h2 className="text-lg font-semibold">{t("age_verification.title")}</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-800 text-xl" aria-label={t("age_verification.close")}>✕</button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="text-gray-500 hover:text-gray-800 text-xl"
+            aria-label={t("age_verification.close")}
+          >
+            ✕
+          </button>
         </div>
 
-        {/* Top Icon */}
+        {/* Icon */}
         <div className="flex justify-center my-4">
           <div className="w-14 h-14 flex items-center justify-center rounded-full bg-teal-500">
             <FaUser className="text-white text-2xl" />
@@ -378,29 +416,25 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         </div>
 
         <h3 className="text-sm font-bold text-center mb-2">{t("age_verification.heading")}</h3>
-        <p className="text-sm font-light text-gray-600 text-center mb-6">
-          {t("age_verification.subheading")}
-        </p>
+        <p className="text-sm font-light text-gray-600 text-center mb-6">{t("age_verification.subheading")}</p>
 
-        {/* Privacy Notice */}
+        {/* Privacy */}
         <div className="border rounded-lg p-4 mb-6 flex space-x-3">
           <FaShieldAlt className="text-gray-600 mt-1" />
           <div>
             <p className="font-bold text-gray-600 text-xs">{t("age_verification.privacy_title")}</p>
-            <p className="text-xs font-light text-gray-600">
-              {t("age_verification.privacy_body")}
-            </p>
+            <p className="text-xs font-light text-gray-600">{t("age_verification.privacy_body")}</p>
           </div>
         </div>
 
-        {/* Verification Method */}
+        {/* Method selector */}
         <div className="border rounded-lg p-4 mb-6">
           <h4 className="text-sm font-medium mb-3">{t("age_verification.choose_method")}</h4>
           <div className="space-y-3">
-            {/* DOB */}
-            <label
-              className={`flex items-center justify-between border rounded-lg p-3 cursor-pointer ${method === "dob" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
-              onClick={() => setMethod("dob")}
+            <button
+              type="button"
+              onClick={(e) => selectMethod("dob", e)}
+              className={`w-full text-left flex items-center justify-between border rounded-lg p-3 ${method === "dob" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
             >
               <div className="flex items-center space-x-2">
                 <FaCalendarAlt className="text-teal-500" />
@@ -410,12 +444,12 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
                 </div>
               </div>
               <input type="radio" checked={method === "dob"} readOnly />
-            </label>
+            </button>
 
-            {/* Age Declaration */}
-            <label
-              className={`flex items-center justify-between border rounded-lg p-3 cursor-pointer ${method === "declaration" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
-              onClick={() => setMethod("declaration")}
+            <button
+              type="button"
+              onClick={(e) => selectMethod("declaration", e)}
+              className={`w-full text-left flex items-center justify-between border rounded-lg p-3 ${method === "declaration" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
             >
               <div className="flex items-center space-x-2">
                 <FaUserCheck className="text-teal-500" />
@@ -425,80 +459,46 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
                 </div>
               </div>
               <input type="radio" checked={method === "declaration"} readOnly />
-            </label>
+            </button>
           </div>
         </div>
 
-        {/* Conditional Input */}
+        {/* Conditional inputs (local only) */}
         {method === "dob" ? (
           <div className="border rounded-lg p-4 mb-6">
             <h4 className="text-sm font-medium mb-3">{t("age_verification.enter_dob")}</h4>
             <div className="flex space-x-3">
-              {/* Month */}
               <select
                 className="border rounded-md p-2 w-1/3 text-sm"
-                value={dobM || ""}
-                onChange={(e) => {
-                  const month = e.target.value.padStart(2, "0");
-                  const day = dobD || "";
-                  const year = dobY || "";
-                  setFormData((prev) => ({
-                    ...prev,
-                    date_of_birth_type: "date",
-                    date_of_birth: year ? `${year}-${month}${day ? `-${day}` : ""}` : `${month}${day ? `-${day}` : ""}`,
-                  }));
-                }}
+                value={localMonth || ""}
+                onChange={(e) => setLocalMonth(String(e.target.value).padStart(2, "0"))}
               >
                 <option value="">{t("age_verification.month_placeholder")}</option>
                 {months.map((m, i) => (
-                  <option key={i} value={String(i + 1).padStart(2, "0")}>
-                    {m}
-                  </option>
+                  <option key={i} value={String(i + 1).padStart(2, "0")}>{m}</option>
                 ))}
               </select>
 
-              {/* Day */}
               <select
                 className="border rounded-md p-2 w-1/3 text-sm"
-                value={dobD || ""}
-                onChange={(e) => {
-                  const day = String(e.target.value).padStart(2, "0");
-                  const [y, m] = safeSplitDOB(formData.date_of_birth);
-                  const year = y || "";
-                  const month = m || "";
-                  setFormData((prev) => ({
-                    ...prev,
-                    date_of_birth_type: "date",
-                    date_of_birth: year ? `${year}-${month}-${day}` : `${month}-${day}`,
-                  }));
-                }}
+                value={localDay || ""}
+                onChange={(e) => setLocalDay(String(e.target.value))}
               >
                 <option value="">{t("age_verification.day_placeholder")}</option>
                 {Array.from({ length: 31 }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>{i + 1}</option>
+                  <option key={i + 1} value={String(i + 1)}>{i + 1}</option>
                 ))}
               </select>
 
-              {/* Year */}
               <select
                 className="border rounded-md p-2 w-1/3 text-sm"
-                value={dobY || ""}
-                onChange={(e) => {
-                  const year = e.target.value;
-                  const [, m, d] = safeSplitDOB(formData.date_of_birth);
-                  const month = m || "";
-                  const day = d || "";
-                  setFormData((prev) => ({
-                    ...prev,
-                    date_of_birth_type: "date",
-                    date_of_birth: month && day ? `${year}-${month}-${day}` : `${year}`,
-                  }));
-                }}
+                value={localYear || ""}
+                onChange={(e) => setLocalYear(e.target.value)}
               >
                 <option value="">{t("age_verification.year_placeholder")}</option>
                 {Array.from({ length: 100 }, (_, i) => {
                   const year = new Date().getFullYear() - i;
-                  return <option key={year} value={year}>{year}</option>;
+                  return <option key={year} value={String(year)}>{year}</option>;
                 })}
               </select>
             </div>
@@ -509,15 +509,8 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
             <input
               type="number"
               placeholder={t("age_verification.age_placeholder")}
-              value={formData.age || ""}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  date_of_birth_type: "age",
-                  age: e.target.value,
-                  date_of_birth: "",
-                }))
-              }
+              value={localAge || ""}
+              onChange={(e) => setLocalAge(e.target.value)}
               className="border rounded-md p-2 w-full text-sm"
             />
           </div>
@@ -527,8 +520,25 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
 
         {/* Footer */}
         <div className="flex justify-between space-x-3">
-          <button onClick={onClose} className="flex-1 px-4 py-2 text-xs border rounded-md text-gray-700 hover:bg-gray-100">{t("age_verification.cancel")}</button>
-          <button onClick={handleVerify} className="flex-1 px-4 py-2 bg-teal-400 text-xs text-white rounded-md hover:bg-teal-500">{t("age_verification.verify")}</button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="flex-1 px-4 py-2 text-xs border rounded-md text-gray-700 hover:bg-gray-100"
+          >
+            {t("age_verification.cancel")}
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleVerify();
+            }}
+            className="flex-1 px-4 py-2 bg-teal-400 text-xs text-white rounded-md hover:bg-teal-500"
+          >
+            {t("age_verification.verify")}
+          </button>
         </div>
       </div>
     </div>

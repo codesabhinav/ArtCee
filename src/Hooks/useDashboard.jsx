@@ -58,7 +58,7 @@ export async function uploadProfileMedia({ uuid, file, onProgress }) {
 
 export async function updateProfessionalBio(params) {
   try {
-    const res = await service.put(`seller/bio/store`, params);
+    const res = await service.post(`seller/bio/store`, params);
     return res.data?.data ?? res.data;
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || "Failed to update intro";
@@ -94,6 +94,17 @@ export async function updateSocialLinks(id, payload) {
     return res.data?.data ?? res.data;
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || "Failed to update links";
+    throw new Error(msg);
+  }
+}
+
+export async function updatePricing(payload) {
+  try {
+
+    const res = await service.put("seller/settings/pricing", payload);
+    return res.data?.data ?? res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to update pricing";
     throw new Error(msg);
   }
 }

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { getSkills } from "../../Hooks/useAuth";
 import { updateSkills } from "../../Hooks/useDashboard";
+import { getGuestDashboardData } from "../../Hooks/useSeller";
+import toast from "react-hot-toast";
 
 const SkillsModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
   const [available, setAvailable] = useState([]); // [{id, name, ...}]
@@ -87,7 +89,16 @@ const SkillsModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     try {
       const res = await updateSkills(id, payload);
       onSaved?.(res);
+
+          try {
+      await getGuestDashboardData();
+    } catch (refreshErr) {
+      console.warn("Failed to refresh guest dashboard data:", refreshErr);
+    }
+    toast.success("Data updated");
+
       onClose();
+
     } catch (err) {
       setErrors(err?.message || "Failed to update skills");
     } finally {

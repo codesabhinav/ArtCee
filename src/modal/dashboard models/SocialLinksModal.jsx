@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateSocialLinks } from "../../Hooks/useDashboard";
+import { getGuestDashboardData } from "../../Hooks/useSeller";
+import toast from "react-hot-toast";
 
 const DEFAULT_PLATFORMS = [
-  "website",
-  "linkedin",
-  "instagram",
-  "behance",
-  "dribbble",
+  "Website",
+  "Linkedin",
+  "Instagram",
+  "Behance",
+  "Dribbble",
 ];
 
 const isValidUrl = (val) => {
@@ -81,6 +83,13 @@ const SocialLinksModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     try {
       const res = await updateSocialLinks(id, payload);
       onSaved?.(res);
+
+          try {
+      await getGuestDashboardData();
+    } catch (refreshErr) {
+      console.warn("Failed to refresh guest dashboard data:", refreshErr);
+    }
+    toast.success("Data updated");
       onClose();
     } catch (err) {
       setErrors(err?.message || "Failed to update social links");

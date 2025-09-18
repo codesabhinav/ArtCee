@@ -124,11 +124,12 @@ const FeaturePremiumPage = () => {
         <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4">
           {/* Back to Home Link */}
           <Link
-            to="/login"
-            className="text-black font-medium text-xs sm:text-sm md:text-base hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
-          >
-            <FaArrowLeft className="mr-2 text-xs sm:text-sm md:text-base" /> {t("premium.back_to_dashboard") || "Back to Home"}
-          </Link>
+  to={Cookies.get("token") ? "/guest-dashboard" : "/login"}
+  className="text-black font-medium text-xs sm:text-sm md:text-base hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
+>
+  <FaArrowLeft className="mr-2 text-xs sm:text-sm md:text-base" />
+  {t("premium.back_to_dashboard") || "Back to Home"}
+</Link>
 
           {/* Title */}
           <h1 className="text-center align-center text-md sm:text-lg md:text-xl font-bold flex-1">

@@ -202,14 +202,16 @@
 // };
 
 // export default LocationStep;
-
-// src/components/LocationStep.jsx
+// LocationStep.jsx
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useTranslation } from "../../contexts/LanguageProvider";
 
+/**
+ * ToggleSwitch: same as before (stateless)
+ */
 const ToggleSwitch = ({ label, checked, onChange }) => {
   return (
     <div className="flex items-center space-x-3 py-2">
@@ -232,66 +234,123 @@ const ToggleSwitch = ({ label, checked, onChange }) => {
   );
 };
 
+/**
+ * LocationStep: uses local state to avoid losing focus while typing.
+ * Syncs to parent via setFormData on Next, Prev, and onBlur for each field.
+ */
 const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
   const { t } = useTranslation();
   const [errors, setErrors] = useState({});
 
+  // local state to avoid parent's re-render stomping input focus/value
+  const [local, setLocal] = useState({
+    city: formData.city ?? "",
+    state: formData.state ?? "",
+    country: formData.country ?? "",
+    is_remote_active: formData.is_remote_active ?? 0,
+    on_site_active: formData.on_site_active ?? 0,
+    travel_radius_miles: formData.travel_radius_miles ?? "",
+  });
+
+  // initialize local state when formData changes (first mount or parent updates)
+  useEffect(() => {
+    setLocal({
+      city: formData.city ?? "",
+      state: formData.state ?? "",
+      country: formData.country ?? "",
+      is_remote_active: formData.is_remote_active ?? 0,
+      on_site_active: formData.on_site_active ?? 0,
+      travel_radius_miles:
+        formData.travel_radius_miles !== undefined && formData.travel_radius_miles !== null
+          ? formData.travel_radius_miles
+          : "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.city, formData.state, formData.country, formData.is_remote_active, formData.on_site_active, formData.travel_radius_miles]);
+
+  // helper: validate local fields
   const validate = () => {
     const newErrors = {};
-    if (!formData.city?.trim()) newErrors.city = t("location.errors.city");
-    if (!formData.state?.trim()) newErrors.state = t("location.errors.state");
-    if (!formData.country?.trim()) newErrors.country = t("location.errors.country");
+    if (!String(local.city).trim()) newErrors.city = t("location.errors.city");
+    if (!String(local.state).trim()) newErrors.state = t("location.errors.state");
+    if (!String(local.country).trim()) newErrors.country = t("location.errors.country");
 
-    // If on-site travel is enabled → travel radius is required
-    if (
-      formData.on_site_active &&
-      (!formData.travel_radius_miles || Number(formData.travel_radius_miles) <= 0)
-    ) {
-      newErrors.travel_radius_miles = t("location.errors.travel_radius");
+    if (Number(local.on_site_active) === 1) {
+      const val = Number(local.travel_radius_miles);
+      if (!val || isNaN(val) || val <= 0) {
+        newErrors.travel_radius_miles = t("location.errors.travel_radius");
+      }
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  // update parent formData (merge)
+  const syncToParent = (overrides = {}) => {
+    setFormData((prev) => ({
+      ...prev,
+      city: overrides.city ?? local.city,
+      state: overrides.state ?? local.state,
+      country: overrides.country ?? local.country,
+      is_remote_active: overrides.is_remote_active ?? local.is_remote_active,
+      on_site_active: overrides.on_site_active ?? local.on_site_active,
+      travel_radius_miles:
+        overrides.travel_radius_miles ?? (local.travel_radius_miles === "" ? 0 : local.travel_radius_miles),
+    }));
+  };
+
+  // input change only updates local state (keeps focus)
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    setLocal((p) => ({ ...p, [name]: value }));
+    if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
   };
 
+  // toggle (local) for switches
   const handleToggle = (name) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: prev[name] === 1 ? 0 : 1,
-    }));
+    setLocal((p) => {
+      const toggled = p[name] === 1 ? 0 : 1;
+      return { ...p, [name]: toggled };
+    });
+    // clear related errors
+    if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
   };
 
+  // on blur we sync single field to parent so parent has up-to-date data (optional)
+  const handleBlurSync = (field) => {
+    syncToParent({ [field]: local[field] });
+  };
+
+  // Next: validate local then sync all fields and call onNext
   const handleNext = (e) => {
     e.preventDefault();
     if (validate()) {
+      syncToParent(); // push local into parent
       onNext();
     }
   };
 
-  useEffect(() => {
-    const city = Cookies.get("user_city");
-    const state = Cookies.get("user_state");
-    const country = Cookies.get("user_country");
+  // Prev: sync and call onPrev
+  const handlePrev = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    syncToParent();
+    onPrev();
+  };
 
-    if (city || state || country) {
-      setFormData((prev) => ({
-        ...prev,
-        city: prev.city || city || "",
-        state: prev.state || state || "",
-        country: prev.country || country || "",
-      }));
-    }
+  // prefill from cookies on component mount (only local state update)
+  useEffect(() => {
+    const city = Cookies.get("user_city") || "";
+    const state = Cookies.get("user_state") || "";
+    const country = Cookies.get("user_country") || "";
+
+    // only apply if empty (don't overwrite user's typed values)
+    setLocal((p) => ({
+      ...p,
+      city: p.city || city,
+      state: p.state || state,
+      country: p.country || country,
+    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -308,7 +367,7 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
         {t("location.subtitle")}
       </p>
 
-      <form onSubmit={handleNext} className="space-y-4">
+      <form onSubmit={handleNext} className="space-y-4" noValidate>
         {/* City + State */}
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -318,8 +377,9 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
             <input
               type="text"
               name="city"
-              value={formData.city || ""}
+              value={local.city}
               onChange={handleChange}
+              onBlur={() => handleBlurSync("city")}
               className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
                 errors.city ? "border-red-400" : "border-gray-300"
               } rounded-md p-2`}
@@ -334,8 +394,9 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
             <input
               type="text"
               name="state"
-              value={formData.state || ""}
+              value={local.state}
               onChange={handleChange}
+              onBlur={() => handleBlurSync("state")}
               className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
                 errors.state ? "border-red-400" : "border-gray-300"
               } rounded-md p-2`}
@@ -352,8 +413,9 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
           <input
             type="text"
             name="country"
-            value={formData.country || ""}
+            value={local.country}
             onChange={handleChange}
+            onBlur={() => handleBlurSync("country")}
             className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
               errors.country ? "border-red-400" : "border-gray-300"
             } rounded-md p-2`}
@@ -364,18 +426,25 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
         {/* Toggles */}
         <ToggleSwitch
           label={t("location.toggle_remote")}
-          checked={formData.is_remote_active === 1}
-          onChange={() => handleToggle("is_remote_active")}
+          checked={local.is_remote_active === 1}
+          onChange={() => {
+            handleToggle("is_remote_active");
+            // optimistic sync for toggles (so parent sees it quickly)
+            setTimeout(() => syncToParent({ is_remote_active: local.is_remote_active === 1 ? 0 : 1 }), 0);
+          }}
         />
 
         <ToggleSwitch
           label={t("location.toggle_on_site")}
-          checked={formData.on_site_active === 1}
-          onChange={() => handleToggle("on_site_active")}
+          checked={local.on_site_active === 1}
+          onChange={() => {
+            handleToggle("on_site_active");
+            setTimeout(() => syncToParent({ on_site_active: local.on_site_active === 1 ? 0 : 1 }), 0);
+          }}
         />
 
         {/* Travel Radius (only if on-site travel is active) */}
-        {formData.on_site_active === 1 && (
+        {local.on_site_active === 1 && (
           <div>
             <label className="block text-sm font-medium text-gray-700">
               {t("location.travel_radius_label")} *
@@ -383,8 +452,9 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
             <input
               type="number"
               name="travel_radius_miles"
-              value={formData.travel_radius_miles || ""}
+              value={local.travel_radius_miles}
               onChange={handleChange}
+              onBlur={() => handleBlurSync("travel_radius_miles")}
               className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
                 errors.travel_radius_miles ? "border-red-400" : "border-gray-300"
               } rounded-md p-2`}
@@ -409,7 +479,7 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
         <div className="flex justify-between py-3">
           <button
             type="button"
-            onClick={onPrev}
+            onClick={handlePrev}
             className="flex items-center px-4 py-2 text-xs border rounded-md hover:bg-gray-100"
           >
             <FaArrowLeft className="mr-2" /> {t("location.prev")}
@@ -427,4 +497,3 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
 };
 
 export default LocationStep;
-

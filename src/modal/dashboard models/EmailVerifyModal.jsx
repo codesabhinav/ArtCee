@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { sendOtp, verifyOtp } from "../../Hooks/useAuth";
+import toast from "react-hot-toast";
+import { getGuestDashboardData } from "../../Hooks/useSeller";
 
 const EmailVerifyModal = ({ isOpen, onClose, initialData = {}, onVerified }) => {
   const email = initialData.email || "";
@@ -161,6 +163,15 @@ const EmailVerifyModal = ({ isOpen, onClose, initialData = {}, onVerified }) => 
       const res = await verifyOtp(payload); 
       setStatusMessage("OTP verified");
       onVerified?.(res);
+
+           try {
+      await getGuestDashboardData();
+    } catch (refreshErr) {
+      console.warn("Failed to refresh guest dashboard data:", refreshErr);
+    }
+    toast.success("Email verified");
+
+
       setTimeout(() => {
         onClose?.();
       }, 600);

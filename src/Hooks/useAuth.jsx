@@ -46,8 +46,6 @@ export function login(formData) {
           secure: true,
           sameSite: "Strict",
         });
-
-        // 🔔 Notify the app that user logged in
         window.dispatchEvent(new Event("authChanged"));
         try {
           localStorage.setItem("authEvent", Date.now().toString());
@@ -162,11 +160,22 @@ export function sendOtp() {
   return service
     .get("auth/send/opt")
     .then((res) => res.data)
-    .catch((err) => {
-      const msg = err?.response?.data?.message || err?.message || "Failed to send OTP";
-      throw new Error(msg);
+    .catch((error) => {
+      const respData = error?.response?.data ?? {};
+      const apiErrors = respData?.errors;
+      const nestedErrorMessage = respData?.error?.message;
+      let message = respData?.message || nestedErrorMessage || error?.message || "Failed to send OTP";
+
+      if (apiErrors && typeof apiErrors === "object") {
+        const allErrors = Object.values(apiErrors).flat();
+        if (allErrors.length) {
+          message = allErrors.join("\n");
+        }
+      }
+      throw new Error(message);
     });
 }
+
 
 export function verifyOtp(payload) {
   return service
@@ -174,8 +183,18 @@ export function verifyOtp(payload) {
       headers: { "Content-Type": "application/json" },
     })
     .then((res) => res.data)
-    .catch((err) => {
-      const msg = err?.response?.data?.message || err?.message || "Failed to verify OTP";
-      throw new Error(msg);
+    .catch((error) => {
+      const respData = error?.response?.data ?? {};
+      const apiErrors = respData?.errors;
+      const nestedErrorMessage = respData?.error?.message;
+      let message = respData?.message || nestedErrorMessage || error?.message || "Failed to send OTP";
+
+      if (apiErrors && typeof apiErrors === "object") {
+        const allErrors = Object.values(apiErrors).flat();
+        if (allErrors.length) {
+          message = allErrors.join("\n");
+        }
+      }
+      throw new Error(message);
     });
 }

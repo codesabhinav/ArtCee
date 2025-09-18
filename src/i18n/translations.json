@@ -1023,12 +1023,16 @@
       "verify": "Verify Age"
     },
     "register": {
+      "finish":"finish",
+      "next" :"Next",
+      "previous":"back",
       "back": "Back",
       "skip_for_now": "Skip for now",
       "registration_success": "Registration successful!",
       "registration_failed": "Registration failed!",
       "geocode_failed": "Could not determine your location (reverse geocoding failed).",
-      "geolocation_failed": "Could not access your location. Please enable location permissions or fill location manually."
+      "geolocation_failed": "Could not access your location. Please enable location permissions or fill location manually.",
+       "step_label": "Step {current} of {total}"
     },
     "profile_completion": {
       "aria_label": "Profile completion dialog",
@@ -3676,13 +3680,17 @@
       "verify": "Verificar Idade"
     },
     "register": {
-      "back": "Voltar",
-      "skip_for_now": "Pular por agora",
-      "registration_success": "Registro bem-sucedido!",
-      "registration_failed": "Registro falhou!",
-      "geocode_failed": "Não foi possível determinar sua localização (geocodificação reversa falhou).",
-      "geolocation_failed": "Não foi possível acessar sua localização. Por favor, habilite as permissões de localização ou preencha a localização manualmente."
-    },
+    "finish": "Finalizar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "back": "Voltar",
+    "skip_for_now": "Pular por agora",
+    "registration_success": "Registro bem-sucedido!",
+    "registration_failed": "Registro falhou!",
+    "geocode_failed": "Não foi possível determinar sua localização (geocodificação reversa falhou).",
+    "geolocation_failed": "Não foi possível acessar sua localização. Por favor, ative as permissões de localização ou preencha a localização manualmente.",
+    "step_label": "Passo {current} de {total}"
+  },
     "profile_completion": {
       "aria_label": "Diálogo de conclusão do perfil",
       "close": "Fechar",
@@ -4999,14 +5007,18 @@
       "cancel": "रद्द करें",
       "verify": "आयु सत्यापित करें"
     },
-    "register": {
-      "back": "वापस",
-      "skip_for_now": "अभी के लिए छोड़ें",
-      "registration_success": "पंजीकरण सफल!",
-      "registration_failed": "पंजीकरण विफल!",
-      "geocode_failed": "आपका स्थान निर्धारित नहीं किया जा सका (रिवर्स जियोकॉडिंग विफल)।",
-      "geolocation_failed": "आपके स्थान तक पहुंच नहीं हो सकी। कृपया स्थान अनुमतियाँ सक्षम करें या स्थान को मैन्युअल रूप से भरें।"
-    },
+   "register": {
+    "finish": "समाप्त करें",
+    "next": "अगला",
+    "previous": "पीछे",
+    "back": "वापस",
+    "skip_for_now": "अभी के लिए छोड़ें",
+    "registration_success": "पंजीकरण सफल!",
+    "registration_failed": "पंजीकरण विफल!",
+    "geocode_failed": "आपकी लोकेशन निर्धारित नहीं हो सकी (रिवर्स जियोकॉडिंग विफल)।",
+    "geolocation_failed": "आपकी लोकेशन तक पहुँच नहीं सकी। कृपया लोकेशन अनुमतियाँ सक्षम करें या लोकेशन मैन्युअल रूप से भरें।",
+    "step_label": "चरण {current} का {total}"
+  },
     "profile_completion": {
       "aria_label": "प्रोफाइल पूर्णता संवाद",
       "close": "बंद करें",
@@ -6324,14 +6336,20 @@
       "cancel": "Kanselahin",
       "verify": "I-verify ang Edad"
     },
-    "register": {
-      "back": "Bumalik",
-      "skip_for_now": "Laktawan muna",
-      "registration_success": "Tagumpay ang pagpaparehistro!",
-      "registration_failed": "Nabigo ang pagpaparehistro!",
-      "geocode_failed": "Hindi matukoy ang iyong lokasyon (nabigo ang reverse geocoding).",
-      "geolocation_failed": "Hindi ma-access ang iyong lokasyon. Mangyaring paganahin ang mga pahintulot sa lokasyon o punan ang lokasyon nang manu-mano."
-    },
+   
+  "register": {
+    "finish": "Tapusin",
+    "next": "Susunod",
+    "previous": "Nakaraan",
+    "back": "Bumalik",
+    "skip_for_now": "Laktawan muna",
+    "registration_success": "Matagumpay na pagrehistro!",
+    "registration_failed": "Nabigo ang pagrehistro!",
+    "geocode_failed": "Hindi matukoy ang iyong lokasyon (nabigo ang reverse geocoding).",
+    "geolocation_failed": "Hindi ma-access ang iyong lokasyon. Paki-enable ang mga pahintulot sa lokasyon o punan ang lokasyon nang manu-mano.",
+    "step_label": "Hakbang {current} ng {total}"
+  
+},
     "profile_completion": {
       "aria_label": "Dialog ng pagkumpleto ng profile",
       "close": "Isara",
@@ -7649,14 +7667,18 @@
       "cancel": "취소",
       "verify": "연령 인증"
     },
-    "register": {
-      "back": "뒤로",
-      "skip_for_now": "지금은 건너뛰기",
-      "registration_success": "등록 성공!",
-      "registration_failed": "등록 실패!",
-      "geocode_failed": "위치를 확인할 수 없습니다 (역지오코딩 실패).",
-      "geolocation_failed": "위치에 접근할 수 없습니다. 위치 권한을 활성화하거나 위치를 수동으로 입력해 주세요."
-    },
+   "register": {
+    "finish": "완료",
+    "next": "다음",
+    "previous": "이전",
+    "back": "뒤로",
+    "skip_for_now": "나중에 건너뛰기",
+    "registration_success": "등록 성공!",
+    "registration_failed": "등록 실패!",
+    "geocode_failed": "위치를 확인할 수 없습니다 (역지오코딩 실패).",
+    "geolocation_failed": "위치에 접근할 수 없습니다. 위치 권한을 활성화하거나 위치를 수동으로 입력하세요.",
+    "step_label": "{total} 중 {current} 단계"
+  },
     "profile_completion": {
       "aria_label": "프로필 완성 다이얼로그",
       "close": "닫기",
@@ -8974,14 +8996,20 @@
       "cancel": "取消",
       "verify": "验证年龄"
     },
-    "register": {
-      "back": "返回",
-      "skip_for_now": "暂时跳过",
-      "registration_success": "注册成功！",
-      "registration_failed": "注册失败！",
-      "geocode_failed": "无法确定你的位置（反向地理编码失败）。",
-      "geolocation_failed": "无法访问你的位置。请启用位置权限或手动填写位置。"
-    },
+  
+
+  "register": {
+    "finish": "完成",
+    "next": "下一步",
+    "previous": "上一步",
+    "back": "返回",
+    "skip_for_now": "暂跳过",
+    "registration_success": "注册成功！",
+    "registration_failed": "注册失败！",
+    "geocode_failed": "无法确定您的位置（反向地理编码失败）。",
+    "geolocation_failed": "无法访问您的位置。请启用位置权限或手动填写位置。",
+    "step_label": "第 {current} 步，共 {total} 步"
+  },
     "profile_completion": {
       "aria_label": "个人资料完成对话框",
       "close": "关闭",
@@ -10298,14 +10326,20 @@
       "cancel": "Annuler",
       "verify": "Vérifier l'âge"
     },
-    "register": {
-      "back": "Retour",
-      "skip_for_now": "Passer pour l'instant",
-      "registration_success": "Inscription réussie !",
-      "registration_failed": "Inscription échouée !",
-      "geocode_failed": "Impossible de déterminer votre emplacement (géocodage inverse échoué).",
-      "geolocation_failed": "Impossible d'accéder à votre emplacement. Veuillez activer les autorisations de localisation ou remplir l'emplacement manuellement."
-    },
+  
+  "register": {
+    "finish": "Terminer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "back": "Retour",
+    "skip_for_now": "Ignorer pour l'instant",
+    "registration_success": "Inscription réussie !",
+    "registration_failed": "Échec de l'inscription !",
+    "geocode_failed": "Impossible de déterminer votre emplacement (échec de la géocodification inverse).",
+    "geolocation_failed": "Impossible d'accéder à votre emplacement. Veuillez activer les autorisations de localisation ou remplir l'emplacement manuellement.",
+    "step_label": "Étape {current} sur {total}"
+  
+},
     "profile_completion": {
       "aria_label": "Dialogue de complétion du profil",
       "close": "Fermer",
@@ -11625,13 +11659,17 @@
       "verify": "年齢を認証"
     },
     "register": {
-      "back": "戻る",
-      "skip_for_now": "今はスキップ",
-      "registration_success": "登録成功！",
-      "registration_failed": "登録失敗！",
-      "geocode_failed": "位置を特定できませんでした（リバースジオコーディング失敗）。",
-      "geolocation_failed": "位置情報にアクセスできませんでした。位置情報の許可を有効にするか、位置を手動で入力してください。"
-    },
+    "finish": "完了",
+    "next": "次へ",
+    "previous": "前へ",
+    "back": "戻る",
+    "skip_for_now": "今はスキップ",
+    "registration_success": "登録成功！",
+    "registration_failed": "登録失敗！",
+    "geocode_failed": "位置を特定できませんでした（リバースジオコーディングに失敗）。",
+    "geolocation_failed": "位置にアクセスできませんでした。位置情報の許可を有効にしてください、または位置を手動で入力してください。",
+    "step_label": "{total} 中 {current} ステップ"
+  },
     "profile_completion": {
       "aria_label": "プロフィール完成ダイアログ",
       "close": "閉じる",
@@ -12949,13 +12987,17 @@
       "verify": "التحقق من العمر"
     },
     "register": {
-      "back": "رجوع",
-      "skip_for_now": "تخطَ في الوقت الحالي",
-      "registration_success": "التسجيل ناجح!",
-      "registration_failed": "فشل التسجيل!",
-      "geocode_failed": "تعذر تحديد موقعك (فشل الترميز الجغرافي العكسي).",
-      "geolocation_failed": "تعذر الوصول إلى موقعك. يرجى تمكين أذونات الموقع أو ملء الموقع يدويًا."
-    },
+    "finish": "إنهاء",
+    "next": "التالي",
+    "previous": "السابق",
+    "back": "رجوع",
+    "skip_for_now": "تخطى الآن",
+    "registration_success": "التسجيل ناجح!",
+    "registration_failed": "فشل التسجيل!",
+    "geocode_failed": "لم يتم تحديد موقعك (فشل الترميز الجغرافي العكسي).",
+    "geolocation_failed": "لم يتم الوصول إلى موقعك. يرجى تمكين أذونات الموقع أو ملء الموقع يدويًا.",
+    "step_label": "الخطوة {current} من {total}"
+  },
     "profile_completion": {
       "aria_label": "حوار إكمال الملف الشخصي",
       "close": "إغلاق",
@@ -14272,14 +14314,20 @@
       "cancel": "Abbrechen",
       "verify": "Alter verifizieren"
     },
-    "register": {
-      "back": "Zurück",
-      "skip_for_now": "Vorerst überspringen",
-      "registration_success": "Registrierung erfolgreich!",
-      "registration_failed": "Registrierung fehlgeschlagen!",
-      "geocode_failed": "Ihr Standort konnte nicht bestimmt werden (Reverse-Geocoding fehlgeschlagen).",
-      "geolocation_failed": "Auf Ihren Standort konnte nicht zugegriffen werden. Bitte aktivieren Sie die Standortberechtigungen oder geben Sie den Standort manuell ein."
-    },
+  
+  "register": {
+    "finish": "Abschließen",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "back": "Zurück",
+    "skip_for_now": "Überspringen",
+    "registration_success": "Registrierung erfolgreich!",
+    "registration_failed": "Registrierung fehlgeschlagen!",
+    "geocode_failed": "Ihre Position konnte nicht bestimmt werden (umgekehrte Geocodierung fehlgeschlagen).",
+    "geolocation_failed": "Zugriff auf Ihre Position nicht möglich. Bitte aktivieren Sie Standorterlaubnisse oder geben Sie den Standort manuell ein.",
+    "step_label": "Schritt {current} von {total}"
+  
+},
     "profile_completion": {
       "aria_label": "Dialog zur Profilvollständigkeit",
       "close": "Schließen",
@@ -15604,13 +15652,18 @@
     "cancel": "Annulla",
     "verify": "Verifica età"
   },
+ 
   "register": {
+    "finish": "Completa",
+    "next": "Avanti",
+    "previous": "Indietro",
     "back": "Indietro",
     "skip_for_now": "Salta per ora",
     "registration_success": "Registrazione riuscita!",
     "registration_failed": "Registrazione fallita!",
     "geocode_failed": "Impossibile determinare la tua posizione (geocodifica inversa fallita).",
-    "geolocation_failed": "Impossibile accedere alla tua posizione. Abilita i permessi di localizzazione o inserisci la posizione manualmente."
+    "geolocation_failed": "Impossibile accedere alla tua posizione. Abilita i permessi di posizione o compila manualmente la posizione.",
+    "step_label": "Passo {current} di {total}"
   },
   "profile_completion": {
     "aria_label": "Finestra di completamento del profilo",

@@ -2,17 +2,19 @@
 import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updatePortfolio } from "../../Hooks/useDashboard";
+import { getGuestDashboardData } from "../../Hooks/useSeller";
+import toast from "react-hot-toast";
 
 const PortfolioModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
   const [form, setForm] = useState({
     title: "",
     description: "",
     role: "",
-    technologies: "", // comma separated for input
+    technologies: "",
     project_url: "",
   });
-  const [files, setFiles] = useState([]); // new File objects to upload
-  const [existingMedia, setExistingMedia] = useState([]); // previews of already uploaded media (keep if not removed)
+  const [files, setFiles] = useState([]);
+  const [existingMedia, setExistingMedia] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState(null);
 
@@ -23,13 +25,11 @@ const PortfolioModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     setExistingMedia(Array.isArray(initialData.media) ? initialData.media : []);
 
     setForm({
-      title: initialData.title || "",
-      description: initialData.description || "",
-      role: initialData.role || "",
-      technologies: Array.isArray(initialData.technologies)
-        ? initialData.technologies.join(",")
-        : (initialData.technologies || ""),
-      project_url: initialData.project_url || "",
+      title: "",
+      description: "",
+      role: "",
+      technologies: "",
+      project_url: "",
     });
   }, [isOpen, initialData]);
 
@@ -70,12 +70,7 @@ const PortfolioModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     fd.append("description", form.description);
     fd.append("role", form.role);
     fd.append("project_url", form.project_url || "");
-
-    const techArray = form.technologies
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean);
-    techArray.forEach((t) => fd.append("technologies[]", t));
+    fd.append("technologies", form.technologies || "");
 
     if (existingMedia.length > 0) {
       existingMedia.forEach((m) => fd.append("existing_media[]", m.id));
@@ -89,6 +84,13 @@ const PortfolioModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     try {
       const res = await updatePortfolio(fd);
       onSaved?.(res);
+
+      try {
+        await getGuestDashboardData();
+      } catch (refreshErr) {
+        console.warn("Failed to refresh guest dashboard data:", refreshErr);
+      }
+      toast.success("Data updated");
       onClose();
     } catch (err) {
       setErrors(err?.message || "Failed to update portfolio");
@@ -142,7 +144,7 @@ const PortfolioModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
               <div className="mt-2 text-xs">
                 <div className="font-medium">Ready to upload:</div>
                 <ul className="text-xs list-disc pl-5">
-                  {files.map((f, i) => <li key={i}>{f.name} ({Math.round(f.size/1024)} KB)</li>)}
+                  {files.map((f, i) => <li key={i}>{f.name} ({Math.round(f.size / 1024)} KB)</li>)}
                 </ul>
               </div>
             )}
@@ -163,7 +165,7 @@ const PortfolioModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
                     </div>
                     <div className="flex-1">
                       <div className="text-sm">{m.file_name}</div>
-                      <div className="text-xs text-gray-400">{m.mime_type} • {Math.round((m.size || 0)/1024)} KB</div>
+                      <div className="text-xs text-gray-400">{m.mime_type} • {Math.round((m.size || 0) / 1024)} KB</div>
                     </div>
                     <div>
                       <button type="button" onClick={() => removeExistingMedia(m.id)} className="text-xs px-2 py-1 border rounded">Remove</button>

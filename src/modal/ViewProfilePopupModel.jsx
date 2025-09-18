@@ -3,10 +3,10 @@ import { IoCloseCircle } from "react-icons/io5";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { getProfileData } from "../Hooks/useSeller";
 import SpinnerProvider from "../components/SpinnerProvider";
-import { FaCalendarAlt, FaClock, FaCrown, FaLocationArrow, FaShare, FaStar, FaUniversity, FaVideo } from "react-icons/fa";
+import { FaCalendarAlt, FaClock, FaCrown, FaHeart, FaLocationArrow, FaShare, FaStar, FaUniversity, FaVideo } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import { VideoCameraIcon } from "@heroicons/react/24/outline";
-import { CalendarRange, Crown, LocateFixed, LocateIcon, LocationEdit, MessageCircle, Share, Share2, Star, Timer, TimerIcon, Video } from "lucide-react";
+import { CalendarRange, Crown, Heart, LocateFixed, LocateIcon, LocationEdit, MessageCircle, Share, Share2, Star, Timer, TimerIcon, Video } from "lucide-react";
 
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
@@ -130,7 +130,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
         </div>
 
         {/* Profile Info Section */}
-        <div className="grid grid-cols-3 gap-6 px-6 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-6 py-6">
           {/* Left Column */}
           <div className="col-span-1 flex flex-col items-center rounded-lg">
             <img src={avatar} alt={DEFAULT_AVATAR} onError={(e) => {
@@ -288,8 +288,8 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
         </div>
 
         {/* Tabs */}
-        <div className="px-6 py-4">
-          <div className="flex justify-between border-b bg-gray-200 rounded-full">
+        <div className="px-6 py-4 ">
+          <div className="flex justify-between overflow-x-auto border-b bg-gray-200 rounded-full">
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -304,7 +304,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
           {/* Tab Content */}
           <div className="mt-4">
             {activeTab === t("profile.tabs.portfolio") && (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                 {portfolio.length === 0 && <div className="text-xs text-gray-500">No Portfolio Found</div>}
                 {portfolio.map((p) => (
                   <div key={p.id} className="overflow-hidden">
@@ -495,6 +495,63 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                   </div>
 
                 </div>
+                <h3 className="font-semibold text-sm mb-4">Recent Activity & Blog Posts</h3>
+
+                {(!profilePayload?.posts || profilePayload.posts.length === 0) ? (
+                  <div className="text-sm text-gray-500">No recent posts</div>
+                ) : (
+                  <div className="space-y-4">
+                    {profilePayload.posts.map((post) => (
+                      <article key={post.id} className="flex gap-4 bg-white rounded-lg p-4 items-center border">
+                        {/* LEFT: image */}
+                        <div className="w-28 flex-shrink-0">
+                          <img
+                            src={post.image || post.image_url || "https://picsum.photos/200/140"}
+                            alt={post.title}
+                            className="w-full h-20 object-cover rounded-md"
+                            onError={(e) => { e.currentTarget.src = "https://picsum.photos/200/140"; }}
+                          />
+                        </div>
+
+                        {/* MIDDLE: title + description */}
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-sm">{post.title}</h4>
+                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">{post.dsc ?? post.content ?? "-"}</p>
+
+                          <div className="flex items-center gap-3 text-xs text-gray-400 mt-3">
+                            {/* created date (use existing formatDateShort to show month year) */}
+                            <span>{new Date(post.created_at || post.updated_at || Date.now()).toLocaleDateString()}</span>
+
+                            {/* optional: status or type badge */}
+                            {post.type && (
+                              <span className="inline-block text-[11px] border rounded-full px-2 py-0.5 bg-white">
+                                {post.type.toLowerCase()}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* tags */}
+                          <div className="flex gap-2 flex-wrap mt-3">
+                            {(post.tags || []).slice(0, 4).map((tag) => (
+                              <span key={tag.id ?? tag.name} className="text-[10px] font-semibold px-2 py-1 rounded-md border">
+                                {tag.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* RIGHT: optional meta / action */}
+                        <div className="flex-shrink-0 text-right ">
+                          <button className="text-xs text-gray-600 font-semibold border px-3 py-1 rounded-md bg-white flex flex-row items-center gap-2"><Heart className="h-3 w-3" /> Like</button>
+                          <div className="text-[10px] text-gray-400 mt-2">Premium Feature</div>
+                          <button className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-2 py-1.5 rounded-lg items-center justify-center flex gap-2">
+                            <Crown className="h-3 w-3" /> {t("profile.upgrade")}
+                          </button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

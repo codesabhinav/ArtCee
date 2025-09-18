@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FaTimes, FaCloudUploadAlt } from "react-icons/fa";
 import { getGuestDashboardData } from "../../Hooks/useSeller";
 import { uploadProfileMedia } from "../../Hooks/useDashboard";
+import toast from "react-hot-toast";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "video/mp4", "video/webm"];
 const MAX_SIZE_BYTES = 8 * 1024 * 1024;
 
-const UploadProfileModal = ({ isOpen, onClose, uuid, onUploaded }) => {
+const UploadProfileModal = ({ isOpen, onClose, initialData = {}, onUploaded, uuid, onSaved }) => {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [error, setError] = useState(null);
@@ -44,6 +45,8 @@ const UploadProfileModal = ({ isOpen, onClose, uuid, onUploaded }) => {
     setError(null);
   };
 
+  console.log('UUID', uuid)
+
   const handleUpload = async () => {
     if (!uuid) {
       setError("Missing user id");
@@ -65,15 +68,13 @@ const UploadProfileModal = ({ isOpen, onClose, uuid, onUploaded }) => {
         onProgress: setProgress,
       });
 
-      await getGuestDashboardData();
-
       onUploaded?.(result);
-        try {
-      await getGuestDashboardData();
-    } catch (refreshErr) {
-      console.warn("Failed to refresh guest dashboard data:", refreshErr);
-    }
-    toast.success( "Data updated");
+      try {
+        await getGuestDashboardData();
+      } catch (refreshErr) {
+        console.warn("Failed to refresh guest dashboard data:", refreshErr);
+      }
+      toast.success("Profile photo updated");
       onClose();
     } catch (err) {
       setError(err.message || "Upload failed");

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { updateProfessionalBio } from "../../Hooks/useDashboard";
+import { getGuestDashboardData } from "../../Hooks/useSeller";
+import toast from "react-hot-toast";
 
 const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
   const [form, setForm] = useState({
@@ -16,10 +18,10 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
   useEffect(() => {
     if (isOpen) {
       setForm({
-        title: initialData.title || "",
-        bio: initialData.bio || "",
-        experience_years: initialData.experience_years || "",
-        skills: Array.isArray(initialData.skills) ? initialData.skills.join(",") : (initialData.skills || ""),
+        title: "",
+        bio: "",
+        experience_years: "",
+        skills: '',
       });
       setErrors(null);
       setSuccessMessage(null);
@@ -54,10 +56,7 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
       title: form.title.trim(),
       bio: form.bio.trim(),
       experience_years: String(form.experience_years).trim(),
-      skills: form.skills
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
+      skills: form.skills,
     };
 
     setLoading(true);
@@ -65,6 +64,14 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
       const res = await updateProfessionalBio(payload);
       setSuccessMessage("Saved successfully");
       onSaved?.(res);
+
+            try {
+      await getGuestDashboardData();
+    } catch (refreshErr) {
+      console.warn("Failed to refresh guest dashboard data:", refreshErr);
+    }
+    toast.success("Data updated");
+
       onClose();
     } catch (err) {
       setErrors(err?.message || "Failed to update professional bio");
@@ -103,7 +110,7 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
               value={form.bio}
               onChange={handleChange}
               className="w-full form-input px-3 py-2 rounded mt-1 text-xs"
-              rows={3}
+              rows={5}
               placeholder="Short professional bio..."
             />
           </div>
@@ -129,7 +136,6 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
                 className="w-full form-input px-3 py-2 rounded mt-1 text-xs"
                 placeholder="MYSQL, LARAVEL, React"
               />
-              <p className="text-xs text-gray-400 mt-1">Separate skills with commas.</p>
             </div>
           </div>
 
