@@ -212,13 +212,13 @@ const JobsOpportunities = () => {
     <div className="bg-white min-h-screen w-full">
       <div className="md:max-w-[80%] mx-auto">
   
-        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4">
+        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
           {/* Back to Home Link */}
           <Link
             to="/home"
-            className="text-black font-medium text-xs sm:text-sm md:text-base hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
+            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
           >
-            <FaArrowLeft className="mr-2 text-xs sm:text-sm md:text-base" /> {t("buttons.back_to_home") || "Back to Home"}
+            <FaArrowLeft className="mr-2 text-xs" /> {t("buttons.back_to_home") || "Back to Home"}
           </Link>
 
           {/* Title */}
@@ -227,7 +227,7 @@ const JobsOpportunities = () => {
           </h1>
 
           {/* Button */}
-          <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs sm:text-sm md:text-base bg-teal-500 text-white rounded-md">
+          <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
             {t("jobs.google_integration")}
           </button>
         </div>

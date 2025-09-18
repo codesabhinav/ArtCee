@@ -39,7 +39,6 @@ const BusinessDirectory = () => {
   ]);
   const [sort, setSort] = useState(t("filters.sort.highest_rated"));
 
-  /* debounce search */
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
@@ -50,7 +49,6 @@ const BusinessDirectory = () => {
     };
   }, [search]);
 
-  /* load filters metadata from API and build dynamic config */
   useEffect(() => {
     (async () => {
       try {
@@ -63,11 +61,9 @@ const BusinessDirectory = () => {
         const humanLabel = (key) => {
           if (key === "type") return t("filters.labels.type");
           if (key === "locations") return t("filters.labels.location");
-          // fallback: capitalize key
           return key.charAt(0).toUpperCase() + key.slice(1);
         };
 
-        // type
         if (meta?.type) {
           const opts = Object.values(meta.type);
           cfg.push({
@@ -78,7 +74,6 @@ const BusinessDirectory = () => {
           Object.entries(meta.type).forEach(([k, v]) => (labelToKey[v] = k));
         }
 
-        // locations
         if (meta?.locations) {
           const opts = Object.values(meta.locations);
           cfg.push({
@@ -89,12 +84,11 @@ const BusinessDirectory = () => {
           Object.entries(meta.locations).forEach(([k, v]) => (labelToKey[v] = k));
         }
 
-        // order_by_rate -> populate sortOptions and map
         if (meta?.order_by_rate) {
           const map = {};
           const sortLabels = [];
           Object.entries(meta.order_by_rate).forEach(([k, v]) => {
-            map[v] = k; // display label -> api key
+            map[v] = k; 
             sortLabels.push(v);
           });
           labelToKey["__order_by_map__"] = map;
@@ -107,7 +101,6 @@ const BusinessDirectory = () => {
         setFiltersConfigDynamic(cfg);
         setFilterLabelToKeyMap(labelToKey);
 
-        // prepare selected defaults by key (not by human label)
         const defaults = {};
         cfg.forEach((f) => {
           defaults[f.key] = f.options[0];
@@ -118,11 +111,8 @@ const BusinessDirectory = () => {
         console.error("Failed to load business filters:", err);
       }
     })();
-    // run once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* build params for API from selectedFilters (keys) and sort */
   const buildApiParams = () => {
     const params = {};
     if (debouncedSearch) params.search = debouncedSearch;
@@ -130,12 +120,9 @@ const BusinessDirectory = () => {
     filtersConfigDynamic.forEach((filterObj) => {
       const chosenLabel = selectedFilters[filterObj.key];
       if (!chosenLabel) return;
-      // skip "All ..." selections
       if (typeof chosenLabel === "string" && chosenLabel.startsWith(t("filters.all_prefix") || "All")) return;
-      // map displayed label back to API key
       const apiKeyFromLabel = filterLabelToKeyMap[chosenLabel];
       if (!apiKeyFromLabel) {
-        // If no mapping, don't include param
         return;
       }
       params[filterObj.key] = apiKeyFromLabel;
@@ -150,7 +137,6 @@ const BusinessDirectory = () => {
     return params;
   };
 
-  /* fetch businesses when controls change */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -189,11 +175,8 @@ const BusinessDirectory = () => {
         }
       })();
     }
-    // react to these changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic]);
 
-  /* clear filter by filter key */
   const clearFilter = (key) => {
     setSelectedFilters((prev) => ({
       ...prev,
@@ -205,9 +188,7 @@ const BusinessDirectory = () => {
     setSelectedFilters(defaultSelectedFilters);
   };
 
-  /* when user selects a value that is not currently in options, add it to that filter's options so dropdown can show it */
   const handleSetFilterValue = (filterKey, value) => {
-    // if value is not present in options for that filter, append it
     setFiltersConfigDynamic((prev) =>
       prev.map((f) => {
         if (f.key !== filterKey) return f;
@@ -225,13 +206,13 @@ const BusinessDirectory = () => {
     <div className="bg-white min-h-screen w-full">
 
       <div className="md:max-w-[80%] mx-auto">
-        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4">
+        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
           {/* Back to Home Link */}
           <Link
             to="/home"
-            className="text-black font-medium text-xs sm:text-sm md:text-base hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
+            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
           >
-            <FaArrowLeft className="mr-2 text-xs sm:text-sm md:text-base" /> {t("business.back_to_home") || "Back to Home"}
+            <FaArrowLeft className="mr-2 text-xs" /> {t("business.back_to_home") || "Back to Home"}
           </Link>
 
           {/* Title */}
@@ -240,7 +221,7 @@ const BusinessDirectory = () => {
           </h1>
 
           {/* Button */}
-          <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs sm:text-sm md:text-base bg-teal-500 text-white rounded-md">
+          <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
             {t("business.industry_partners")}
           </button>
         </div>

@@ -3,10 +3,8 @@ import { IoCloseCircle } from "react-icons/io5";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { getProfileData } from "../Hooks/useSeller";
 import SpinnerProvider from "../components/SpinnerProvider";
-import { FaCalendarAlt, FaClock, FaCrown, FaHeart, FaLocationArrow, FaShare, FaStar, FaUniversity, FaVideo } from "react-icons/fa";
-import { FaMessage } from "react-icons/fa6";
-import { VideoCameraIcon } from "@heroicons/react/24/outline";
-import { CalendarRange, Crown, Heart, LocateFixed, LocateIcon, LocationEdit, MessageCircle, Share, Share2, Star, Timer, TimerIcon, Video } from "lucide-react";
+import { FaCalendarAlt, FaClock, FaStar, FaUniversity } from "react-icons/fa";
+import { CalendarRange, Crown, Heart, LocationEdit, MessageCircle, Share, Share2, Star, Timer, TimerIcon, Video } from "lucide-react";
 
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
@@ -308,7 +306,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                 {portfolio.length === 0 && <div className="text-xs text-gray-500">No Portfolio Found</div>}
                 {portfolio.map((p) => (
                   <div key={p.id} className="overflow-hidden">
-                    <img src={p.media?.[0]?.url ?? p.project_url ?? "https://picsum.photos/300/200"} alt={p.title} className="w-full h-40 object-cover rounded-lg transform transition-transform duration-300 ease-out hover:scale-110" />
+                    <img src={p.media?.[0]?.url ?? p.project_url ?? "https://picsum.photos/300/200"} alt={p.title} className="w-full h-40 bg-gray-100 object-cover rounded-lg transform transition-transform duration-300 ease-out hover:scale-110" />
                     <div className="p-3">
                       <h4 className="font-semibold text-xs">{p.title}</h4>
                       <p className="text-xs text-gray-500">{p.role}</p>

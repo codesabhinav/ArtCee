@@ -159,23 +159,36 @@ export async function getProfileData(uuid) {
     throw new Error(msg);
   }
 }
-
  
 export async function JobsData(params = {}) {
   try {
-  
     const res = await service.get("seller/jobs", { params });
-
-
     const root = res.data ?? {};
     const jobsArray = Array.isArray(root.data) ? root.data : [];
     const meta = root.meta ?? null;
     const links = root.links ?? null;
-
     return { jobs: jobsArray, meta, links };
   } catch (err) {
     const message =
       err?.response?.data?.message || err?.message || "Failed to fetch jobs data";
     throw new Error(message);
   }
+}
+
+export function createPayment(formData) {
+  return service
+    .post("seller/subscription/payment", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to create payment";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+      throw new Error(message);
+    });
 }

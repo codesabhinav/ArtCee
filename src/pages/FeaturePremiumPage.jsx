@@ -16,10 +16,10 @@ const FeaturePremiumPage = () => {
 
   const joined = 347;
   const spotsLeft = 153;
-  // const foundingRemainingText = t("premium.founding_spots_remaining", { remaining: spotsLeft });
 
   const [plans, setPlans] = useState([]);
   const [location, setLocation] = useState(null);
+  const [locationId, setLocationId] = useState(null);
   const [permissionDenied, setPermissionDenied] = useState(false);
   const [loadingPlans, setLoadingPlans] = useState(false);
   const [plansError, setPlansError] = useState(null);
@@ -89,6 +89,7 @@ const FeaturePremiumPage = () => {
         const res = await getPlans({ location: loc });
         const normalized = normalizePlansResponse(res);
         setPlans(normalized);
+        setLocationId(normalized[0].pricing.country_id);
       } catch (err) {
         const msg = err?.message || err?.response?.data?.message || "Failed to fetch plans";
         setPlansError(msg);
@@ -121,15 +122,15 @@ const FeaturePremiumPage = () => {
   return (
     <div className="bg-white min-h-screen w-full">
       <div className="md:max-w-[80%] mx-auto">
-        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4">
+        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0 border-b">
           {/* Back to Home Link */}
           <Link
-  to={Cookies.get("token") ? "/guest-dashboard" : "/login"}
-  className="text-black font-medium text-xs sm:text-sm md:text-base hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
->
-  <FaArrowLeft className="mr-2 text-xs sm:text-sm md:text-base" />
-  {t("premium.back_to_dashboard") || "Back to Home"}
-</Link>
+            to={Cookies.get("token") ? "/guest-dashboard" : "/login"}
+            className="text-black font-medium text-xs  hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
+          >
+            <FaArrowLeft className="mr-2 text-xs " />
+            {t("premium.back_to_dashboard") || "Back to Home"}
+          </Link>
 
           {/* Title */}
           <h1 className="text-center align-center text-md sm:text-lg md:text-xl font-bold flex-1">
@@ -286,17 +287,6 @@ const FeaturePremiumPage = () => {
                         "No plans found for your location."
                       )}
                     </p>
-                    <div className="mt-3">
-                      <button
-                        // onClick={() => {
-                        //   setShowLocationPrompt(true);
-                        //   setUserEnteredLocation("");
-                        // }}
-                        className="px-4 py-2 bg-teal-500 text-white rounded"
-                      >
-                        {t("premium.enter_location", "Enter location")}
-                      </button>
-                    </div>
                   </div>
                 )}
 
@@ -308,7 +298,7 @@ const FeaturePremiumPage = () => {
                         <span className="mr-4 text-orange-400"><FaCrown /></span> {plan.title}
                       </h4>
                       {plan.onetime_payment === "1" && (
-                        <span className="bg-orange-400 text-white text-xs px-2 py-1 rounded-md font-semibold">
+                        <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-md font-semibold">
                           {("One-time")}
                         </span>
                       )}
@@ -340,7 +330,7 @@ const FeaturePremiumPage = () => {
         </div>
 
         <div className="flex justify-center md:ml-20 md:mr-20">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full px-6 mb-4">
             {/* Instant Access */}
             <div className="border rounded-xl p-6 text-center shadow-sm hover:shadow-md transition">
               <div className="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-teal-500 text-white text-xl mb-3">
@@ -394,6 +384,7 @@ const FeaturePremiumPage = () => {
         onClose={() => setSelectedPlan(null)}
         planId={selectedPlan}
         country={location}
+        countryId={locationId}
       />
     </div>
   );
