@@ -260,7 +260,7 @@ const LoginPage = ({ onClose }) => {
         onClose();
       } else {
         // if it's a route, redirect to guest dashboard
-        navigate("/guest-dashboard");
+        navigate("/profile");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -290,7 +290,7 @@ const LoginPage = ({ onClose }) => {
       if (onClose) {
         onClose();
       } else {
-        navigate("/guest-dashboard");
+        navigate("/profile");
       }
     } catch (err) {
       console.error("Google login error:", err);
@@ -314,7 +314,7 @@ const LoginPage = ({ onClose }) => {
     setShowProfileModal(false);
     if (opts.closeLogin !== false) {
       if (onClose) onClose();
-      else navigate("/guest-dashboard");
+      else navigate("/profile");
     }
   };
 

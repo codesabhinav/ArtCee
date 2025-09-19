@@ -59,15 +59,15 @@ const LocationModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
           {err && <div className="text-xs text-red-500">{err}</div>}
           <div>
             <label className="text-xs">Country</label>
-            <input name="country" value={form.country} onChange={onChange} className="w-full form-input px-3 py-2 rounded mt-1" />
+            <input name="country" value={form.country} onChange={onChange} className="w-full form-input px-3 py-2 rounded mt-1  text-xs" />
           </div>
           <div>
             <label className="text-xs">State</label>
-            <input name="state" value={form.state} onChange={onChange} className="w-full form-input px-3 py-2 rounded mt-1" />
+            <input name="state" value={form.state} onChange={onChange} className="w-full form-input px-3 py-2 rounded mt-1 text-xs" />
           </div>
           <div>
             <label className="text-xs">City</label>
-            <input name="city" value={form.city} onChange={onChange} className="w-full form-input px-3 py-2 rounded mt-1" />
+            <input name="city" value={form.city} onChange={onChange} className="w-full form-input px-3 py-2 rounded mt-1 text-xs" />
           </div>
 
           <div className="flex justify-end gap-2 text-xs">

@@ -79,7 +79,7 @@ const LandingPage = () => {
           </button>
         </div>
 
-        <button className="border border-orange-500 text-orange-500 mt-10 flex items-center gap-2 hover:bg-orange-50 px-6 py-3 rounded-full text-xs">
+        <button className="border border-orange-500 text-orange-500 mt-10 flex items-center gap-2 px-6 py-3 rounded-full text-xs">
           <StarIcon className="text-orange-400 h-4 w-4" /> {t("landing.prototype_tag")}
         </button>
 

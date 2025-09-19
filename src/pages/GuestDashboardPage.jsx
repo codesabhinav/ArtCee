@@ -20,7 +20,7 @@ import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
 import SpinnerProvider from "../components/SpinnerProvider";
 import { getGuestDashboardData, getPostData, JobsData } from "../Hooks/useSeller";
-import { Star } from "lucide-react";
+import { Crown, LogOut, Star } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
 import UploadProfileModal from "../modal/dashboard models/UploadProfileModal";
@@ -126,8 +126,8 @@ const GuestDashboardPage = () => {
   const bio = profile?.bio ?? "";
   const title = profile?.title ?? t("guest.default_title");
 
-  const followers = data?.followers_count ?? 0;      // API has followers_count
-  const following = data?.follow_count ?? 0;        // API has follow_count (people the user follows)
+  const followers = data?.followers_count ?? 0;
+  const following = data?.follow_count ?? 0;
   const portfolioCount = data?.portfolio_count ?? 0;
   const servicesCount = data?.services_count ?? 0;
   const postsCount = data?.post_count ?? 0;
@@ -166,14 +166,12 @@ const GuestDashboardPage = () => {
     setModalOpen(true);
   };
 
-  // --- Logout handler ---
   const handleLogout = () => {
     Cookies.remove("token");
     window.dispatchEvent(new Event("authChanged"));
     navigate("/home");
   };
 
-  // open external apply link (or fallback)
   const handleApply = (job, opt = null) => {
     const option = opt || (Array.isArray(job.apply_options) ? job.apply_options[0] : null);
     if (option?.link) {
@@ -183,12 +181,9 @@ const GuestDashboardPage = () => {
     console.warn("No apply link for job", job?.id);
   };
 
-  // onSaved handler passed to step modals: refresh dashboard when called
   const handleModalSaved = async (serverResponse) => {
     try {
       await fetchDashboard();
-      // optional toast returned from modal already shown there; but we can show one:
-      // toast.success("Profile updated");
     } catch (err) {
       console.warn("Failed to refresh dashboard after modal save:", err);
     }
@@ -216,9 +211,9 @@ const GuestDashboardPage = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={handleLogout}
-              className="px-3 py-1.5 text-xs bg-red-500 text-white rounded-md hover:bg-red-600 inline-flex items-center"
+              className="px-3 py-1.5 text-xs bg-gray-100 text-gray-800 rounded-md hover:bg-gray-300 inline-flex items-center"
             >
-              <RiLogoutCircleRLine className="mr-2" size={18} />
+              <LogOut className="mr-2" size={18} />
               {t("nav.logout")}
             </button>
           </div>
@@ -448,7 +443,7 @@ const GuestDashboardPage = () => {
             <div className="bg-white border border-orange-400 rounded-lg p-6">
               <div className="flex flex-col items-center text-center">
                 <div className="bg-orange-500 text-white w-12 h-12 flex items-center justify-center rounded-full mb-3">
-                  <FaCrown className="text-2xl" />
+                  <Crown className="text-2xl" />
                 </div>
                 <h3 className="font-bold text-md mb-1">{t("guest.unlock_title")}</h3>
                 <p className="text-xs text-gray-500 mb-4">{t("guest.unlock_subtitle")}</p>
@@ -559,7 +554,7 @@ const GuestDashboardPage = () => {
 
               <div className="grid lg:grid-cols-3 gap-4 break-words text-center">
                 <div className="bg-gray-50 rounded-md py-4">
-                  <p className="text-2xl font-bold text-teal-500">{payload?.data?.profile_views ?? 342}</p>
+                  <p className="text-2xl font-bold text-teal-500">{payload?.data?.profile_views ?? 0}</p>
                   <p className="text-xs text-gray-500">{t("guest.usage.profile_views")}</p>
                   <p className="text-[11px] text-orange-500 font-medium">+23 {t("guest.usage.this_month")}</p>
                 </div>
@@ -569,7 +564,7 @@ const GuestDashboardPage = () => {
                   <p className="text-[11px] text-teal-400">{t("guest.usage.unlimited_uploads")}</p>
                 </div>
                 <div className="bg-gray-50 rounded-md py-4">
-                  <p className="text-2xl font-bold text-teal-500">{payload?.data?.orders_count ?? 12}</p>
+                  <p className="text-2xl font-bold text-teal-500">{payload?.data?.orders_count ?? 0}</p>
                   <p className="text-xs text-gray-500">{t("guest.usage.job_applications")}</p>
                   <p className="text-[11px] text-orange-500 font-medium">+3 {t("guest.usage.this_week")}</p>
                 </div>
@@ -580,9 +575,9 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6">
               <h3 className="font-semibold text-sm mb-3">{t("guest.profile_stats_title")}</h3>
               <ul className="space-y-2 text-xs font-light">
-                <li className="flex justify-between"><span>{t("guest.stats.profile_views")}</span><span className="font-bold">{payload?.data?.profile_views ?? 42}</span></li>
+                <li className="flex justify-between"><span>{t("guest.stats.profile_views")}</span><span className="font-bold">{payload?.data?.profile_views ?? 0}</span></li>
                 <li className="flex justify-between"><span>{t("guest.stats.portfolio_items")}</span><span className="font-bold">{portfolioCount}</span></li>
-                <li className="flex justify-between"><span>{t("guest.stats.blog_posts")}</span><span className="font-bold">{payload?.data?.blog_posts_count ?? 0}</span></li>
+                <li className="flex justify-between"><span>{t("guest.stats.blog_posts")}</span><span className="font-bold">{postsCount}</span></li>
                 <li className="flex justify-between"><span>{t("guest.stats.job_applications")}</span><span className="font-bold">{payload?.data?.orders_count ?? 0}</span></li>
                 <li className="flex justify-between"><span>{t("guest.stats.member_since")}</span><span className="font-bold">{memberSince}</span></li>
               </ul>

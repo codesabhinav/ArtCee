@@ -378,7 +378,7 @@ const CreativeDirectory = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t("creative.search_placeholder")}
-              className="flex-1 form-input w-full"
+              className="flex-1 form-input w-full text-xs"
             />
             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
               <div className="w-48">
@@ -489,7 +489,7 @@ const CreativeDirectory = () => {
                         </p>
                       </div>
 
-                      <SkillChips skills={creative?.user?.skills} />
+                      <SkillChips skills={creative?.skills} />
 
                       {/* Button */}
                       <button

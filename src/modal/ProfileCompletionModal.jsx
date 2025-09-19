@@ -406,7 +406,7 @@ const ProfileCompletionModal = ({ onClose, progress = 71, sectionsCompleted = "5
         <div className="mt-6">
           <div className="flex gap-3">
             <button className="flex-1 bg-teal-500 text-white py-2 rounded-md text-xs font-medium"
-             onClick={() => navigate("/guest-dashboard")}  >
+             onClick={() => navigate("/profile")}  >
               {t("profile_completion.primary_cta")}
             </button>
             <button onClick={onClose} className="flex-1 border py-2 rounded-md text-xs font-medium hover:bg-gray-200">

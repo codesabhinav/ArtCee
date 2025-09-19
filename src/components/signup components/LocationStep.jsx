@@ -4,40 +4,32 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useTranslation } from "../../contexts/LanguageProvider";
 
-/**
- * ToggleSwitch: same as before (stateless)
- */
 const ToggleSwitch = ({ label, checked, onChange }) => {
   return (
     <div className="flex items-center space-x-3 py-2">
       <button
         type="button"
         onClick={onChange}
-        className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors ${
+        className={`w-9 h-5 flex items-center rounded-full transition-colors ${
           checked ? "bg-teal-500" : "bg-gray-300"
         }`}
         aria-pressed={checked}
       >
         <div
           className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-            checked ? "translate-x-6" : "translate-x-0"
+            checked ? "translate-x-5" : "translate-x-0"
           }`}
         />
       </button>
-      <span className="text-gray-700 text-sm">{label}</span>
+      <span className="text-xs font-semibold">{label}</span>
     </div>
   );
 };
 
-/**
- * LocationStep: uses local state to avoid losing focus while typing.
- * Syncs to parent via setFormData on Next, Prev, and onBlur for each field.
- */
 const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
   const { t } = useTranslation();
   const [errors, setErrors] = useState({});
 
-  // local state to avoid parent's re-render stomping input focus/value
   const [local, setLocal] = useState({
     city: formData.city ?? "",
     state: formData.state ?? "",
@@ -47,7 +39,6 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
     travel_radius_miles: formData.travel_radius_miles ?? "",
   });
 
-  // initialize local state when formData changes (first mount or parent updates)
   useEffect(() => {
     setLocal({
       city: formData.city ?? "",
@@ -60,10 +51,8 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
           ? formData.travel_radius_miles
           : "",
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.city, formData.state, formData.country, formData.is_remote_active, formData.on_site_active, formData.travel_radius_miles]);
 
-  // helper: validate local fields
   const validate = () => {
     const newErrors = {};
     if (!String(local.city).trim()) newErrors.city = t("location.errors.city");
@@ -81,7 +70,6 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // update parent formData (merge)
   const syncToParent = (overrides = {}) => {
     setFormData((prev) => ({
       ...prev,
@@ -95,14 +83,12 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
     }));
   };
 
-  // input change only updates local state (keeps focus)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLocal((p) => ({ ...p, [name]: value }));
     if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
   };
 
-  // toggle (local) for switches
   const handleToggle = (name) => {
     setLocal((p) => {
       const toggled = p[name] === 1 ? 0 : 1;
@@ -112,45 +98,39 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
     if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
   };
 
-  // on blur we sync single field to parent so parent has up-to-date data (optional)
   const handleBlurSync = (field) => {
     syncToParent({ [field]: local[field] });
   };
 
-  // Next: validate local then sync all fields and call onNext
   const handleNext = (e) => {
     e.preventDefault();
     if (validate()) {
-      syncToParent(); // push local into parent
+      syncToParent();
       onNext();
     }
   };
 
-  // Prev: sync and call onPrev
   const handlePrev = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     syncToParent();
     onPrev();
   };
 
-  // prefill from cookies on component mount (only local state update)
   useEffect(() => {
     const city = Cookies.get("user_city") || "";
     const state = Cookies.get("user_state") || "";
     const country = Cookies.get("user_country") || "";
 
-    // only apply if empty (don't overwrite user's typed values)
     setLocal((p) => ({
       ...p,
       city: p.city || city,
       state: p.state || state,
       country: p.country || country,
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="w-full max-w-2xl bg-white p-8 rounded-lg shadow-sm border">
+    <div className="w-full max-w-2xl bg-white p-8 rounded-lg border">
       <div className="flex justify-center mb-4 text-teal-500">
         <MapPinIcon className="h-10 w-10" />
       </div>
@@ -166,7 +146,7 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
         {/* City + State */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-xs font-semibold">
               {t("location.city_label")} *
             </label>
             <input
@@ -175,15 +155,15 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
               value={local.city}
               onChange={handleChange}
               onBlur={() => handleBlurSync("city")}
-              className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
-                errors.city ? "border-red-400" : "border-gray-300"
+              className={`mt-1 block w-full form-input border text-xs ${
+                errors.city ? "border-red-400" : "border-none"
               } rounded-md p-2`}
               placeholder={t("location.city_placeholder")}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-xs font-semibold">
               {t("location.state_label")} *
             </label>
             <input
@@ -192,8 +172,8 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
               value={local.state}
               onChange={handleChange}
               onBlur={() => handleBlurSync("state")}
-              className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
-                errors.state ? "border-red-400" : "border-gray-300"
+              className={`mt-1 block w-full form-input border text-xs ${
+                errors.state ? "border-red-400" : "border-none"
               } rounded-md p-2`}
               placeholder={t("location.state_placeholder")}
             />
@@ -202,7 +182,7 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
 
         {/* Country */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-xs font-semibold">
             {t("location.country_label")} *
           </label>
           <input
@@ -211,8 +191,8 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
             value={local.country}
             onChange={handleChange}
             onBlur={() => handleBlurSync("country")}
-            className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
-              errors.country ? "border-red-400" : "border-gray-300"
+            className={`mt-1 block w-full form-input border text-xs ${
+              errors.country ? "border-red-400" : "border-none"
             } rounded-md p-2`}
             placeholder={t("location.country_placeholder")}
           />
@@ -241,7 +221,7 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
         {/* Travel Radius (only if on-site travel is active) */}
         {local.on_site_active === 1 && (
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-xs font-semibold">
               {t("location.travel_radius_label")} *
             </label>
             <input
@@ -250,8 +230,8 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
               value={local.travel_radius_miles}
               onChange={handleChange}
               onBlur={() => handleBlurSync("travel_radius_miles")}
-              className={`mt-1 block w-full bg-gray-100 border placeholder:text-sm ${
-                errors.travel_radius_miles ? "border-red-400" : "border-gray-300"
+              className={`mt-1 block w-full form-input border text-xs ${
+                errors.travel_radius_miles ? "border-red-400" : "border-none"
               } rounded-md p-2`}
               placeholder={t("location.travel_radius_placeholder")}
             />
@@ -260,7 +240,7 @@ const LocationStep = ({ formData, setFormData, onNext, onPrev }) => {
 
         {/* Error Summary */}
         {Object.keys(errors).length > 0 && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-xs">
             <p>{t("location.error_summary")}</p>
             <ul className="list-disc list-inside">
               {Object.values(errors).map((err, i) => (

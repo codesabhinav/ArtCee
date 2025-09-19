@@ -238,7 +238,7 @@ const JobsOpportunities = () => {
             <input
               type="text"
               placeholder={t("jobs.search_placeholder")}
-              className="form-input px-4 py-2 rounded-md text-sm flex-1"
+              className="form-input px-4 py-2 rounded-md text-xs flex-1"
               value={activeFilters.keyword_search}
               onChange={(e) => setActiveFilters((prev) => ({ ...prev, keyword_search: e.target.value }))}
             />

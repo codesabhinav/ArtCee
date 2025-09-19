@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FaTimes, FaCrown, FaLock } from "react-icons/fa";
+import { FaTimes, FaCrown, FaLock, FaTimesCircle, FaShieldAlt } from "react-icons/fa";
 import SuccessPopupModel from "./SuccessPopupModel";
 import { createPayment, getPlanShow } from "../Hooks/useSeller";
 import { useTranslation } from "../contexts/LanguageProvider";
+import { Crown } from "lucide-react";
 
 const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => {
   const { t } = useTranslation();
@@ -147,20 +148,20 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex justify-center items-center px-2 ">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative overflow-y-auto max-h-[90vh] scrollbar-hide">
-        <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-          <FaTimes size={20} />
-        </button>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative overflow-y-auto max-h-[90vh] scrollbar-hide">
 
         <div className="p-6 space-y-6">
-          <h2 className="text-lg font-semibold">
-            {t("purchase.title", { plan: planDetails?.title || t("purchase.plan") })}
-          </h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-md font-semibold">
+              {t("purchase.title", { plan: planDetails?.title || t("purchase.plan") })}
+            </h2>
+            <FaTimesCircle className="h-5 w-5" onClick={onClose} />
+          </div>
 
           <div className="border-2 border-orange-400 rounded-lg p-4">
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-bold flex items-center gap-2 text-orange-600">
-                <FaCrown />{" "}
+                <Crown />{" "}
                 {planDetails?.title || (loadingPlanDetails ? t("purchase.loading_plan") : t("purchase.plan"))}
               </h3>
               {loadingPlanDetails && <div className="text-xs text-gray-500">{t("purchase.loading_plan_details")}</div>}
@@ -193,126 +194,142 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
             </div>
           </div>
 
-          <div className="border rounded-md p-3 text-sm text-gray-600 bg-gray-50">{t("purchase.secure_payment")}</div>
-
-          <form className="space-y-3" onSubmit={handleSubmit}>
-            <input
-              type="email"
-              name="email"
-              placeholder={t("purchase.email_placeholder")}
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full form-input px-3 py-2 text-sm"
-            />
-            {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
-
-            <input
-              type="text"
-              name="name"
-              placeholder={t("purchase.name_placeholder")}
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full form-input px-3 py-2 text-sm"
-            />
-            {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
-
-            <p className="text-sm font-medium mt-2 mb-1">{t("purchase.billing_address")}</p>
-            <input
-              type="text"
-              name="address"
-              placeholder={t("purchase.street_placeholder")}
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-              className="w-full form-input px-3 py-2 text-sm"
-            />
-            {errors.address && <p className="text-xs text-red-500">{errors.address}</p>}
-
-            <div className="flex gap-3">
-              <input
-                type="text"
-                name="city"
-                placeholder={t("purchase.city_placeholder")}
-                value={form.city}
-                onChange={(e) => setForm({ ...form, city: e.target.value })}
-                className="w-1/2 form-input px-3 py-2 text-sm"
-              />
-              <input
-                type="text"
-                name="state"
-                placeholder={t("purchase.state_placeholder")}
-                value={form.state}
-                onChange={(e) => setForm({ ...form, state: e.target.value })}
-                className="w-1/2 form-input px-3 py-2 text-sm"
-              />
+          <div className="border rounded-md p-3 border-blue-400 bg-blue-50">
+            <div className="flex flex-row gap-2 items-center text-xs font-semibold text-black">
+              <FaShieldAlt className="text-teal-500" /> {t("purchase.secure_payment")}
             </div>
-            {(errors.city || errors.state) && <p className="text-xs text-red-500">{errors.city || errors.state}</p>}
+            <p className="text-[10px] text-gray-600 mt-1">
+              {t("purchase.secure_payment_desc")}
+            </p>
+          </div>
 
-            <input
-              type="text"
-              name="zip"
-              placeholder={t("purchase.zip_placeholder")}
-              value={form.zip}
-              onChange={(e) => setForm({ ...form, zip: e.target.value })}
-              className="w-full form-input px-3 py-2 text-sm"
-            />
-            {errors.zip && <p className="text-xs text-red-500">{errors.zip}</p>}
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Email */}
+            <div>
+              <label className="block text-xs font-medium mb-1">Email Address</label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full form-input px-3 py-2 text-xs"
+                placeholder="you@email.com"
+              />
+              {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
+            </div>
 
-            <div className="mt-2">
-              <p className="text-sm font-medium mb-1">{t("purchase.card_details")}</p>
-
+            {/* Cardholder Name */}
+            <div>
+              <label className="block text-xs font-medium mb-1">Cardholder Name</label>
               <input
                 type="text"
-                name="card_number"
-                placeholder={ "Card Number" || "4242 4242 4242 4242"}
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full form-input px-3 py-2 text-xs"
+                placeholder="John Doe"
+              />
+              {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
+            </div>
+
+            {/* Card Number */}
+            <div>
+              <label className="block text-xs font-medium mb-1">Card Number</label>
+              <input
+                type="text"
                 value={form.card_number}
                 onChange={(e) => setForm({ ...form, card_number: e.target.value })}
-                className="w-full form-input px-3 py-2 text-sm mb-2"
+                className="w-full form-input px-3 py-2 text-xs"
+                placeholder="1234 5678 9012 3456"
               />
-              {errors.card_number && <p className="text-xs text-red-500">{errors.card_number}</p>}
-
-              <div className="flex gap-3">
-                <input
-                  type="text"
-                  name="expiry_date"
-                  placeholder={ "Expiry Date" || "MM/YY"}
-                  value={form.expiry_date}
-                  onChange={(e) => setForm({ ...form, expiry_date: e.target.value })}
-                  className="w-1/2 form-input px-3 py-2 text-sm"
-                />
-                <input
-                  type="text"
-                  name="cvv"
-                  placeholder={"CVV" || "123"}
-                  value={form.cvv}
-                  onChange={(e) => setForm({ ...form, cvv: e.target.value })}
-                  className="w-1/2 form-input px-3 py-2 text-sm"
-                />
-              </div>
-              {(errors.expiry_date || errors.cvv) && (
-                <p className="text-xs text-red-500">{errors.expiry_date || errors.cvv}</p>
-              )}
+              {errors.card_number && <p className="text-xs text-red-500 mt-1">{errors.card_number}</p>}
             </div>
 
+            {/* Expiry + CVV */}
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <label className="block text-xs font-medium mb-1">Expiry Date</label>
+                <input
+                  type="text"
+                  value={form.expiry_date}
+                  onChange={(e) => setForm({ ...form, expiry_date: e.target.value })}
+                  className="w-full form-input px-3 py-2 text-xs"
+                  placeholder="MM/YY"
+                />
+                {errors.expiry_date && <p className="text-xs text-red-500 mt-1">{errors.expiry_date}</p>}
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs font-medium mb-1">CVV</label>
+                <input
+                  type="text"
+                  value={form.cvv}
+                  onChange={(e) => setForm({ ...form, cvv: e.target.value })}
+                  className="w-full form-input px-3 py-2 text-xs"
+                  placeholder="123"
+                />
+                {errors.cvv && <p className="text-xs text-red-500 mt-1">{errors.cvv}</p>}
+              </div>
+            </div>
+
+            {/* Billing Address */}
+            <div>
+              <p className="text-xs font-medium mt-4 mb-2">Billing Address</p>
+              <input
+                type="text"
+                value={form.address}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
+                className="w-full form-input px-3 py-2 text-xs mb-2"
+                placeholder="123 Main Street"
+              />
+              {errors.address && <p className="text-xs text-red-500 mt-1">{errors.address}</p>}
+
+              <div className="flex gap-3 mb-2">
+                <input
+                  type="text"
+                  value={form.city}
+                  onChange={(e) => setForm({ ...form, city: e.target.value })}
+                  className="w-1/2 form-input px-3 py-2 text-xs"
+                  placeholder="City"
+                />
+                <input
+                  type="text"
+                  value={form.state}
+                  onChange={(e) => setForm({ ...form, state: e.target.value })}
+                  className="w-1/2 form-input px-3 py-2 text-xs"
+                  placeholder="State"
+                />
+              </div>
+              {(errors.city || errors.state) && <p className="text-xs text-red-500 mt-1">{errors.city || errors.state}</p>}
+
+              <input
+                type="text"
+                value={form.zip}
+                onChange={(e) => setForm({ ...form, zip: e.target.value })}
+                className="w-full form-input px-3 py-2 text-xs"
+                placeholder="ZIP Code"
+              />
+              {errors.zip && <p className="text-xs text-red-500 mt-1">{errors.zip}</p>}
+            </div>
+
+            {/* Submit Buttons */}
             <div className="flex justify-between items-center pt-4 gap-4">
               <button
                 type="button"
-                className="flex-1 px-4 py-2 text-sm border rounded-md hover:bg-gray-100"
                 onClick={onClose}
+                className="flex-1 px-4 py-2 text-xs border rounded-md hover:bg-gray-100"
                 disabled={submitting}
               >
-                {t("purchase.cancel")}
+                Cancel
               </button>
-
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-md flex items-center justify-center"
+                className="flex-1 px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-md flex items-center justify-center"
               >
-                <FaLock className="mr-3" />
-                {submitting ? t("purchase.processing") : t("purchase.pay", { price: planDetails?.pricing?.price || planDetails?.price || "$47"})}
+                <FaLock className="mr-2" />
+                {submitting ? "Processing..." : `Pay ${planDetails?.pricing?.price || "$47"}`}
               </button>
             </div>
           </form>
+
 
           {submitError && <p className="text-xs text-red-500">{submitError}</p>}
         </div>

@@ -272,7 +272,7 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
   const { t } = useTranslation();
 
 
-  const [method, setMethod] = useState("dob"); 
+  const [method, setMethod] = useState("dob");
   const [localYear, setLocalYear] = useState("");
   const [localMonth, setLocalMonth] = useState("");
   const [localDay, setLocalDay] = useState("");
@@ -344,7 +344,7 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         age: String(userAge),
       }));
     } else {
-     
+
       if (!localAge) {
         const msg = t("age_verification.errors.enter_age");
         setError(msg);
@@ -392,16 +392,16 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-      <div className="bg-white rounded-lg w-full max-w-md shadow-lg p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg w-full max-w-md shadow-lg p-6 max-h-[90vh] overflow-y-auto scrollbar-hide">
         {/* Header */}
         <div className="flex justify-between items-start">
-          <h2 className="text-lg font-semibold">{t("age_verification.title")}</h2>
+          <h2 className="text-sm font-semibold">{t("age_verification.title")}</h2>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onClose();
             }}
-            className="text-gray-500 hover:text-gray-800 text-xl"
+            className="text-gray-500 hover:text-gray-800 text-sm"
             aria-label={t("age_verification.close")}
           >
             ✕
@@ -416,7 +416,7 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         </div>
 
         <h3 className="text-sm font-bold text-center mb-2">{t("age_verification.heading")}</h3>
-        <p className="text-sm font-light text-gray-600 text-center mb-6">{t("age_verification.subheading")}</p>
+        <p className="text-xs font-regular text-gray-600 text-center mb-6">{t("age_verification.subheading")}</p>
 
         {/* Privacy */}
         <div className="border rounded-lg p-4 mb-6 flex space-x-3">
@@ -429,36 +429,37 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
 
         {/* Method selector */}
         <div className="border rounded-lg p-4 mb-6">
-          <h4 className="text-sm font-medium mb-3">{t("age_verification.choose_method")}</h4>
+          <h4 className="text-xs font-semibold mb-3">{t("age_verification.choose_method")}</h4>
           <div className="space-y-3">
             <button
               type="button"
               onClick={(e) => selectMethod("dob", e)}
-              className={`w-full text-left flex items-center justify-between border rounded-lg p-3 ${method === "dob" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
+              className={`w-full text-left flex items-start justify-start border rounded-lg p-3 ${method === "dob" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
             >
-              <div className="flex items-center space-x-2">
-                <FaCalendarAlt className="text-teal-500" />
-                <div>
-                  <p className="font-medium text-sm">{t("age_verification.method_dob.title")}</p>
-                  <p className="text-xs text-gray-500">{t("age_verification.method_dob.desc")}</p>
-                </div>
-              </div>
               <input type="radio" checked={method === "dob"} readOnly />
+              <div className="ml-2">
+                <div className="flex flex-row gap-2">
+                  <FaCalendarAlt className="text-teal-500 h-3 w-3" />
+                  <p className="font-semibold text-xs">{t("age_verification.method_dob.title")}</p>
+                </div>
+                <p className="text-[10px] text-gray-500">{t("age_verification.method_dob.desc")}</p>
+              </div>
             </button>
 
             <button
               type="button"
               onClick={(e) => selectMethod("declaration", e)}
-              className={`w-full text-left flex items-center justify-between border rounded-lg p-3 ${method === "declaration" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
+              className={`w-full text-left flex items-start justify-start border rounded-lg p-3 ${method === "declaration" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
             >
-              <div className="flex items-center space-x-2">
-                <FaUserCheck className="text-teal-500" />
-                <div>
-                  <p className="font-medium text-sm">{t("age_verification.method_decl.title")}</p>
-                  <p className="text-xs text-gray-500">{t("age_verification.method_decl.desc")}</p>
-                </div>
-              </div>
               <input type="radio" checked={method === "declaration"} readOnly />
+              <div className="ml-2">
+                <div className="flex flex-row gap-2">
+                  <FaUserCheck className="text-teal-500 h-3 w-3" />
+                  <p className="font-semibold text-xs">{t("age_verification.method_decl.title")}</p>
+                </div>
+                <p className="text-[10px] text-gray-500">{t("age_verification.method_decl.desc")}</p>
+              </div>
+
             </button>
           </div>
         </div>
@@ -466,10 +467,10 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         {/* Conditional inputs (local only) */}
         {method === "dob" ? (
           <div className="border rounded-lg p-4 mb-6">
-            <h4 className="text-sm font-medium mb-3">{t("age_verification.enter_dob")}</h4>
+            <h4 className="text-xs font-semibold mb-3">{t("age_verification.enter_dob")}</h4>
             <div className="flex space-x-3">
               <select
-                className="border rounded-md p-2 w-1/3 text-sm"
+                className="border form-input rounded-md p-2 w-1/3 text-xs"
                 value={localMonth || ""}
                 onChange={(e) => setLocalMonth(String(e.target.value).padStart(2, "0"))}
               >
@@ -480,7 +481,7 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
               </select>
 
               <select
-                className="border rounded-md p-2 w-1/3 text-sm"
+                className="border form-input rounded-md p-2 w-1/3 text-xs"
                 value={localDay || ""}
                 onChange={(e) => setLocalDay(String(e.target.value))}
               >
@@ -491,7 +492,7 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
               </select>
 
               <select
-                className="border rounded-md p-2 w-1/3 text-sm"
+                className="border form-input rounded-md p-2 w-1/3 text-xs"
                 value={localYear || ""}
                 onChange={(e) => setLocalYear(e.target.value)}
               >

@@ -202,6 +202,23 @@ const BusinessDirectory = () => {
     setSelectedFilters((prev) => ({ ...prev, [filterKey]: value }));
   };
 
+  const SkillChips = ({ skills = [] }) => {
+    if (!Array.isArray(skills) || skills.length === 0) return null;
+    const visible = skills.slice(0, 3);
+    const extra = skills.length - visible.length;
+
+    return (
+      <div className="mt-3 flex flex-wrap gap-2">
+        {visible.map((s) => (
+          <span key={s.id} className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{s.name}</span>
+        ))}
+        {extra > 0 && (
+          <span className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{`+${extra} ${t("creative.more")}`}</span>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="bg-white min-h-screen w-full">
 
@@ -230,7 +247,7 @@ const BusinessDirectory = () => {
           <input
             type="text"
             placeholder={t("filters.search_placeholder")}
-            className="form-input w-full"
+            className="form-input w-full text-xs"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -357,6 +374,8 @@ const BusinessDirectory = () => {
                     <p className="mt-3 text-gray-800 font-medium text-sm">
                       {t("price.hourly")}: {biz.hourly_rate != null ? `$${biz.hourly_rate}` : "-"} | {t("price.daily")}: {biz.daily_rate != null ? `$${biz.daily_rate}` : "-"} | {t("price.project")}: {biz.project_rate != null ? `$${biz.project_rate}` : "-"}
                     </p>
+
+                    <SkillChips skills={biz?.skills} />
 
                     {/* Social Links */}
                     <div className="mt-3 flex gap-2 flex-wrap">

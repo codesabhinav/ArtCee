@@ -152,7 +152,7 @@
       "all_types": "All types",
       "all_locations": "All locations",
       "all_location_types": "All",
-       "search_placeholder": "Search businesses, services, or specializations...",
+      "search_placeholder": "Search businesses, services, or specializations...",
       "options": {
         "type": {
           "full_time": "Full-time",
@@ -1023,16 +1023,16 @@
       "verify": "Verify Age"
     },
     "register": {
-      "finish":"finish",
-      "next" :"Next",
-      "previous":"back",
+      "finish": "finish",
+      "next": "Next",
+      "previous": "back",
       "back": "Back",
       "skip_for_now": "Skip for now",
       "registration_success": "Registration successful!",
       "registration_failed": "Registration failed!",
       "geocode_failed": "Could not determine your location (reverse geocoding failed).",
       "geolocation_failed": "Could not access your location. Please enable location permissions or fill location manually.",
-       "step_label": "Step {current} of {total}"
+      "step_label": "Step {current} of {total}"
     },
     "profile_completion": {
       "aria_label": "Profile completion dialog",
@@ -1294,41 +1294,39 @@
         "update_failed": "Failed to update basic information"
       }
     },
-
-
     "purchase": {
-  "title": "Complete Your {plan} Upgrade",
-  "plan": "Plan",
-  "loading_plan": "Loading...",
-  "loading_plan_details": "Loading plan details…",
-  "price_label": "Limited time – only {spots} spots remaining!",
-  "payment_method": "Payment Method",
-  "credit_card": "Credit/Debit Card",
-  "paypal": "PayPal (Coming Soon)",
-  "secure_payment": "🔒 Secure Payment — Your payment info is encrypted & processed with Stripe",
-  "email_placeholder": "Email Address",
-  "name_placeholder": "Cardholder Name",
-  "billing_address": "Billing Address",
-  "street_placeholder": "Street address",
-  "city_placeholder": "City",
-  "state_placeholder": "State",
-  "zip_placeholder": "ZIP Code",
-  "card_details": "Card details",
-  "cancel": "Cancel",
-  "processing": "Processing…",
-  "pay": "Pay {price}",
-  "errors": {
-    "email": "Valid email required",
-    "name": "Name required",
-    "address": "Address required",
-    "city": "City required",
-    "state": "State required",
-    "zip": "ZIP required",
-    "payment_failed": "Payment failed",
-    "load_plan": "Failed to load plan details"
-  }
-}
-
+      "title": "Complete Your {plan} Upgrade",
+      "plan": "Plan",
+      "loading_plan": "Loading...",
+      "loading_plan_details": "Loading plan details…",
+      "price_label": "Limited time – only {spots} spots remaining!",
+      "payment_method": "Payment Method",
+      "credit_card": "Credit/Debit Card",
+      "paypal": "PayPal (Coming Soon)",
+      "secure_payment": "Secure Payment",
+      "secure_payment_desc": "Your payment information is encrypted and secure. We use Stripe for payment processing.",
+      "email_placeholder": "Email Address",
+      "name_placeholder": "Cardholder Name",
+      "billing_address": "Billing Address",
+      "street_placeholder": "Street address",
+      "city_placeholder": "City",
+      "state_placeholder": "State",
+      "zip_placeholder": "ZIP Code",
+      "card_details": "Card details",
+      "cancel": "Cancel",
+      "processing": "Processing…",
+      "pay": "Pay {price}",
+      "errors": {
+        "email": "Valid email required",
+        "name": "Name required",
+        "address": "Address required",
+        "city": "City required",
+        "state": "State required",
+        "zip": "ZIP required",
+        "payment_failed": "Payment failed",
+        "load_plan": "Failed to load plan details"
+      }
+    }
   },
   "es": {
     "meta": {
@@ -1344,8 +1342,7 @@
       "dashboard": "Panel",
       "sign_in": "Iniciar sesión",
       "logout": "cerrar sesión",
-       "my_account": "Mi cuenta"
-
+      "my_account": "Mi cuenta"
     },
     "apply_job_modal": {
       "apply_title": "Postular a {{title}}",
@@ -1484,7 +1481,7 @@
       "all_types": "Todos los tipos",
       "all_locations": "Todas las ubicaciones",
       "all_location_types": "Todos",
-       "search_placeholder": "Buscar negocios, servicios o especializaciones...",
+      "search_placeholder": "Buscar negocios, servicios o especializaciones...",
       "options": {
         "type": {
           "full_time": "Tiempo completo",
@@ -2518,37 +2515,38 @@
       "posts_load_error": "No se pudieron cargar las publicaciones"
     },
     "purchase": {
-    "title": "Completa tu actualización de {plan}",
-    "plan": "Plan",
-    "loading_plan": "Cargando...",
-    "loading_plan_details": "Cargando detalles del plan…",
-    "price_label": "¡Tiempo limitado – solo quedan {spots} lugares!",
-    "payment_method": "Método de Pago",
-    "credit_card": "Tarjeta de Crédito/Débito",
-    "paypal": "PayPal (Próximamente)",
-    "secure_payment": "🔒 Pago Seguro — Tu información de pago está encriptada y procesada con Stripe",
-    "email_placeholder": "Dirección de Correo Electrónico",
-    "name_placeholder": "Nombre del Titular de la Tarjeta",
-    "billing_address": "Dirección de Facturación",
-    "street_placeholder": "Dirección de la calle",
-    "city_placeholder": "Ciudad",
-    "state_placeholder": "Estado",
-    "zip_placeholder": "Código Postal",
-    "card_details": "Detalles de la Tarjeta",
-    "cancel": "Cancelar",
-    "processing": "Procesando…",
-    "pay": "Pagar {price}",
-    "errors": {
-      "email": "Se requiere un correo electrónico válido",
-      "name": "Se requiere el nombre",
-      "address": "Se requiere la dirección",
-      "city": "Se requiere la ciudad",
-      "state": "Se requiere el estado",
-      "zip": "Se requiere el código postal",
-      "payment_failed": "El pago falló",
-      "load_plan": "No se pudieron cargar los detalles del plan"
-    }
-  },
+      "title": "Completa tu actualización de {plan}",
+      "plan": "Plan",
+      "loading_plan": "Cargando...",
+      "loading_plan_details": "Cargando detalles del plan…",
+      "price_label": "¡Tiempo limitado – solo quedan {spots} lugares!",
+      "payment_method": "Método de Pago",
+      "credit_card": "Tarjeta de Crédito/Débito",
+      "paypal": "PayPal (Próximamente)",
+      "secure_payment": "Pago Seguro",
+      "secure_payment_desc": "Tu información de pago está encriptada y procesada con Stripe",
+      "email_placeholder": "Dirección de Correo Electrónico",
+      "name_placeholder": "Nombre del Titular de la Tarjeta",
+      "billing_address": "Dirección de Facturación",
+      "street_placeholder": "Dirección de la calle",
+      "city_placeholder": "Ciudad",
+      "state_placeholder": "Estado",
+      "zip_placeholder": "Código Postal",
+      "card_details": "Detalles de la Tarjeta",
+      "cancel": "Cancelar",
+      "processing": "Procesando…",
+      "pay": "Pagar {price}",
+      "errors": {
+        "email": "Se requiere un correo electrónico válido",
+        "name": "Se requiere el nombre",
+        "address": "Se requiere la dirección",
+        "city": "Se requiere la ciudad",
+        "state": "Se requiere el estado",
+        "zip": "Se requiere el código postal",
+        "payment_failed": "El pago falló",
+        "load_plan": "No se pudieron cargar los detalles del plan"
+      }
+    },
     "profile_steps": {
       "required_title": "Requerido para la Activación del Perfil",
       "optional_title": "Mejoras Opcionales",
@@ -2607,7 +2605,6 @@
       "footer_summary": "Explora tus nuevas funciones premium y comienza a ser descubierto",
       "footer_contact_prefix": "¿Preguntas sobre tus beneficios de Miembro Fundador?"
     },
-
     "login": {
       "welcome_back": "Bienvenido de nuevo",
       "subtitle": "Inicia sesión en tu cuenta de ArtCee",
@@ -3680,17 +3677,17 @@
       "verify": "Verificar Idade"
     },
     "register": {
-    "finish": "Finalizar",
-    "next": "Próximo",
-    "previous": "Anterior",
-    "back": "Voltar",
-    "skip_for_now": "Pular por agora",
-    "registration_success": "Registro bem-sucedido!",
-    "registration_failed": "Registro falhou!",
-    "geocode_failed": "Não foi possível determinar sua localização (geocodificação reversa falhou).",
-    "geolocation_failed": "Não foi possível acessar sua localização. Por favor, ative as permissões de localização ou preencha a localização manualmente.",
-    "step_label": "Passo {current} de {total}"
-  },
+      "finish": "Finalizar",
+      "next": "Próximo",
+      "previous": "Anterior",
+      "back": "Voltar",
+      "skip_for_now": "Pular por agora",
+      "registration_success": "Registro bem-sucedido!",
+      "registration_failed": "Registro falhou!",
+      "geocode_failed": "Não foi possível determinar sua localização (geocodificação reversa falhou).",
+      "geolocation_failed": "Não foi possível acessar sua localização. Por favor, ative as permissões de localização ou preencha a localização manualmente.",
+      "step_label": "Passo {current} de {total}"
+    },
     "profile_completion": {
       "aria_label": "Diálogo de conclusão do perfil",
       "close": "Fechar",
@@ -3952,37 +3949,38 @@
       }
     },
     "purchase": {
-    "title": "Complete sua atualização de {plan}",
-    "plan": "Plano",
-    "loading_plan": "Carregando...",
-    "loading_plan_details": "Carregando detalhes do plano…",
-    "price_label": "Tempo limitado – apenas {spots} vagas restantes!",
-    "payment_method": "Método de Pagamento",
-    "credit_card": "Cartão de Crédito/Débito",
-    "paypal": "PayPal (Em Breve)",
-    "secure_payment": "🔒 Pagamento Seguro — Suas informações de pagamento são criptografadas e processadas com Stripe",
-    "email_placeholder": "Endereço de E-mail",
-    "name_placeholder": "Nome do Titular do Cartão",
-    "billing_address": "Endereço de Cobrança",
-    "street_placeholder": "Endereço da rua",
-    "city_placeholder": "Cidade",
-    "state_placeholder": "Estado",
-    "zip_placeholder": "Código Postal",
-    "card_details": "Detalhes do Cartão",
-    "cancel": "Cancelar",
-    "processing": "Processando…",
-    "pay": "Pagar {price}",
-    "errors": {
-      "email": "E-mail válido necessário",
-      "name": "Nome necessário",
-      "address": "Endereço necessário",
-      "city": "Cidade necessária",
-      "state": "Estado necessário",
-      "zip": "Código postal necessário",
-      "payment_failed": "Pagamento falhou",
-      "load_plan": "Falha ao carregar os detalhes do plano"
+      "title": "Complete sua atualização de {plan}",
+      "plan": "Plano",
+      "loading_plan": "Carregando...",
+      "loading_plan_details": "Carregando detalhes do plano…",
+      "price_label": "Tempo limitado – apenas {spots} vagas restantes!",
+      "payment_method": "Método de Pagamento",
+      "credit_card": "Cartão de Crédito/Débito",
+      "paypal": "PayPal (Em Breve)",
+      "secure_payment": "Pagamento Seguro",
+      "secure_payment_desc":"Suas informações de pagamento são criptografadas e processadas com Stripe",
+      "email_placeholder": "Endereço de E-mail",
+      "name_placeholder": "Nome do Titular do Cartão",
+      "billing_address": "Endereço de Cobrança",
+      "street_placeholder": "Endereço da rua",
+      "city_placeholder": "Cidade",
+      "state_placeholder": "Estado",
+      "zip_placeholder": "Código Postal",
+      "card_details": "Detalhes do Cartão",
+      "cancel": "Cancelar",
+      "processing": "Processando…",
+      "pay": "Pagar {price}",
+      "errors": {
+        "email": "E-mail válido necessário",
+        "name": "Nome necessário",
+        "address": "Endereço necessário",
+        "city": "Cidade necessária",
+        "state": "Estado necessário",
+        "zip": "Código postal necessário",
+        "payment_failed": "Pagamento falhou",
+        "load_plan": "Falha ao carregar os detalhes do plano"
+      }
     }
-  }
   },
   "hi": {
     "meta": {
@@ -3998,7 +3996,7 @@
       "dashboard": "डैशबोर्ड",
       "sign_in": "साइन इन",
       "logout": "लॉगआउट",
-       "my_account": "मेरा खाता"
+      "my_account": "मेरा खाता"
     },
     "apply_job_modal": {
       "apply_title": "{{title}} के लिए आवेदन करें",
@@ -4280,119 +4278,119 @@
       "privacy_policy": "गोपनीयता नीति",
       "terms": "सेवा की शर्तें"
     },
-   "creative": {
-    "title": "रचनात्मक निर्देशिका",
-    "back_to_home": "होम पर वापस",
-    "count_creatives": "{{count}} रचनाकार",
-    "search_placeholder": "नाम, विशेषज्ञता, या जीवनी द्वारा रचनाकार खोजें...",
-    "no_creatives": "कोई रचनाकार नहीं मिला",
-    "anonymous": "अनाम",
-    "view_profile": "प्रोफाइल देखें",
-    "no_intro": "कोई व्यक्तिगत परिचय उपलब्ध नहीं।",
-    "years": "वर्ष",
-    "level": "स्तर",
-    "na": "लागू नहीं",
-    "advanced_filters": "उन्नत फ़िल्टर",
-    "budget_range": "बजट रेंज",
-    "industries": "उद्योग",
-    "clear_all": "सभी फ़िल्टर हटाएँ",
-    "more": "अधिक",
-    "all": "सभी",
-    "all_status": "सभी स्थिति",
-    "all_levels": "सभी स्तर",
-    "all_types": "सभी प्रकार",
-    "filter_availability": "उपलब्धता",
-    "filter_experience_level": "अनुभव स्तर",
-    "filter_work_style": "कार्य शैली",
-    "filter_union_status": "संघ स्थिति",
-    "sort_highest_rated": "सर्वोच्च रेटेड",
-    "sort_price_low_high": "मूल्य: निम्न → उच्च",
-    "sort_price_high_low": "मूल्य: उच्च → निम्न",
-    "sort_most_experience": "सबसे अधिक अनुभवी",
-    "sort_name_az": "नाम A → Z",
-    "available": "उपलब्ध",
-    "busy": "व्यस्त",
-    "booked": "बुक किया गया",
-    "offline": "ऑफ़लाइन",
-    "on_site": "ऑन-साइट",
-    "remote_ok": "रिमोट ठीक है",
-    "remote_ok_on_site": "रिमोट ठीक है और ऑन-साइट",
-    "level_label_entry": "प्रारंभिक स्तर",
-    "level_label_mid": "मध्य स्तर",
-    "level_label_senior": "वरिष्ठ स्तर",
-    "level_label_expert": "विशेषज्ञ स्तर",
-    "level_label_unknown": "—",
-    "levels": {
-      "entry": "प्रारंभिक स्तर",
-      "mid": "मध्य स्तर",
-      "senior": "वरिष्ठ स्तर",
-      "expert": "विशेषज्ञ स्तर",
-      "unknown": "—"
-    },
-    "filter_options": {
-      "availability": {
-        "available": "उपलब्ध",
-        "busy": "व्यस्त",
-        "booked": "बुक किया गया",
-        "offline": "ऑफ़लाइन"
+    "creative": {
+      "title": "रचनात्मक निर्देशिका",
+      "back_to_home": "होम पर वापस",
+      "count_creatives": "{{count}} रचनाकार",
+      "search_placeholder": "नाम, विशेषज्ञता, या जीवनी द्वारा रचनाकार खोजें...",
+      "no_creatives": "कोई रचनाकार नहीं मिला",
+      "anonymous": "अनाम",
+      "view_profile": "प्रोफाइल देखें",
+      "no_intro": "कोई व्यक्तिगत परिचय उपलब्ध नहीं।",
+      "years": "वर्ष",
+      "level": "स्तर",
+      "na": "लागू नहीं",
+      "advanced_filters": "उन्नत फ़िल्टर",
+      "budget_range": "बजट रेंज",
+      "industries": "उद्योग",
+      "clear_all": "सभी फ़िल्टर हटाएँ",
+      "more": "अधिक",
+      "all": "सभी",
+      "all_status": "सभी स्थिति",
+      "all_levels": "सभी स्तर",
+      "all_types": "सभी प्रकार",
+      "filter_availability": "उपलब्धता",
+      "filter_experience_level": "अनुभव स्तर",
+      "filter_work_style": "कार्य शैली",
+      "filter_union_status": "संघ स्थिति",
+      "sort_highest_rated": "सर्वोच्च रेटेड",
+      "sort_price_low_high": "मूल्य: निम्न → उच्च",
+      "sort_price_high_low": "मूल्य: उच्च → निम्न",
+      "sort_most_experience": "सबसे अधिक अनुभवी",
+      "sort_name_az": "नाम A → Z",
+      "available": "उपलब्ध",
+      "busy": "व्यस्त",
+      "booked": "बुक किया गया",
+      "offline": "ऑफ़लाइन",
+      "on_site": "ऑन-साइट",
+      "remote_ok": "रिमोट ठीक है",
+      "remote_ok_on_site": "रिमोट ठीक है और ऑन-साइट",
+      "level_label_entry": "प्रारंभिक स्तर",
+      "level_label_mid": "मध्य स्तर",
+      "level_label_senior": "वरिष्ठ स्तर",
+      "level_label_expert": "विशेषज्ञ स्तर",
+      "level_label_unknown": "—",
+      "levels": {
+        "entry": "प्रारंभिक स्तर",
+        "mid": "मध्य स्तर",
+        "senior": "वरिष्ठ स्तर",
+        "expert": "विशेषज्ञ स्तर",
+        "unknown": "—"
       },
-      "level": {
+      "filter_options": {
+        "availability": {
+          "available": "उपलब्ध",
+          "busy": "व्यस्त",
+          "booked": "बुक किया गया",
+          "offline": "ऑफ़लाइन"
+        },
+        "level": {
+          "entry": "प्रारंभिक स्तर",
+          "mid": "मध्य स्तर",
+          "senior": "वरिष्ठ स्तर",
+          "expert": "विशेषज्ञ स्तर"
+        },
+        "working_style": {
+          "remote": "रिमोट",
+          "onsite": "ऑन-साइट",
+          "hybrid": "रिमोट और ऑन-साइट"
+        },
+        "union_status": {
+          "union": "संघ",
+          "non_union": "गैर-संघ"
+        }
+      },
+      "default_industries": [
+        "उद्योग",
+        "सेवाएँ",
+        "कौशल"
+      ],
+      "industry_map": {
+        "Industries": "उद्योग",
+        "Services": "सेवाएँ",
+        "Skills": "कौशल",
+        "Film & TV": "फिल्म और टीवी",
+        "Photography": "फोटोग्राफी",
+        "Music": "संगीत",
+        "Design": "डिज़ाइन",
+        "Events": "इवेंट्स",
+        "Modeling": "मॉडलिंग",
+        "Other": "अन्य"
+      },
+      "level_keys": {
         "entry": "प्रारंभिक स्तर",
         "mid": "मध्य स्तर",
         "senior": "वरिष्ठ स्तर",
         "expert": "विशेषज्ञ स्तर"
       },
-      "working_style": {
-        "remote": "रिमोट",
-        "onsite": "ऑन-साइट",
-        "hybrid": "रिमोट और ऑन-साइट"
+      "filter_labels": {
+        "availability": "उपलब्धता",
+        "level": "स्तर",
+        "working_style": "कार्य शैली"
       },
-      "union_status": {
-        "union": "संघ",
-        "non_union": "गैर-संघ"
-      }
+      "sort_map": {
+        "Highest Rated": "rating_desc",
+        "Price: Low → High": "price_asc",
+        "Price: High → Low": "price_desc",
+        "Most Experienced": "experience_desc",
+        "Name A → Z": "name_asc"
+      },
+      "search_examples": [
+        "अभिनेता",
+        "फोटोग्राफर",
+        "वीडियो संपादक"
+      ]
     },
-    "default_industries": [
-      "उद्योग",
-      "सेवाएँ",
-      "कौशल"
-    ],
-    "industry_map": {
-      "Industries": "उद्योग",
-      "Services": "सेवाएँ",
-      "Skills": "कौशल",
-      "Film & TV": "फिल्म और टीवी",
-      "Photography": "फोटोग्राफी",
-      "Music": "संगीत",
-      "Design": "डिज़ाइन",
-      "Events": "इवेंट्स",
-      "Modeling": "मॉडलिंग",
-      "Other": "अन्य"
-    },
-    "level_keys": {
-      "entry": "प्रारंभिक स्तर",
-      "mid": "मध्य स्तर",
-      "senior": "वरिष्ठ स्तर",
-      "expert": "विशेषज्ञ स्तर"
-    },
-    "filter_labels": {
-      "availability": "उपलब्धता",
-      "level": "स्तर",
-      "working_style": "कार्य शैली"
-    },
-    "sort_map": {
-      "Highest Rated": "rating_desc",
-      "Price: Low → High": "price_asc",
-      "Price: High → Low": "price_desc",
-      "Most Experienced": "experience_desc",
-      "Name A → Z": "name_asc"
-    },
-    "search_examples": [
-      "अभिनेता",
-      "फोटोग्राफर",
-      "वीडियो संपादक"
-    ]
-  },
     "premium": {
       "back_to_dashboard": "डैशबोर्ड पर वापस जाएं",
       "upgrade_title": "प्रीमियम में अपग्रेड करें",
@@ -5007,18 +5005,18 @@
       "cancel": "रद्द करें",
       "verify": "आयु सत्यापित करें"
     },
-   "register": {
-    "finish": "समाप्त करें",
-    "next": "अगला",
-    "previous": "पीछे",
-    "back": "वापस",
-    "skip_for_now": "अभी के लिए छोड़ें",
-    "registration_success": "पंजीकरण सफल!",
-    "registration_failed": "पंजीकरण विफल!",
-    "geocode_failed": "आपकी लोकेशन निर्धारित नहीं हो सकी (रिवर्स जियोकॉडिंग विफल)।",
-    "geolocation_failed": "आपकी लोकेशन तक पहुँच नहीं सकी। कृपया लोकेशन अनुमतियाँ सक्षम करें या लोकेशन मैन्युअल रूप से भरें।",
-    "step_label": "चरण {current} का {total}"
-  },
+    "register": {
+      "finish": "समाप्त करें",
+      "next": "अगला",
+      "previous": "पीछे",
+      "back": "वापस",
+      "skip_for_now": "अभी के लिए छोड़ें",
+      "registration_success": "पंजीकरण सफल!",
+      "registration_failed": "पंजीकरण विफल!",
+      "geocode_failed": "आपकी लोकेशन निर्धारित नहीं हो सकी (रिवर्स जियोकॉडिंग विफल)।",
+      "geolocation_failed": "आपकी लोकेशन तक पहुँच नहीं सकी। कृपया लोकेशन अनुमतियाँ सक्षम करें या लोकेशन मैन्युअल रूप से भरें।",
+      "step_label": "चरण {current} का {total}"
+    },
     "profile_completion": {
       "aria_label": "प्रोफाइल पूर्णता संवाद",
       "close": "बंद करें",
@@ -5279,39 +5277,39 @@
         "update_failed": "मूल जानकारी अपडेट करने में विफल"
       }
     },
-    
-   "purchase": {
-    "title": "अपना {plan} अपग्रेड पूरा करें",
-    "plan": "योजना",
-    "loading_plan": "लोड हो रहा है...",
-    "loading_plan_details": "योजना विवरण लोड हो रहा है…",
-    "price_label": "सीमित समय – केवल {spots} स्थान शेष!",
-    "payment_method": "भुगतान विधि",
-    "credit_card": "क्रेडिट/डेबिट कार्ड",
-    "paypal": "पेपैल (जल्द ही उपलब्ध)",
-    "secure_payment": "🔒 सुरक्षित भुगतान — आपकी भुगतान जानकारी एन्क्रिप्टेड और स्ट्राइप के साथ संसाधित है",
-    "email_placeholder": "ईमेल पता",
-    "name_placeholder": "कार्डधारक का नाम",
-    "billing_address": "बिलिंग पता",
-    "street_placeholder": "गली का पता",
-    "city_placeholder": "शहर",
-    "state_placeholder": "राज्य",
-    "zip_placeholder": "पिन कोड",
-    "card_details": "कार्ड विवरण",
-    "cancel": "रद्द करें",
-    "processing": "प्रोसेसिंग…",
-    "pay": "भुगतान करें {price}",
-    "errors": {
-      "email": "मान्य ईमेल आवश्यक है",
-      "name": "नाम आवश्यक है",
-      "address": "पता आवश्यक है",
-      "city": "शहर आवश्यक है",
-      "state": "राज्य आवश्यक है",
-      "zip": "पिन कोड आवश्यक है",
-      "payment_failed": "भुगतान विफल",
-      "load_plan": "योजना विवरण लोड करने में विफल"
+    "purchase": {
+      "title": "अपना {plan} अपग्रेड पूरा करें",
+      "plan": "योजना",
+      "loading_plan": "लोड हो रहा है...",
+      "loading_plan_details": "योजना विवरण लोड हो रहा है…",
+      "price_label": "सीमित समय – केवल {spots} स्थान शेष!",
+      "payment_method": "भुगतान विधि",
+      "credit_card": "क्रेडिट/डेबिट कार्ड",
+      "paypal": "पेपैल (जल्द ही उपलब्ध)",
+      "secure_payment": "सुरक्षित भुगतान",
+      "secure_payment_desc": "आपकी भुगतान जानकारी एन्क्रिप्टेड और स्ट्राइप के साथ संसाधित है",
+      "email_placeholder": "ईमेल पता",
+      "name_placeholder": "कार्डधारक का नाम",
+      "billing_address": "बिलिंग पता",
+      "street_placeholder": "गली का पता",
+      "city_placeholder": "शहर",
+      "state_placeholder": "राज्य",
+      "zip_placeholder": "पिन कोड",
+      "card_details": "कार्ड विवरण",
+      "cancel": "रद्द करें",
+      "processing": "प्रोसेसिंग…",
+      "pay": "भुगतान करें {price}",
+      "errors": {
+        "email": "मान्य ईमेल आवश्यक है",
+        "name": "नाम आवश्यक है",
+        "address": "पता आवश्यक है",
+        "city": "शहर आवश्यक है",
+        "state": "राज्य आवश्यक है",
+        "zip": "पिन कोड आवश्यक है",
+        "payment_failed": "भुगतान विफल",
+        "load_plan": "योजना विवरण लोड करने में विफल"
+      }
     }
-  }
   },
   "tl": {
     "meta": {
@@ -5465,7 +5463,7 @@
       "all_categories": "Lahat ng kategorya",
       "all_types": "Lahat ng uri",
       "all_locations": "Lahat ng lokasyon",
-       "search_placeholder": "Maghanap ng mga negosyo, serbisyo o espesyalisasyon...",
+      "search_placeholder": "Maghanap ng mga negosyo, serbisyo o espesyalisasyon...",
       "all_location_types": "Lahat",
       "options": {
         "type": {
@@ -6336,20 +6334,18 @@
       "cancel": "Kanselahin",
       "verify": "I-verify ang Edad"
     },
-   
-  "register": {
-    "finish": "Tapusin",
-    "next": "Susunod",
-    "previous": "Nakaraan",
-    "back": "Bumalik",
-    "skip_for_now": "Laktawan muna",
-    "registration_success": "Matagumpay na pagrehistro!",
-    "registration_failed": "Nabigo ang pagrehistro!",
-    "geocode_failed": "Hindi matukoy ang iyong lokasyon (nabigo ang reverse geocoding).",
-    "geolocation_failed": "Hindi ma-access ang iyong lokasyon. Paki-enable ang mga pahintulot sa lokasyon o punan ang lokasyon nang manu-mano.",
-    "step_label": "Hakbang {current} ng {total}"
-  
-},
+    "register": {
+      "finish": "Tapusin",
+      "next": "Susunod",
+      "previous": "Nakaraan",
+      "back": "Bumalik",
+      "skip_for_now": "Laktawan muna",
+      "registration_success": "Matagumpay na pagrehistro!",
+      "registration_failed": "Nabigo ang pagrehistro!",
+      "geocode_failed": "Hindi matukoy ang iyong lokasyon (nabigo ang reverse geocoding).",
+      "geolocation_failed": "Hindi ma-access ang iyong lokasyon. Paki-enable ang mga pahintulot sa lokasyon o punan ang lokasyon nang manu-mano.",
+      "step_label": "Hakbang {current} ng {total}"
+    },
     "profile_completion": {
       "aria_label": "Dialog ng pagkumpleto ng profile",
       "close": "Isara",
@@ -6611,37 +6607,38 @@
       }
     },
     "purchase": {
-    "title": "Kumpletuhin ang Iyong {plan} Upgrade",
-    "plan": "Plano",
-    "loading_plan": "Naglo-load...",
-    "loading_plan_details": "Naglo-load ng mga detalye ng plano…",
-    "price_label": "Limitadong oras – {spots} na puwesto na lang ang natitira!",
-    "payment_method": "Paraan ng Pagbabayad",
-    "credit_card": "Credit/Debit Card",
-    "paypal": "PayPal (Darating na)",
-    "secure_payment": "🔒 Ligtas na Pagbabayad — Ang iyong impormasyon sa pagbabayad ay naka-encrypt at pinoproseso gamit ang Stripe",
-    "email_placeholder": "Email Address",
-    "name_placeholder": "Pangalan ng May-ari ng Card",
-    "billing_address": "Billing Address",
-    "street_placeholder": "Address ng kalye",
-    "city_placeholder": "Lungsod",
-    "state_placeholder": "Estado",
-    "zip_placeholder": "ZIP Code",
-    "card_details": "Mga Detalye ng Card",
-    "cancel": "Kanselahin",
-    "processing": "Pinoproseso…",
-    "pay": "Magbayad ng {price}",
-    "errors": {
-      "email": "Kailangan ng wastong email",
-      "name": "Kailangan ng pangalan",
-      "address": "Kailangan ng address",
-      "city": "Kailangan ng lungsod",
-      "state": "Kailangan ng estado",
-      "zip": "Kailangan ng ZIP code",
-      "payment_failed": "Nabigo ang pagbabayad",
-      "load_plan": "Nabigo sa pag-load ng mga detalye ng plano"
+      "title": "Kumpletuhin ang Iyong {plan} Upgrade",
+      "plan": "Plano",
+      "loading_plan": "Naglo-load...",
+      "loading_plan_details": "Naglo-load ng mga detalye ng plano…",
+      "price_label": "Limitadong oras – {spots} na puwesto na lang ang natitira!",
+      "payment_method": "Paraan ng Pagbabayad",
+      "credit_card": "Credit/Debit Card",
+      "paypal": "PayPal (Darating na)",
+      "secure_payment": "Ligtas na Pagbabayad",
+      "secure_payment_desc": "Ang iyong impormasyon sa pagbabayad ay naka-encrypt at pinoproseso gamit ang Stripe",
+      "email_placeholder": "Email Address",
+      "name_placeholder": "Pangalan ng May-ari ng Card",
+      "billing_address": "Billing Address",
+      "street_placeholder": "Address ng kalye",
+      "city_placeholder": "Lungsod",
+      "state_placeholder": "Estado",
+      "zip_placeholder": "ZIP Code",
+      "card_details": "Mga Detalye ng Card",
+      "cancel": "Kanselahin",
+      "processing": "Pinoproseso…",
+      "pay": "Magbayad ng {price}",
+      "errors": {
+        "email": "Kailangan ng wastong email",
+        "name": "Kailangan ng pangalan",
+        "address": "Kailangan ng address",
+        "city": "Kailangan ng lungsod",
+        "state": "Kailangan ng estado",
+        "zip": "Kailangan ng ZIP code",
+        "payment_failed": "Nabigo ang pagbabayad",
+        "load_plan": "Nabigo sa pag-load ng mga detalye ng plano"
+      }
     }
-  }
   },
   "ko": {
     "meta": {
@@ -6657,7 +6654,7 @@
       "dashboard": "대시보드",
       "sign_in": "로그인",
       "logout": "로그아웃",
-       "my_account": "내 계정"
+      "my_account": "내 계정"
     },
     "apply_job_modal": {
       "apply_title": "{{title}}에 지원하기",
@@ -6755,7 +6752,6 @@
       "no_jobs": "일자리를 찾을 수 없습니다.",
       "load_more": "더 불러오기",
       "loading_more": "불러오는 중...",
-      
       "job_card": {
         "via": "출처",
         "share": "공유",
@@ -7667,18 +7663,18 @@
       "cancel": "취소",
       "verify": "연령 인증"
     },
-   "register": {
-    "finish": "완료",
-    "next": "다음",
-    "previous": "이전",
-    "back": "뒤로",
-    "skip_for_now": "나중에 건너뛰기",
-    "registration_success": "등록 성공!",
-    "registration_failed": "등록 실패!",
-    "geocode_failed": "위치를 확인할 수 없습니다 (역지오코딩 실패).",
-    "geolocation_failed": "위치에 접근할 수 없습니다. 위치 권한을 활성화하거나 위치를 수동으로 입력하세요.",
-    "step_label": "{total} 중 {current} 단계"
-  },
+    "register": {
+      "finish": "완료",
+      "next": "다음",
+      "previous": "이전",
+      "back": "뒤로",
+      "skip_for_now": "나중에 건너뛰기",
+      "registration_success": "등록 성공!",
+      "registration_failed": "등록 실패!",
+      "geocode_failed": "위치를 확인할 수 없습니다 (역지오코딩 실패).",
+      "geolocation_failed": "위치에 접근할 수 없습니다. 위치 권한을 활성화하거나 위치를 수동으로 입력하세요.",
+      "step_label": "{total} 중 {current} 단계"
+    },
     "profile_completion": {
       "aria_label": "프로필 완성 다이얼로그",
       "close": "닫기",
@@ -7940,37 +7936,38 @@
       }
     },
     "purchase": {
-    "title": "{plan} 업그레이드를 완료하세요",
-    "plan": "플랜",
-    "loading_plan": "로딩 중...",
-    "loading_plan_details": "플랜 세부 정보 로딩 중…",
-    "price_label": "한정된 시간 – {spots} 자리만 남았습니다!",
-    "payment_method": "결제 방법",
-    "credit_card": "신용/체크 카드",
-    "paypal": "PayPal (곧 출시 예정)",
-    "secure_payment": "🔒 안전한 결제 — 결제 정보는 암호화되어 Stripe로 처리됩니다",
-    "email_placeholder": "이메일 주소",
-    "name_placeholder": "카드 소지자 이름",
-    "billing_address": "청구지 주소",
-    "street_placeholder": "도로명 주소",
-    "city_placeholder": "도시",
-    "state_placeholder": "주",
-    "zip_placeholder": "우편번호",
-    "card_details": "카드 세부 정보",
-    "cancel": "취소",
-    "processing": "처리 중…",
-    "pay": "{price} 결제",
-    "errors": {
-      "email": "유효한 이메일이 필요합니다",
-      "name": "이름이 필요합니다",
-      "address": "주소가 필요합니다",
-      "city": "도시가 필요합니다",
-      "state": "주가 필요합니다",
-      "zip": "우편번호가 필요합니다",
-      "payment_failed": "결제 실패",
-      "load_plan": "플랜 세부 정보 로드 실패"
+      "title": "{plan} 업그레이드를 완료하세요",
+      "plan": "플랜",
+      "loading_plan": "로딩 중...",
+      "loading_plan_details": "플랜 세부 정보 로딩 중…",
+      "price_label": "한정된 시간 – {spots} 자리만 남았습니다!",
+      "payment_method": "결제 방법",
+      "credit_card": "신용/체크 카드",
+      "paypal": "PayPal (곧 출시 예정)",
+      "secure_payment": "안전한 결제",
+      "secure_payment_desc": "결제 정보는 암호화되어 Stripe로 처리됩니다",
+      "email_placeholder": "이메일 주소",
+      "name_placeholder": "카드 소지자 이름",
+      "billing_address": "청구지 주소",
+      "street_placeholder": "도로명 주소",
+      "city_placeholder": "도시",
+      "state_placeholder": "주",
+      "zip_placeholder": "우편번호",
+      "card_details": "카드 세부 정보",
+      "cancel": "취소",
+      "processing": "처리 중…",
+      "pay": "{price} 결제",
+      "errors": {
+        "email": "유효한 이메일이 필요합니다",
+        "name": "이름이 필요합니다",
+        "address": "주소가 필요합니다",
+        "city": "도시가 필요합니다",
+        "state": "주가 필요합니다",
+        "zip": "우편번호가 필요합니다",
+        "payment_failed": "결제 실패",
+        "load_plan": "플랜 세부 정보 로드 실패"
+      }
     }
-  }
   },
   "zh": {
     "meta": {
@@ -7986,8 +7983,7 @@
       "dashboard": "仪表盘",
       "sign_in": "登录",
       "logout": "退出",
-  "my_account": "我的账户"
-
+      "my_account": "我的账户"
     },
     "apply_job_modal": {
       "apply_title": "申请 {{title}}",
@@ -8126,7 +8122,7 @@
       "all_types": "所有类型",
       "all_locations": "所有地点",
       "all_location_types": "全部",
-         "search_placeholder": "搜索商家、服务或专长...",
+      "search_placeholder": "搜索商家、服务或专长...",
       "options": {
         "type": {
           "full_time": "全职",
@@ -8996,20 +8992,18 @@
       "cancel": "取消",
       "verify": "验证年龄"
     },
-  
-
-  "register": {
-    "finish": "完成",
-    "next": "下一步",
-    "previous": "上一步",
-    "back": "返回",
-    "skip_for_now": "暂跳过",
-    "registration_success": "注册成功！",
-    "registration_failed": "注册失败！",
-    "geocode_failed": "无法确定您的位置（反向地理编码失败）。",
-    "geolocation_failed": "无法访问您的位置。请启用位置权限或手动填写位置。",
-    "step_label": "第 {current} 步，共 {total} 步"
-  },
+    "register": {
+      "finish": "完成",
+      "next": "下一步",
+      "previous": "上一步",
+      "back": "返回",
+      "skip_for_now": "暂跳过",
+      "registration_success": "注册成功！",
+      "registration_failed": "注册失败！",
+      "geocode_failed": "无法确定您的位置（反向地理编码失败）。",
+      "geolocation_failed": "无法访问您的位置。请启用位置权限或手动填写位置。",
+      "step_label": "第 {current} 步，共 {total} 步"
+    },
     "profile_completion": {
       "aria_label": "个人资料完成对话框",
       "close": "关闭",
@@ -9271,37 +9265,38 @@
       }
     },
     "purchase": {
-    "title": "完成您的{plan}升级",
-    "plan": "计划",
-    "loading_plan": "加载中...",
-    "loading_plan_details": "加载计划详情…",
-    "price_label": "限时优惠 – 仅剩{spots}个名额！",
-    "payment_method": "支付方式",
-    "credit_card": "信用卡/借记卡",
-    "paypal": "PayPal（即将推出）",
-    "secure_payment": "🔒 安全支付 — 您的支付信息已加密并通过Stripe处理",
-    "email_placeholder": "电子邮件地址",
-    "name_placeholder": "持卡人姓名",
-    "billing_address": "账单地址",
-    "street_placeholder": "街道地址",
-    "city_placeholder": "城市",
-    "state_placeholder": "州",
-    "zip_placeholder": "邮政编码",
-    "card_details": "卡详情",
-    "cancel": "取消",
-    "processing": "处理中…",
-    "pay": "支付{price}",
-    "errors": {
-      "email": "需要有效的电子邮件",
-      "name": "需要姓名",
-      "address": "需要地址",
-      "city": "需要城市",
-      "state": "需要州",
-      "zip": "需要邮政编码",
-      "payment_failed": "支付失败",
-      "load_plan": "无法加载计划详情"
+      "title": "完成您的{plan}升级",
+      "plan": "计划",
+      "loading_plan": "加载中...",
+      "loading_plan_details": "加载计划详情…",
+      "price_label": "限时优惠 – 仅剩{spots}个名额！",
+      "payment_method": "支付方式",
+      "credit_card": "信用卡/借记卡",
+      "paypal": "PayPal（即将推出）",
+      "secure_payment": "安全支付",
+      "secure_payment_desc": "您的支付信息已加密并通过Stripe处理",
+      "email_placeholder": "电子邮件地址",
+      "name_placeholder": "持卡人姓名",
+      "billing_address": "账单地址",
+      "street_placeholder": "街道地址",
+      "city_placeholder": "城市",
+      "state_placeholder": "州",
+      "zip_placeholder": "邮政编码",
+      "card_details": "卡详情",
+      "cancel": "取消",
+      "processing": "处理中…",
+      "pay": "支付{price}",
+      "errors": {
+        "email": "需要有效的电子邮件",
+        "name": "需要姓名",
+        "address": "需要地址",
+        "city": "需要城市",
+        "state": "需要州",
+        "zip": "需要邮政编码",
+        "payment_failed": "支付失败",
+        "load_plan": "无法加载计划详情"
+      }
     }
-  }
   },
   "fr": {
     "meta": {
@@ -9456,7 +9451,7 @@
       "all_types": "Tous les types",
       "all_locations": "Tous les lieux",
       "all_location_types": "Tous",
-         "search_placeholder": "Rechercher des emplois, entreprises ou mots-clés...",
+      "search_placeholder": "Rechercher des emplois, entreprises ou mots-clés...",
       "options": {
         "type": {
           "full_time": "Temps plein",
@@ -10326,20 +10321,18 @@
       "cancel": "Annuler",
       "verify": "Vérifier l'âge"
     },
-  
-  "register": {
-    "finish": "Terminer",
-    "next": "Suivant",
-    "previous": "Précédent",
-    "back": "Retour",
-    "skip_for_now": "Ignorer pour l'instant",
-    "registration_success": "Inscription réussie !",
-    "registration_failed": "Échec de l'inscription !",
-    "geocode_failed": "Impossible de déterminer votre emplacement (échec de la géocodification inverse).",
-    "geolocation_failed": "Impossible d'accéder à votre emplacement. Veuillez activer les autorisations de localisation ou remplir l'emplacement manuellement.",
-    "step_label": "Étape {current} sur {total}"
-  
-},
+    "register": {
+      "finish": "Terminer",
+      "next": "Suivant",
+      "previous": "Précédent",
+      "back": "Retour",
+      "skip_for_now": "Ignorer pour l'instant",
+      "registration_success": "Inscription réussie !",
+      "registration_failed": "Échec de l'inscription !",
+      "geocode_failed": "Impossible de déterminer votre emplacement (échec de la géocodification inverse).",
+      "geolocation_failed": "Impossible d'accéder à votre emplacement. Veuillez activer les autorisations de localisation ou remplir l'emplacement manuellement.",
+      "step_label": "Étape {current} sur {total}"
+    },
     "profile_completion": {
       "aria_label": "Dialogue de complétion du profil",
       "close": "Fermer",
@@ -10601,37 +10594,38 @@
       }
     },
     "purchase": {
-    "title": "Complétez votre mise à niveau {plan}",
-    "plan": "Plan",
-    "loading_plan": "Chargement...",
-    "loading_plan_details": "Chargement des détails du plan…",
-    "price_label": "Temps limité – seulement {spots} places restantes !",
-    "payment_method": "Méthode de Paiement",
-    "credit_card": "Carte de Crédit/Débit",
-    "paypal": "PayPal (Bientôt disponible)",
-    "secure_payment": "🔒 Paiement Sécurisé — Vos informations de paiement sont cryptées et traitées avec Stripe",
-    "email_placeholder": "Adresse e-mail",
-    "name_placeholder": "Nom du titulaire de la carte",
-    "billing_address": "Adresse de Facturation",
-    "street_placeholder": "Adresse de la rue",
-    "city_placeholder": "Ville",
-    "state_placeholder": "État",
-    "zip_placeholder": "Code Postal",
-    "card_details": "Détails de la carte",
-    "cancel": "Annuler",
-    "processing": "Traitement…",
-    "pay": "Payer {price}",
-    "errors": {
-      "email": "E-mail valide requis",
-      "name": "Nom requis",
-      "address": "Adresse requise",
-      "city": "Ville requise",
-      "state": "État requis",
-      "zip": "Code postal requis",
-      "payment_failed": "Échec du paiement",
-      "load_plan": "Échec du chargement des détails du plan"
+      "title": "Complétez votre mise à niveau {plan}",
+      "plan": "Plan",
+      "loading_plan": "Chargement...",
+      "loading_plan_details": "Chargement des détails du plan…",
+      "price_label": "Temps limité – seulement {spots} places restantes !",
+      "payment_method": "Méthode de Paiement",
+      "credit_card": "Carte de Crédit/Débit",
+      "paypal": "PayPal (Bientôt disponible)",
+      "secure_payment": "Paiement Sécurisé",
+      "secure_payment_desc": "Vos informations de paiement sont cryptées et traitées avec Stripe",
+      "email_placeholder": "Adresse e-mail",
+      "name_placeholder": "Nom du titulaire de la carte",
+      "billing_address": "Adresse de Facturation",
+      "street_placeholder": "Adresse de la rue",
+      "city_placeholder": "Ville",
+      "state_placeholder": "État",
+      "zip_placeholder": "Code Postal",
+      "card_details": "Détails de la carte",
+      "cancel": "Annuler",
+      "processing": "Traitement…",
+      "pay": "Payer {price}",
+      "errors": {
+        "email": "E-mail valide requis",
+        "name": "Nom requis",
+        "address": "Adresse requise",
+        "city": "Ville requise",
+        "state": "État requis",
+        "zip": "Code postal requis",
+        "payment_failed": "Échec du paiement",
+        "load_plan": "Échec du chargement des détails du plan"
+      }
     }
-  }
   },
   "ja": {
     "meta": {
@@ -10647,8 +10641,7 @@
       "dashboard": "ダッシュボード",
       "sign_in": "サインイン",
       "logout": "ログアウト",
-      
-  "my_account": "マイアカウント"
+      "my_account": "マイアカウント"
     },
     "apply_job_modal": {
       "apply_title": "{{title}} に応募する",
@@ -10742,7 +10735,6 @@
       "page_title": "クリエイティブな求人と機会",
       "google_integration": "Google Jobsと統合",
       "search_placeholder": "求人、企業、キーワードを検索...",
-      
       "showing_jobs": "{count}件の求人を表示中",
       "no_jobs": "求人が見つかりませんでした。",
       "load_more": "もっと読み込む",
@@ -10787,7 +10779,7 @@
       "all_categories": "すべてのカテゴリー",
       "all_types": "すべての種類",
       "all_locations": "すべての勤務地",
-       "search_placeholder": "事業、サービス、または専門分野を検索...",
+      "search_placeholder": "事業、サービス、または専門分野を検索...",
       "all_location_types": "すべて",
       "options": {
         "type": {
@@ -11659,17 +11651,17 @@
       "verify": "年齢を認証"
     },
     "register": {
-    "finish": "完了",
-    "next": "次へ",
-    "previous": "前へ",
-    "back": "戻る",
-    "skip_for_now": "今はスキップ",
-    "registration_success": "登録成功！",
-    "registration_failed": "登録失敗！",
-    "geocode_failed": "位置を特定できませんでした（リバースジオコーディングに失敗）。",
-    "geolocation_failed": "位置にアクセスできませんでした。位置情報の許可を有効にしてください、または位置を手動で入力してください。",
-    "step_label": "{total} 中 {current} ステップ"
-  },
+      "finish": "完了",
+      "next": "次へ",
+      "previous": "前へ",
+      "back": "戻る",
+      "skip_for_now": "今はスキップ",
+      "registration_success": "登録成功！",
+      "registration_failed": "登録失敗！",
+      "geocode_failed": "位置を特定できませんでした（リバースジオコーディングに失敗）。",
+      "geolocation_failed": "位置にアクセスできませんでした。位置情報の許可を有効にしてください、または位置を手動で入力してください。",
+      "step_label": "{total} 中 {current} ステップ"
+    },
     "profile_completion": {
       "aria_label": "プロフィール完成ダイアログ",
       "close": "閉じる",
@@ -11931,37 +11923,38 @@
       }
     },
     "purchase": {
-    "title": "{plan}アップグレードを完了する",
-    "plan": "プラン",
-    "loading_plan": "読み込み中...",
-    "loading_plan_details": "プラン詳細を読み込み中…",
-    "price_label": "期間限定 – 残り{spots}枠のみ！",
-    "payment_method": "支払い方法",
-    "credit_card": "クレジット/デビットカード",
-    "paypal": "PayPal（近日公開）",
-    "secure_payment": "🔒 安全な支払い — 支払い情報は暗号化され、Stripeで処理されます",
-    "email_placeholder": "メールアドレス",
-    "name_placeholder": "カード名義人の名前",
-    "billing_address": "請求先住所",
-    "street_placeholder": "住所",
-    "city_placeholder": "市区町村",
-    "state_placeholder": "州",
-    "zip_placeholder": "郵便番号",
-    "card_details": "カード詳細",
-    "cancel": "キャンセル",
-    "processing": "処理中…",
-    "pay": "{price}を支払う",
-    "errors": {
-      "email": "有効なメールアドレスが必要です",
-      "name": "名前が必要です",
-      "address": "住所が必要です",
-      "city": "市区町村が必要です",
-      "state": "州が必要です",
-      "zip": "郵便番号が必要です",
-      "payment_failed": "支払いに失敗しました",
-      "load_plan": "プラン詳細の読み込みに失敗しました"
+      "title": "{plan}アップグレードを完了する",
+      "plan": "プラン",
+      "loading_plan": "読み込み中...",
+      "loading_plan_details": "プラン詳細を読み込み中…",
+      "price_label": "期間限定 – 残り{spots}枠のみ！",
+      "payment_method": "支払い方法",
+      "credit_card": "クレジット/デビットカード",
+      "paypal": "PayPal（近日公開）",
+      "secure_payment": "安全な支払い",
+      "secure_payment_desc": "支払い情報は暗号化され、Stripeで処理されます",
+      "email_placeholder": "メールアドレス",
+      "name_placeholder": "カード名義人の名前",
+      "billing_address": "請求先住所",
+      "street_placeholder": "住所",
+      "city_placeholder": "市区町村",
+      "state_placeholder": "州",
+      "zip_placeholder": "郵便番号",
+      "card_details": "カード詳細",
+      "cancel": "キャンセル",
+      "processing": "処理中…",
+      "pay": "{price}を支払う",
+      "errors": {
+        "email": "有効なメールアドレスが必要です",
+        "name": "名前が必要です",
+        "address": "住所が必要です",
+        "city": "市区町村が必要です",
+        "state": "州が必要です",
+        "zip": "郵便番号が必要です",
+        "payment_failed": "支払いに失敗しました",
+        "load_plan": "プラン詳細の読み込みに失敗しました"
+      }
     }
-  }
   },
   "ar": {
     "meta": {
@@ -12116,7 +12109,7 @@
       "all_types": "جميع الأنواع",
       "all_locations": "جميع المواقع",
       "all_location_types": "الكل",
-       "search_placeholder": "ابحث عن الشركات، الخدمات، أو التخصصات...",
+      "search_placeholder": "ابحث عن الشركات، الخدمات، أو التخصصات...",
       "options": {
         "type": {
           "full_time": "دوام كامل",
@@ -12987,17 +12980,17 @@
       "verify": "التحقق من العمر"
     },
     "register": {
-    "finish": "إنهاء",
-    "next": "التالي",
-    "previous": "السابق",
-    "back": "رجوع",
-    "skip_for_now": "تخطى الآن",
-    "registration_success": "التسجيل ناجح!",
-    "registration_failed": "فشل التسجيل!",
-    "geocode_failed": "لم يتم تحديد موقعك (فشل الترميز الجغرافي العكسي).",
-    "geolocation_failed": "لم يتم الوصول إلى موقعك. يرجى تمكين أذونات الموقع أو ملء الموقع يدويًا.",
-    "step_label": "الخطوة {current} من {total}"
-  },
+      "finish": "إنهاء",
+      "next": "التالي",
+      "previous": "السابق",
+      "back": "رجوع",
+      "skip_for_now": "تخطى الآن",
+      "registration_success": "التسجيل ناجح!",
+      "registration_failed": "فشل التسجيل!",
+      "geocode_failed": "لم يتم تحديد موقعك (فشل الترميز الجغرافي العكسي).",
+      "geolocation_failed": "لم يتم الوصول إلى موقعك. يرجى تمكين أذونات الموقع أو ملء الموقع يدويًا.",
+      "step_label": "الخطوة {current} من {total}"
+    },
     "profile_completion": {
       "aria_label": "حوار إكمال الملف الشخصي",
       "close": "إغلاق",
@@ -13259,37 +13252,38 @@
       }
     },
     "purchase": {
-    "title": "أكمل ترقية {plan} الخاصة بك",
-    "plan": "الخطة",
-    "loading_plan": "جارٍ التحميل...",
-    "loading_plan_details": "جارٍ تحميل تفاصيل الخطة…",
-    "price_label": "وقت محدود – بقي {spots} أماكن فقط!",
-    "payment_method": "طريقة الدفع",
-    "credit_card": "بطاقة ائتمان/خصم",
-    "paypal": "PayPal (قريبًا)",
-    "secure_payment": "🔒 دفع آمن — معلومات الدفع مشفرة وتتم معالجتها بواسطة Stripe",
-    "email_placeholder": "عنوان البريد الإلكتروني",
-    "name_placeholder": "اسم حامل البطاقة",
-    "billing_address": "عنوان الفوترة",
-    "street_placeholder": "عنوان الشارع",
-    "city_placeholder": "المدينة",
-    "state_placeholder": "الولاية",
-    "zip_placeholder": "الرمز البريدي",
-    "card_details": "تفاصيل البطاقة",
-    "cancel": "إلغاء",
-    "processing": "جارٍ المعالجة…",
-    "pay": "ادفع {price}",
-    "errors": {
-      "email": "البريد الإلكتروني الصالح مطلوب",
-      "name": "الاسم مطلوب",
-      "address": "العنوان مطلوب",
-      "city": "المدينة مطلوبة",
-      "state": "الولاية مطلوبة",
-      "zip": "الرمز البريدي مطلوب",
-      "payment_failed": "فشل الدفع",
-      "load_plan": "فشل تحميل تفاصيل الخطة"
+      "title": "أكمل ترقية {plan} الخاصة بك",
+      "plan": "الخطة",
+      "loading_plan": "جارٍ التحميل...",
+      "loading_plan_details": "جارٍ تحميل تفاصيل الخطة…",
+      "price_label": "وقت محدود – بقي {spots} أماكن فقط!",
+      "payment_method": "طريقة الدفع",
+      "credit_card": "بطاقة ائتمان/خصم",
+      "paypal": "PayPal (قريبًا)",
+      "secure_payment": "دفع آمن —  Stripe",
+      "secure_payment_desc": "معلومات الدفع مشفرة وتتم معالجتها بواسطة",
+      "email_placeholder": "عنوان البريد الإلكتروني",
+      "name_placeholder": "اسم حامل البطاقة",
+      "billing_address": "عنوان الفوترة",
+      "street_placeholder": "عنوان الشارع",
+      "city_placeholder": "المدينة",
+      "state_placeholder": "الولاية",
+      "zip_placeholder": "الرمز البريدي",
+      "card_details": "تفاصيل البطاقة",
+      "cancel": "إلغاء",
+      "processing": "جارٍ المعالجة…",
+      "pay": "ادفع {price}",
+      "errors": {
+        "email": "البريد الإلكتروني الصالح مطلوب",
+        "name": "الاسم مطلوب",
+        "address": "العنوان مطلوب",
+        "city": "المدينة مطلوبة",
+        "state": "الولاية مطلوبة",
+        "zip": "الرمز البريدي مطلوب",
+        "payment_failed": "فشل الدفع",
+        "load_plan": "فشل تحميل تفاصيل الخطة"
+      }
     }
-  }
   },
   "de": {
     "meta": {
@@ -13444,7 +13438,7 @@
       "all_types": "Alle Typen",
       "all_locations": "Alle Standorte",
       "all_location_types": "Alle",
-       "search_placeholder": "Suche nach Unternehmen, Dienstleistungen oder Spezialisierungen...",
+      "search_placeholder": "Suche nach Unternehmen, Dienstleistungen oder Spezialisierungen...",
       "options": {
         "type": {
           "full_time": "Vollzeit",
@@ -14314,20 +14308,18 @@
       "cancel": "Abbrechen",
       "verify": "Alter verifizieren"
     },
-  
-  "register": {
-    "finish": "Abschließen",
-    "next": "Weiter",
-    "previous": "Zurück",
-    "back": "Zurück",
-    "skip_for_now": "Überspringen",
-    "registration_success": "Registrierung erfolgreich!",
-    "registration_failed": "Registrierung fehlgeschlagen!",
-    "geocode_failed": "Ihre Position konnte nicht bestimmt werden (umgekehrte Geocodierung fehlgeschlagen).",
-    "geolocation_failed": "Zugriff auf Ihre Position nicht möglich. Bitte aktivieren Sie Standorterlaubnisse oder geben Sie den Standort manuell ein.",
-    "step_label": "Schritt {current} von {total}"
-  
-},
+    "register": {
+      "finish": "Abschließen",
+      "next": "Weiter",
+      "previous": "Zurück",
+      "back": "Zurück",
+      "skip_for_now": "Überspringen",
+      "registration_success": "Registrierung erfolgreich!",
+      "registration_failed": "Registrierung fehlgeschlagen!",
+      "geocode_failed": "Ihre Position konnte nicht bestimmt werden (umgekehrte Geocodierung fehlgeschlagen).",
+      "geolocation_failed": "Zugriff auf Ihre Position nicht möglich. Bitte aktivieren Sie Standorterlaubnisse oder geben Sie den Standort manuell ein.",
+      "step_label": "Schritt {current} von {total}"
+    },
     "profile_completion": {
       "aria_label": "Dialog zur Profilvollständigkeit",
       "close": "Schließen",
@@ -14589,37 +14581,38 @@
       }
     },
     "purchase": {
-    "title": "Schließen Sie Ihr {plan}-Upgrade ab",
-    "plan": "Plan",
-    "loading_plan": "Laden...",
-    "loading_plan_details": "Plandetails werden geladen…",
-    "price_label": "Zeitlich begrenzt – nur noch {spots} Plätze verfügbar!",
-    "payment_method": "Zahlungsmethode",
-    "credit_card": "Kredit-/Debitkarte",
-    "paypal": "PayPal (Demnächst verfügbar)",
-    "secure_payment": "🔒 Sichere Zahlung — Ihre Zahlungsinformationen sind verschlüsselt und werden mit Stripe verarbeitet",
-    "email_placeholder": "E-Mail-Adresse",
-    "name_placeholder": "Name des Karteninhabers",
-    "billing_address": "Rechnungsadresse",
-    "street_placeholder": "Straßenadresse",
-    "city_placeholder": "Stadt",
-    "state_placeholder": "Bundesland",
-    "zip_placeholder": "Postleitzahl",
-    "card_details": "Kartendetails",
-    "cancel": "Abbrechen",
-    "processing": "Verarbeitung…",
-    "pay": "{price} bezahlen",
-    "errors": {
-      "email": "Gültige E-Mail-Adresse erforderlich",
-      "name": "Name erforderlich",
-      "address": "Adresse erforderlich",
-      "city": "Stadt erforderlich",
-      "state": "Bundesland erforderlich",
-      "zip": "Postleitzahl erforderlich",
-      "payment_failed": "Zahlung fehlgeschlagen",
-      "load_plan": "Plandetails konnten nicht geladen werden"
+      "title": "Schließen Sie Ihr {plan}-Upgrade ab",
+      "plan": "Plan",
+      "loading_plan": "Laden...",
+      "loading_plan_details": "Plandetails werden geladen…",
+      "price_label": "Zeitlich begrenzt – nur noch {spots} Plätze verfügbar!",
+      "payment_method": "Zahlungsmethode",
+      "credit_card": "Kredit-/Debitkarte",
+      "paypal": "PayPal (Demnächst verfügbar)",
+      "secure_payment": "Sichere Zahlung",
+      "secure_payment_desc": "Ihre Zahlungsinformationen sind verschlüsselt und werden mit Stripe verarbeitet",
+      "email_placeholder": "E-Mail-Adresse",
+      "name_placeholder": "Name des Karteninhabers",
+      "billing_address": "Rechnungsadresse",
+      "street_placeholder": "Straßenadresse",
+      "city_placeholder": "Stadt",
+      "state_placeholder": "Bundesland",
+      "zip_placeholder": "Postleitzahl",
+      "card_details": "Kartendetails",
+      "cancel": "Abbrechen",
+      "processing": "Verarbeitung…",
+      "pay": "{price} bezahlen",
+      "errors": {
+        "email": "Gültige E-Mail-Adresse erforderlich",
+        "name": "Name erforderlich",
+        "address": "Adresse erforderlich",
+        "city": "Stadt erforderlich",
+        "state": "Bundesland erforderlich",
+        "zip": "Postleitzahl erforderlich",
+        "payment_failed": "Zahlung fehlgeschlagen",
+        "load_plan": "Plandetails konnten nicht geladen werden"
+      }
     }
-  }
   },
   "it": {
     "meta": {
@@ -14635,7 +14628,7 @@
       "dashboard": "Dashboard",
       "sign_in": "Accedi",
       "logout": "disconnettersi",
-       "my_account": "Il mio account"
+      "my_account": "Il mio account"
     },
     "apply_job_modal": {
       "apply_title": "Candidati per {{title}}",
@@ -14774,7 +14767,7 @@
       "all_types": "Tutti i tipi",
       "all_locations": "Tutte le sedi",
       "all_location_types": "Tutti",
-        "search_placeholder": "Cerca aziende, servizi o specializzazioni...",
+      "search_placeholder": "Cerca aziende, servizi o specializzazioni...",
       "options": {
         "type": {
           "full_time": "Tempo pieno",
@@ -15096,106 +15089,106 @@
       "exclusive_status_title": "Status esclusivo",
       "exclusive_status_desc": "Solo per i primi 500 membri fondatori"
     },
-  "guest": {
-    "back_to_home": "Torna alla homepage",
-    "welcome": "Benvenuto",
-    "manage_profile": "Gestisci e visualizza in anteprima il tuo profilo pubblico",
-    "free_account": "Account gratuito",
-    "default_name": "Utente ospite",
-    "default_role": "Professionista creativo",
-    "default_title": "Professionista creativo",
-    "unknown": "Sconosciuto",
-    "rating_scale": "5",
-    "no_bio": "Nessuna biografia disponibile.",
-    "stats": {
-      "followers": "Follower",
-      "portfolio": "Portfolio",
-      "services": "Servizi",
-      "years": "Anni di esperienza",
-      "profile_views": "Visualizzazioni del profilo",
-      "portfolio_items": "Elementi del portfolio",
-      "blog_posts": "Post del blog",
-      "job_applications": "Candidature di lavoro",
-      "member_since": "Membro dal"
-    },
-    "profile_completion_title": "Completamento del profilo",
-    "profile_complete": "Completo",
-    "profile_incomplete": "Profilo incompleto",
-    "completed_of": "completato",
-    "activity_blog_title": "Attività e Blog",
-    "create_post": "Crea un post",
-    "posts_empty_title": "Inizia a condividere il tuo percorso creativo",
-    "posts_empty_desc": "Crea post sul blog per mostrare il tuo lavoro, condividere spunti e attirare potenziali clienti",
-    "create_your_first_post": "Crea il tuo primo post",
-    "job_applications_title": "Candidature di lavoro",
-    "browse_jobs": "Sfoglia lavori",
-    "no_applications": "Nessuna candidatura ancora",
-    "no_applications_desc": "Inizia a candidarti per lavori creativi per monitorare i tuoi progressi qui",
-    "browse_available_jobs": "Sfoglia i lavori disponibili",
-    "unlock_title": "Sblocca funzionalità sociali",
-    "unlock_subtitle": "Ottieni un posizionamento preferenziale e sblocca interazioni di Follow/Like",
-    "upgrade": {
-      "featured": "In evidenza nell'elenco",
-      "follow": "Segui altri creativi",
-      "like": "Metti Mi piace e supporta i contenuti",
-      "story": "In evidenza nella sezione Storie",
-      "badge": "Distintivo di membro fondatore"
-    },
-    "upgrade_limited": "Offerta a tempo limitato: Prezzo per membri fondatori – Risparmia $50!",
-    "founding_member_cta": "Diventa membro fondatore – $47",
-    "premium_monthly_cta": "Premium Mensile – $29/mese",
-    "account_includes_title": "Il tuo account gratuito include",
-    "includes": {
-      "portfolio_uploads": "Caricamenti del portfolio",
-      "images_videos": "Immagini e video",
-      "blog_posts": "Post del blog",
-      "job_applications": "Candidature di lavoro",
-      "directory_listing": "Elenco nella directory",
-      "unlimited": "Illimitato",
-      "included": "Incluso"
-    },
-    "current_plan_title": "Piano attuale",
-    "plan_paid": "Pagato",
-    "plan_free": "Account gratuito",
-    "plan_active": "Attivo",
-    "plan_inactive": "Inattivo",
-    "billing": {
-      "title": "Informazioni di fatturazione",
-      "price": "Prezzo:",
-      "cycle": "Ciclo di fatturazione:",
-      "member_since": "Membro dal:",
-      "paid": "Pagato",
-      "free": "Gratuito"
-    },
-    "upgrade_button": "Passa a Premium",
-    "upgrade_hint": "Sblocca funzionalità sociali e posizionamento premium",
-    "plan_features_title": "Caratteristiche del piano",
-    "features": {
-      "basic_profile": "Profilo base",
-      "unlimited_portfolio": "Caricamenti illimitati del portfolio",
-      "job_applications": "Candidature di lavoro",
-      "directory_listing": "Elenco base nella directory"
-    },
-    "account_usage_title": "Utilizzo dell'account",
-    "usage": {
-      "profile_views": "Visualizzazioni del profilo",
-      "this_month": "questo mese",
-      "portfolio_items": "Elementi del portfolio",
-      "unlimited_uploads": "Caricamenti illimitati",
-      "job_applications": "Candidature di lavoro",
-      "this_week": "questa settimana"
-    },
-    "profile_stats_title": "Statistiche del profilo",
-    "quick_actions_title": "Azioni rapide",
-    "quick": {
-      "upload_work": "Carica nuovo lavoro",
-      "write_blog": "Scrivi un post sul blog",
+    "guest": {
+      "back_to_home": "Torna alla homepage",
+      "welcome": "Benvenuto",
+      "manage_profile": "Gestisci e visualizza in anteprima il tuo profilo pubblico",
+      "free_account": "Account gratuito",
+      "default_name": "Utente ospite",
+      "default_role": "Professionista creativo",
+      "default_title": "Professionista creativo",
+      "unknown": "Sconosciuto",
+      "rating_scale": "5",
+      "no_bio": "Nessuna biografia disponibile.",
+      "stats": {
+        "followers": "Follower",
+        "portfolio": "Portfolio",
+        "services": "Servizi",
+        "years": "Anni di esperienza",
+        "profile_views": "Visualizzazioni del profilo",
+        "portfolio_items": "Elementi del portfolio",
+        "blog_posts": "Post del blog",
+        "job_applications": "Candidature di lavoro",
+        "member_since": "Membro dal"
+      },
+      "profile_completion_title": "Completamento del profilo",
+      "profile_complete": "Completo",
+      "profile_incomplete": "Profilo incompleto",
+      "completed_of": "completato",
+      "activity_blog_title": "Attività e Blog",
+      "create_post": "Crea un post",
+      "posts_empty_title": "Inizia a condividere il tuo percorso creativo",
+      "posts_empty_desc": "Crea post sul blog per mostrare il tuo lavoro, condividere spunti e attirare potenziali clienti",
+      "create_your_first_post": "Crea il tuo primo post",
+      "job_applications_title": "Candidature di lavoro",
       "browse_jobs": "Sfoglia lavori",
-      "update_photo": "Aggiorna la foto del profilo"
+      "no_applications": "Nessuna candidatura ancora",
+      "no_applications_desc": "Inizia a candidarti per lavori creativi per monitorare i tuoi progressi qui",
+      "browse_available_jobs": "Sfoglia i lavori disponibili",
+      "unlock_title": "Sblocca funzionalità sociali",
+      "unlock_subtitle": "Ottieni un posizionamento preferenziale e sblocca interazioni di Follow/Like",
+      "upgrade": {
+        "featured": "In evidenza nell'elenco",
+        "follow": "Segui altri creativi",
+        "like": "Metti Mi piace e supporta i contenuti",
+        "story": "In evidenza nella sezione Storie",
+        "badge": "Distintivo di membro fondatore"
+      },
+      "upgrade_limited": "Offerta a tempo limitato: Prezzo per membri fondatori – Risparmia $50!",
+      "founding_member_cta": "Diventa membro fondatore – $47",
+      "premium_monthly_cta": "Premium Mensile – $29/mese",
+      "account_includes_title": "Il tuo account gratuito include",
+      "includes": {
+        "portfolio_uploads": "Caricamenti del portfolio",
+        "images_videos": "Immagini e video",
+        "blog_posts": "Post del blog",
+        "job_applications": "Candidature di lavoro",
+        "directory_listing": "Elenco nella directory",
+        "unlimited": "Illimitato",
+        "included": "Incluso"
+      },
+      "current_plan_title": "Piano attuale",
+      "plan_paid": "Pagato",
+      "plan_free": "Account gratuito",
+      "plan_active": "Attivo",
+      "plan_inactive": "Inattivo",
+      "billing": {
+        "title": "Informazioni di fatturazione",
+        "price": "Prezzo:",
+        "cycle": "Ciclo di fatturazione:",
+        "member_since": "Membro dal:",
+        "paid": "Pagato",
+        "free": "Gratuito"
+      },
+      "upgrade_button": "Passa a Premium",
+      "upgrade_hint": "Sblocca funzionalità sociali e posizionamento premium",
+      "plan_features_title": "Caratteristiche del piano",
+      "features": {
+        "basic_profile": "Profilo base",
+        "unlimited_portfolio": "Caricamenti illimitati del portfolio",
+        "job_applications": "Candidature di lavoro",
+        "directory_listing": "Elenco base nella directory"
+      },
+      "account_usage_title": "Utilizzo dell'account",
+      "usage": {
+        "profile_views": "Visualizzazioni del profilo",
+        "this_month": "questo mese",
+        "portfolio_items": "Elementi del portfolio",
+        "unlimited_uploads": "Caricamenti illimitati",
+        "job_applications": "Candidature di lavoro",
+        "this_week": "questa settimana"
+      },
+      "profile_stats_title": "Statistiche del profilo",
+      "quick_actions_title": "Azioni rapide",
+      "quick": {
+        "upload_work": "Carica nuovo lavoro",
+        "write_blog": "Scrivi un post sul blog",
+        "browse_jobs": "Sfoglia lavori",
+        "update_photo": "Aggiorna la foto del profilo"
+      },
+      "load_error": "Errore nel caricamento del dashboard",
+      "posts_load_error": "Errore nel caricamento dei post"
     },
-    "load_error": "Errore nel caricamento del dashboard",
-    "posts_load_error": "Errore nel caricamento dei post"
-  },
     "profile": {
       "tabs": {
         "portfolio": "Portfolio",
@@ -15652,7 +15645,6 @@
     "cancel": "Annulla",
     "verify": "Verifica età"
   },
- 
   "register": {
     " ": "Completa",
     "next": "Avanti",
@@ -15878,7 +15870,7 @@
     "footer_summary": "Esplora le tue nuove funzionalità premium e inizia a farti scoprire",
     "footer_contact_prefix": "Domande sui tuoi benefici come Membro Fondatore?"
   },
- "login": {
+  "login": {
     "welcome_back": "Bentornato",
     "subtitle": "Accedi al tuo account ArtCee",
     "email_label": "Email",
@@ -15934,7 +15926,8 @@
     "payment_method": "Metodo di Pagamento",
     "credit_card": "Carta di Credito/Debito",
     "paypal": "PayPal (Prossimamente)",
-    "secure_payment": "🔒 Pagamento Sicuro — Le tue informazioni di pagamento sono crittografate e processate con Stripe",
+    "secure_payment": "Pagamento Sicuro",
+    "secure_payment_desc": "Le tue informazioni di pagamento sono crittografate e processate con Stripe",
     "email_placeholder": "Indirizzo Email",
     "name_placeholder": "Nome del Titolare della Carta",
     "billing_address": "Indirizzo di Fatturazione",

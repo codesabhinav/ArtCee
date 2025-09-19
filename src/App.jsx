@@ -35,7 +35,7 @@ function App() {
               <Route path="business-directory" element={<BusinessDirectory />} />
               <Route path="jobs" element={<JobsOpportunities />} />
               <Route path="featured" element={<FeaturePremiumPage />} />
-              <Route path="guest-dashboard" element={<GuestDashboardPage />} />
+              <Route path="profile" element={<GuestDashboardPage />} />
             </Route>
             
             <Route path="/dashboard" element={<DashboardLayout />}>
@@ -43,7 +43,7 @@ function App() {
               <Route path="projects" element={<ProjectsPage />} />
               <Route path="projects/create" element={<CreateProjectPage />} />
               <Route path="projects/:projectId" element={<ProjectDetailPage />} />
-              <Route path="profile" element={<ProfilePage />} />
+              {/* <Route path="profile" element={<ProfilePage />} /> */}
                
             </Route>
             

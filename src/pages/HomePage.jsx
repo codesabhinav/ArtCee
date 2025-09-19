@@ -20,6 +20,7 @@ import ViewProfilePopupModel from "../modal/ViewProfilePopupModel";
 import { useEffect, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { getCreativeData } from "../Hooks/useSeller";
+import { Crown } from "lucide-react";
 
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
@@ -57,12 +58,39 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const getAvailabilityBadge = (status) => {
-    const s = (status || "").toLowerCase();
-    if (s === "online") return { label: t("creative.available"), badge: "bg-green-100 text-green-700" };
-    if (s === "busy") return { label: t("creative.busy"), badge: "bg-yellow-100 text-yellow-700" };
-    if (s === "booked") return { label: t("creative.booked"), badge: "bg-orange-100 text-orange-700" };
-    return { label: t("creative.offline"), badge: "bg-gray-100 text-gray-700" };
+  const getAvailability = (creative) => {
+    const rawLabel = creative?.availability_label ?? creative?.status ?? "";
+    const label = String(rawLabel).trim();
+    const lower = label.toLowerCase();
+
+    if (lower.includes("avail") || lower.includes("available") || lower === "online") {
+      return { label: label || t("creative.available"), badge: "bg-green-100 text-green-700" };
+    }
+    if (lower.includes("busy")) {
+      return { label: label || t("creative.busy"), badge: "bg-yellow-100 text-yellow-700" };
+    }
+    if (lower.includes("book") || lower.includes("booked")) {
+      return { label: label || t("creative.booked"), badge: "bg-orange-100 text-orange-700" };
+    }
+
+    return { label: label || t("creative.offline"), badge: "bg-gray-100 text-gray-700" };
+  };
+
+  const SkillChips = ({ skills = [] }) => {
+    if (!Array.isArray(skills) || skills.length === 0) return null;
+    const visible = skills.slice(0, 3);
+    const extra = skills.length - visible.length;
+
+    return (
+      <div className="mt-3 flex flex-wrap gap-2">
+        {visible.map((s) => (
+          <span key={s.id} className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{s.name}</span>
+        ))}
+        {extra > 0 && (
+          <span className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{`+${extra} ${t("creative.more")}`}</span>
+        )}
+      </div>
+    );
   };
 
 
@@ -77,8 +105,8 @@ export default function Home() {
 
         <div className="relative w-full max-w-3xl text-white">
           {/* Top Badge */}
-          <button className="bg-orange-500 px-3 sm:px-4 py-2 rounded-md mb-6 shadow text-xs sm:text-sm flex items-center gap-2 justify-center mx-auto">
-            <FaCrown className="text-white text-[12px]" />
+          <button className="bg-orange-500 px-3 font-semibold sm:px-4 py-2 rounded-md mb-6 shadow text-xs flex items-center gap-2 justify-center mx-auto">
+            <Crown className="text-white h-3 w-3" />
             {t("home.join_revolution")}
           </button>
 
@@ -100,7 +128,7 @@ export default function Home() {
             <div className="font-bold text-start text-xs sm:text-sm flex flex-wrap justify-between items-center gap-2">
               {t("home.founding_program")}{" "}
               <span className="text-[10px] sm:text-xs bg-orange-500 text-white px-2 py-1 rounded-md flex items-center gap-1">
-                <FaCrown className="text-[10px]" /> {t("home.lifetime_badge")}
+                <Crown className="h-3 w-3" /> {t("home.lifetime_badge")}
               </span>
             </div>
 
@@ -130,7 +158,7 @@ export default function Home() {
               to="/featured"
               className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-white text-white font-semibold flex items-center gap-2 hover:bg-white hover:text-black transition"
             >
-              <FaCrown className="text-base sm:text-lg" /> {t("home.get_featured")}
+              <Crown className="w-5 h-5" /> {t("home.get_featured")}
             </Link>
           </div>
         </div>
@@ -298,7 +326,7 @@ export default function Home() {
                 const profileSrc = pro?.user?.profile?.profile_picture || DEFAULT_AVATAR;
                 const name = pro?.user?.full_name || t("creative.anonymous");
                 const title = pro?.user?.profile?.title || "—";
-                const availability = getAvailabilityBadge(pro?.status);
+                const availability = getAvailability(pro);
                 const uuid = pro?.user?.uuid || "";
 
                 return (
@@ -306,7 +334,7 @@ export default function Home() {
                     key={pro.id ?? pro.uuid ?? name}
                     className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1"
                   >
-                    <div className="relative h-44 bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
+                    <div className="relative bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
                       <img
                         src={profileSrc}
                         alt={name}
@@ -339,13 +367,7 @@ export default function Home() {
                         {pro.personal_intro || pro.user?.profile?.bio || t("creative.no_intro")}
                       </p>
 
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {Array.isArray(pro.user?.skills) && pro.user.skills.slice(0, 5).map((skill) => (
-                          <span key={skill.id ?? skill.name} className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-md">
-                            {skill.name}
-                          </span>
-                        ))}
-                      </div>
+                      <SkillChips skills={pro?.skills} />
 
                       <button
                         onClick={() => {

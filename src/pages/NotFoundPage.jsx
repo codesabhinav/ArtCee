@@ -1,38 +1,40 @@
 import { Link } from 'react-router-dom'
-import { FaHome, FaArrowLeft } from 'react-icons/fa'
+import { FaHome, FaArrowLeft, FaClock } from 'react-icons/fa'
 
 const NotFoundPage = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full text-center">
-        <div className="mb-8">
-          <h1 className="text-9xl font-bold gradient-text">404</h1>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Page Not Found</h2>
-          <p className="text-gray-600 mb-8">
-            The page you're looking for doesn't exist or has been moved.
-          </p>
+    <div className="min-h-screen flex items-center justify-center  px-6">
+      <div className="w-full max-w-xl text-center p-8 bg-white/5 backdrop-blur-sm rounded-2xl shadow-lg border border-white/10 bg-gradient-to-b from-teal-600 via-teal-500 to-teal-400 text-white">
+        <div className="mx-auto mb-6 w-24 h-24 rounded-full bg-white/10 flex items-center justify-center border border-white/10">
+          <FaClock className="text-4xl text-white/90" />
         </div>
-        
-        <div className="space-y-4">
+
+
+        <h1 className="text-4xl sm:text-5xl font-extrabold mb-2">Coming Soon</h1>
+        <p className="text-sm sm:text-base text-white/85 mb-6">We’re polishing things to make your experience even better. No spam — we won’t ask for info here.</p>
+
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             to="/"
-            className="w-full btn-primary"
+            className="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-white text-teal-600 font-semibold shadow-sm hover:shadow-md transition"
           >
-            <FaHome className="mr-2 h-4 w-4" />
             Go to Homepage
           </Link>
-          
+
+
           <button
             onClick={() => window.history.back()}
-            className="w-full btn-secondary"
+            className="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-white/10 border border-white/10 text-white font-medium hover:bg-white/5 transition"
           >
-            <FaArrowLeft className="mr-2 h-4 w-4" />
             Go Back
           </button>
         </div>
+
+
+        <div className="mt-6 text-xs text-white/60">© {new Date().getFullYear()} Artcee</div>
       </div>
     </div>
-  )
-}
-
+  );
+};
 export default NotFoundPage

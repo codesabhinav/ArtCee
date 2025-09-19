@@ -79,31 +79,31 @@ const Navbar = () => {
           <div className="hidden [@media(min-width:999px)]:flex items-center space-x-4 text-xs font-semibold">
             <Link
               to="/creatives"
-              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-100 transition px-3 py-1.5"
+              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
             >
               <FaSearch className="mr-3" /> {t("nav.browse_creatives")}
             </Link>
             <Link
               to="/business-directory"
-              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-100 transition px-3 py-1.5"
+              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
             >
               <FaBuilding className="mr-3" /> {t("nav.business_directory")}
             </Link>
             <Link
               to="/jobs"
-              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-100 transition px-3 py-1.5"
+              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
             >
               <FaBriefcase className="mr-3" /> {t("nav.find_jobs")}
             </Link>
             <Link
               to="/spotlight"
-              className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-100 transition px-3 py-1.5"
+              className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
             >
               <FaStar className="mr-3" /> {t("nav.spotlight")}
             </Link>
             <Link
               to="/perspective"
-              className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-100 transition px-3 py-1.5"
+              className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
             >
               <FaBookOpen className="mr-3" /> {t("nav.perspective")}
             </Link>
@@ -111,7 +111,7 @@ const Navbar = () => {
 
             <div className="relative" ref={langDropdownRef}>
               <button
-                className="flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition text-xs font-semibold focus:outline-none"
+                className="flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition text-xs font-semibold focus:outline-none"
                 onClick={() => setLangDropdownOpen((s) => !s)}
                 aria-haspopup="listbox"
                 aria-expanded={langDropdownOpen}
@@ -161,8 +161,8 @@ const Navbar = () => {
 
             {isAuthenticated ? (
               <Link
-                to="/guest-dashboard"
-                className="flex items-center px-3 py-2 rounded-md bg-teal-500 text-white hover:bg-red-600 transition text-xs font-semibold"
+                to="/profile"
+                className="flex items-center px-3 py-2 rounded-md bg-teal-500 text-white hover:bg-teal-600 transition text-xs font-semibold"
               >
                 <FaUser className="mr-2" />  {t("nav.my_account")}
               </Link>
@@ -170,7 +170,7 @@ const Navbar = () => {
               <button
                 // onClick={() => setShowModal(true)}
                 onClick={() => navigate("/login")}
-                className="flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition text-xs font-semibold"
+                className="flex items-center px-3 py-2 border border-gray-400 rounded-md text-gray-700 hover:bg-gray-100 transition text-xs font-semibold"
               >
                 <FaUser className="mr-2" /> {t("nav.sign_in")}
               </button>

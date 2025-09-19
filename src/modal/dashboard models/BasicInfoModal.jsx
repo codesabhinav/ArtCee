@@ -80,7 +80,7 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
               name="full_name"
               value={form.full_name}
               onChange={handleChange}
-              className="w-full form-input px-3 py-2 rounded mt-1"
+              className="w-full form-input px-3 py-2 rounded mt-1 text-xs"
               placeholder={t("basic_info.placeholders.full_name")}
             />
           </div>
@@ -91,7 +91,7 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="w-full form-input px-3 py-2 rounded mt-1"
+              className="w-full form-input px-3 py-2 rounded mt-1 text-xs"
               placeholder={t("basic_info.placeholders.email")}
             />
           </div>
@@ -102,7 +102,7 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
               name="title"
               value={form.title}
               onChange={handleChange}
-              className="w-full form-input px-3 py-2 rounded mt-1"
+              className="w-full form-input px-3 py-2 rounded mt-1 text-xs"
               placeholder={t("basic_info.placeholders.title")}
             />
           </div>
@@ -113,7 +113,7 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
               name="bio"
               value={form.bio}
               onChange={handleChange}
-              className="w-full form-input px-3 py-2 rounded mt-1"
+              className="w-full form-input px-3 py-2 rounded mt-1 text-xs"
               rows={4}
               placeholder={t("basic_info.placeholders.bio")}
             />

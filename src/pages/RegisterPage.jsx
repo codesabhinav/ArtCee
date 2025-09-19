@@ -63,7 +63,6 @@ const RegisterPage = () => {
   const [step, setStep] = useState(1);
   const totalSteps = 7;
 
-  // reactive desktop detection so desktop layout is preserved
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== "undefined" ? window.innerWidth >= 768 : true
   );
@@ -90,7 +89,6 @@ const RegisterPage = () => {
     }
   };
 
-  // --- location prefill (unchanged behaviour) ---
   useEffect(() => {
     const savedCity = Cookies.get("user_city");
     const savedState = Cookies.get("user_state");
@@ -120,12 +118,10 @@ const RegisterPage = () => {
             const state = data.address?.state || "";
             const country = data.address?.country || "";
 
-            // save to cookies
             Cookies.set("user_city", city, { expires: 7 });
             Cookies.set("user_state", state, { expires: 7 });
             Cookies.set("user_country", country, { expires: 7 });
 
-            // prefill form
             setFormData((prev) => ({
               ...prev,
               city,
@@ -138,7 +134,6 @@ const RegisterPage = () => {
           }
         },
         (err) => {
-          // geolocation permission/failed
           console.warn("Geolocation failed", err);
           toast.error(t("register.geolocation_failed"));
         },
@@ -147,16 +142,13 @@ const RegisterPage = () => {
     }
   }, [t]);
 
-  // --- slider/touch logic for non-desktop devices ---
   const sliderRef = useRef(null);
   const touchStartX = useRef(null);
   const touchDeltaX = useRef(0);
-  const swipeThreshold = 50; // px
-
+  const swipeThreshold = 50; 
   useEffect(() => {
-    // keyboard nav for slider (left/right)
     const handleKey = (e) => {
-      if (isDesktop) return; // only enable on non-desktop
+      if (isDesktop) return; 
       if (e.key === "ArrowLeft") handlePrev();
       if (e.key === "ArrowRight") handleNext();
     };
@@ -175,7 +167,6 @@ const RegisterPage = () => {
     if (isDesktop || touchStartX.current === null) return;
     const currentX = e.touches[0].clientX;
     touchDeltaX.current = currentX - touchStartX.current;
-    // small visual feedback while dragging
     if (sliderRef.current) {
       sliderRef.current.style.transform = `translateX(calc(-${(step - 1) * 100}% + ${touchDeltaX.current}px))`;
     }
@@ -184,23 +175,19 @@ const RegisterPage = () => {
   const onTouchEnd = () => {
     if (isDesktop || touchStartX.current === null) return;
     const dx = touchDeltaX.current;
-    // restore transition
     if (sliderRef.current) {
       sliderRef.current.style.transition = "transform 300ms ease-in-out";
       sliderRef.current.style.transform = `translateX(-${(step - 1) * 100}%)`;
     }
     if (dx > swipeThreshold) {
-      // swipe right -> prev
       handlePrev();
     } else if (dx < -swipeThreshold) {
-      // swipe left -> next
       handleNext();
     }
     touchStartX.current = null;
     touchDeltaX.current = 0;
   };
 
-  // helper to render step content uniformly
   const StepWrapper = ({ children }) => {
     return (
       <div className="w-full flex-shrink-0 px-4 sm:px-6 lg:px-8">
@@ -209,7 +196,6 @@ const RegisterPage = () => {
     );
   };
 
-  // update slider transform whenever step changes (only on mobile)
   useEffect(() => {
     if (!isDesktop && sliderRef.current) {
       sliderRef.current.style.transition = "transform 300ms ease-in-out";
@@ -224,13 +210,13 @@ const RegisterPage = () => {
         <div className="flex justify-between items-center py-4 max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
           <Link
             to="/"
-            className="text-gray-600 text-xs hover:bg-gray-200 rounded-md px-3 py-1 flex items-center"
+            className="text-black font-medium text-xs hover:bg-gray-100 rounded-md px-3 py-2 flex items-center"
           >
-            <FaArrowLeft className="mr-2" /> {t("register.back")}
+            <FaArrowLeft className="mr-3" /> {t("register.back")}
           </Link>
           <Link
             to="/home"
-            className="text-gray-600 text-xs border px-3 py-1 rounded-md hover:bg-gray-200"
+            className="text-gray-600 text-xs border-2 px-3 py-2 rounded-md hover:bg-gray-100"
           >
             {t("register.skip_for_now")}
           </Link>
@@ -244,11 +230,9 @@ const RegisterPage = () => {
         </div>
       </div>
 
-      {/* Step content area */}
       <div className="w-full px-2 sm:px-6 lg:px-8 mt-2 mb-10 max-w-full mx-auto">
         <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
           <div className="relative">
-            {/* slider viewport - on mobile it's overflow-hidden */}
             <div
               className={`relative ${isDesktop ? "" : "overflow-hidden rounded-lg bg-white shadow-sm"}`}
               onTouchStart={onTouchStart}
@@ -256,7 +240,6 @@ const RegisterPage = () => {
               onTouchEnd={onTouchEnd}
               aria-roledescription={isDesktop ? "step-panel" : "slider"}
             >
-              {/* sliding inner container (only visually slides on small screens) */}
               <div
                 ref={sliderRef}
                 className={`flex ${isDesktop ? "flex-col" : "flex-row"}`}
@@ -269,7 +252,6 @@ const RegisterPage = () => {
                     }
                 }
               >
-                {/* each slide width = container width on small screens */}
                 <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
                   <StepWrapper>
                     {step === 1 || !isDesktop ? (

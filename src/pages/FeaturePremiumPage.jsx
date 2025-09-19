@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import Cookies from "js-cookie";
 import { getPlans } from "../Hooks/useSeller";
+import { Crown, Heart } from "lucide-react";
 
 const FeaturePremiumPage = () => {
   const { t } = useTranslation();
@@ -125,7 +126,7 @@ const FeaturePremiumPage = () => {
         <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0 border-b">
           {/* Back to Home Link */}
           <Link
-            to={Cookies.get("token") ? "/guest-dashboard" : "/login"}
+            to={Cookies.get("token") ? "/profile" : "/login"}
             className="text-black font-medium text-xs  hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
           >
             <FaArrowLeft className="mr-2 text-xs " />
@@ -144,8 +145,8 @@ const FeaturePremiumPage = () => {
         </div>
         {/* Crown Icon */}
         <div className="flex justify-center mt-20">
-          <div className="w-18 h-18 rounded-full bg-gradient-to-r from-teal-500 to-orange-400 flex items-center justify-center">
-            <FaCrown className="text-white text-4xl" />
+          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-teal-500 to-orange-400 flex items-center justify-center">
+            <Crown className="text-white h-10 w-10" />
           </div>
         </div>
 
@@ -162,7 +163,7 @@ const FeaturePremiumPage = () => {
           <div className="font-bold text-start text-sm justify-between flex items-center">
             {t("premium.founding_status")}
             <span className="ml-2 text-xs bg-orange-500 text-white px-2 py-1 rounded flex items-center gap-1">
-              <FaCrown className="text-[10px]" /> {t("premium.badge_forever")}
+              <Crown className="text-[10px] w-3 h-3" /> {t("premium.badge_forever")}
             </span>
           </div>
 
@@ -235,7 +236,7 @@ const FeaturePremiumPage = () => {
 
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 rounded-full bg-orange-400 flex items-center justify-center">
-                <FaHeart className="text-white text-2xl" />
+                <Heart className="text-white text-2xl" />
               </div>
               <h4 className="font-semibold mt-3 text-sm">{t("premium.connect_appreciate")}</h4>
               <p className="text-xs font-light text-gray-600 mt-1 text-center max-w-xs">
@@ -257,7 +258,7 @@ const FeaturePremiumPage = () => {
 
         {/* Pricing Section: dynamic plan cards based on fetched plans */}
         <div className="flex justify-center">
-          <div className="grid md:grid-cols-2 gap-10 m-10 max-w-6xl justify-items-center ">
+          <div className="grid md:grid-cols-2 gap-10 mb-10 max-w-6xl justify-items-center mx-auto">
             {/* If permission denied, show message */}
             {permissionDenied ? (
               <div className="col-span-2 p-6 text-center border rounded-lg">
@@ -292,10 +293,10 @@ const FeaturePremiumPage = () => {
 
                 {/* Render each plan */}
                 {plans.map((plan) => (
-                  <div key={plan.id} className="border-2 rounded-xl p-8 shadow-sm flex flex-col w-full md:w-[400px] hover:shadow-md transition border-orange-400">
+                  <div key={plan.id} className="border-2 rounded-xl p-8 shadow-sm flex flex-col w-full md:w-[350px] hover:shadow-md transition border-orange-400">
                     <div className="flex justify-between items-center">
-                      <h4 className="flex items-center font-light text-md text-black">
-                        <span className="mr-4 text-orange-400"><FaCrown /></span> {plan.title}
+                      <h4 className="flex items-center font-light text-sm text-black">
+                        <span className="mr-2 text-orange-400"><Crown className="h-4 w-4"/></span> {plan.title}
                       </h4>
                       {plan.onetime_payment === "1" && (
                         <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-md font-semibold">
@@ -319,7 +320,7 @@ const FeaturePremiumPage = () => {
                         onClick={() => setSelectedPlan(plan.id)}
                         className="mt-4 bg-orange-500 hover:bg-orange-600 text-xs text-white w-full py-3 rounded-md font-semibold flex items-center justify-center"
                       >
-                        <span className="mr-4"><FaCrown /></span> {("Select plan")}
+                        <span className="mr-4"><Crown className="h-4 w-4"/></span> {("Select plan")}
                       </button>
                     </div>
                   </div>
@@ -367,7 +368,7 @@ const FeaturePremiumPage = () => {
             {/* Exclusive Status */}
             <div className="border rounded-xl p-6 text-center shadow-sm hover:shadow-md transition">
               <div className="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-orange-500 text-white text-xl mb-3">
-                <FaCrown />
+                <Crown />
               </div>
               <h4 className="font-semibold text-md">{t("premium.exclusive_status_title")}</h4>
               <p className="text-xs font-light text-gray-600 mt-1">
@@ -380,7 +381,7 @@ const FeaturePremiumPage = () => {
 
       {/* Payment Modal */}
       <PurchasePopupModel
-        isOpen={!!selectedPlan}
+        isOpen={ Cookies.get("token") ? !!selectedPlan : navigate('/login')}
         onClose={() => setSelectedPlan(null)}
         planId={selectedPlan}
         country={location}
