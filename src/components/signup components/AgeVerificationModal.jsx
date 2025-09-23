@@ -258,19 +258,32 @@
 
 // export default AgeVerificationModal;
 
-
-// src/components/AgeVerificationModal.jsx
-// src/components/modals/AgeVerificationModal.jsx
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaUser, FaShieldAlt, FaCalendarAlt, FaUserCheck } from "react-icons/fa";
 import { useTranslation } from "../../contexts/LanguageProvider";
 
-const safeSplitDOB = (dob) => (typeof dob === "string" && dob.length ? dob.split("-") : []);
+
+const safeSplitDOB = (dob) => {
+  if (typeof dob !== "string" || !dob.trim()) return [];
+  const parts = dob.split("-");
+  if (parts.length !== 3) return [];
+
+  // If first part looks like year (4 digits), assume ISO YYYY-MM-DD
+  if (parts[0].length === 4) {
+    const [y, m, d] = parts;
+    if (!y || !m || !d) return [];
+    return [String(Number(d)).padStart(2, "0"), String(Number(m)).padStart(2, "0"), String(y)];
+  }
+
+  // Otherwise assume DD-MM-YYYY
+  const [d, m, y] = parts;
+  if (!d || !m || !y) return [];
+  return [String(Number(d)).padStart(2, "0"), String(Number(m)).padStart(2, "0"), String(y)];
+};
 
 const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFormData }) => {
   const { t } = useTranslation();
-
 
   const [method, setMethod] = useState("dob");
   const [localYear, setLocalYear] = useState("");
@@ -287,15 +300,16 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
     const dtype = formData?.date_of_birth_type || "date";
     setMethod(dtype === "age" ? "declaration" : "dob");
 
-    const [y, m, d] = safeSplitDOB(formData?.date_of_birth || "");
-    setLocalYear(y || "");
-    setLocalMonth(m || "");
-    setLocalDay(d || "");
+    // Use robust splitter: will handle YYYY-MM-DD and DD-MM-YYYY
+    const parts = safeSplitDOB(formData?.date_of_birth || "");
+    const [dayPart, monthPart, yearPart] = parts.length === 3 ? parts : ["", "", ""];
+    setLocalDay(dayPart || "");
+    setLocalMonth(monthPart ? String(Number(monthPart)).padStart(2, "0") : "");
+    setLocalYear(yearPart || "");
     setLocalAge(formData?.age ? String(formData.age) : "");
     setError("");
-  }, [isOpen, formData]);
+  }, [isOpen, formData, t]);
 
-  // prevent body scroll while modal is open
   useEffect(() => {
     if (isOpen) document.body.classList.add("overflow-hidden");
     else document.body.classList.remove("overflow-hidden");
@@ -322,6 +336,7 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
   const handleVerify = async () => {
     setError("");
     let userAge = null;
+    let next = { ...(formData || {}) };
 
     if (method === "dob") {
       userAge = calculateAgeFromLocal();
@@ -332,17 +347,19 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         return;
       }
 
-      const monthStr = String(localMonth).padStart(2, "0");
-      const dayStr = String(localDay).padStart(2, "0");
-      const dobString = `${localYear}-${monthStr}-${dayStr}`;
+      const monthStr = String(Number(localMonth)).padStart(2, "0");
+      const dayStr = String(Number(localDay)).padStart(2, "0");
+      const dobIso = `${dayStr}-${monthStr}-${String(localYear)}`; 
 
-
-      setFormData((prev) => ({
-        ...prev,
+      next = {
+        ...next,
         date_of_birth_type: "date",
-        date_of_birth: dobString,
+        date_of_birth: dobIso,
         age: String(userAge),
-      }));
+      };
+
+
+      setFormData((prev) => ({ ...(prev || {}), ...next }));
     } else {
 
       if (!localAge) {
@@ -360,12 +377,14 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
       }
       userAge = parsed;
 
-      setFormData((prev) => ({
-        ...prev,
+      next = {
+        ...next,
         date_of_birth_type: "age",
         age: String(userAge),
         date_of_birth: "",
-      }));
+      };
+
+      setFormData((prev) => ({ ...(prev || {}), ...next }));
     }
 
     if (userAge < 18) {
@@ -377,7 +396,17 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
 
     setError("");
     toast.success(t("age_verification.success"));
-    if (onSubmit) await onSubmit();
+
+    try {
+      if (typeof onSubmit === "function") {
+        await onSubmit(next);
+      }
+    } catch (err) {
+      console.error("onSubmit error:", err);
+      toast.error(t("age_verification.errors.submit_failed") || "Submit failed");
+      return;
+    }
+
     onClose();
   };
 
@@ -393,7 +422,6 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
       <div className="bg-white rounded-lg w-full max-w-md shadow-lg p-6 max-h-[90vh] overflow-y-auto scrollbar-hide">
-        {/* Header */}
         <div className="flex justify-between items-start">
           <h2 className="text-sm font-semibold">{t("age_verification.title")}</h2>
           <button
@@ -408,7 +436,6 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
           </button>
         </div>
 
-        {/* Icon */}
         <div className="flex justify-center my-4">
           <div className="w-14 h-14 flex items-center justify-center rounded-full bg-teal-500">
             <FaUser className="text-white text-2xl" />
@@ -418,7 +445,6 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         <h3 className="text-sm font-bold text-center mb-2">{t("age_verification.heading")}</h3>
         <p className="text-xs font-regular text-gray-600 text-center mb-6">{t("age_verification.subheading")}</p>
 
-        {/* Privacy */}
         <div className="border rounded-lg p-4 mb-6 flex space-x-3">
           <FaShieldAlt className="text-gray-600 mt-1" />
           <div>
@@ -427,15 +453,10 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
           </div>
         </div>
 
-        {/* Method selector */}
         <div className="border rounded-lg p-4 mb-6">
           <h4 className="text-xs font-semibold mb-3">{t("age_verification.choose_method")}</h4>
           <div className="space-y-3">
-            <button
-              type="button"
-              onClick={(e) => selectMethod("dob", e)}
-              className={`w-full text-left flex items-start justify-start border rounded-lg p-3 ${method === "dob" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
-            >
+            <button type="button" onClick={(e) => selectMethod("dob", e)} className={`w-full text-left flex items-start justify-start border rounded-lg p-3 ${method === "dob" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}>
               <input type="radio" checked={method === "dob"} readOnly />
               <div className="ml-2">
                 <div className="flex flex-row gap-2">
@@ -446,11 +467,7 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
               </div>
             </button>
 
-            <button
-              type="button"
-              onClick={(e) => selectMethod("declaration", e)}
-              className={`w-full text-left flex items-start justify-start border rounded-lg p-3 ${method === "declaration" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}
-            >
+            <button type="button" onClick={(e) => selectMethod("declaration", e)} className={`w-full text-left flex items-start justify-start border rounded-lg p-3 ${method === "declaration" ? "bg-teal-50 border-teal-400" : "hover:bg-gray-50"}`}>
               <input type="radio" checked={method === "declaration"} readOnly />
               <div className="ml-2">
                 <div className="flex flex-row gap-2">
@@ -459,43 +476,25 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
                 </div>
                 <p className="text-[10px] text-gray-500">{t("age_verification.method_decl.desc")}</p>
               </div>
-
             </button>
           </div>
         </div>
 
-        {/* Conditional inputs (local only) */}
         {method === "dob" ? (
           <div className="border rounded-lg p-4 mb-6">
             <h4 className="text-xs font-semibold mb-3">{t("age_verification.enter_dob")}</h4>
             <div className="flex space-x-3">
-              <select
-                className="border form-input rounded-md p-2 w-1/3 text-xs"
-                value={localMonth || ""}
-                onChange={(e) => setLocalMonth(String(e.target.value).padStart(2, "0"))}
-              >
+              <select className="border form-input rounded-md p-2 w-1/3 text-xs" value={localMonth || ""} onChange={(e) => setLocalMonth(String(e.target.value).padStart(2, "0"))}>
                 <option value="">{t("age_verification.month_placeholder")}</option>
-                {months.map((m, i) => (
-                  <option key={i} value={String(i + 1).padStart(2, "0")}>{m}</option>
-                ))}
+                {months.map((m, i) => <option key={i} value={String(i + 1).padStart(2, "0")}>{m}</option>)}
               </select>
 
-              <select
-                className="border form-input rounded-md p-2 w-1/3 text-xs"
-                value={localDay || ""}
-                onChange={(e) => setLocalDay(String(e.target.value))}
-              >
+              <select className="border form-input rounded-md p-2 w-1/3 text-xs" value={localDay || ""} onChange={(e) => setLocalDay(String(e.target.value).padStart(2, "0"))}>
                 <option value="">{t("age_verification.day_placeholder")}</option>
-                {Array.from({ length: 31 }, (_, i) => (
-                  <option key={i + 1} value={String(i + 1)}>{i + 1}</option>
-                ))}
+                {Array.from({ length: 31 }, (_, i) => <option key={i + 1} value={String(i + 1).padStart(2, "0")}>{i + 1}</option>)}
               </select>
 
-              <select
-                className="border form-input rounded-md p-2 w-1/3 text-xs"
-                value={localYear || ""}
-                onChange={(e) => setLocalYear(e.target.value)}
-              >
+              <select className="border form-input rounded-md p-2 w-1/3 text-xs" value={localYear || ""} onChange={(e) => setLocalYear(String(e.target.value))}>
                 <option value="">{t("age_verification.year_placeholder")}</option>
                 {Array.from({ length: 100 }, (_, i) => {
                   const year = new Date().getFullYear() - i;
@@ -507,39 +506,15 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         ) : (
           <div className="border rounded-lg p-4 mb-6">
             <h4 className="text-sm font-medium mb-3">{t("age_verification.enter_age")}</h4>
-            <input
-              type="number"
-              placeholder={t("age_verification.age_placeholder")}
-              value={localAge || ""}
-              onChange={(e) => setLocalAge(e.target.value)}
-              className="border rounded-md p-2 w-full text-sm"
-            />
+            <input type="number" placeholder={t("age_verification.age_placeholder")} value={localAge || ""} onChange={(e) => setLocalAge(e.target.value)} className="border rounded-md p-2 w-full text-sm" />
           </div>
         )}
 
         {error && <p className="text-red-500 text-xs mb-4 text-center">{error}</p>}
 
-        {/* Footer */}
         <div className="flex justify-between space-x-3">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose();
-            }}
-            className="flex-1 px-4 py-2 text-xs border rounded-md text-gray-700 hover:bg-gray-100"
-          >
-            {t("age_verification.cancel")}
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleVerify();
-            }}
-            className="flex-1 px-4 py-2 bg-teal-400 text-xs text-white rounded-md hover:bg-teal-500"
-          >
-            {t("age_verification.verify")}
-          </button>
+          <button onClick={(e) => { e.stopPropagation(); onClose(); }} className="flex-1 px-4 py-2 text-xs border rounded-md text-gray-700 hover:bg-gray-100">{t("age_verification.cancel")}</button>
+          <button onClick={(e) => { e.stopPropagation(); handleVerify(); }} className="flex-1 px-4 py-2 bg-teal-400 text-xs text-white rounded-md hover:bg-teal-500">{t("age_verification.verify")}</button>
         </div>
       </div>
     </div>

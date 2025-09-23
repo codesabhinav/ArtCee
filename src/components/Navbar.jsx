@@ -213,15 +213,12 @@ const Navbar = () => {
 
 
           {isAuthenticated ? (
-            <button
-              onClick={() => {
-                handleLogout();
-                setMenuOpen(false);
-              }}
-              className="flex items-center px-3 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition"
-            >
-              <FaUser className="mr-2" /> {t("nav.logout")}
-            </button>
+            <Link
+                to="/profile"
+                className="flex items-center px-3 py-2 w-[120px] rounded-md bg-teal-500 text-white hover:bg-teal-600 transition text-xs font-semibold"
+              >
+                <FaUser className="mr-2" />  {t("nav.my_account")}
+              </Link>
           ) : (
             <button
               onClick={() => {

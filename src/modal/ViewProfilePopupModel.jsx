@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { IoCloseCircle } from "react-icons/io5";
 import { useTranslation } from "../contexts/LanguageProvider";
-import { getProfileData } from "../Hooks/useSeller";
+import { followUnfollowMethod, getProfileData } from "../Hooks/useSeller";
 import SpinnerProvider from "../components/SpinnerProvider";
 import { FaCalendarAlt, FaClock, FaStar, FaUniversity } from "react-icons/fa";
-import { CalendarRange, Crown, Heart, LocationEdit, MessageCircle, Share, Share2, Star, Timer, TimerIcon, Video } from "lucide-react";
+import { CalendarRange, Crown, Heart, LocationEdit, MessageCircle, Share, Share2, Star, Timer, Video } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import MessagePopupModal from "./MessagePopupModal";
 
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
@@ -15,6 +19,23 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [profilePayload, setProfilePayload] = useState(null);
+  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const fetchProfile = useCallback(async (id) => {
+    if (!id) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await getProfileData(id);
+      const payload = res?.data ?? res;
+      setProfilePayload(payload?.data ?? payload);
+    } catch (err) {
+      setError(err.message || "Failed to load profile");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -24,25 +45,59 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     }
 
     let mounted = true;
-    async function fetchProfile() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await getProfileData(uuid);
-        const payload = res?.data ?? res;
-        if (mounted) setProfilePayload(payload?.data ?? payload);
-      } catch (err) {
-        if (mounted) setError(err.message || "Failed to load profile");
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    }
+    (async () => {
+      if (!mounted) return;
+      await fetchProfile(uuid);
+    })();
 
-    fetchProfile();
     return () => {
       mounted = false;
     };
-  }, [isOpen, uuid]);
+  }, [isOpen, uuid, fetchProfile]);
+
+  const handleFollow = async (id) => {
+    if (!Cookies.get("token")) {
+      navigate("/login");
+      return;
+    }
+
+    if (!id) {
+      toast.error("Invalid user.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const api = await followUnfollowMethod(id);
+      const message = api?.data?.message || "Updated follow status";
+      toast.success(message);
+
+      await fetchProfile(id);
+
+    } catch (error) {
+      const errMsg = error?.message || "Failed to update follow status";
+      toast.error(errMsg);
+      console.error("Follow/Unfollow failed:", errMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMessageClick = () => {
+    if (!Cookies.get("token")) {
+      navigate("/login");
+      return;
+    }
+    setIsMessageOpen(true);
+  };
+
+  const handleVideoClick = () => {
+    if (!Cookies.get("token")) {
+      navigate("/login");
+      return;
+    }
+    navigate(`/video-call/${uuid}`);
+  };
 
   if (!isOpen) return null;
 
@@ -62,9 +117,10 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   const daily = profilePayload?.seller?.daily_rate ?? profilePayload?.profile?.daily_rate ?? profilePayload?.daily_rate;
   const projectRate = profilePayload?.seller?.project_rate ?? profilePayload?.profile?.project_rate ?? profilePayload?.project_rate;
   const availabilityLabel = profilePayload?.seller?.availability_label ?? profilePayload?.profile?.availability_label ?? profilePayload?.availability;
-  const city = profilePayload?.seller.user.location?.city?.name ?? "";
+  const city = profilePayload?.seller?.user.location?.city?.name ?? "";
   const state = profilePayload?.seller.user.location?.state?.name ?? "";
   const country = profilePayload?.seller.user.location?.country?.name ?? "";
+  const is_followed_by_login_user = profilePayload?.is_followed_by_login_user ?? false;
 
   const tabs = [
     t("profile.tabs.portfolio"),
@@ -78,9 +134,8 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     if (!dateStr) return "-";
     try {
       const d = new Date(dateStr);
-      // if input is "2025-09-17T07:35:07.000000Z" or "2018-09-01"
       if (isNaN(d)) return dateStr;
-      return d.toLocaleString(undefined, { month: "short", year: "numeric" }); // e.g. "Sep 2018"
+      return d.toLocaleString(undefined, { month: "short", year: "numeric" });
     } catch {
       return dateStr;
     }
@@ -111,7 +166,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
             <IoCloseCircle className="w-6 h-6 text-gray-500 hover:text-black" />
           </button>
         </div>
-
 
         {/* Loading / Error */}
         <div className="px-6 py-4">
@@ -158,34 +212,52 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               {t("profile.book_now")}
             </button>
             <div className="flex gap-2 mt-3 w-full justify-center items-center">
-              <button className="inline-flex items-center justify-center text-xs border text-gray-400 font-semibold px-4 py-2 rounded-lg gap-2">
+              <button
+                onClick={handleMessageClick}
+                className="inline-flex items-center justify-center text-xs border text-gray-400 font-semibold px-4 py-2 rounded-lg gap-2"
+              >
                 <MessageCircle className="h-3 w-3" /> {t("profile.message")}
               </button>
 
-              <button className="inline-flex items-center justify-center text-xs border text-gray-400 font-semibold px-4 py-2 rounded-lg gap-2">
+              <button
+                onClick={handleVideoClick}
+                className="inline-flex items-center justify-center text-xs border text-gray-400 font-semibold px-4 py-2 rounded-lg gap-2"
+              >
                 <Video className="h-4 w-3" /> {t("profile.video_call")}
               </button>
             </div>
-
 
             {/* Premium Upgrade */}
             <div className="mt-2 w-full text-center items-center justify-center flex flex-col">
               <p className="text-[10px] text-gray-500 mb-1">{t("profile.premium_features")}</p>
 
-              <button className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
+              <Link to='/featured' className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
                 <Crown className="h-3 w-3" /> {t("profile.upgrade")}
-              </button>
+              </Link>
 
-              <button className="text-xs text-gray-400 font-semibold mt-2 border px-4 py-2 rounded-lg w-full">{t("profile.follow")}</button>
+              <button
+                onClick={() => handleFollow(uuid)}
+                disabled={loading}
+                className={`text-xs text-gray-400 font-semibold mt-2 border px-4 py-2 rounded-lg w-full flex items-center justify-center ${loading ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
+              >
+                {loading ? (
+                  <span className="text-[12px]">...</span>
+                ) : is_followed_by_login_user ? (
+                  "Unfollow"
+                ) : (
+                  "Follow"
+                )}
+              </button>
               <p className="text-[10px] mt-1 text-gray-500">{t("profile.premium_feature_note")}</p>
             </div>
 
-            <button className="text-[10px] mt-2 w-full font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
+            <Link to='/featured' className="text-[10px] mt-2 w-full font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
               <Crown className="h-3 w-3" /> Upgarde to Follow
-            </button>
+            </Link>
 
             <button className="text-xs mt-2 w-full font-semibold bg-white hover:bg-gray-100 border text-black px-4 py-2 rounded-lg items-center justify-center flex gap-2">
-              <Share2 className="h-3 w-4" /> Share Profile
+              <Share className="h-3 w-4" /> Share Profile
             </button>
 
             <div className="w-full mt-4">
@@ -265,7 +337,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
 
               <h3 className="font-semibold mt-4 text-sm">{t("profile.services_title")}</h3>
               <div className="flex gap-2 flex-wrap mt-2">
-                {/* You can map services from seller or fallback to translations */}
                 {(profilePayload?.seller?.skills ?? []).slice(0, 4).map((s) => (
                   <span key={s.id ?? s.name} className="bg-teal-500 text-white text-[10px] font-semibold px-3 py-1 rounded-lg">
                     {s.name}
@@ -542,9 +613,9 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                         <div className="flex-shrink-0 text-right ">
                           <button className="text-xs text-gray-600 font-semibold border px-3 py-1 rounded-md bg-white flex flex-row items-center gap-2"><Heart className="h-3 w-3" /> Like</button>
                           <div className="text-[10px] text-gray-400 mt-2">Premium Feature</div>
-                          <button className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-2 py-1.5 rounded-lg items-center justify-center flex gap-2">
+                          <Link to='/featured' className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-2 py-1.5 rounded-lg items-center justify-center flex gap-2">
                             <Crown className="h-3 w-3" /> {t("profile.upgrade")}
-                          </button>
+                          </Link>
                         </div>
                       </article>
                     ))}
@@ -581,6 +652,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
           </div>
         </div>
       </div>
+      <MessagePopupModal isOpen={isMessageOpen} onClose={() => setIsMessageOpen(false)} fullName= {fullName} title= {title} uuid={uuid} avatar= {avatar}/>
     </div>
   );
 };

@@ -192,3 +192,68 @@ export function createPayment(formData) {
       throw new Error(message);
     });
 }
+
+export function followUnfollowMethod(uuid) {
+  return service
+    .post(`site/follow/${uuid}/toggle`)
+    .then((res) => res.data || {})
+    .catch((error) => {
+      const errorMessage =
+        error.response?.data?.message || error.message || "Failed to follow/unfollow";
+      throw new Error(errorMessage);
+    });
+}
+
+export function initChatWithUser(uuid) {
+  return service
+    .get(`chats/user/${uuid}`)
+    .then((res) => res.data?.data || null)
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message || "Init chat failed";
+      throw new Error(errorMessage);
+    });
+}
+
+export function fetchChatData(id) {
+  return service
+    .get(`chats/${id}/messages`)
+    .then((res) => res.data || {})
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message || "Failed to fetch chat";
+      throw new Error(errorMessage);
+    });
+}
+
+export function sendTextMessage(id, payload) {
+  return service
+    .post(`chats/${id}/messages`, payload)
+    .then((res) => res.data || {})
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message || "Failed to send message";
+      throw new Error(errorMessage);
+    });
+}
+
+export function sendMediaMessage(id, { message = "", message_type = "file", file }, onUploadProgress) {
+  const formData = new FormData();
+  formData.append("message", message);
+  formData.append("message_type", message_type);
+  formData.append("media", file);
+
+  return service.post(`chats/${id}/messages`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress: (progressEvent) => {
+      if (onUploadProgress) {
+        const percent = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
+        onUploadProgress(percent);
+      }
+    },
+  })
+  .then((res) => res.data || {})
+  .catch((error) => {
+    const errorMessage = error.response?.data?.message || error.message || "Failed to upload media";
+    throw new Error(errorMessage);
+  });
+}

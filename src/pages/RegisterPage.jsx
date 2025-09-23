@@ -8,10 +8,10 @@ import ServicesSkillsStep from "../components/signup components/ServicesSkillsSt
 import PortfolioSocialStep from "../components/signup components/PortfolioSocialStep";
 import RatesPricingStep from "../components/signup components/RatesPricingStep";
 import ProfileSettingsStep from "../components/signup components/ProfileSettingsStep";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../Hooks/useAuth";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
+import Cookies from "js-cookie";  
 import { useTranslation } from "../contexts/LanguageProvider";
 
 const RegisterPage = () => {
@@ -61,11 +61,13 @@ const RegisterPage = () => {
   });
 
   const [step, setStep] = useState(1);
+  const navigate = useNavigate();
   const totalSteps = 7;
 
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== "undefined" ? window.innerWidth >= 768 : true
   );
+
   useEffect(() => {
     const onResize = () => setIsDesktop(window.innerWidth >= 768);
     window.addEventListener("resize", onResize);
@@ -80,7 +82,7 @@ const RegisterPage = () => {
     try {
       const res = await register(formData);
       toast.success(t("register.registration_success"));
-      console.log("Registered user:", res);
+      navigate("/home");
     } catch (err) {
       const apiMessage =
         err?.response?.data?.message || err?.message || t("register.registration_failed");
@@ -113,8 +115,9 @@ const RegisterPage = () => {
               `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`
             );
             const data = await res.json();
+            console.log(data);
 
-            const city = data.address?.city || data.address?.town || data.address?.village || "";
+            const city = data.address?.city || data.address?.town || data.address?.state_district || "";
             const state = data.address?.state || "";
             const country = data.address?.country || "";
 
@@ -216,7 +219,7 @@ const RegisterPage = () => {
           </Link>
           <Link
             to="/home"
-            className="text-gray-600 text-xs border-2 px-3 py-2 rounded-md hover:bg-gray-100"
+            className="text-gray-600 text-xs border-2 px-3 py-1.5 rounded-md hover:bg-gray-100"
           >
             {t("register.skip_for_now")}
           </Link>
@@ -309,7 +312,6 @@ const RegisterPage = () => {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

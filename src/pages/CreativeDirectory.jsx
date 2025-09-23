@@ -350,7 +350,7 @@ const CreativeDirectory = () => {
 
   return (
       <div className="bg-white min-h-screen w-full">
-        <div className="md:max-w-[80%] mx-auto">
+        <div className="md:max-w-[80%] mx-auto pb-4">
           <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
             {/* Back to Home Link */}
             <Link

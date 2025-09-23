@@ -1,6 +1,6 @@
 import { StarIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { FaStar, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { getSkills } from "../../Hooks/useAuth";
 import { useTranslation } from "../../contexts/LanguageProvider";
 
@@ -9,6 +9,9 @@ const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState({});
   const [loading, setLoading] = useState(true);
+
+  // ✅ local state for skills instead of directly writing to parent
+  const [selectedSkills, setSelectedSkills] = useState(formData.skills || []);
 
   useEffect(() => {
     getSkills()
@@ -28,30 +31,33 @@ const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
       .finally(() => setLoading(false));
   }, []);
 
+  // ✅ toggle local state only
   const toggleSelection = (id) => {
-    setFormData((prev) => {
-      const current = prev.skills || [];
-      return {
-        ...prev,
-        skills: current.includes(id)
-          ? current.filter((v) => v !== id)
-          : [...current, id], 
-      };
-    });
+    setSelectedSkills((prev) =>
+      prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
+    );
   };
 
+  // ✅ sync to parent only on Next
   const handleNext = (e) => {
     e.preventDefault();
     if (
       ((formData.industries?.length) || 0) === 0 &&
       ((formData.services?.length) || 0) === 0 &&
-      ((formData.skills?.length) || 0) === 0
+      ((selectedSkills.length) || 0) === 0
     ) {
       setErrors({ selections: t("services_skills.errors.select_one") });
       return;
     }
     setErrors({});
+    setFormData((prev) => ({ ...prev, skills: selectedSkills }));
     onNext();
+  };
+
+  // ✅ also sync when going back
+  const handlePrev = () => {
+    setFormData((prev) => ({ ...prev, skills: selectedSkills }));
+    onPrev();
   };
 
   return (
@@ -93,7 +99,7 @@ const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
                   <label key={item.id} className="flex items-center text-xs font-medium">
                     <input
                       type="checkbox"
-                      checked={formData.skills?.includes(item.id) || false}
+                      checked={selectedSkills.includes(item.id)}
                       onChange={() => toggleSelection(item.id)}
                       className="mr-2 rounded-md bg-gray-100 text-teal-500"
                     />
@@ -108,7 +114,7 @@ const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
           <div className="flex justify-between pt-4">
             <button
               type="button"
-              onClick={onPrev}
+              onClick={handlePrev}
               className="flex items-center px-4 py-2 text-xs border rounded-md text-gray-700 hover:bg-gray-100"
             >
               <FaArrowLeft className="mr-2" /> {t("services_skills.prev")}

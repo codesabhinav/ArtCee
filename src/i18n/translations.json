@@ -39,9 +39,8 @@
       "quick_facts": "Quick facts:",
       "apply_now": "Apply Now",
       "applied": "Applied",
-      "close": "Close",
-      "no_title": "Job"
-    },
+      "close": "Close"
+        },
     "ui": {
       "back_to_home": "Back to Home",
       "business_directory": "Business Directory",
@@ -877,6 +876,7 @@
       "error_summary": "Please complete the following required fields:",
       "prev": "Previous",
       "next": "Next",
+         "api_fallback" : "Couldn't load country/state list — falling back to text input",
       "errors": {
         "city": "City is required",
         "state": "State/Province is required",

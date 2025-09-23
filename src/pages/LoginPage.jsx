@@ -227,16 +227,13 @@ const LoginPage = ({ onClose }) => {
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   const saveTokenAndNotify = (resp) => {
-    // Try several shapes: resp.token, resp.data?.token, resp.access_token
     const token =
       resp?.token || resp?.data?.token || resp?.access_token || resp?.accessToken || resp?.data?.access_token;
 
     if (token) {
-      // set cookie (adjust options as needed)
-      Cookies.set("token", token, { expires: 7 });
+      Cookies.set("token", token, { expires: 365 });
     }
 
-    // Notify the app that auth changed
     window.dispatchEvent(new Event("authChanged"));
   };
 
@@ -248,20 +245,10 @@ const LoginPage = ({ onClose }) => {
       const response = await login({ email, password });
       console.log("Login success:", response);
 
-      // Persist token if returned and notify other parts of the app
       saveTokenAndNotify(response);
 
       toast.success(t("login.success"));
       setShowProfileModal(true);
-
-      // close modal or navigate if used as standalone
-      if (onClose) {
-        // If this login page is used as modal, close it and let parent navigate if needed
-        onClose();
-      } else {
-        // if it's a route, redirect to guest dashboard
-        navigate("/profile");
-      }
     } catch (error) {
       console.error("Login error:", error);
       // show server message if available
@@ -280,18 +267,11 @@ const LoginPage = ({ onClose }) => {
       if (!token) throw new Error(t("login.google_no_token"));
 
       const response = await login({ token });
-      console.log("Google login success:", response);
 
       saveTokenAndNotify(response);
 
       toast.success(t("login.google_success"));
       setShowProfileModal(true);
-
-      if (onClose) {
-        onClose();
-      } else {
-        navigate("/profile");
-      }
     } catch (err) {
       console.error("Google login error:", err);
       toast.error(err?.message || t("login.google_error"));
