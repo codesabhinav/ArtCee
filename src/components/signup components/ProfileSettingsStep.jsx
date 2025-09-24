@@ -20,11 +20,22 @@ const ProfileSettingsStep = ({ formData, setFormData, onPrev, onSubmit }) => {
       </div>
       <h2 className="text-xl font-semibold text-center">{t("profile_settings.title")}</h2>
       <p className="text-gray-500 text-center mb-6 text-sm">
-        {t("profile_settings.subtitle")}
+        Are you ready to complete your profile?
+      </p>
+      <p className="text-gray-500 text-center mb-6 text-sm">
+        Bring your profile to life upload your art, music, or projects now.
       </p>
 
+      <div className="flex gap-2 justify-center">
+        <button className="px-4 py-2 bg-teal-500 text-white text-xs rounded-md font-semibold hover:bg-teal-600">
+          Upload Portfolio
+        </button>
+        <button className="px-4 py-2 bg-white border text-xs rounded-md font-semibold hover:bg-gray-200">
+          Skip for Now
+        </button>
+      </div>
       {/* Profile Sections Toggles */}
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h3 className="text-sm font-semibold mb-3">
           {t("profile_settings.sections_title")}
         </h3>
@@ -58,19 +69,19 @@ const ProfileSettingsStep = ({ formData, setFormData, onPrev, onSubmit }) => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Info Card */}
-      <div className="mb-6 p-4 rounded-md border bg-gradient-to-r from-cyan-50 to-orange-50 flex flex-row items-center gap-3 border border-teal-500">
+      {/* <div className="mb-6 p-4 rounded-md border bg-gradient-to-r from-cyan-50 to-orange-50 flex flex-row items-center gap-3 border border-teal-500">
         <Heart className="text-teal-500 h-5 w-5"/>
         <div>
           <p className="text-sm font-semibold text-gray-800">{t("profile_settings.ready_title")}</p>
           <p className="text-xs text-gray-600">{t("profile_settings.ready_subtitle")}</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Next Steps */}
-      <div className="mb-6 p-4 rounded-md border bg-blue-50 border-teal-500">
+      {/* <div className="mb-6 p-4 rounded-md border bg-blue-50 border-teal-500">
         <h3 className="text-sm font-semibold text-gray-800 flex items-center mb-2">
           <FaUserCheck className="mr-2 text-teal-500" /> {t("profile_settings.next_steps_title")}
         </h3>
@@ -80,7 +91,7 @@ const ProfileSettingsStep = ({ formData, setFormData, onPrev, onSubmit }) => {
           <li>✓ {t("profile_settings.step_email_verification")}</li>
           <li>✓ {t("profile_settings.step_profile_activation")}</li>
         </ul>
-      </div>
+      </div> */}
 
       {/* Navigation */}
       <div className="flex justify-between pt-4">

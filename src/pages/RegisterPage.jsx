@@ -30,8 +30,8 @@ const RegisterPage = () => {
     state: "",
     country: "",
     travel_radius_miles: 0,
-    experience_in_year: "",
-    experience_in_level: "",
+    // experience_in_year: "",
+    // experience_in_level: "",
     personal_intro: "",
     exp_vision: "",
     is_remote_active: 0,
@@ -45,15 +45,15 @@ const RegisterPage = () => {
       behance: "",
       dribbble: ""
     },
-    hourly_rate: 0,
-    daily_rate: 0,
-    project_rate: 0,
-    currency: "USD",
-    is_rate_negotiable: 0,
-    education_visible: 0,
-    pricing_visible: 0,
-    client_review_visible: 0,
-    professions_visible: 0,
+    // hourly_rate: 0,
+    // daily_rate: 0,
+    // project_rate: 0,
+    // currency: "USD",
+    // is_rate_negotiable: 0,
+    // education_visible: 0,
+    // pricing_visible: 0,
+    // client_review_visible: 0,
+    // professions_visible: 0,
     date_of_birth_type: "date",
     date_of_birth: "",
     age: "",
@@ -62,7 +62,7 @@ const RegisterPage = () => {
 
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
-  const totalSteps = 7;
+  const totalSteps = 6;
 
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== "undefined" ? window.innerWidth >= 768 : true
@@ -295,17 +295,17 @@ const RegisterPage = () => {
                   </StepWrapper>
                 </div>
 
-                <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
+                {/* <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
                   <StepWrapper>
                     {step === 6 || !isDesktop ? (
                       <RatesPricingStep formData={formData} setFormData={setFormData} onNext={handleNext} onPrev={handlePrev} />
                     ) : null}
                   </StepWrapper>
-                </div>
+                </div> */}
 
                 <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
                   <StepWrapper>
-                    {step === 7 || !isDesktop ? (
+                    {step === 6 || !isDesktop ? (
                       <ProfileSettingsStep formData={formData} setFormData={setFormData} onPrev={handlePrev} onSubmit={handleSubmit} />
                     ) : null}
                   </StepWrapper>

@@ -1229,7 +1229,7 @@
       "sub_heading": "You're officially 1 of 500 Founding Members!",
       "description": "Your profile is now featured and visible to the ArtCee creative community.",
       "badge_message": "Your badge is permanent – welcome to the circle!",
-      "founding_member": "🎉 Founding Member #{{id}}",
+      "founding_member": "Founding Member #{id}",
       "features": {
         "directory_title": "⭐ Featured in Directory",
         "directory_desc": "Premium placement",
@@ -2587,7 +2587,7 @@
       "sub_heading": "¡Eres oficialmente uno de los 500 Miembros Fundadores!",
       "description": "Tu perfil ahora está destacado y visible para la comunidad creativa de ArtCee.",
       "badge_message": "Tu insignia es permanente – ¡bienvenido al círculo!",
-      "founding_member": "🎉 Miembro Fundador #{{id}}",
+      "founding_member": "Miembro Fundador #{id}",
       "features": {
         "directory_title": "⭐ Destacado en el Directorio",
         "directory_desc": "Colocación premium",
@@ -3883,7 +3883,7 @@
       "sub_heading": "Você é oficialmente um dos 500 Membros Fundadores!",
       "description": "Seu perfil agora está destacado e visível para a comunidade criativa da ArtCee.",
       "badge_message": "Sua insígnia é permanente – bem-vindo ao círculo!",
-      "founding_member": "🎉 Membro Fundador #{{id}}",
+      "founding_member": "Membro Fundador #{id}",
       "features": {
         "directory_title": "⭐ Destacado no Diretório",
         "directory_desc": "Colocação premium",
@@ -5212,7 +5212,7 @@
       "sub_heading": "आप आधिकारिक रूप से 500 संस्थापक सदस्यों में से एक हैं!",
       "description": "आपका प्रोफाइल अब ArtCee रचनात्मक समुदाय के लिए विशेष रूप से प्रदर्शित और दृश्यमान है।",
       "badge_message": "आपका बैज स्थायी है – सर्कल में आपका स्वागत है!",
-      "founding_member": "🎉 संस्थापक सदस्य #{{id}}",
+      "founding_member": "संस्थापक सदस्य #{id}",
       "features": {
         "directory_title": "⭐ निर्देशिका में विशेष",
         "directory_desc": "प्रीमियम स्थान",
@@ -6541,7 +6541,7 @@
       "sub_heading": "Opisyal kang isa sa 500 Founding Members!",
       "description": "Ang iyong profile ay naka-feature na ngayon at nakikita ng ArtCee creative community.",
       "badge_message": "Permanente ang iyong badge – maligayang pagdating sa circle!",
-      "founding_member": "🎉 Founding Member #{{id}}",
+      "founding_member": "Founding Member #{id}",
       "features": {
         "directory_title": "⭐ Itinatampok sa Direktoryo",
         "directory_desc": "Premium na placement",
@@ -7870,7 +7870,7 @@
       "sub_heading": "당신은 공식적으로 500명의 창립 회원 중 한 명입니다!",
       "description": "당신의 프로필은 이제 ArtCee 창의적 커뮤니티에 추천되고 가시화됩니다.",
       "badge_message": "당신의 배지는 영구적입니다 – 서클에 오신 것을 환영합니다!",
-      "founding_member": "🎉 창립 회원 #{{id}}",
+      "founding_member": "창립 회원 #{id}",
       "features": {
         "directory_title": "⭐ 디렉토리에 추천",
         "directory_desc": "프리미엄 배치",
@@ -9199,7 +9199,7 @@
       "sub_heading": "你正式成为500名创始会员之一！",
       "description": "你的个人资料现在已在ArtCee创意社区中获得推荐和可见。",
       "badge_message": "你的徽章是永久的 - 欢迎加入圈子！",
-      "founding_member": "🎉 创始会员 #{{id}}",
+      "founding_member": "创始会员 #{id}",
       "features": {
         "directory_title": "⭐ 在目录中推荐",
         "directory_desc": "高级展示位置",
@@ -10528,7 +10528,7 @@
       "sub_heading": "Vous êtes officiellement l'un des 500 membres fondateurs !",
       "description": "Votre profil est maintenant mis en avant et visible pour la communauté créative ArtCee.",
       "badge_message": "Votre badge est permanent – bienvenue dans le cercle !",
-      "founding_member": "🎉 Membre Fondateur #{{id}}",
+      "founding_member": "Membre Fondateur #{id}",
       "features": {
         "directory_title": "⭐ Mis en Avant dans l'Annuaire",
         "directory_desc": "Placement premium",
@@ -11857,7 +11857,7 @@
       "sub_heading": "あなたは正式に500人の創設メンバーの1人です！",
       "description": "あなたのプロフィールは現在、ArtCeeクリエイティブコミュニティで特集され、表示されています。",
       "badge_message": "あなたのバッジは永続的です – サークルへようこそ！",
-      "founding_member": "🎉 創設メンバー #{{id}}",
+      "founding_member": "創設メンバー #{id}",
       "features": {
         "directory_title": "⭐ ディレクトリで特集",
         "directory_desc": "プレミアム配置",
@@ -13186,7 +13186,7 @@
       "sub_heading": "أنت الآن رسميًا واحد من 500 عضو مؤسس!",
       "description": "ملفك الشخصي الآن مميز ومرئي لمجتمع ArtCee الإبداعي.",
       "badge_message": "شاراتك دائمة – مرحبًا بك في الدائرة!",
-      "founding_member": "🎉 عضو مؤسس #{{id}}",
+      "founding_member": "عضو مؤسس #{id}",
       "features": {
         "directory_title": "⭐ مميز في الدليل",
         "directory_desc": "مكانة مميزة",
@@ -14515,7 +14515,7 @@
       "sub_heading": "Sie sind offiziell einer der 500 Gründungsmitglieder!",
       "description": "Ihr Profil ist jetzt hervorgehoben und für die ArtCee-Kreativgemeinschaft sichtbar.",
       "badge_message": "Ihr Abzeichen ist dauerhaft – willkommen im Kreis!",
-      "founding_member": "🎉 Gründungsmitglied #{{id}}",
+      "founding_member": "Gründungsmitglied #{id}",
       "features": {
         "directory_title": "⭐ Hervorgehoben im Verzeichnis",
         "directory_desc": "Premium-Platzierung",
@@ -15852,7 +15852,7 @@
     "sub_heading": "Sei ufficialmente uno dei 500 Membri Fondatori!",
     "description": "Il tuo profilo è ora in evidenza e visibile alla comunità creativa di ArtCee.",
     "badge_message": "Il tuo badge è permanente – benvenuto nel cerchio!",
-    "founding_member": "🎉 Membro Fondatore #{{id}}",
+    "founding_member": "Membro Fondatore #{id}",
     "features": {
       "directory_title": "⭐ In Evidenza nella Directory",
       "directory_desc": "Posizionamento premium",

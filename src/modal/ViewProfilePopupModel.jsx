@@ -564,63 +564,85 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                   </div>
 
                 </div>
-                <h3 className="font-semibold text-sm mb-4">Recent Activity & Blog Posts</h3>
+                <h3 className="font-semibold text-sm mb-4">Recent Activity &amp; Blog Posts</h3>
 
                 {(!profilePayload?.posts || profilePayload.posts.length === 0) ? (
                   <div className="text-sm text-gray-500">No recent posts</div>
                 ) : (
                   <div className="space-y-4">
                     {profilePayload.posts.map((post) => (
-                      <article key={post.id} className="flex gap-4 bg-white rounded-lg p-4 items-center border">
-                        {/* LEFT: image */}
-                        <div className="w-28 flex-shrink-0">
+                      <article
+                        key={post.id}
+                        className="flex flex-col md:flex-row gap-3 bg-white rounded-lg p-3 md:p-4 items-start md:items-center border"
+                      >
+                        {/* LEFT: image -> full width on mobile, thumbnail on desktop */}
+                        <div className="w-full md:w-28 flex-shrink-0">
                           <img
-                            src={post.image || post.image_url || "https://picsum.photos/200/140"}
-                            alt={post.title}
-                            className="w-full h-20 object-cover rounded-md"
-                            onError={(e) => { e.currentTarget.src = "https://picsum.photos/200/140"; }}
+                            src={post.image || post.image_url || "https://picsum.photos/400/280"}
+                            alt={post.title || "post image"}
+                            className="w-full h-40 md:h-20 object-cover rounded-md"
+                            onError={(e) => { e.currentTarget.src = "https://picsum.photos/400/280"; }}
                           />
                         </div>
 
                         {/* MIDDLE: title + description */}
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-sm">{post.title}</h4>
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">{post.dsc ?? post.content ?? "-"}</p>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-sm truncate">{post.title}</h4>
 
-                          <div className="flex items-center gap-3 text-xs text-gray-400 mt-3">
-                            {/* created date (use existing formatDateShort to show month year) */}
-                            <span>{new Date(post.created_at || post.updated_at || Date.now()).toLocaleDateString()}</span>
+                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                            {post.dsc ?? post.content ?? "-"}
+                          </p>
 
-                            {/* optional: status or type badge */}
+                          <div className="flex items-center gap-3 text-xs text-gray-400 mt-3 flex-wrap">
+                            <time dateTime={post.created_at || post.updated_at || new Date().toISOString()}>
+                              {new Date(post.created_at || post.updated_at || Date.now()).toLocaleDateString()}
+                            </time>
+
                             {post.type && (
                               <span className="inline-block text-[11px] border rounded-full px-2 py-0.5 bg-white">
-                                {post.type.toLowerCase()}
+                                {post.type}
                               </span>
                             )}
-                          </div>
 
-                          {/* tags */}
-                          <div className="flex gap-2 flex-wrap mt-3">
-                            {(post.tags || []).slice(0, 4).map((tag) => (
-                              <span key={tag.id ?? tag.name} className="text-[10px] font-semibold px-2 py-1 rounded-md border">
-                                {tag.name}
-                              </span>
-                            ))}
+                            {/* tags (hide on very small screens if too many) */}
+                            <div className="flex gap-2 flex-wrap mt-2">
+                              {(post.tags || []).slice(0, 4).map((tag) => (
+                                <span
+                                  key={tag.id ?? tag.name}
+                                  className="text-[10px] font-semibold px-2 py-1 rounded-md border bg-gray-50"
+                                >
+                                  {tag.name}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                         </div>
 
-                        {/* RIGHT: optional meta / action */}
-                        <div className="flex-shrink-0 text-right ">
-                          <button className="text-xs text-gray-600 font-semibold border px-3 py-1 rounded-md bg-white flex flex-row items-center gap-2"><Heart className="h-3 w-3" /> Like</button>
-                          <div className="text-[10px] text-gray-400 mt-2">Premium Feature</div>
-                          <Link to='/featured' className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-2 py-1.5 rounded-lg items-center justify-center flex gap-2">
-                            <Crown className="h-3 w-3" /> {t("profile.upgrade")}
+                        {/* RIGHT: meta / actions -> stack under content on mobile, column on desktop */}
+                        <div className="w-full md:w-auto flex md:flex-col items-start md:items-end gap-2 mt-3 md:mt-0">
+                          <button
+                            className="w-full md:w-auto text-xs text-gray-600 font-semibold border px-3 py-1 rounded-md bg-white flex items-center justify-center gap-2"
+                            aria-label={`Like ${post.title}`}
+                          >
+                            <Heart className="h-3 w-3" /> <span className="hidden md:inline">Like</span>
+                            <span className="md:hidden text-[11px]">♥</span>
+                          </button>
+
+                          <div className="text-[10px] text-gray-400 mt-0 md:mt-2">Premium Feature</div>
+
+                          <Link
+                            to="/featured"
+                            className="w-full md:w-auto text-[12px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-md flex items-center justify-center gap-2"
+                            aria-label="Upgrade to premium"
+                          >
+                            <Crown className="h-3 w-3" /> <span className="text-xs">{t("profile.upgrade")}</span>
                           </Link>
                         </div>
                       </article>
                     ))}
                   </div>
                 )}
+
               </div>
             )}
 
@@ -652,7 +674,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
           </div>
         </div>
       </div>
-      <MessagePopupModal isOpen={isMessageOpen} onClose={() => setIsMessageOpen(false)} fullName= {fullName} title= {title} uuid={uuid} avatar= {avatar}/>
+      <MessagePopupModal isOpen={isMessageOpen} onClose={() => setIsMessageOpen(false)} fullName={fullName} title={title} uuid={uuid} avatar={avatar} />
     </div>
   );
 };

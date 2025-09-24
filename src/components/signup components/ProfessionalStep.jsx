@@ -7,7 +7,6 @@ import CustomDropdown from "../../components/CustomDropdown";
 const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
   const { t } = useTranslation();
 
-  // stable keys for backend
   const LEVEL_KEYS = {
     ENTRY: "entry",
     MID: "mid",
@@ -15,7 +14,6 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
     EXPERT: "expert",
   };
 
-  // helper to get translated label for a stable key
   const labelFor = (key) => {
     switch (key) {
       case LEVEL_KEYS.ENTRY:
@@ -31,7 +29,6 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
     }
   };
 
-  // UI labels for dropdown
   const placeholderLabel = t("professional.career_level_placeholder");
   const levelLabels = [
     t("professional.level_entry"),
@@ -41,11 +38,10 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
   ];
 
   const [local, setLocal] = useState({
-    experience_in_year: formData.experience_in_year ?? "",
-    // stable key for payload + label for UI (placeholder shown initially)
-    experience_in_level: formData.experience_in_level ?? "",
-    experience_in_levelLabel:
-      formData.experience_in_level ? labelFor(formData.experience_in_level) : placeholderLabel,
+    // experience_in_year: formData.experience_in_year ?? "",
+    // experience_in_level: formData.experience_in_level ?? "",
+    // experience_in_levelLabel:
+    //   formData.experience_in_level ? labelFor(formData.experience_in_level) : placeholderLabel,
     personal_intro: formData.personal_intro ?? "",
     exp_vision: formData.exp_vision ?? "",
   });
@@ -57,19 +53,18 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
   useEffect(() => {
     setLocal((prev) => ({
       ...prev,
-      experience_in_year: formData.experience_in_year ?? prev.experience_in_year ?? "",
-      experience_in_level: formData.experience_in_level ?? prev.experience_in_level ?? "",
-      experience_in_levelLabel:
-        formData.experience_in_level
-          ? labelFor(formData.experience_in_level)
-          : prev.experience_in_levelLabel || placeholderLabel,
+      // experience_in_year: formData.experience_in_year ?? prev.experience_in_year ?? "",
+      // experience_in_level: formData.experience_in_level ?? prev.experience_in_level ?? "",
+      // experience_in_levelLabel:
+      //   formData.experience_in_level
+      //     ? labelFor(formData.experience_in_level)
+      //     : prev.experience_in_levelLabel || placeholderLabel,
       personal_intro: formData.personal_intro ?? prev.personal_intro ?? "",
       exp_vision: formData.exp_vision ?? prev.exp_vision ?? "",
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    formData?.experience_in_year,
-    formData?.experience_in_level,
+    // formData?.experience_in_year,
+    // formData?.experience_in_level,
     formData?.personal_intro,
     formData?.exp_vision,
     t,
@@ -84,9 +79,9 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
   if (!String(local.exp_vision).trim())
     newErrors.exp_vision = t("professional.errors.exp_vision");
 
-  if (!local.experience_in_level) {
-    newErrors.experience_in_level = "choose career level";
-  }
+  // if (!local.experience_in_level) {
+  //   newErrors.experience_in_level = "choose career level";
+  // }
 
   setErrors(newErrors);
   setShowTopAlert(Object.keys(newErrors).length > 0);
@@ -97,9 +92,9 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
   const syncToParent = (overrides = {}) => {
     setFormData((prev) => ({
       ...prev,
-      experience_in_year:
-        overrides.experience_in_year ?? (local.experience_in_year === "" ? "" : local.experience_in_year),
-      experience_in_level: overrides.experience_in_level ?? local.experience_in_level,
+      // experience_in_year:
+      //   overrides.experience_in_year ?? (local.experience_in_year === "" ? "" : local.experience_in_year),
+      // experience_in_level: overrides.experience_in_level ?? local.experience_in_level,
       personal_intro: overrides.personal_intro ?? local.personal_intro,
       exp_vision: overrides.exp_vision ?? local.exp_vision,
     }));
@@ -131,11 +126,11 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
     else if (selectedLabel === t("professional.level_senior")) stable = LEVEL_KEYS.SENIOR;
     else if (selectedLabel === t("professional.level_expert")) stable = LEVEL_KEYS.EXPERT;
 
-    setLocal((p) => ({
-      ...p,
-      experience_in_level: stable,
-      experience_in_levelLabel: selectedLabel,
-    }));
+    // setLocal((p) => ({
+    //   ...p,
+    //   experience_in_level: stable,
+    //   experience_in_levelLabel: selectedLabel,
+    // }));
 
     // Immediately sync stable key to parent for correct payload
     syncToParent({ experience_in_level: stable });
@@ -177,7 +172,7 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
       )}
 
       <form onSubmit={handleNext} className="space-y-5">
-        <div className="grid grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold">{t("professional.years_label")}</label>
             <input
@@ -202,7 +197,7 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
 
             {errors.experience_in_level && <div className="text-xs text-red-500 mt-1">{errors.experience_in_level}</div>}
           </div>
-        </div>
+        </div> */}
 
         {/* Personal Introduction */}
         <div>

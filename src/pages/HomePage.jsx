@@ -20,7 +20,7 @@ import ViewProfilePopupModel from "../modal/ViewProfilePopupModel";
 import { useEffect, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { getCreativeData } from "../Hooks/useSeller";
-import { Crown } from "lucide-react";
+import { Building2, Crown, Palette, Search, Shield, Trophy, Users } from "lucide-react";
 
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
@@ -124,7 +124,7 @@ export default function Home() {
           </p>
 
           {/* Founding Member Card */}
-          <div className="mt-8 sm:mt-10 bg-white text-black p-4 sm:p-6 rounded-xl shadow-md w-full max-w-full sm:max-w-md mx-auto border-2 border-teal-500">
+          {/* <div className="mt-8 sm:mt-10 bg-white text-black p-4 sm:p-6 rounded-xl shadow-md w-full max-w-full sm:max-w-md mx-auto border-2 border-teal-500">
             <div className="font-bold text-start text-xs sm:text-sm flex flex-wrap justify-between items-center gap-2">
               {t("home.founding_program")}{" "}
               <span className="text-[10px] sm:text-xs bg-orange-500 text-white px-2 py-1 rounded-md flex items-center gap-1">
@@ -143,7 +143,7 @@ export default function Home() {
             <p className="text-teal-600 font-semibold mt-1 text-[10px] sm:text-xs">
               {t("home.premium_offer")}
             </p>
-          </div>
+          </div> */}
 
           {/* Buttons */}
           <div className="mt-6 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center">
@@ -154,12 +154,12 @@ export default function Home() {
               <FaPlayCircle className="text-base sm:text-lg" />{" "}
               {t("home.explore_creatives")}
             </Link>
-            <Link
+            {/* <Link
               to="/featured"
               className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-white text-white font-semibold flex items-center gap-2 hover:bg-white hover:text-black transition"
             >
               <Crown className="w-5 h-5" /> {t("home.get_featured")}
-            </Link>
+            </Link> */}
           </div>
         </div>
       </section>
@@ -183,7 +183,7 @@ export default function Home() {
             {/* For Creatives */}
             <div className="bg-white p-8 rounded-xl shadow-md border hover:border-teal-500 hover:shadow-lg transition group">
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-teal-500 text-white shadow-md mb-4">
-                <FaPalette />
+                <Palette />
               </div>
               <h3 className="font-bold text-xl">{t("home.for_creatives_title")}</h3>
               <p className="mt-2 text-gray-600 text-sm">
@@ -229,7 +229,7 @@ export default function Home() {
             {/* For Businesses */}
             <div className="bg-white p-8 rounded-xl shadow-md border hover:border-teal-500 hover:shadow-lg transition group">
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-teal-500 text-white shadow-md mb-4">
-                <FaBuilding />
+                <Building2 />
               </div>
               <h3 className="font-bold text-xl">{t("home.for_businesses_title")}</h3>
               <p className="mt-2 text-gray-600 text-sm">
@@ -259,13 +259,13 @@ export default function Home() {
             {t("home.how_it_works_title")}
           </h2>
           <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            {t("home.how_it_works_subtitle")}
+           {t("home.value_subtitle")}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-16">
             <div className="group">
               <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-teal-500 text-white text-3xl shadow-md">
-                <FaSearch />
+                <Search size={30} />
               </div>
               <h4 className="mt-6 font-bold text-lg">{t("home.step1_title")}</h4>
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
@@ -275,7 +275,7 @@ export default function Home() {
 
             <div className="group">
               <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-orange-500 text-white text-3xl shadow-md">
-                <FaUsers />
+                <Users size={30} />
               </div>
               <h4 className="mt-6 font-bold text-lg">{t("home.step2_title")}</h4>
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
@@ -285,7 +285,7 @@ export default function Home() {
 
             <div className="group">
               <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-teal-500 text-white text-3xl shadow-md">
-                <FaHandshake />
+                <Shield size={30} />
               </div>
               <h4 className="mt-6 font-bold text-lg">{t("home.step3_title")}</h4>
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
@@ -295,7 +295,7 @@ export default function Home() {
 
             <div className="group">
               <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-orange-500 text-white text-3xl shadow-md">
-                <FaTrophy />
+                <Trophy size={30} />
               </div>
               <h4 className="mt-6 font-bold text-lg">{t("home.step4_title")}</h4>
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
@@ -307,7 +307,7 @@ export default function Home() {
       </section>
 
       {/* Featured Professionals */}
-      <section className="py-14  lg:py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">
+      {/* <section className="py-14  lg:py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center">
             <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
@@ -402,10 +402,10 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Spotlight & Perspective */}
-      <section className="relative w-full">
+      {/* <section className="relative w-full">
         <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-cyan-50 -z-10" />
 
         <div className="max-w-5xl mx-auto px-6 py-14 lg:py-20 space-y-24 text-center">
@@ -437,7 +437,7 @@ export default function Home() {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }

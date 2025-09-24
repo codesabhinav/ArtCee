@@ -334,14 +334,14 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
           {submitError && <p className="text-xs text-red-500">{submitError}</p>}
         </div>
 
-        <SuccessPopupModel
+        {/* <SuccessPopupModel
           isOpen={showSuccess}
           onClose={() => {
             setShowSuccess(false);
             onClose();
           }}
           memberId={planDetails?.id || "348"}
-        />
+        /> */}
       </div>
     </div>
   );

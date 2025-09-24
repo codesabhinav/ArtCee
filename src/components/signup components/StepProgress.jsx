@@ -16,8 +16,8 @@ const stepsConfig = [
   { id: 3, key: "professional", icon: BriefcaseIcon },
   { id: 4, key: "services_skills", icon: StarIcon },
   { id: 5, key: "portfolio_social", icon: CameraIcon },
-  { id: 6, key: "rates_pricing", icon: CurrencyDollarIcon },
-  { id: 7, key: "profile_settings", icon: Cog6ToothIcon },
+  // { id: 6, key: "rates_pricing", icon: CurrencyDollarIcon },
+  { id: 6, key: "profile_settings", icon: Cog6ToothIcon },
 ];
 
 const StepProgress = ({ currentStep = 1, onChangeStep = () => {} }) => {

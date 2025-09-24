@@ -19,6 +19,8 @@ import FeaturePremiumPage from './pages/FeaturePremiumPage'
 import ToastProvider from "./components/ToastProvider";
 import GuestDashboardPage from './pages/GuestDashboardPage'
 import LandingPage from './pages/LandingPage'
+import PaymentSuccessPage from './pages/PaymentSuccessPage'
+import PaymentCancelPage from './pages/PaymentCancelPage'
 
 function App() {
   return (
@@ -37,18 +39,22 @@ function App() {
               <Route path="featured" element={<FeaturePremiumPage />} />
               <Route path="profile" element={<GuestDashboardPage />} />
             </Route>
-            
+
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="projects" element={<ProjectsPage />} />
               <Route path="projects/create" element={<CreateProjectPage />} />
               <Route path="projects/:projectId" element={<ProjectDetailPage />} />
               {/* <Route path="profile" element={<ProfilePage />} /> */}
-               
+
             </Route>
-            
+
+            <Route path="/payment">
+              <Route path="success" element={<PaymentSuccessPage />} />
+              <Route path="cancel" element={<PaymentCancelPage />} />
+            </Route>
             <Route path="*" element={<NotFoundPage />} />
-             <Route index element={<LandingPage />}></Route>
+            <Route index element={<LandingPage />}></Route>
           </Routes>
         </Router>
       </ProjectProvider>

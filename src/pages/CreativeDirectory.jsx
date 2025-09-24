@@ -234,7 +234,7 @@ const CreativeDirectory = () => {
     <div className="w-full md:w-64 shrink-0 border rounded-lg p-4 bg-white shadow-sm ">
       <h2 className="font-semibold mb-4">{t("creative.advanced_filters")}</h2>
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <p className="font-medium text-sm">{t("creative.budget_range")}</p>
 
         <input
@@ -249,14 +249,11 @@ const CreativeDirectory = () => {
           }}
         />
 
-        {/* <RangeSlider value={value} onInput={setValue} /> */}
         <div className="flex justify-between text-xs text-gray-500 mt-1">
-          {/* left always shows available API min */}
           <span>${filtersMeta?.budged_range?.min ?? budgetRange.min ?? 0}</span>
-          {/* right shows the selected max value (slider) */}
           <span>${(budgetRange.sliderValue ?? budgetRange.max ?? filtersMeta?.budged_range?.max ?? 10000)}+ </span>
         </div>
-      </div>
+      </div> */}
 
       <div className="mb-4">
         <p className="font-medium text-sm">{t("creative.industries")}</p>

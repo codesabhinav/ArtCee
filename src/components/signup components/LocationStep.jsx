@@ -88,59 +88,59 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
     formData.travel_radius_miles,
   ]);
 
-  // fetch countries (adjust endpoint if needed)
-  useEffect(() => {
-    const ctrl = new AbortController();
-    const fetchCountries = async () => {
-      setLoadingCountries(true);
-      setApiError("");
-      try {
-        const res = await fetch("/api/countries", { signal: ctrl.signal });
-        if (!res.ok) throw new Error(`Countries fetch failed: ${res.status}`);
-        const data = await res.json();
-        if (!mountedRef.current) return;
-        setCountries(Array.isArray(data) ? data : data.data || []);
-      } catch (err) {
-        console.warn("Could not load countries:", err);
-        if (mountedRef.current) setApiError("Could not load countries");
-        setCountries([]);
-      } finally {
-        if (mountedRef.current) setLoadingCountries(false);
-      }
-    };
-    fetchCountries();
-    return () => ctrl.abort();
-  }, []);
+  // // fetch countries (adjust endpoint if needed)
+  // useEffect(() => {
+  //   const ctrl = new AbortController();
+  //   const fetchCountries = async () => {
+  //     setLoadingCountries(true);
+  //     setApiError("");
+  //     try {
+  //       const res = await fetch("/api/countries", { signal: ctrl.signal });
+  //       if (!res.ok) throw new Error(`Countries fetch failed: ${res.status}`);
+  //       const data = await res.json();
+  //       if (!mountedRef.current) return;
+  //       setCountries(Array.isArray(data) ? data : data.data || []);
+  //     } catch (err) {
+  //       console.warn("Could not load countries:", err);
+  //       if (mountedRef.current) setApiError("Could not load countries");
+  //       setCountries([]);
+  //     } finally {
+  //       if (mountedRef.current) setLoadingCountries(false);
+  //     }
+  //   };
+  //   fetchCountries();
+  //   return () => ctrl.abort();
+  // }, []);
 
-  // fetch states when country_id changes
-  useEffect(() => {
-    const countryId = local.country_id;
-    if (!countryId) {
-      setStates([]);
-      setLoadingStates(false);
-      return;
-    }
+  // // fetch states when country_id changes
+  // useEffect(() => {
+  //   const countryId = local.country_id;
+  //   if (!countryId) {
+  //     setStates([]);
+  //     setLoadingStates(false);
+  //     return;
+  //   }
 
-    const ctrl = new AbortController();
-    const fetchStates = async () => {
-      setLoadingStates(true);
-      try {
-        const res = await fetch(`/api/countries/${countryId}/states`, { signal: ctrl.signal });
-        if (!res.ok) throw new Error(`States fetch failed: ${res.status}`);
-        const data = await res.json();
-        if (!mountedRef.current) return;
-        setStates(Array.isArray(data) ? data : data.data || []);
-      } catch (err) {
-        console.warn("Could not load states:", err);
-        if (mountedRef.current) setApiError("Could not load states for selected country");
-        setStates([]);
-      } finally {
-        if (mountedRef.current) setLoadingStates(false);
-      }
-    };
-    fetchStates();
-    return () => ctrl.abort();
-  }, [local.country_id]);
+  //   const ctrl = new AbortController();
+  //   const fetchStates = async () => {
+  //     setLoadingStates(true);
+  //     try {
+  //       const res = await fetch(`/api/countries/${countryId}/states`, { signal: ctrl.signal });
+  //       if (!res.ok) throw new Error(`States fetch failed: ${res.status}`);
+  //       const data = await res.json();
+  //       if (!mountedRef.current) return;
+  //       setStates(Array.isArray(data) ? data : data.data || []);
+  //     } catch (err) {
+  //       console.warn("Could not load states:", err);
+  //       if (mountedRef.current) setApiError("Could not load states for selected country");
+  //       setStates([]);
+  //     } finally {
+  //       if (mountedRef.current) setLoadingStates(false);
+  //     }
+  //   };
+  //   fetchStates();
+  //   return () => ctrl.abort();
+  // }, [local.country_id]);
 
   // map cookie names to ids (optional UX improvement)
   useEffect(() => {
@@ -303,11 +303,11 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
       <h2 className="text-xl text-md font-semibold text-center mb-2">{t("location.title")}</h2>
       <p className="text-gray-500 font-light text-sm text-center mb-6">{t("location.subtitle")}</p>
 
-      {apiError && (
+      {/* {apiError && (
         <div className="text-xs text-yellow-700 bg-yellow-50 border border-yellow-100 px-3 py-2 rounded mb-4 text-center">
           {t("location.api_fallback") || "Couldn't load country/state list — falling back to text input."}
         </div>
-      )}
+      )} */}
 
       <form onSubmit={handleNext} className="space-y-4" noValidate>
         <div className="grid grid-cols-2 gap-4">

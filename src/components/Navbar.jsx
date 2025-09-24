@@ -13,6 +13,7 @@ import LoginPage from "../pages/LoginPage";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import Cookies from "js-cookie";
+import { BookOpen, Briefcase, Building2, Search, SearchIcon, Spotlight, Users } from "lucide-react";
 
 
 
@@ -76,36 +77,42 @@ const Navbar = () => {
           </div>
 
 
-          <div className="hidden [@media(min-width:999px)]:flex items-center space-x-4 text-xs font-semibold">
+          <div className="hidden [@media(min-width:999px)]:flex items-center space-x-2 text-xs font-semibold">
             <Link
               to="/creatives"
               className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
             >
-              <FaSearch className="mr-3" /> {t("nav.browse_creatives")}
-            </Link>
-            <Link
-              to="/business-directory"
-              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
-            >
-              <FaBuilding className="mr-3" /> {t("nav.business_directory")}
+              <Search className="mr-2 h-4 w-4" /> {t("nav.browse_creatives")}
             </Link>
             <Link
               to="/jobs"
               className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
             >
-              <FaBriefcase className="mr-3" /> {t("nav.find_jobs")}
+              <Briefcase className="mr-2 h-4 w-4" /> {t("nav.find_jobs")}
+            </Link>
+            <Link
+              to="/business-directory"
+              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
+            >
+              <Building2 className="mr-2 h-4 w-4" /> {t("nav.business_directory")}
             </Link>
             <Link
               to="/spotlight"
               className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
             >
-              <FaStar className="mr-3" /> {t("nav.spotlight")}
+              <Spotlight className="mr-2 h-4 w-4" /> {t("nav.spotlight")}
             </Link>
             <Link
               to="/perspective"
               className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
             >
-              <FaBookOpen className="mr-3" /> {t("nav.perspective")}
+              <BookOpen className="mr-2 h-4 w-4" /> {t("nav.perspective")}
+            </Link>
+            <Link
+              to="/groups"
+              className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
+            >
+              <Users className="mr-2 h-4 w-4" /> Groups
             </Link>
 
 
@@ -196,19 +203,22 @@ const Navbar = () => {
       {menuOpen && (
         <div className="[@media(min-width:999px)]:hidden px-4 pb-4 space-y-2 text-xs font-semibold w-full box-border">
           <Link to="/creatives" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <FaSearch className="mr-3" /> {t("nav.browse_creatives")}
-          </Link>
-          <Link to="/business-directory" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <FaBuilding className="mr-3" /> {t("nav.business_directory")}
+            <Search className="mr-3 h-4 w-4" /> {t("nav.browse_creatives")}
           </Link>
           <Link to="/jobs" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <FaBriefcase className="mr-3" /> {t("nav.find_jobs")}
+            <Briefcase className="mr-3 h-4 w-4" /> {t("nav.find_jobs")}
+          </Link>
+          <Link to="/business-directory" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
+            <Building2 className="mr-3 h-4 w-4" /> {t("nav.business_directory")}
           </Link>
           <Link to="/spotlight" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <FaStar className="mr-3" /> {t("nav.spotlight")}
+            <Spotlight className="mr-3 h-4 w-4" /> {t("nav.spotlight")}
           </Link>
           <Link to="/perspective" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <FaBookOpen className="mr-3" /> {t("nav.perspective")}
+            <BookOpen className="mr-3 h-4 w-4" /> {t("nav.perspective")}
+          </Link>
+          <Link to="/groups" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
+            <Users className="mr-3 h-4 w-4" /> Groups
           </Link>
 
 

@@ -193,6 +193,24 @@ export function createPayment(formData) {
     });
 }
 
+export function fetchPaymentStatus(formData) {
+  return service
+    .post("seller/payment", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to fetch payment status";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+      throw new Error(message);
+    });
+}
+
 export function followUnfollowMethod(uuid) {
   return service
     .post(`site/follow/${uuid}/toggle`)

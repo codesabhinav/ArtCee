@@ -8,6 +8,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
 
   const fileInputRef = useRef(null);
   const urlInputRef = useRef(null);
+  const resumeInputRef = useRef(null);
 
   const currentObjectUrlRef = useRef(null);
 
@@ -18,6 +19,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
   const [preview, setPreview] = useState("");
   const [localSocial, setLocalSocial] = useState({ ...(formData.social || {}) });
   const [error, setError] = useState({});
+  const [resumeFile, setResumeFile] = useState(formData.resume ?? null);
 
 
   const revokeCurrentObjectUrl = () => {
@@ -219,6 +221,29 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
     return false;
   })();
 
+  const handleResumeChange = (e) => {
+    const file = e.target.files?.[0] ?? null;
+    if (!file) return;
+    if (file.size <= MAX_RESUME_BYTES) {
+      setResumeFile(file);
+      syncToParent({});
+      setError((p) => ({ ...p, resume: null }));
+    } else {
+      setError((p) => ({ ...p, resume: t("portfolio_social.errors.resume_size") || "Resume too large (max 10MB)" }));
+      if (resumeInputRef.current) resumeInputRef.current.value = "";
+    }
+  };
+
+  const removeResume = () => {
+    setResumeFile(null);
+    if (resumeInputRef.current) {
+      try {
+        resumeInputRef.current.value = "";
+      } catch (e) {}
+    }
+    syncToParent({}); // persist removal
+  };
+
   return (
     <div className="w-full max-w-3xl bg-white rounded-lg p-6 border">
       {/* Top Icon */}
@@ -299,6 +324,34 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
           className={`mt-1 block w-full form-input border text-xs ${error?.url ? "border-red-400" : "border-none"} rounded-md p-2`}
         />
         {error?.url && <div className="text-xs text-red-500 mt-1">{error.url}</div>}
+      </div>
+
+      {/* Resume Upload */}
+      <div className="mb-4">
+        <label className="block text-xs font-semibold">Resume / CV</label>
+        <div className="flex items-center gap-3 mt-1">
+          <label className="flex items-center cursor-pointer px-3 py-2 border rounded-md text-xs hover:bg-gray-50" aria-label="Upload resume">
+            <FaUpload className="mr-2" />
+            <span>Upload resume</span>
+            <input
+              ref={resumeInputRef}
+              type="file"
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              className="hidden"
+              onChange={handleResumeChange}
+            />
+          </label>
+
+          {resumeFile ? (
+            <div className="text-xs text-gray-700">
+              <div>{resumeFile.name}</div>
+              <button type="button" onClick={removeResume} className="text-xs text-red-500 mt-1">Remove</button>
+            </div>
+          ) : (
+            <div className="text-xs text-gray-400">No resume uploaded</div>
+          )}
+        </div>
+        {error?.resume && <div className="text-xs text-red-500 mt-1">{error.resume}</div>}
       </div>
 
       {/* Social Links */}
