@@ -64,16 +64,6 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const totalSteps = 6;
 
-  const [isDesktop, setIsDesktop] = useState(
-    typeof window !== "undefined" ? window.innerWidth >= 768 : true
-  );
-
-  useEffect(() => {
-    const onResize = () => setIsDesktop(window.innerWidth >= 768);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
   const handleNext = () => setStep((prev) => Math.min(prev + 1, totalSteps));
   const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
   const handleGoto = (n) => setStep(() => Math.min(Math.max(1, n), totalSteps));
@@ -145,52 +135,6 @@ const RegisterPage = () => {
     }
   }, [t]);
 
-  const sliderRef = useRef(null);
-  const touchStartX = useRef(null);
-  const touchDeltaX = useRef(0);
-  const swipeThreshold = 50; 
-  useEffect(() => {
-    const handleKey = (e) => {
-      if (isDesktop) return; 
-      if (e.key === "ArrowLeft") handlePrev();
-      if (e.key === "ArrowRight") handleNext();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [isDesktop]);
-
-  const onTouchStart = (e) => {
-    if (isDesktop) return;
-    touchStartX.current = e.touches[0].clientX;
-    touchDeltaX.current = 0;
-    if (sliderRef.current) sliderRef.current.style.transition = "none";
-  };
-
-  const onTouchMove = (e) => {
-    if (isDesktop || touchStartX.current === null) return;
-    const currentX = e.touches[0].clientX;
-    touchDeltaX.current = currentX - touchStartX.current;
-    if (sliderRef.current) {
-      sliderRef.current.style.transform = `translateX(calc(-${(step - 1) * 100}% + ${touchDeltaX.current}px))`;
-    }
-  };
-
-  const onTouchEnd = () => {
-    if (isDesktop || touchStartX.current === null) return;
-    const dx = touchDeltaX.current;
-    if (sliderRef.current) {
-      sliderRef.current.style.transition = "transform 300ms ease-in-out";
-      sliderRef.current.style.transform = `translateX(-${(step - 1) * 100}%)`;
-    }
-    if (dx > swipeThreshold) {
-      handlePrev();
-    } else if (dx < -swipeThreshold) {
-      handleNext();
-    }
-    touchStartX.current = null;
-    touchDeltaX.current = 0;
-  };
-
   const StepWrapper = ({ children }) => {
     return (
       <div className="w-full flex-shrink-0 px-4 sm:px-6 lg:px-8">
@@ -198,13 +142,6 @@ const RegisterPage = () => {
       </div>
     );
   };
-
-  useEffect(() => {
-    if (!isDesktop && sliderRef.current) {
-      sliderRef.current.style.transition = "transform 300ms ease-in-out";
-      sliderRef.current.style.transform = `translateX(-${(step - 1) * 100}%)`;
-    }
-  }, [step, isDesktop]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-start py-6">
@@ -236,76 +173,59 @@ const RegisterPage = () => {
       <div className="w-full px-2 sm:px-6 lg:px-8 mt-2 mb-10 max-w-full mx-auto">
         <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
           <div className="relative">
-            <div
-              className={`relative ${isDesktop ? "" : "overflow-hidden rounded-lg bg-white shadow-sm"}`}
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
-              aria-roledescription={isDesktop ? "step-panel" : "slider"}
-            >
-              <div
-                ref={sliderRef}
-                className={`flex ${isDesktop ? "flex-col" : "flex-row"}`}
-                style={
-                  isDesktop
-                    ? {}
-                    : {
-                      width: `${100 * totalSteps}%`,
-                      transform: `translateX(-${(step - 1) * 100}%)`,
-                    }
-                }
-              >
-                <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
+            <div className="relative overflow-hidden rounded-lg bg-white shadow-sm" aria-roledescription="step-panel">
+              <div className="flex flex-col">
+                <div className="">
                   <StepWrapper>
-                    {step === 1 || !isDesktop ? (
+                    {step === 1 ? (
                       <PersonalInfoStep formData={formData} setFormData={setFormData} onNext={handleNext} />
                     ) : null}
                   </StepWrapper>
                 </div>
 
-                <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
+                <div className="">
                   <StepWrapper>
-                    {step === 2 || !isDesktop ? (
+                    {step === 2 ? (
                       <LocationStep formData={formData} setFormData={setFormData} onNext={handleNext} onPrev={handlePrev} />
                     ) : null}
                   </StepWrapper>
                 </div>
 
-                <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
+                <div className="">
                   <StepWrapper>
-                    {step === 3 || !isDesktop ? (
+                    {step === 3 ? (
                       <ProfessionalStep formData={formData} setFormData={setFormData} onNext={handleNext} onPrev={handlePrev} />
                     ) : null}
                   </StepWrapper>
                 </div>
 
-                <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
+                <div className="">
                   <StepWrapper>
-                    {step === 4 || !isDesktop ? (
+                    {step === 4 ? (
                       <ServicesSkillsStep formData={formData} setFormData={setFormData} onNext={handleNext} onPrev={handlePrev} />
                     ) : null}
                   </StepWrapper>
                 </div>
 
-                <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
+                <div className="">
                   <StepWrapper>
-                    {step === 5 || !isDesktop ? (
+                    {step === 5 ? (
                       <PortfolioSocialStep formData={formData} setFormData={setFormData} onNext={handleNext} onPrev={handlePrev} />
                     ) : null}
                   </StepWrapper>
                 </div>
 
-                {/* <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
+                {/* <div className="">
                   <StepWrapper>
-                    {step === 6 || !isDesktop ? (
+                    {step === 6 ? (
                       <RatesPricingStep formData={formData} setFormData={setFormData} onNext={handleNext} onPrev={handlePrev} />
                     ) : null}
                   </StepWrapper>
                 </div> */}
 
-                <div style={!isDesktop ? { width: `${100 / totalSteps}%` } : {}} className={`${isDesktop ? "" : "flex-shrink-0"}`}>
+                <div className="">
                   <StepWrapper>
-                    {step === 6 || !isDesktop ? (
+                    {step === 6 ? (
                       <ProfileSettingsStep formData={formData} setFormData={setFormData} onPrev={handlePrev} onSubmit={handleSubmit} />
                     ) : null}
                   </StepWrapper>
