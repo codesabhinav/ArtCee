@@ -246,7 +246,7 @@ const GuestDashboardPage = () => {
               </div>
 
               <div className="text-xs text-gray-600 text-center sm:text-left mt-4 line-clamp-2">
-                {bio || t("guest.no_bio")}
+                {title || t("guest.no_bio")}
               </div>
 
               {/* Stats */}
@@ -378,8 +378,8 @@ const GuestDashboardPage = () => {
                   <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
                     <BriefcaseIcon className="h-7 w-7" />
                   </div>
-                  <p className="text-sm font-medium">{t("guest.no_jobs_title") || "No jobs available"}</p>
-                  <p className="text-xs text-gray-500 mb-4">{t("guest.no_jobs_desc") || "Check back later or browse all jobs."}</p>
+                  <p className="text-sm font-medium">{t("guest.no_applications") || "No jobs available"}</p>
+                  <p className="text-xs text-gray-500 mb-4">{t("guest.no_applications_desc") || "Check back later or browse all jobs."}</p>
                   <button
                     onClick={() => navigate("/jobs")}
                     className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto"

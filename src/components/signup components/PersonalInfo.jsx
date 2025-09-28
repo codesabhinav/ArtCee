@@ -35,7 +35,7 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
     password: formData.password || "",
     phone: formData.phone || "",
     title: formData.title || "",
-    bio: formData.bio || "",
+    // bio: formData.bio || "",
   });
 
   const [errors, setErrors] = useState({});
@@ -49,7 +49,7 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
       password: formData.password ?? prev.password ?? "",
       phone: formData.phone ?? prev.phone ?? "",
       title: formData.title ?? prev.title ?? "",
-      bio: formData.bio ?? prev.bio ?? "",
+      // bio: formData.bio ?? prev.bio ?? "",
       type: formData.type || prev.type || STABLE_TYPES.BUSINESS,
       typeLabel: formData.type
         ? labelFor(formData.type)
@@ -61,7 +61,7 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
     formData?.password,
     formData?.phone,
     formData?.title,
-    formData?.bio,
+    // formData?.bio,
     formData?.type,
     t,
   ]);
@@ -99,8 +99,8 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
     }
     if (!local.title || !local.title.trim())
       newErrors.title = t("personal_info.errors.title");
-    if (!local.bio || !local.bio.trim())
-      newErrors.bio = t("personal_info.errors.bio");
+    // if (!local.bio || !local.bio.trim())
+    //   newErrors.bio = t("personal_info.errors.bio");
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -316,7 +316,7 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
         </div>
 
         {/* Personal Intro */}
-        <div>
+        {/* <div>
           <label className="block text-xs font-semibold">
             {t("personal_info.bio")} *
           </label>
@@ -334,7 +334,7 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
           {errors.bio && (
             <div className="text-xs text-red-500 mt-1">{errors.bio}</div>
           )}
-        </div>
+        </div> */}
 
         {/* Error Summary */}
         {Object.keys(errors).length > 0 && (

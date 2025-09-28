@@ -71,30 +71,67 @@ export function login(formData) {
 export function register(formData) {
   const payload = new FormData();
 
-  // append scalar values
   for (const key in formData) {
     if (formData[key] === null || formData[key] === undefined) continue;
 
-    if (key === "portfolio" && formData[key]) {
-      // File upload
-      payload.append("portfolio", formData[key]);
-    } else if (Array.isArray(formData[key])) {
-      // Arrays like skills[], services[]
-      formData[key].forEach((val) => payload.append(`${key}[]`, val));
-    } else if (typeof formData[key] === "object" && formData[key] !== null) {
-      // Nested objects (like social)
-      for (const nestedKey in formData[key]) {
-        payload.append(`${key}[${nestedKey}]`, formData[key][nestedKey]);
-      }
-    } else {
-      payload.append(key, formData[key]);
+    const value = formData[key];
+
+    // 1) If it's a File/Blob (resume, portfolio file, etc.), append as file
+    if (typeof File !== "undefined" && value instanceof File) {
+      payload.append(key, value);
+      continue;
     }
+    if (typeof Blob !== "undefined" && value instanceof Blob) {
+      payload.append(key, value);
+      continue;
+    }
+
+    // 2) Special handling for portfolio that may be an object like { url: "..." }
+    if (key === "portfolio") {
+      if (value === null) {
+        continue;
+      }
+      if (typeof value === "string") {
+        // raw url string
+        payload.append("portfolio[url]", value);
+      } else if (value instanceof File || (typeof Blob !== "undefined" && value instanceof Blob)) {
+        payload.append("portfolio", value);
+      } else if (typeof value === "object" && value.url) {
+        payload.append("portfolio[url]", value.url);
+      }
+      continue;
+    }
+
+    // 3) Arrays -> append as key[]
+    if (Array.isArray(value)) {
+      value.forEach((val) => {
+        // if array items might be files:
+        if (typeof File !== "undefined" && val instanceof File) {
+          payload.append(`${key}[]`, val);
+        } else {
+          payload.append(`${key}[]`, val);
+        }
+      });
+      continue;
+    }
+
+    // 4) Nested object (social): append as social[key]=value
+    if (typeof value === "object") {
+      for (const nestedKey in value) {
+        // skip undefined/null nested values
+        if (value[nestedKey] === null || value[nestedKey] === undefined) continue;
+        payload.append(`${key}[${nestedKey}]`, value[nestedKey]);
+      }
+      continue;
+    }
+
+    // 5) primitive scalar (string/number/boolean)
+    payload.append(key, value);
   }
 
+  // remove manual Content-Type so browser/axios can set boundary for multipart
   return service
-    .post(`auth/register`, payload, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
+    .post(`auth/register`, payload /* no header override */)
     .then((res) => {
       const data = res.data;
       if (data?.token) {
@@ -197,4 +234,39 @@ export function verifyOtp(payload) {
       }
       throw new Error(message);
     });
+}
+
+export async function updatePortfolio(formData) {
+  try {
+    const res = await service.post("auth/portfolio/store", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data?.data ?? res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to update portfolio";
+    throw new Error(msg);
+  }
+}
+
+export async function getPortfolios(ss_id = null) {
+  try {
+    const params = {};
+    if (ss_id) params.ss_id = ss_id;
+    const res = await service.get("auth/portfolio", { params });
+    // normalize to array
+    return res.data?.data ?? res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to fetch portfolios";
+    throw new Error(msg);
+  }
+}
+
+export async function deletePortfolio(id) {
+  try {
+    const res = await service.delete(`auth/portfolio/${id}`);
+    return res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to delete portfolio";
+    throw new Error(msg);
+  }
 }

@@ -24,7 +24,7 @@ const RegisterPage = () => {
     password_confirmation: "",
     phone: "",
     title: "",
-    bio: "",
+    // bio: "",
     type: "",
     city: "",
     state: "",
@@ -37,6 +37,7 @@ const RegisterPage = () => {
     is_remote_active: 0,
     on_site_active: 0,
     skills: [],
+    custom_skills: "",
     portfolio: null,
     social: {
       website: "",
@@ -57,6 +58,10 @@ const RegisterPage = () => {
     date_of_birth_type: "date",
     date_of_birth: "",
     age: "",
+    address: "",
+    resume: null,
+    ss_id: "",
+    profile_portfolio: [],
     step: "COMP"
   });
 
@@ -68,9 +73,11 @@ const RegisterPage = () => {
   const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
   const handleGoto = (n) => setStep(() => Math.min(Math.max(1, n), totalSteps));
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (payload) => {
+    const dataToSend = payload ?? formData;
+
     try {
-      const res = await register(formData);
+      const res = await register(dataToSend);
       toast.success(t("register.registration_success"));
       navigate("/home");
     } catch (err) {

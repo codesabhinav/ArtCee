@@ -11,7 +11,7 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     full_name: "",
     email: "",
     title: "",
-    bio: "",
+    // bio: "",
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState(null);
@@ -22,7 +22,7 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
         full_name: initialData.full_name || "",
         email: initialData.email || "",
         title: initialData.title || "",
-        bio: initialData.bio || "",
+        // bio: initialData.bio || "",
       });
       setErrors(null);
     }
@@ -107,7 +107,7 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="text-xs block mb-1">{t("basic_info.labels.bio")}</label>
             <textarea
               name="bio"
@@ -117,7 +117,7 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
               rows={4}
               placeholder={t("basic_info.placeholders.bio")}
             />
-          </div>
+          </div> */}
 
           <div className="flex justify-end gap-2 text-xs">
             <button

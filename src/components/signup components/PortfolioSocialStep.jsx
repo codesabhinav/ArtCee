@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import { FaArrowLeft, FaArrowRight, FaUpload, FaTimes } from "react-icons/fa";
 import { useTranslation } from "../../contexts/LanguageProvider";
 
+const MAX_RESUME_BYTES = 10 * 1024 * 1024; // 10MB
+
 const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
   const { t } = useTranslation();
 
@@ -21,23 +23,20 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
   const [error, setError] = useState({});
   const [resumeFile, setResumeFile] = useState(formData.resume ?? null);
 
-
   const revokeCurrentObjectUrl = () => {
     const obj = currentObjectUrlRef.current;
     if (obj) {
       try {
         URL.revokeObjectURL(obj);
       } catch (e) {
-
+        // ignore
       } finally {
         currentObjectUrlRef.current = null;
       }
     }
   };
 
-
   useEffect(() => {
-
     revokeCurrentObjectUrl();
 
     if (formData.portfolio) {
@@ -53,7 +52,6 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
         setPreview(objUrl);
         setLocalFile(formData.portfolio);
       } else {
-       
         setPreview("");
         setLocalFile(null);
       }
@@ -64,15 +62,15 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
 
     setLocalUrl((formData.portfolio && formData.portfolio.url) || "");
     setLocalSocial({ ...(formData.social || {}) });
-
+    setResumeFile(formData.resume ?? null);
 
     return () => {
       revokeCurrentObjectUrl();
     };
 
-  }, [formData.portfolio, formData.social]);
+  }, [formData.portfolio, formData.social, formData.resume]);
 
-
+  // syncToParent now includes resume
   const syncToParent = (overrides = {}) => {
     const portfolioPayload =
       overrides.portfolio ??
@@ -82,6 +80,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
       ...prev,
       portfolio: portfolioPayload,
       social: { ...(prev.social || {}), ...localSocial },
+      resume: overrides.resume !== undefined ? overrides.resume : resumeFile ?? null,
     });
 
     setFormData(nextForm);
@@ -92,7 +91,6 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
     const file = e.target.files?.[0] ?? null;
     if (!file) return;
 
-    // revoke old object URL if we created one
     revokeCurrentObjectUrl();
 
     if (file.size <= 50 * 1024 * 1024) {
@@ -108,21 +106,20 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
         ...prev,
         portfolio: file,
         social: { ...(prev.social || {}), ...localSocial },
+        resume: prev.resume ?? resumeFile ?? null,
       }));
     } else {
       setError((p) => ({
         ...p,
         file: t("portfolio_social.errors.file_size"),
       }));
- 
+
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
   const handleRemoveFile = () => {
-
     revokeCurrentObjectUrl();
-
 
     setLocalFile(null);
     setLocalUrl("");
@@ -133,22 +130,20 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
       try {
         fileInputRef.current.value = "";
       } catch (e) {
-    
+        // ignore
       }
     }
 
-
-    setFormData((prev) => ({ ...prev, portfolio: null }));
+    setFormData((prev) => ({ ...prev, portfolio: null, resume: prev.resume ?? resumeFile ?? null }));
   };
 
   const handleUrlBlur = async () => {
     const url = (localUrl || "").trim();
     if (!url) {
-
       revokeCurrentObjectUrl();
       setPreview("");
       setLocalFile(null);
-      setFormData((prev) => ({ ...prev, portfolio: null }));
+      setFormData((prev) => ({ ...prev, portfolio: null, resume: prev.resume ?? resumeFile ?? null }));
       return;
     }
 
@@ -168,7 +163,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
     setPreview(url);
     setLocalFile(null);
 
-    setFormData((prev) => ({ ...prev, portfolio: { url } }));
+    setFormData((prev) => ({ ...prev, portfolio: { url }, resume: prev.resume ?? resumeFile ?? null }));
   };
 
   const handleSocialChange = (key, value) => {
@@ -178,7 +173,6 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
 
   const handleSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
-
 
     const newErrors = {};
     if (!localFile && !localUrl && !preview) {
@@ -196,6 +190,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
       ...prev,
       portfolio: portfolioPayload,
       social: { ...(prev.social || {}), ...localSocial },
+      resume: resumeFile ?? null,
     }));
 
     setError({});
@@ -203,12 +198,12 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
   };
 
   const handlePrev = () => {
-   
     const portfolioPayload = localFile ? localFile : localUrl ? { url: localUrl } : null;
     setFormData((prev) => ({
       ...prev,
       portfolio: portfolioPayload,
       social: { ...(prev.social || {}), ...localSocial },
+      resume: resumeFile ?? null,
     }));
     onPrev();
   };
@@ -226,7 +221,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
     if (!file) return;
     if (file.size <= MAX_RESUME_BYTES) {
       setResumeFile(file);
-      syncToParent({});
+      setFormData((prev) => ({ ...prev, resume: file }));
       setError((p) => ({ ...p, resume: null }));
     } else {
       setError((p) => ({ ...p, resume: t("portfolio_social.errors.resume_size") || "Resume too large (max 10MB)" }));
@@ -241,7 +236,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
         resumeInputRef.current.value = "";
       } catch (e) {}
     }
-    syncToParent({}); // persist removal
+    setFormData((prev) => ({ ...prev, resume: null }));
   };
 
   return (
@@ -251,38 +246,20 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
         <CameraIcon className="text-orange-500 h-10 w-10" />
       </div>
 
-      <h2 className="text-xl font-semibold text-center">
-        {t("portfolio_social.title")}
-      </h2>
-      <p className="text-gray-500 text-center mb-4 text-sm font-light">
-        {t("portfolio_social.subtitle")}
-      </p>
+      <h2 className="text-xl font-semibold text-center">{t("portfolio_social.title")}</h2>
+      <p className="text-gray-500 text-center mb-4 text-sm font-light">{t("portfolio_social.subtitle")}</p>
 
-      <p className="bg-purple-50 border border-purple-200 text-orange-600 px-4 py-3 rounded-md mb-6 text-xs font-light text-center">
-        {t("portfolio_social.note_required")}
-      </p>
+      <p className="bg-purple-50 border border-purple-200 text-orange-600 px-4 py-3 rounded-md mb-6 text-xs font-light text-center">{t("portfolio_social.note_required")}</p>
 
       {/* File Upload */}
-      <label className="block text-xs font-semibold">
-        {t("portfolio_social.portfolio_label")}
-      </label>
+      <label className="block text-xs font-semibold">{t("portfolio_social.portfolio_label")}</label>
       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center relative my-2">
         {!preview ? (
-          <label
-            htmlFor="portfolioFile"
-            className="cursor-pointer flex flex-col items-center"
-          >
+          <label htmlFor="portfolioFile" className="cursor-pointer flex flex-col items-center">
             <FaUpload className="text-gray-500 text-2xl mb-2" />
             <span className="text-gray-500">{t("portfolio_social.upload_cta")}</span>
             <span className="text-xs text-gray-400">{t("portfolio_social.upload_hint")}</span>
-            <input
-              ref={fileInputRef}
-              type="file"
-              id="portfolioFile"
-              accept="image/*,video/*"
-              className="hidden"
-              onChange={handleFileChange}
-            />
+            <input ref={fileInputRef} type="file" id="portfolioFile" accept="image/*,video/*" className="hidden" onChange={handleFileChange} />
           </label>
         ) : (
           <div className="relative">
@@ -294,12 +271,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
               </video>
             )}
 
-            <button
-              type="button"
-              onClick={handleRemoveFile}
-              className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-              aria-label={t("portfolio_social.remove_label")}
-            >
+            <button type="button" onClick={handleRemoveFile} className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600" aria-label={t("portfolio_social.remove_label")}>
               <FaTimes size={14} />
             </button>
           </div>
