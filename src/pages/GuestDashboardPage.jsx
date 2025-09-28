@@ -184,6 +184,13 @@ const GuestDashboardPage = () => {
   const handleModalSaved = async (serverResponse) => {
     try {
       await fetchDashboard();
+      getPostData(page)
+      .then(({ posts, meta }) => {
+        setPosts(posts);
+        setMeta(meta);
+      })
+      .catch((err) => console.error(err?.message || t("guest.posts_load_error")))
+      .finally(() => setLoading(false));
     } catch (err) {
       console.warn("Failed to refresh dashboard after modal save:", err);
     }

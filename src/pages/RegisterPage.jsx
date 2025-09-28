@@ -14,6 +14,41 @@ import toast from "react-hot-toast";
 import Cookies from "js-cookie";  
 import { useTranslation } from "../contexts/LanguageProvider";
 
+const STORAGE_KEY_FORM = "artcee_register_form_v1";
+const STORAGE_KEY_STEP = "artcee_register_step_v1";
+
+function makeSerializableForm(form) {
+  if (!form) return {};
+  const copy = { ...form };
+
+  // Remove big non-serializable items (File/Blob). Replace with lightweight metadata if you want.
+  // portfolio could be either File | { url } | string
+  if (copy.portfolio instanceof File || (typeof Blob !== "undefined" && copy.portfolio instanceof Blob)) {
+    copy.portfolio = { __file_meta: { name: copy.portfolio.name, type: copy.portfolio.type, size: copy.portfolio.size } };
+  } else if (copy.portfolio && typeof copy.portfolio === "object" && copy.portfolio.url) {
+    // keep url
+    copy.portfolio = { url: copy.portfolio.url };
+  }
+
+  if (copy.resume instanceof File || (typeof Blob !== "undefined" && copy.resume instanceof Blob)) {
+    copy.resume = { __file_meta: { name: copy.resume.name, type: copy.resume.type, size: copy.resume.size } };
+  }
+
+  // If profile_portfolio contains objects, convert to ids
+  if (Array.isArray(copy.profile_portfolio)) {
+    copy.profile_portfolio = copy.profile_portfolio.map((p) => (typeof p === "object" && p?.id ? p.id : p));
+  }
+
+  // Ensure social is serializable
+  if (copy.social && typeof copy.social === "object") {
+    copy.social = { ...(copy.social || {}) };
+  }
+
+  // Remove any other non-serializable keys if present
+  // (You can add more rules here if you introduce other Blobs/Files)
+  return copy;
+}
+
 const RegisterPage = () => {
   const { t } = useTranslation();
 
@@ -65,9 +100,74 @@ const RegisterPage = () => {
     step: "COMP"
   });
 
-  const [step, setStep] = useState(1);
   const navigate = useNavigate();
   const totalSteps = 6;
+
+  const [step, setStep] = useState(() => {
+    // load step from storage synchronously for initial render if present
+    try {
+      const s = window.localStorage.getItem(STORAGE_KEY_STEP);
+      const n = s ? Number(s) : 1;
+      return Number.isFinite(n) && n >= 1 && n <= 6 ? n : 1;
+    } catch {
+      return 1;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY_FORM);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (saved && typeof saved === "object") {
+        // Merge saved values into formData but keep file fields as null (user may re-upload)
+        setFormData((prev) => {
+          const merged = {
+            ...prev,
+            ...saved,
+            // keep resume/portfolio as null so we don't try to use non-serializable File objects
+            resume: prev.resume ?? null,
+            portfolio: prev.portfolio ?? (saved.portfolio && saved.portfolio.url ? { url: saved.portfolio.url } : null),
+          };
+
+          // if social exists in saved ensure shape
+          merged.social = { ...(prev.social || {}), ...(saved.social || {}) };
+          // if profile_portfolio were saved as ids, ensure they are array of numbers/strings
+          if (Array.isArray(saved.profile_portfolio)) {
+            merged.profile_portfolio = saved.profile_portfolio;
+          }
+
+          return merged;
+        });
+      }
+    } catch (err) {
+      console.warn("Failed to restore register form from storage", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      const serial = makeSerializableForm(formData);
+      window.localStorage.setItem(STORAGE_KEY_FORM, JSON.stringify(serial));
+    } catch (err) {
+      console.warn("Failed to save form state", err);
+    }
+  }, [formData]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY_STEP, String(step));
+    } catch (err) {
+      console.warn("Failed to save step", err);
+    }
+  }, [step]);
+
+  const clearSavedRegistration = () => {
+    try {
+      window.localStorage.removeItem(STORAGE_KEY_FORM);
+      window.localStorage.removeItem(STORAGE_KEY_STEP);
+    } catch {}
+  };
 
   const handleNext = () => setStep((prev) => Math.min(prev + 1, totalSteps));
   const handlePrev = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -79,6 +179,8 @@ const RegisterPage = () => {
     try {
       const res = await register(dataToSend);
       toast.success(t("register.registration_success"));
+
+      clearSavedRegistration();
       navigate("/home");
     } catch (err) {
       const apiMessage =

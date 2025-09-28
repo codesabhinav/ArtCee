@@ -846,7 +846,7 @@
       "bio": "Personal Intro",
       "bio_placeholder": "Tell us about yourself and your creative journey...",
       "error_summary": "Please complete the following required fields:",
-      "next": "Next",
+      "next": "Save & Next",
       "errors": {
         "type": "Account Type is required",
         "full_name": "Full Name is required",
@@ -875,7 +875,7 @@
       "travel_radius_placeholder": "50",
       "error_summary": "Please complete the following required fields:",
       "prev": "Previous",
-      "next": "Next",
+      "next": "Save & Next",
          "api_fallback" : "Couldn't load country/state list — falling back to text input",
       "errors": {
         "city": "City is required",
@@ -903,7 +903,7 @@
       "exp_vision_placeholder": "Share your creative vision and what drives your artistic work...",
       "error_summary": "Please complete the following required fields:",
       "prev": "Previous",
-      "next": "Next",
+      "next": "Save & Next",
       "errors": {
         "personal_intro": "Personal Introduction is required",
         "exp_vision": "Creative Vision is required"
@@ -916,7 +916,7 @@
       "category_prefix": "",
       "category_other": "Other",
       "prev": "Previous",
-      "next": "Next",
+      "next": "Save & Next",
       "error_loading": "Unable to load skills. Please try again later.",
       "errors": {
         "select_one": "Please select at least one option"
@@ -945,7 +945,7 @@
       "dribbble_placeholder": "dribbble.com/yourprofile",
       "error_summary_title": "Please complete the following required fields:",
       "prev": "Previous",
-      "next": "Next",
+      "next": "Save & Next",
       "errors": {
         "file_size": "File must be under 50MB",
         "invalid_url": "Invalid URL or unable to fetch file",
@@ -967,7 +967,7 @@
       "currency_label": "Currency",
       "negotiable_label": "Rates are negotiable",
       "prev": "Previous",
-      "next": "Next",
+      "next": "Save & Next",
       "errors": {
         "at_least_one": "Please enter at least one rate."
       }

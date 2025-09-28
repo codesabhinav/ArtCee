@@ -76,6 +76,7 @@ const ProfileSteps = ({ data = {}, openStepModal }) => {
           return (
             <div
               key={act}
+              onClick={() => openStepModal(act)}
               className={`flex items-center justify-between rounded-lg px-4 py-3 border transition
                 ${done ? "bg-green-50 border-green-200" : "bg-white border-gray-100 hover:shadow-sm"}`}
             >

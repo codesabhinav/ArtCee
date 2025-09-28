@@ -197,7 +197,7 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
               type="submit"
               className={clsx("flex-1 px-4 py-2 font-semibold bg-teal-500 text-white rounded-md text-xs hover:bg-teal-600", { "opacity-60 pointer-events-none": loading })}
             >
-              {loading ? (t("create_post.actions.publishing") || "Publishing...") : t("create_post.actions.publish") || "Publish"}
+              {loading ? ("Publishing...") : t("create_post.actions.publish") || "Publish"}
             </button>
           </div>
         </form>
