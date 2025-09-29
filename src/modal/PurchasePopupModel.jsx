@@ -27,6 +27,17 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
   const [submitError, setSubmitError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
+   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+  
   // reset when modal closed
   useEffect(() => {
     if (!isOpen) {

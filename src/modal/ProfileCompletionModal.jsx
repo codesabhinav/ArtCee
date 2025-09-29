@@ -14,6 +14,17 @@ const ProfileCompletionModal = ({ onClose, progress = 71, sectionsCompleted = "5
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+  
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
     setError(null);

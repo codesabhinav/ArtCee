@@ -13,6 +13,17 @@ const SkillsModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
   const [errors, setErrors] = useState(null);
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) return;
     setErrors(null);
 
@@ -90,12 +101,12 @@ const SkillsModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
       const res = await updateSkills(id, payload);
       onSaved?.(res);
 
-          try {
-      await getGuestDashboardData();
-    } catch (refreshErr) {
-      console.warn("Failed to refresh guest dashboard data:", refreshErr);
-    }
-    toast.success("Data updated");
+      try {
+        await getGuestDashboardData();
+      } catch (refreshErr) {
+        console.warn("Failed to refresh guest dashboard data:", refreshErr);
+      }
+      toast.success("Data updated");
 
       onClose();
 

@@ -70,23 +70,6 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
 
   }, [formData.portfolio, formData.social, formData.resume]);
 
-  // syncToParent now includes resume
-  const syncToParent = (overrides = {}) => {
-    const portfolioPayload =
-      overrides.portfolio ??
-      (localFile ? localFile : localUrl ? { url: localUrl } : null);
-
-    const nextForm = (prev) => ({
-      ...prev,
-      portfolio: portfolioPayload,
-      social: { ...(prev.social || {}), ...localSocial },
-      resume: overrides.resume !== undefined ? overrides.resume : resumeFile ?? null,
-    });
-
-    setFormData(nextForm);
-    return portfolioPayload;
-  };
-
   const handleFileChange = (e) => {
     const file = e.target.files?.[0] ?? null;
     if (!file) return;
@@ -135,35 +118,6 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
     }
 
     setFormData((prev) => ({ ...prev, portfolio: null, resume: prev.resume ?? resumeFile ?? null }));
-  };
-
-  const handleUrlBlur = async () => {
-    const url = (localUrl || "").trim();
-    if (!url) {
-      revokeCurrentObjectUrl();
-      setPreview("");
-      setLocalFile(null);
-      setFormData((prev) => ({ ...prev, portfolio: null, resume: prev.resume ?? resumeFile ?? null }));
-      return;
-    }
-
-    try {
-      new URL(url);
-    } catch {
-      setError((p) => ({
-        ...p,
-        url: t("portfolio_social.errors.invalid_url"),
-      }));
-      return;
-    }
-
-    revokeCurrentObjectUrl();
-
-    setError((p) => ({ ...p, url: null, file: null }));
-    setPreview(url);
-    setLocalFile(null);
-
-    setFormData((prev) => ({ ...prev, portfolio: { url }, resume: prev.resume ?? resumeFile ?? null }));
   };
 
   const handleSocialChange = (key, value) => {
@@ -292,7 +246,6 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
             setLocalUrl(e.target.value);
             setError((p) => ({ ...p, url: null }));
           }}
-          onBlur={handleUrlBlur}
           className={`mt-1 block w-full form-input border text-xs ${error?.url ? "border-red-400" : "border-none"} rounded-md p-2`}
         />
         {error?.url && <div className="text-xs text-red-500 mt-1">{error.url}</div>}
@@ -342,9 +295,6 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
               placeholder={placeholder}
               value={localSocial?.[key] || ""}
               onChange={(e) => handleSocialChange(key, e.target.value)}
-              onBlur={() =>
-                setFormData((p) => ({ ...p, social: { ...(p.social || {}), [key]: localSocial[key] } }))
-              }
               className="mt-1 block w-full form-input border border-none text-xs rounded-md p-2"
             />
             {error?.[key] && <div className="text-xs text-red-500 mt-1">{error[key]}</div>}

@@ -18,6 +18,17 @@ const RegisterUploadPortfolioModal = ({ isOpen, onClose, initialData = {}, onSav
 
   const isSubmittingRef = useRef(false);
 
+   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+  
   useEffect(() => {
     if (!isOpen) return;
 

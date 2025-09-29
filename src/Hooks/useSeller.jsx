@@ -109,6 +109,42 @@ export function createPost(formData) {
     });
 }
 
+export function updatePost(id, formData) {
+  return service
+    .put(`seller/posts/${id}`, formData, {
+      headers: { "Content-Type": "application/json" },
+    })
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to update post";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+
+      throw new Error(message);
+    });
+}
+
+export function deletePost(id) {
+  return service
+    .delete(`seller/posts/${id}`)
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to delete post";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+
+      throw new Error(message);
+    });
+}
+
 export function getPostData(page = 1) {
   return service
     .get(`seller/posts?page=${page}`)

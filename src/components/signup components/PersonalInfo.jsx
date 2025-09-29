@@ -24,7 +24,6 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
     t("personal_info.account_creative"),
   ];
 
-  // Default to BUSINESS if no type is provided
   const [local, setLocal] = useState({
     type: formData.type || STABLE_TYPES.BUSINESS,
     typeLabel: formData.type
@@ -127,21 +126,6 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
     if (errors.type) setErrors((p) => ({ ...p, type: "" }));
   };
 
-  const handleBlur = (e) => {
-    const { name } = e.target;
-    const value = (local[name] ?? "").toString();
-
-    if (name === "type") {
-      writeToParent("type", local.type || STABLE_TYPES.BUSINESS);
-    } else {
-      writeToParent(name, value);
-    }
-
-    if (name === "password") {
-      writeToParent("password_confirmation", value);
-    }
-  };
-
   const handleNext = (ev) => {
     ev.preventDefault();
     if (!validateAll()) {
@@ -210,7 +194,6 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="full_name"
             value={local.full_name}
             onChange={handleChange}
-            onBlur={handleBlur}
             className={`mt-1 block w-full border form-input text-xs ${
               errors.full_name ? "border-red-400" : "border-none"
             } rounded-md p-2`}
@@ -231,7 +214,6 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="email"
             value={local.email}
             onChange={handleChange}
-            onBlur={handleBlur}
             className={`mt-1 block w-full border form-input text-xs ${
               errors.email ? "border-red-400" : "border-none"
             } rounded-md p-2`}
@@ -253,7 +235,6 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="password"
             value={local.password}
             onChange={handleChange}
-            onBlur={handleBlur}
             className={`mt-1 block w-full form-input border text-xs ${
               errors.password ? "border-red-400" : "border-none"
             } rounded-md p-2 pr-10`}
@@ -282,7 +263,6 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="phone"
             value={local.phone}
             onChange={handleChange}
-            onBlur={handleBlur}
             className={`mt-1 block w-full form-input border text-xs ${
               errors.phone ? "border-red-400" : "border-none"
             } rounded-md p-2`}
@@ -304,7 +284,6 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="title"
             value={local.title}
             onChange={handleChange}
-            onBlur={handleBlur}
             className={`mt-1 block w-full form-input border text-xs ${
               errors.title ? "border-red-400" : "border-none"
             } rounded-md p-2`}
@@ -324,7 +303,7 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="bio"
             value={local.bio}
             onChange={handleChange}
-            onBlur={handleBlur}
+            // onBlur={handleBlur}
             rows="3"
             className={`mt-1 block w-full form-input border text-xs ${
               errors.bio ? "border-red-400" : "border-none"

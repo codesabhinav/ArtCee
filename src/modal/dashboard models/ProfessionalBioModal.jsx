@@ -8,7 +8,7 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
   const [form, setForm] = useState({
     title: "",
     bio: "",
-    experience_years: "",
+    // experience_years: "",
     skills: "",
   });
   const [loading, setLoading] = useState(false);
@@ -17,10 +17,21 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
 
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
       setForm({
         title: "",
         bio: "",
-        experience_years: "",
+        // experience_years: "",
         skills: '',
       });
       setErrors(null);
@@ -38,8 +49,8 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
   const validate = () => {
     if (!form.title.trim()) return "Title is required";
     if (!form.bio.trim()) return "Bio is required";
-    if (form.experience_years && !/^\d+$/.test(String(form.experience_years).trim()))
-      return "Experience must be a number (years)";
+    // if (form.experience_years && !/^\d+$/.test(String(form.experience_years).trim()))
+    //   return "Experience must be a number (years)";
     return null;
   };
 
@@ -55,7 +66,7 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
       ...(initialData.uuid ? { uuid: initialData.uuid } : (initialData.id ? { id: initialData.id } : {})),
       title: form.title.trim(),
       bio: form.bio.trim(),
-      experience_years: String(form.experience_years).trim(),
+      // experience_years: String(form.experience_years).trim(),
       skills: form.skills,
     };
 
@@ -65,12 +76,12 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
       setSuccessMessage("Saved successfully");
       onSaved?.(res);
 
-            try {
-      await getGuestDashboardData();
-    } catch (refreshErr) {
-      console.warn("Failed to refresh guest dashboard data:", refreshErr);
-    }
-    toast.success("Data updated");
+      try {
+        await getGuestDashboardData();
+      } catch (refreshErr) {
+        console.warn("Failed to refresh guest dashboard data:", refreshErr);
+      }
+      toast.success("Data updated");
 
       onClose();
     } catch (err) {
@@ -115,7 +126,18 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs">Skills (comma-separated)</label>
+            <input
+              name="skills"
+              value={form.skills}
+              onChange={handleChange}
+              className="w-full form-input px-3 py-2 rounded mt-1 text-xs"
+              placeholder="MYSQL, LARAVEL, React"
+            />
+          </div>
+
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs">Experience (years)</label>
               <input
@@ -126,18 +148,7 @@ const ProfessionalBioModal = ({ isOpen, onClose, initialData = {}, onSaved }) =>
                 placeholder="e.g. 10"
               />
             </div>
-
-            <div>
-              <label className="text-xs">Skills (comma-separated)</label>
-              <input
-                name="skills"
-                value={form.skills}
-                onChange={handleChange}
-                className="w-full form-input px-3 py-2 rounded mt-1 text-xs"
-                placeholder="MYSQL, LARAVEL, React"
-              />
-            </div>
-          </div>
+          </div> */}
 
           <div className="flex justify-end gap-2 text-xs">
             <button type="button" onClick={onClose} className="px-4 py-2 border rounded">Cancel</button>

@@ -198,16 +198,6 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
     }, 0);
   };
 
-  const handleBlurSync = (field) => {
-    if (field === "country") {
-      syncToParent({ country: local.country, country_id: null });
-    } else if (field === "state") {
-      syncToParent({ state: local.state, state_id: null });
-    } else {
-      syncToParent({ [field]: local[field] });
-    }
-  };
-
   const handleNext = (e) => {
     e.preventDefault();
     if (validate()) {
@@ -240,7 +230,6 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
               name="city"
               value={local.city}
               onChange={handleChange}
-              onBlur={() => handleBlurSync("city")}
               className={`mt-1 block w-full form-input border text-xs ${errors.city ? "border-red-400" : "border-none"} rounded-md p-2`}
               placeholder={t("location.city_placeholder")}
             />
@@ -255,7 +244,6 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
                 name="state_id"
                 value={local.state_id ?? ""}
                 onChange={handleStateSelect}
-                onBlur={() => handleBlurSync("state")}
                 className={`mt-1 block w-full form-input border text-xs ${errors.state ? "border-red-400" : "border-none"} rounded-md p-2`}
               >
                 <option value="">{t("location.state_placeholder")}</option>
@@ -271,7 +259,6 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
                 name="state"
                 value={local.state}
                 onChange={handleChange}
-                onBlur={() => handleBlurSync("state")}
                 className={`mt-1 block w-full form-input border text-xs ${errors.state ? "border-red-400" : "border-none"} rounded-md p-2`}
                 placeholder={t("location.state_placeholder")}
               />
@@ -290,7 +277,6 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
               name="country_id"
               value={local.country_id ?? ""}
               onChange={handleCountrySelect}
-              onBlur={() => handleBlurSync("country")}
               className={`mt-1 block w-full form-input border text-xs ${errors.country ? "border-red-400" : "border-none"} rounded-md p-2`}
             >
               <option value="">{t("location.country_placeholder")}</option>
@@ -306,7 +292,6 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
               name="country"
               value={local.country}
               onChange={handleChange}
-              onBlur={() => handleBlurSync("country")}
               className={`mt-1 block w-full form-input border text-xs ${errors.country ? "border-red-400" : "border-none"} rounded-md p-2`}
               placeholder={t("location.country_placeholder")}
             />
@@ -322,7 +307,6 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
             name="address"
             value={local.address}
             onChange={handleChange}
-            onBlur={() => handleBlurSync("address")}
             rows={3}
             className="mt-1 block w-full form-input border text-xs rounded-md p-2"
             placeholder="e.g. Neighborhoods, nearby towns, or regions (optional)"
@@ -341,7 +325,6 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
               name="travel_radius_miles"
               value={local.travel_radius_miles}
               onChange={handleChange}
-              onBlur={() => handleBlurSync("travel_radius_miles")}
               className={`mt-1 block w-full form-input border text-xs ${errors.travel_radius_miles ? "border-red-400" : "border-none"} rounded-md p-2`}
               placeholder={t("location.travel_radius_placeholder")}
             />

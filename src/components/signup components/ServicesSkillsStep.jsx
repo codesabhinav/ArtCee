@@ -144,7 +144,7 @@ const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
                 onKeyDown={handleCustomKeyDown}
-                placeholder="Add custom skills — press Enter or comma to add"
+                placeholder="Add custom skills press Enter or comma to add"
                 className="flex-1 form-input border rounded-md p-2 text-xs"
               />
               <button type="button" onClick={() => addCustomSkill()} className="px-3 py-2 text-xs bg-gray-100 rounded-md border">
@@ -160,7 +160,7 @@ const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
                   <button type="button" onClick={() => removeCustomSkill(s)} className="text-gray-500 text-xs px-1">✕</button>
                 </span>
               ))}
-              {customSkills.length === 0 && <div className="text-xs text-gray-400">Optional — list any other skills</div>}
+              {customSkills.length === 0 && <div className="text-xs text-gray-400">Optional: list any other skills</div>}
             </div>
           </div>
 

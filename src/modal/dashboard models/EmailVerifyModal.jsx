@@ -23,6 +23,17 @@ const EmailVerifyModal = ({ isOpen, onClose, initialData = {}, onVerified }) => 
   const code = values.join("");
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     setValues(Array(OTP_LENGTH).fill(""));
@@ -160,16 +171,16 @@ const EmailVerifyModal = ({ isOpen, onClose, initialData = {}, onVerified }) => 
     setLoadingVerify(true);
     try {
       const payload = { code };
-      const res = await verifyOtp(payload); 
+      const res = await verifyOtp(payload);
       setStatusMessage("OTP verified");
       onVerified?.(res);
 
-           try {
-      await getGuestDashboardData();
-    } catch (refreshErr) {
-      console.warn("Failed to refresh guest dashboard data:", refreshErr);
-    }
-    toast.success("Email verified");
+      try {
+        await getGuestDashboardData();
+      } catch (refreshErr) {
+        console.warn("Failed to refresh guest dashboard data:", refreshErr);
+      }
+      toast.success("Email verified");
 
 
       setTimeout(() => {

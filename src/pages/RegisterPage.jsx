@@ -9,7 +9,7 @@ import PortfolioSocialStep from "../components/signup components/PortfolioSocial
 import RatesPricingStep from "../components/signup components/RatesPricingStep";
 import ProfileSettingsStep from "../components/signup components/ProfileSettingsStep";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "../Hooks/useAuth";
+import { login, register } from "../Hooks/useAuth";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";  
 import { useTranslation } from "../contexts/LanguageProvider";
@@ -21,8 +21,6 @@ function makeSerializableForm(form) {
   if (!form) return {};
   const copy = { ...form };
 
-  // Remove big non-serializable items (File/Blob). Replace with lightweight metadata if you want.
-  // portfolio could be either File | { url } | string
   if (copy.portfolio instanceof File || (typeof Blob !== "undefined" && copy.portfolio instanceof Blob)) {
     copy.portfolio = { __file_meta: { name: copy.portfolio.name, type: copy.portfolio.type, size: copy.portfolio.size } };
   } else if (copy.portfolio && typeof copy.portfolio === "object" && copy.portfolio.url) {
@@ -34,18 +32,14 @@ function makeSerializableForm(form) {
     copy.resume = { __file_meta: { name: copy.resume.name, type: copy.resume.type, size: copy.resume.size } };
   }
 
-  // If profile_portfolio contains objects, convert to ids
   if (Array.isArray(copy.profile_portfolio)) {
     copy.profile_portfolio = copy.profile_portfolio.map((p) => (typeof p === "object" && p?.id ? p.id : p));
   }
 
-  // Ensure social is serializable
   if (copy.social && typeof copy.social === "object") {
     copy.social = { ...(copy.social || {}) };
   }
 
-  // Remove any other non-serializable keys if present
-  // (You can add more rules here if you introduce other Blobs/Files)
   return copy;
 }
 
@@ -104,7 +98,6 @@ const RegisterPage = () => {
   const totalSteps = 6;
 
   const [step, setStep] = useState(() => {
-    // load step from storage synchronously for initial render if present
     try {
       const s = window.localStorage.getItem(STORAGE_KEY_STEP);
       const n = s ? Number(s) : 1;
@@ -120,19 +113,15 @@ const RegisterPage = () => {
       if (!raw) return;
       const saved = JSON.parse(raw);
       if (saved && typeof saved === "object") {
-        // Merge saved values into formData but keep file fields as null (user may re-upload)
         setFormData((prev) => {
           const merged = {
             ...prev,
             ...saved,
-            // keep resume/portfolio as null so we don't try to use non-serializable File objects
             resume: prev.resume ?? null,
             portfolio: prev.portfolio ?? (saved.portfolio && saved.portfolio.url ? { url: saved.portfolio.url } : null),
           };
 
-          // if social exists in saved ensure shape
           merged.social = { ...(prev.social || {}), ...(saved.social || {}) };
-          // if profile_portfolio were saved as ids, ensure they are array of numbers/strings
           if (Array.isArray(saved.profile_portfolio)) {
             merged.profile_portfolio = saved.profile_portfolio;
           }
@@ -178,7 +167,17 @@ const RegisterPage = () => {
 
     try {
       const res = await register(dataToSend);
-      toast.success(t("register.registration_success"));
+       try {
+        await login({ email: dataToSend.email, password: dataToSend.password });
+
+        toast.success(t("register.registration_success"));
+      } catch (loginErr) {
+        console.error("Auto-login after register failed:", loginErr);
+        toast.success(t("register.registration_success"));
+        toast.error(
+          loginErr?.message || t("register.auto_login_failed") || "Registration succeeded but automatic login failed. Please login manually."
+        );
+      }
 
       clearSavedRegistration();
       navigate("/home");

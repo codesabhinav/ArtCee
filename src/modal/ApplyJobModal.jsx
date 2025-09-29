@@ -25,6 +25,17 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
 
   if (!open || !job) return null;
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   const buildPayload = (methodTitle = null) => ({
     job_id: job?.job_id || "",
     title: job?.title || "",

@@ -3,23 +3,17 @@ import toast from "react-hot-toast";
 import { FaUser, FaShieldAlt, FaCalendarAlt, FaUserCheck } from "react-icons/fa";
 import { useTranslation } from "../../contexts/LanguageProvider";
 
-/**
- * safeSplitDOB: accepts a string in either YYYY-MM-DD or DD-MM-YYYY (or empty)
- * and returns [DD, MM, YYYY] or [] if invalid.
- */
 const safeSplitDOB = (dob) => {
   if (typeof dob !== "string" || !dob.trim()) return [];
   const parts = dob.split("-");
   if (parts.length !== 3) return [];
 
-  // If first part looks like year (4 digits) -> assume YYYY-MM-DD
   if (parts[0].length === 4) {
     const [y, m, d] = parts;
     if (!y || !m || !d) return [];
     return [String(Number(d)).padStart(2, "0"), String(Number(m)).padStart(2, "0"), String(y)];
   }
 
-  // Otherwise assume DD-MM-YYYY
   const [d, m, y] = parts;
   if (!d || !m || !y) return [];
   return [String(Number(d)).padStart(2, "0"), String(Number(m)).padStart(2, "0"), String(y)];
@@ -44,7 +38,6 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
     const dtype = formData?.date_of_birth_type || "date";
     setMethod(dtype === "age" ? "declaration" : "dob");
 
-    // Normalize any incoming DOB into local selects
     const parts = safeSplitDOB(formData?.date_of_birth || "");
     const [dayPart, monthPart, yearPart] = parts.length === 3 ? parts : ["", "", ""];
     setLocalDay(dayPart || "");
@@ -78,7 +71,7 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
   };
 
   const handleVerify = async () => {
-    if (loading) return; // prevent double clicks
+    if (loading) return;
     setLoading(true);
     setError("");
 
@@ -87,7 +80,6 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
       let next = { ...(formData || {}) };
 
       if (method === "dob") {
-        // ensure all parts selected
         if (!localDay || !localMonth || !localYear) {
           const msg = t("age_verification.errors.invalid_dob");
           setError(msg);
@@ -107,7 +99,6 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
 
         const monthStr = String(Number(localMonth)).padStart(2, "0");
         const dayStr = String(Number(localDay)).padStart(2, "0");
-        // Use ISO YYYY-MM-DD as canonical payload format
         const dobIso = `${dayStr}-${monthStr}-${localYear}`;
 
         next = {
@@ -117,7 +108,6 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
           age: String(userAge),
         };
       } else {
-        // declaration by age
         if (!localAge) {
           const msg = t("age_verification.errors.enter_age");
           setError(msg);
@@ -151,15 +141,12 @@ const AgeVerificationModal = ({ isOpen, onClose, onSubmit, formData = {}, setFor
         return;
       }
 
-      // Provide immediate success toast (optional)
       toast.success(t("age_verification.success"));
 
-      // IMPORTANT: pass the prepared payload `next` to onSubmit so parent gets correct data immediately
       if (typeof onSubmit === "function") {
         await onSubmit(next);
       }
 
-      // After successful submit, update parent form data (optional, won't race with parent submit)
       if (typeof setFormData === "function") {
         setFormData((prev) => ({ ...(prev || {}), ...next }));
       }

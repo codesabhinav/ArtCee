@@ -18,6 +18,18 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
 
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+
+  useEffect(() => {
+    if (isOpen) {
       setForm({
         full_name: initialData.full_name || "",
         email: initialData.email || "",
@@ -52,10 +64,10 @@ const BasicInfoModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
       // Notify parent that save succeeded; parent will refresh dashboard
       onSaved?.(res);
 
-      toast.success( "Profile updated");
+      toast.success("Profile updated");
       onClose();
     } catch (err) {
-      setErrors(err?.message );
+      setErrors(err?.message);
     } finally {
       setLoading(false);
     }

@@ -15,6 +15,17 @@ const UploadProfileModal = ({ isOpen, onClose, initialData = {}, onUploaded, uui
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) {
       setFile(null);
       setPreviewUrl(null);
@@ -68,7 +79,7 @@ const UploadProfileModal = ({ isOpen, onClose, initialData = {}, onUploaded, uui
         onProgress: setProgress,
       });
 
-      onUploaded?.(result);
+      onSaved();
       try {
         await getGuestDashboardData();
       } catch (refreshErr) {

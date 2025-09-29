@@ -1,11 +1,11 @@
-import { XMarkIcon, PencilIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import CustomDropdown from "../components/CustomDropdown";
 import clsx from "clsx";
-import { createPost } from "../Hooks/useSeller";
+import { createPost, updatePost } from "../Hooks/useSeller";
 
-export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
+export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess, editingPost }) {
   const { t } = useTranslation();
 
   const [title, setTitle] = useState("");
@@ -17,6 +17,37 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    if (editingPost) {
+      setTitle(editingPost.title || "");
+      setType(editingPost.type || "BLOG_ARTICLE");
+      setBrief(editingPost.dsc || editingPost.brief || "");
+      setContent(editingPost.content || "");
+      setImageUrl(editingPost.image_url || editingPost.image || "");
+    } else {
+      // reset
+      setTitle("");
+      setType("BLOG_ARTICLE");
+      setBrief("");
+      setContent("");
+      setTags("");
+      setImageUrl("");
+      setError(null);
+    }
+  }, [isOpen, editingPost]);
+
   if (!isOpen) return null;
 
   const typeOptions = [
@@ -26,7 +57,6 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
     { label: t("create_post.form.type_tutorial") || "Tutorial", value: "TUTORIAL" },
     { label: t("create_post.form.type_inspiration") || "Inspiration", value: "INSPIRATION" },
   ];
-
   const dropdownLabels = typeOptions.map((o) => o.label);
 
   function labelToValue(label) {
@@ -57,8 +87,13 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
       fd.append("tags", tags);
       fd.append("image_url", imageUrl);
 
-      const res = await createPost(fd);
-      console.log("Post created:", res);
+      let res;
+      if (editingPost && editingPost.id) {
+        res = await updatePost(editingPost.id, fd);
+      } else {
+        res = await createPost(fd);
+      }
+
       if (typeof onSuccess === "function") onSuccess(res);
       setIsOpen(false);
       setTitle("");
@@ -68,7 +103,7 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
       setImageUrl("");
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to create post");
+      setError(err.message || "Failed to save post");
     } finally {
       setLoading(false);
     }
@@ -77,7 +112,6 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white w-full max-w-md rounded-lg shadow-lg p-6 relative overflow-y-auto max-h-[90vh] scrollbar-hide">
-        {/* Close button */}
         <button
           onClick={() => setIsOpen(false)}
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
@@ -86,10 +120,10 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
           <XMarkIcon className="h-6 w-6" />
         </button>
 
-        {/* Header */}
-        <h2 className="text-md font-semibold mb-4">{t("create_post.title") || "Create Post"}</h2>
+        <h2 className="text-md font-semibold mb-4">
+          {editingPost ? ("Edit Post") : (t("create_post.title") || "Create Post")}
+        </h2>
 
-        {/* Features */}
         <div className="bg-blue-50 text-gray-700 border border-blue-200 p-4 rounded-md mb-6">
           <p className="mb-1 font-semibold">{t("create_post.features.title") || "What you can do"}</p>
           <ul className="space-y-1 text-xs font-regular text-gray-500">
@@ -102,9 +136,7 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
 
         {error && <div className="text-sm text-red-600 mb-3">{error}</div>}
 
-        {/* Form */}
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Post Title + Post Type in one row */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-medium">{t("create_post.form.title_label") || "Title"}</label>
@@ -184,7 +216,6 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
             />
           </div>
 
-          {/* Actions */}
           <div className="flex justify-center gap-3 pt-2">
             <button
               type="button"
@@ -197,7 +228,7 @@ export default function CreatePostPopupModel({ isOpen, setIsOpen, onSuccess }) {
               type="submit"
               className={clsx("flex-1 px-4 py-2 font-semibold bg-teal-500 text-white rounded-md text-xs hover:bg-teal-600", { "opacity-60 pointer-events-none": loading })}
             >
-              {loading ? ("Publishing...") : t("create_post.actions.publish") || "Publish"}
+              {loading ? (editingPost ? "Saving..." : "Publishing...") : (editingPost ? ("Save") : (t("create_post.actions.publish") || "Publish"))}
             </button>
           </div>
         </form>

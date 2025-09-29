@@ -138,7 +138,7 @@ const ProfileSettingsStep = ({ formData, setFormData, onPrev, onSubmit }) => {
         </button>
         <button
           type="button"
-          onClick={() => onSubmit(formData)} // Skip for now -> submit current formData
+           onClick={() => setShowModal(true)}
           className="px-4 py-2 bg-white border text-xs rounded-md font-semibold hover:bg-gray-200"
         >
           Skip for Now

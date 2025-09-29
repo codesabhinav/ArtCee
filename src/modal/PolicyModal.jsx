@@ -23,6 +23,17 @@ const PolicyModal = ({ open, onClose, initialTab = "overview" }) => {
   const dialogRef = useRef(null);
   const previouslyFocused = useRef(null);
 
+   useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   useEffect(() => {
     if (open) {
       setActive(initialTab);

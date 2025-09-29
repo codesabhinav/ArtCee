@@ -1,37 +1,6 @@
 import service from "../Helper/Axios";
 import Cookies from 'js-cookie';
 
-// export function login(formData) {
-//   return service
-//     .post(`auth/login`, formData)
-//     .then((res) => {
-//       const root = res.data ?? {};
-//       const payload = root.data ?? root;
-
-//       const token = payload?.token;
-//       if (token) {
-//         Cookies.set("token", token, {
-//           expires: 365,
-//           secure: true,
-//           sameSite: "Strict",
-//         });
-//       }
-
-//       return res.data;
-//     })
-//     .catch((error) => {
-//       let errorMessage = "Failed to login";
-//       if (error.response?.data?.errors) {
-//         const errors = Object.values(error.response.data.errors).flat();
-//         errorMessage = errors.length > 0 ? errors[0] : errorMessage;
-//       } else if (error.response?.data?.message) {
-//         errorMessage = error.response.data.message;
-//       }
-//       throw new Error(errorMessage);
-//     });
-// }
-
-
 export function login(formData) {
   return service
     .post(`auth/login`, formData)
@@ -76,7 +45,6 @@ export function register(formData) {
 
     const value = formData[key];
 
-    // 1) If it's a File/Blob (resume, portfolio file, etc.), append as file
     if (typeof File !== "undefined" && value instanceof File) {
       payload.append(key, value);
       continue;
@@ -86,13 +54,11 @@ export function register(formData) {
       continue;
     }
 
-    // 2) Special handling for portfolio that may be an object like { url: "..." }
     if (key === "portfolio") {
       if (value === null) {
         continue;
       }
       if (typeof value === "string") {
-        // raw url string
         payload.append("portfolio[url]", value);
       } else if (value instanceof File || (typeof Blob !== "undefined" && value instanceof Blob)) {
         payload.append("portfolio", value);
@@ -102,10 +68,8 @@ export function register(formData) {
       continue;
     }
 
-    // 3) Arrays -> append as key[]
     if (Array.isArray(value)) {
       value.forEach((val) => {
-        // if array items might be files:
         if (typeof File !== "undefined" && val instanceof File) {
           payload.append(`${key}[]`, val);
         } else {
@@ -115,23 +79,19 @@ export function register(formData) {
       continue;
     }
 
-    // 4) Nested object (social): append as social[key]=value
     if (typeof value === "object") {
       for (const nestedKey in value) {
-        // skip undefined/null nested values
         if (value[nestedKey] === null || value[nestedKey] === undefined) continue;
         payload.append(`${key}[${nestedKey}]`, value[nestedKey]);
       }
       continue;
     }
 
-    // 5) primitive scalar (string/number/boolean)
     payload.append(key, value);
   }
 
-  // remove manual Content-Type so browser/axios can set boundary for multipart
   return service
-    .post(`auth/register`, payload /* no header override */)
+    .post(`auth/register`, payload)
     .then((res) => {
       const data = res.data;
       if (data?.token) {

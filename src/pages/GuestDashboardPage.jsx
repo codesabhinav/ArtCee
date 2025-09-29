@@ -19,8 +19,8 @@ import { Link, useNavigate } from "react-router-dom";
 import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
 import SpinnerProvider from "../components/SpinnerProvider";
-import { getGuestDashboardData, getPostData, JobsData } from "../Hooks/useSeller";
-import { Crown, LogOut, Star } from "lucide-react";
+import { deletePost, getGuestDashboardData, getPostData, JobsData } from "../Hooks/useSeller";
+import { Crown, LogOut, Star, TrashIcon } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
 import UploadProfileModal from "../modal/dashboard models/UploadProfileModal";
@@ -38,13 +38,14 @@ const GuestDashboardPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [posts, setPosts] = useState([]);
+  // const [posts, setPosts] = useState([]);
   const [meta, setMeta] = useState(null);
   const [page, setPage] = useState(1);
   const [isPhotoOpen, setPhotoIsOpen] = useState(false);
   const [isWorkOpen, setWorkOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState(null);
 
-  const [jobsList, setJobsList] = useState([]);
+  // const [jobsList, setJobsList] = useState([]);
   const [jobsLoading, setJobsLoading] = useState(false);
   const [jobsError, setJobsError] = useState(null);
 
@@ -72,46 +73,44 @@ const GuestDashboardPage = () => {
     };
   }, [fetchDashboard]);
 
-  // fetch jobs on page load
-  useEffect(() => {
-    let mounted = true;
-    setJobsLoading(true);
-    setJobsError(null);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   getPostData(page)
+  //     .then(({ posts, meta }) => {
+  //       setPosts(posts);
+  //       setMeta(meta);
+  //     })
+  //     .catch((err) => console.error(err?.message || t("guest.posts_load_error")))
+  //     .finally(() => setLoading(false));
+  // }, [page, t]);
 
-    JobsData({ page: 1 })
-      .then(({ jobs }) => {
-        if (!mounted) return;
-        setJobsList(jobs || []);
-      })
-      .catch((err) => {
-        if (!mounted) return;
-        setJobsError(err?.message || "Failed to load jobs");
-      })
-      .finally(() => {
-        if (!mounted) return;
-        setJobsLoading(false);
-      });
+  function openCreate() {
+    setEditingPost(null);
+    setIsOpen(true);
+  }
 
-    return () => { mounted = false; };
-  }, []);
+  function openEdit(post) {
+    setEditingPost(post);
+    setIsOpen(true);
+  }
 
-  useEffect(() => {
-    setLoading(true);
-    getPostData(page)
-      .then(({ posts, meta }) => {
-        setPosts(posts);
-        setMeta(meta);
-      })
-      .catch((err) => console.error(err?.message || t("guest.posts_load_error")))
-      .finally(() => setLoading(false));
-  }, [page, t]);
+  async function handleDelete(postId) {
+    const ok = window.confirm("Are you sure you want to delete this post?");
+    if (!ok) return;
 
+    try {
+      await deletePost(postId);
+      // setPosts(prev => prev.filter(p => p.id !== postId));
+    } catch (err) {
+      console.error("Failed to delete:", err);
+      alert(err.message || "Failed to delete post");
+    }
+  }
   const user = payload?.user ?? {};
   const seller = payload?.seller ?? null;
   const sellerUser = seller?.user ?? user?.seller?.user ?? null;
   const profile = payload?.data?.profile ?? user?.profile ?? sellerUser?.profile ?? null;
 
-  // location (prefer user.location, fall back to seller.user.location)
   const location = user?.location ?? sellerUser?.location ?? null;
   const city = location?.city?.name ?? null;
   const state = location?.state?.name ?? null;
@@ -143,6 +142,8 @@ const GuestDashboardPage = () => {
   const totalReviews = profile?.total_reviews ?? 0;
 
   const memberSince = new Date(user?.created_at ?? profile?.created_at ?? Date.now()).toLocaleDateString();
+  const jobsList = payload?.jobs ?? [];
+  const posts = payload?.posts ?? [];
 
 
   if (loading) {
@@ -184,13 +185,13 @@ const GuestDashboardPage = () => {
   const handleModalSaved = async (serverResponse) => {
     try {
       await fetchDashboard();
-      getPostData(page)
-      .then(({ posts, meta }) => {
-        setPosts(posts);
-        setMeta(meta);
-      })
-      .catch((err) => console.error(err?.message || t("guest.posts_load_error")))
-      .finally(() => setLoading(false));
+      // getPostData(page)
+      //   .then(({ posts, meta }) => {
+      //     setPosts(posts);
+      //     setMeta(meta);
+      //   })
+      //   .catch((err) => console.error(err?.message || t("guest.posts_load_error")))
+      //   .finally(() => setLoading(false));
     } catch (err) {
       console.warn("Failed to refresh dashboard after modal save:", err);
     }
@@ -307,7 +308,7 @@ const GuestDashboardPage = () => {
                 </h3>
 
                 <button
-                  onClick={() => setIsOpen(true)}
+                  onClick={openCreate}
                   className="bg-teal-500 text-white px-4 py-2 text-xs rounded-md hover:bg-teal-600 w-full sm:w-auto"
                 >
                   + {t("guest.create_post")}
@@ -332,10 +333,28 @@ const GuestDashboardPage = () => {
                             <p className="text-xs text-gray-600 mt-1 truncate">{post.dsc}</p>
                           </div>
 
-                          <div className="mt-2 sm:mt-0">
+                          <div className="mt-2 sm:mt-0 flex items-center gap-2">
                             <span className="inline-block text-[10px] px-2 py-1 bg-yellow-100 max-h-[22px] text-yellow-600 rounded-md whitespace-nowrap mx-auto sm:mx-0">
                               {post.type}
                             </span>
+
+                            <button
+                              onClick={() => openEdit(post)}
+                              className="p-1 rounded hover:bg-gray-100"
+                              title="Edit"
+                              aria-label="Edit"
+                            >
+                              <PencilIcon className="h-4 w-4 text-gray-600" />
+                            </button>
+
+                            <button
+                              onClick={() => handleDelete(post.id)}
+                              className="p-1 rounded hover:bg-gray-100"
+                              title="Delete"
+                              aria-label="Delete"
+                            >
+                              <TrashIcon className="h-4 w-4 text-red-500" />
+                            </button>
                           </div>
                         </div>
 
@@ -597,7 +616,7 @@ const GuestDashboardPage = () => {
                 <li onClick={() => setWorkOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
                   <span className="flex items-center gap-2"><BiCloudUpload className="h-4 w-4" /> {t("guest.quick.upload_work")}</span>
                 </li>
-                <li onClick={() => setIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                <li onClick={openCreate} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
                   <span className="flex items-center gap-2"><PencilIcon className="h-4 w-4" /> {t("guest.quick.write_blog")}</span>
                 </li>
                 <li onClick={() => navigate("/jobs")} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
@@ -612,9 +631,14 @@ const GuestDashboardPage = () => {
         </div>
       </div>
 
-      <CreatePostPopupModel isOpen={isOpen} setIsOpen={setIsOpen} onSuccess={handleModalSaved}/>
+      <CreatePostPopupModel
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onSuccess={handleModalSaved}
+        editingPost={editingPost}
+      />
 
-      <UploadProfileModal isOpen={isPhotoOpen} onClose={() => setPhotoIsOpen(false)} uuid={uuid} onSaved={handleModalSaved}/>
+      <UploadProfileModal isOpen={isPhotoOpen} onClose={() => setPhotoIsOpen(false)} uuid={uuid} onSaved={handleModalSaved} />
 
       <PortfolioModal isOpen={isWorkOpen} onClose={() => setWorkOpen(false)} initialData={{
         ...user,

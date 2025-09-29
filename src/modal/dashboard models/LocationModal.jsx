@@ -11,6 +11,17 @@ const LocationModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
 
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
       setForm({
         country: initialData.location.country.name || initialData.country_name || "",
         state: initialData.location.state.name || initialData.state_name || "",
@@ -33,12 +44,12 @@ const LocationModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
     try {
       const res = await updateLocation(initialData.uuid || initialData.id, form);
       onSaved?.(res);
-       try {
-      await getGuestDashboardData();
-    } catch (refreshErr) {
-      console.warn("Failed to refresh guest dashboard data:", refreshErr);
-    }
-    toast.success( "Data updated");
+      try {
+        await getGuestDashboardData();
+      } catch (refreshErr) {
+        console.warn("Failed to refresh guest dashboard data:", refreshErr);
+      }
+      toast.success("Data updated");
       onClose();
     } catch (err) {
       setErr(err.message || "Failed to update location");

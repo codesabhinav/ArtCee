@@ -106,20 +106,13 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
     if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
   };
 
-  const handleBlurSync = (field) => {
-    syncToParent({ [field]: local[field] });
-  };
-
-  // When CustomDropdown returns a selected label string:
   const handleLevelDropdownChange = (selectedLabel) => {
-    // If placeholder selected, treat as no selection
     if (!selectedLabel || selectedLabel === placeholderLabel) {
       setLocal((p) => ({ ...p, experience_in_level: "", experience_in_levelLabel: placeholderLabel }));
       syncToParent({ experience_in_level: "" });
       return;
     }
 
-    // Map selected translated label -> stable key
     let stable = "";
     if (selectedLabel === t("professional.level_entry")) stable = LEVEL_KEYS.ENTRY;
     else if (selectedLabel === t("professional.level_mid")) stable = LEVEL_KEYS.MID;
@@ -180,7 +173,7 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
               name="experience_in_year"
               value={local.experience_in_year ?? ""}
               onChange={handleChange}
-              onBlur={() => handleBlurSync("experience_in_year")}
+              // onBlur={() => handleBlurSync("experience_in_year")}
               className="mt-1 block w-full form-input border text-xs rounded-md p-2"
               placeholder={t("professional.years_placeholder")}
             />
@@ -207,7 +200,6 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
             rows="3"
             value={local.personal_intro ?? ""}
             onChange={handleChange}
-            onBlur={() => handleBlurSync("personal_intro")}
             className={`mt-1 block w-full form-input border text-xs ${errors.personal_intro ? "border-red-400" : "border-none"} rounded-md p-2`}
             placeholder={t("professional.personal_intro_placeholder")}
           />
@@ -221,7 +213,6 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
             rows="3"
             value={local.exp_vision ?? ""}
             onChange={handleChange}
-            onBlur={() => handleBlurSync("exp_vision")}
             className={`mt-1 block w-full form-input border text-xs ${errors.exp_vision ? "border-red-400" : "border-none"} rounded-md p-2`}
             placeholder={t("professional.exp_vision_placeholder")}
           />
