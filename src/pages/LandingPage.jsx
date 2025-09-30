@@ -85,9 +85,9 @@ const LandingPage = () => {
         {/* Footer */}
         <p className="text-gray-400 text-xs mt-8">
           {t("landing.footer_prefix")}&nbsp;
-          <a href="#" className="underline text-teal-500">
+          <button className="text-teal-500">
             {t("landing.terms")}
-          </a>
+          </button>
           &nbsp;{t("landing.and")}&nbsp;
           <button onClick={() => setShowPolicy(true)} className="underline text-teal-500">
             {t("landing.privacy")}

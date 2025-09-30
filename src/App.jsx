@@ -21,6 +21,7 @@ import GuestDashboardPage from './pages/GuestDashboardPage'
 import LandingPage from './pages/LandingPage'
 import PaymentSuccessPage from './pages/PaymentSuccessPage'
 import PaymentCancelPage from './pages/PaymentCancelPage'
+import ForgotPasswordModal from './modal/ForgotPasswordModal'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<MainLayout />}>
               <Route path='home' element={<HomePage />} />
               <Route path="login" element={<LoginPage />} />
+              <Route path="forgot-password" element={<ForgotPasswordModal />} />
               <Route path="register" element={<RegisterPage />} />
               <Route path="creatives" element={<CreativeDirectory />} />
               <Route path="business-directory" element={<BusinessDirectory />} />

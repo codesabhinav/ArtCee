@@ -8,6 +8,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import ProfileCompletionModal from "../modal/ProfileCompletionModal";
 import { useTranslation } from "../contexts/LanguageProvider";
 import Cookies from "js-cookie";
+import ForgotPasswordModal from "../modal/ForgotPasswordModal";
 
 const LoginPage = ({ onClose }) => {
   const { t } = useTranslation();
@@ -19,6 +20,7 @@ const LoginPage = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
 
   const saveTokenAndNotify = (resp) => {
     const token =
@@ -164,7 +166,13 @@ const LoginPage = ({ onClose }) => {
                 <input type="checkbox" className="mr-1 rounded-md" />{" "}
                 {t("login.remember_me")}
               </label>
-              <button type="button" className="text-teal-500 hover:underline">
+              <button
+                type="button"
+                className="text-teal-500 hover:underline"
+                onClick={() => {
+                  navigate("/forgot-password");
+                }}
+              >
                 {t("login.forgot_password")}
               </button>
             </div>

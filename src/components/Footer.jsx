@@ -22,9 +22,9 @@ const Footer = () => {
             <button onClick={() => setShowPolicy(true)} className="hover:underline">
               {t("footer.privacy_policy")}
             </button>
-            <Link to="/terms" className="hover:underline">
+            <button>
               {t("footer.terms")}
-            </Link>
+            </button>
           </div>
         </div>
       </div>

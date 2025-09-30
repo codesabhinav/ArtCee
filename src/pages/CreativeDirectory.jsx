@@ -33,7 +33,6 @@ const CreativeDirectory = () => {
   const [filterLabelToKeyMap, setFilterLabelToKeyMap] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
-  const [budgetRange, setBudgetRange] = useState({ min: 0, max: 10000 });
   const [selectedIndustries, setSelectedIndustries] = useState([]);
   const [selectedUuid, setSelectedUuid] = useState(null);
 
@@ -104,14 +103,6 @@ const CreativeDirectory = () => {
         setSelectedFilters(defaults);
         setDefaultSelectedFilters(defaults);
 
-        // NEW: initialize budgetRange and selectedIndustries from meta if available
-        if (meta.budged_range) {
-          setBudgetRange({
-            min: typeof meta.budged_range.min === "number" ? meta.budged_range.min : 0,
-            max: typeof meta.budged_range.max === "number" ? meta.budged_range.max : 10000,
-            sliderValue: typeof meta.budged_range.max === "number" ? meta.budged_range.max : 10000,
-          });
-        }
         setSelectedIndustries([]); // default empty
       } catch (err) {
         console.error("Failed to load filters:", err);
@@ -139,11 +130,6 @@ const CreativeDirectory = () => {
       if (mapped) params.order_by_rate = mapped;
     }
 
-    if (budgetRange && (budgetRange.min != null || budgetRange.max != null)) {
-      if (Number.isFinite(Number(budgetRange.min))) params["budged_range[min]"] = Number(budgetRange.min);
-      if (Number.isFinite(Number(budgetRange.max))) params["budged_range[max]"] = Number(budgetRange.max);
-    }
-
     if (Array.isArray(selectedIndustries) && selectedIndustries.length > 0) {
       params.industries = selectedIndustries;
     }
@@ -169,7 +155,7 @@ const CreativeDirectory = () => {
     if (filtersConfigDynamic.length > 0 || Object.keys(filtersMeta).length > 0) {
       fetchData();
     }
-  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, budgetRange, selectedIndustries, filtersMeta]);
+  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, selectedIndustries, filtersMeta]);
 
   const clearFilter = (label) => {
     setSelectedFilters((prev) => ({
@@ -181,14 +167,6 @@ const CreativeDirectory = () => {
   const clearAllFilters = () => {
     setSelectedFilters(defaultSelectedFilters);
     setSelectedIndustries([]);
-    if (filtersMeta?.budged_range) {
-      setBudgetRange({
-        min: typeof filtersMeta.budged_range.min === "number" ? filtersMeta.budged_range.min : 0,
-        max: typeof filtersMeta.budged_range.max === "number" ? filtersMeta.budged_range.max : 10000,
-      });
-    } else {
-      setBudgetRange({ min: 0, max: 10000 });
-    }
   };
 
   const getLocationText = (creative) => {
@@ -298,8 +276,6 @@ const CreativeDirectory = () => {
       ? selectedIndustries.map((id) => filtersMeta.industries[id] || id)
       : [];
 
-    if (active.length === 0 && industryLabels.length === 0 && (budgetRange.min == null && budgetRange.max == null)) return null;
-
     return (
       <div className="flex flex-wrap gap-2 items-center">
         {active.map(([label, val]) => (
@@ -314,12 +290,6 @@ const CreativeDirectory = () => {
             <span>{t("creative.industries")}: <strong className="ml-1">{lab}</strong></span>
           </div>
         ))}
-
-        {(budgetRange.min !== undefined || budgetRange.max !== undefined) && (
-          <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md text-xs">
-            <span>{t("creative.budget_range")}: <strong className="ml-1">${budgetRange.min} - ${budgetRange.max}</strong></span>
-          </div>
-        )}
 
         <button onClick={clearAllFilters} className="ml-2 text-xs border px-3 py-1.5 rounded-md font-semibold hover:bg-gray-100">
           {t("creative.clear_all")}
@@ -406,7 +376,7 @@ const CreativeDirectory = () => {
             <div className="grid grid-cols-1  sm:grid-cols-1
            lg:grid-cols-2 gap-6 w-full">
               {loading ? (
-                <p className="text-gray-500"><SpinnerProvider /></p>
+                <div className="text-gray-500"><SpinnerProvider /></div>
               ) : creatives.length === 0 ? (
                 <p className="text-gray-500">{t("creative.no_creatives")}</p>
               ) : (

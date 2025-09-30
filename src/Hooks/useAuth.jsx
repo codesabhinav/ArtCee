@@ -173,7 +173,6 @@ export function sendOtp() {
     });
 }
 
-
 export function verifyOtp(payload) {
   return service
     .post("auth/verify/opt", payload, {
@@ -229,4 +228,64 @@ export async function deletePortfolio(id) {
     const msg = err?.response?.data?.message || err?.message || "Failed to delete portfolio";
     throw new Error(msg);
   }
+}
+
+export function forgotSendOtp(payload) {
+  return service
+    .post("auth/forgot-password", payload)
+    .then((res) => res.data)
+    .catch((error) => {
+      const respData = error?.response?.data ?? {};
+      const apiErrors = respData?.errors;
+      const nestedErrorMessage = respData?.error?.message;
+      let message = respData?.message || nestedErrorMessage || error?.message || "Failed to send OTP";
+
+      if (apiErrors && typeof apiErrors === "object") {
+        const allErrors = Object.values(apiErrors).flat();
+        if (allErrors.length) {
+          message = allErrors.join("\n");
+        }
+      }
+      throw new Error(message);
+    });
+}
+
+export function forgotVerifyOtp(payload) {
+  return service
+    .post("auth/verify-opt", payload)
+    .then((res) => res.data)
+    .catch((error) => {
+      const respData = error?.response?.data ?? {};
+      const apiErrors = respData?.errors;
+      const nestedErrorMessage = respData?.error?.message;
+      let message = respData?.message || nestedErrorMessage || error?.message || "Failed to verify OTP";
+
+      if (apiErrors && typeof apiErrors === "object") {
+        const allErrors = Object.values(apiErrors).flat();
+        if (allErrors.length) {
+          message = allErrors.join("\n");
+        }
+      }
+      throw new Error(message);
+    });
+}
+
+export function resetPassword(payload) {
+  return service
+    .post("auth/change-password", payload)
+    .then((res) => res.data)
+    .catch((error) => {
+      const respData = error?.response?.data ?? {};
+      const apiErrors = respData?.errors;
+      const nestedErrorMessage = respData?.error?.message;
+      let message = respData?.message || nestedErrorMessage || error?.message || "Failed to verify OTP";
+
+      if (apiErrors && typeof apiErrors === "object") {
+        const allErrors = Object.values(apiErrors).flat();
+        if (allErrors.length) {
+          message = allErrors.join("\n");
+        }
+      }
+      throw new Error(message);
+    });
 }

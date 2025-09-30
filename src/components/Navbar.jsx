@@ -232,7 +232,7 @@ const Navbar = () => {
           ) : (
             <button
               onClick={() => {
-                setShowModal(true);
+                navigate("/login")
                 setMenuOpen(false);
               }}
               className="flex items-center px-3 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition"

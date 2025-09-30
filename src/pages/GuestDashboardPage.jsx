@@ -19,7 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
 import SpinnerProvider from "../components/SpinnerProvider";
-import { deletePost, getGuestDashboardData, getPostData, JobsData } from "../Hooks/useSeller";
+import { deletePost, getGuestDashboardData, getPlans, getPostData, JobsData } from "../Hooks/useSeller";
 import { Crown, LogOut, Star, TrashIcon } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
@@ -48,6 +48,9 @@ const GuestDashboardPage = () => {
   // const [jobsList, setJobsList] = useState([]);
   const [jobsLoading, setJobsLoading] = useState(false);
   const [jobsError, setJobsError] = useState(null);
+  const [plans, setPlans] = useState([]);
+  const [plansLoading, setPlansLoading] = useState(false);
+  const [plansError, setPlansError] = useState(null);
 
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
@@ -145,6 +148,65 @@ const GuestDashboardPage = () => {
   const jobsList = payload?.jobs ?? [];
   const posts = payload?.posts ?? [];
 
+  useEffect(() => {
+    const loadPlansForCountry = async () => {
+      if (!payload) return;
+
+      const user = payload?.user ?? {};
+      const seller = payload?.seller ?? null;
+      const sellerUser = seller?.user ?? user?.seller?.user ?? null;
+      const location = user?.location ?? sellerUser?.location ?? null;
+      const countryName = location?.country?.name ?? null;
+
+      if (!countryName) return;
+
+      setPlansLoading(true);
+      setPlansError(null);
+      try {
+        const params = { location: countryName };
+        const res = await getPlans(params);
+        setPlans(res?.data ?? []);
+      } catch (err) {
+        setPlansError(err?.message || "Failed to load plans");
+        setPlans([]);
+      } finally {
+        setPlansLoading(false);
+      }
+    };
+
+    loadPlansForCountry();
+  }, [payload]);
+
+  const getPriceForPlan = (plan) => {
+    const location = payload?.user?.location ?? payload?.seller?.user?.location ?? null;
+    const countryId = location?.country?.id ?? null;
+    const countryName = location?.country?.name ?? null;
+
+    if (plan?.pricing) {
+      const pricing = plan.pricing;
+      if (pricing?.country?.id && countryId && Number(pricing.country.id) === Number(countryId)) {
+        return { price: pricing.price, symbol: pricing.country.currency_symbol ?? pricing.currency ?? "" };
+      }
+      if (pricing?.country_id && countryId && Number(pricing.country_id) === Number(countryId)) {
+        return { price: pricing.price, symbol: pricing.currency ?? "" };
+      }
+    }
+
+    if (plan?.location && countryId) {
+      const match = plan.location.find((c) => Number(c.id) === Number(countryId) || c.name === countryName);
+      if (match) {
+        return { price: plan.pricing?.price ?? null, symbol: plan.pricing?.country?.currency_symbol ?? match.currency_symbol ?? "" };
+      }
+    }
+
+    return { price: null, symbol: "" };
+  };
+
+  const premiumMonthly = plans.find((p) => p.title?.toLowerCase().includes("premium")) ?? plans[0];
+  const foundingMember = plans.find((p) => p.title?.toLowerCase().includes("founding")) ?? plans[1];
+
+  const premiumPrice = premiumMonthly ? getPriceForPlan(premiumMonthly) : { price: null, symbol: "" };
+  const foundingPrice = foundingMember ? getPriceForPlan(foundingMember) : { price: null, symbol: "" };
 
   if (loading) {
     return (
@@ -185,13 +247,6 @@ const GuestDashboardPage = () => {
   const handleModalSaved = async (serverResponse) => {
     try {
       await fetchDashboard();
-      // getPostData(page)
-      //   .then(({ posts, meta }) => {
-      //     setPosts(posts);
-      //     setMeta(meta);
-      //   })
-      //   .catch((err) => console.error(err?.message || t("guest.posts_load_error")))
-      //   .finally(() => setLoading(false));
     } catch (err) {
       console.warn("Failed to refresh dashboard after modal save:", err);
     }
@@ -488,10 +543,11 @@ const GuestDashboardPage = () => {
               </div>
 
               <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 bg-orange-500 text-white py-2 rounded-md font-medium">
-                {t("guest.founding_member_cta")}
+                {premiumPrice.price ? `${premiumPrice.symbol} ${premiumPrice.price} • ${t("guest.premium_monthly_cta")}` : t("guest.founding_member_cta")}
               </button>
+
               <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 border border-teal-500 text-teal-600 py-2 rounded-md font-medium hover:bg-gray-200">
-                {t("guest.premium_monthly_cta")}
+                {foundingPrice.price ? `${foundingPrice.symbol} ${foundingPrice.price} • ${t("guest.founding_member_cta")}` : t("guest.premium_monthly_cta")}
               </button>
             </div>
 
