@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaTimes, FaCrown, FaLock, FaTimesCircle, FaShieldAlt } from "react-icons/fa";
 import SuccessPopupModel from "./SuccessPopupModel";
-import { createPayment, getPlanShow } from "../Hooks/useSeller";
+import { createSubscription, createPayment, getPlanShow } from "../Hooks/useSeller";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { Crown } from "lucide-react";
 
@@ -27,7 +27,7 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
   const [submitError, setSubmitError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-   useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -37,7 +37,7 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-  
+
   // reset when modal closed
   useEffect(() => {
     if (!isOpen) {
@@ -125,9 +125,31 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
     setSubmitting(true);
 
     try {
+      // 1) Create subscription first
+      const subFd = new FormData();
+      subFd.append("plan_id", planId);
+      if (countryId != null) subFd.append("country_id", countryId);
+      if (form.email) subFd.append("email", form.email);
+
+      const subscriptionResponse = await createSubscription(subFd);
+      // createSubscription returns res.data (per your helper)
+      // payload might be in subscriptionResponse.data or subscriptionResponse directly
+      const subscriptionPayload = subscriptionResponse?.data ?? subscriptionResponse;
+      const subscriptionId = subscriptionPayload?.id ?? subscriptionResponse?.id ?? null;
+
+      if (!subscriptionId) {
+        // If API didn't return a subscription id, treat this as failure
+        const msg = subscriptionResponse?.message || t("purchase.errors.subscription_failed") || "Failed to create subscription";
+        throw new Error(msg);
+      }
+
+      // 2) Create payment for the subscription
       const fd = new FormData();
+      // include subscription id returned by previous call
+      fd.append("subscription_id", subscriptionId);
+      // include some duplicate info to help server identify the payer
       fd.append("plan_id", planId);
-      fd.append("country_id", countryId);
+      if (countryId != null) fd.append("country_id", countryId);
       fd.append("email", form.email);
       fd.append("card_holder_name", form.name);
       fd.append("card_number", form.card_number.replace(/\s+/g, ""));
@@ -138,20 +160,24 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
       fd.append("state", form.state);
       fd.append("zip_code", form.zip);
 
-      const response = await createPayment(fd);
+      const paymentResponse = await createPayment(fd);
+      // createPayment returns res.data (per your helper)
+      const paymentPayload = paymentResponse?.data ?? paymentResponse;
 
-      if (response?.status === "success") {
-        if (response?.data?.checkout_url) {
-          window.open(response.data.checkout_url, "_blank");
+      if (paymentResponse?.status === "success" || paymentPayload?.status === "success") {
+        const checkoutUrl = paymentPayload?.checkout_url ?? paymentResponse?.checkout_url;
+        if (checkoutUrl) {
+          // open checkout in new tab if provided
+          window.open(checkoutUrl, "_blank");
         }
         setShowSuccess(true);
       } else {
-        const message = response?.message || "Payment creation failed";
+        const message = paymentResponse?.message || paymentPayload?.message || t("purchase.errors.payment_failed") || "Payment creation failed";
         throw new Error(message);
       }
     } catch (err) {
-      console.error("createPayment error:", err);
-      setSubmitError(err.message || t("purchase.errors.payment_failed"));
+      console.error("Subscription/Payment error:", err);
+      setSubmitError(err?.message || t("purchase.errors.payment_failed"));
     } finally {
       setSubmitting(false);
     }
@@ -341,8 +367,7 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
             </div>
           </form>
 
-
-          {submitError && <p className="text-xs text-red-500">{submitError}</p>}
+          {submitError && <p className="text-xs text-red-500 mt-3">{submitError}</p>}
         </div>
 
         {/* <SuccessPopupModel

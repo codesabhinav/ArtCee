@@ -16,7 +16,6 @@ const DEFAULT_JOB_IMAGE =
 const JobsOpportunities = () => {
   const { t } = useTranslation();
 
-  // translation-aware defaults (so dropdowns use translated "All ..." labels)
   const ALL_CATEGORIES = t("filters.all_categories") || "All Categories";
   const ALL_TYPES = t("filters.all_types") || "All Types";
   const ALL_LOCATIONS = t("filters.all_locations") || "All Locations";
@@ -45,14 +44,12 @@ const JobsOpportunities = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [applyJob, setApplyJob] = useState(null);
 
-  // load filters from backend; after load, set translated defaults if provided by API (we translate API labels when possible)
   useEffect(() => {
     (async () => {
       try {
         const data = await getJobsDataFilters();
         setFiltersOptions(data || {});
 
-        // set initial activeFilters from translations + api availability
         setActiveFilters((prev) => ({
           ...prev,
           category: ALL_CATEGORIES,
@@ -68,10 +65,8 @@ const JobsOpportunities = () => {
         console.error("Failed to load filters:", err);
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t]);
 
-  // helper: find api key by the label shown in dropdown
   const findKeyByLabel = (obj = {}, label) => {
     if (!obj || !label) return "";
     const entry = Object.entries(obj).find(([, v]) => String(v) === String(label));
@@ -170,14 +165,12 @@ const JobsOpportunities = () => {
     setSelectedJob((prev) => (prev?.job_id === jobId ? { ...prev, applied: true } : prev));
   };
 
-  // Helper: translate a fallback option when API doesn't provide options.
   const tryTranslate = (pathOrValue, fallback) => {
     const maybe = t(pathOrValue);
     if (maybe && maybe !== pathOrValue) return maybe;
     return fallback ?? pathOrValue;
   };
 
-  // Build dropdown lists for UI (use API options if present, else translated static lists)
   const categoryOptions = filtersOptions?.category
     ? [ALL_CATEGORIES, ...filtersOptions.category]
     : [ALL_CATEGORIES];
@@ -213,7 +206,6 @@ const JobsOpportunities = () => {
       <div className="md:max-w-[80%] mx-auto">
   
         <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
-          {/* Back to Home Link */}
           <Link
             to="/home"
             className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
@@ -221,18 +213,15 @@ const JobsOpportunities = () => {
             <FaArrowLeft className="mr-2 text-xs" /> {t("buttons.back_to_home") || "Back to Home"}
           </Link>
 
-          {/* Title */}
           <h1 className="text-center align-center text-sm sm:text-lg md:text-xl font-bold flex-1">
             {t("jobs.page_title")}
           </h1>
 
-          {/* Button */}
           <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
             {t("jobs.google_integration")}
           </button>
         </div>
 
-        {/* Search + Filters */}
         <div className="px-6 py-4 space-y-3 border-b md:px-0">
           <div className="flex flex-wrap gap-3">
             <input
@@ -267,11 +256,10 @@ const JobsOpportunities = () => {
           </div>
         </div>
 
-        {/* Jobs Listing */}
         <div className="px-6 py-6 md:px-0 rounded-md mt-2">
           <div className="flex justify-between text-sm items-center mb-4">
             <p className="text-gray-600">{t("jobs.showing_jobs", { count: jobs.length })}</p>
-            {loading && <p className="text-gray-500 text-sm"><SpinnerProvider /></p>}
+            {loading && <div className="text-gray-500 text-sm"><SpinnerProvider /></div>}
           </div>
 
           {error && <p className="text-red-500 mb-2">{error}</p>}
@@ -305,12 +293,8 @@ const JobsOpportunities = () => {
 
                     <p className="text-[12px] lg:text-sm text-gray-700 mt-2 max-w-[90%] font-thin">{job.description?.slice(0, 200)}{job.description && job.description.length > 200 ? "..." : ""}</p>
 
-                    {/* Actions area */}
                     <div className="mt-4">
-                      {/* Mobile only: 2-column grid to create left/right stacks
-                          md+ (tablet & desktop): original horizontal layout preserved */}
                       <div className="grid grid-cols-2 gap-3 md:flex md:items-center md:justify-between md:gap-2">
-                        {/* LEFT stack (mobile only, vertical) */}
                         <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
                           {job.via && (
                             <button className="text-xs border rounded-md px-3 py-2 hover:bg-gray-100">
@@ -329,7 +313,6 @@ const JobsOpportunities = () => {
                           )}
                         </div>
 
-                        {/* RIGHT stack (mobile only, vertical) */}
                         <div className="flex flex-col items-end gap-2 md:flex-row md:items-center">
                           <button
                             onClick={() => setSelectedJob(job)}

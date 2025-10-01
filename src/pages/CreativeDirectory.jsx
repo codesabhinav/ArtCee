@@ -39,10 +39,17 @@ const CreativeDirectory = () => {
   const [sortOptions, setSortOptions] = useState([]);
   const [sort, setSort] = useState("");
 
+  // Pagination state
+  const [page, setPage] = useState(1); // current page to request
+  const [lastPage, setLastPage] = useState(1); // last page from API metadata
+  const [totalItems, setTotalItems] = useState(0); // total results
+  const [perPage, setPerPage] = useState(10); // items per page (from API)
+
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
       setDebouncedSearch(search.trim());
+      setPage(1); // reset to first page when search changes
     }, 500);
     return () => {
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
@@ -134,6 +141,11 @@ const CreativeDirectory = () => {
       params.industries = selectedIndustries;
     }
 
+    // Add pagination page param
+    if (page && Number(page) > 0) {
+      params.page = Number(page);
+    }
+
     return params;
   };
 
@@ -142,8 +154,20 @@ const CreativeDirectory = () => {
       try {
         setLoading(true);
         const params = buildApiParams();
-        const data = await getCreativeData(params);
-        setCreatives(Array.isArray(data) ? data : []);
+        // updated getCreativeData now returns an object with { data, links, meta } (see API helper below)
+        const res = await getCreativeData(params);
+
+        // handle response shape: res.data (array), res.meta (pagination metadata), res.links
+        const list = Array.isArray(res?.data) ? res.data : [];
+        setCreatives(list);
+
+        // Update pagination derived state (if present)
+        if (res?.meta) {
+          setLastPage(res.meta.last_page ?? 1);
+          setPerPage(res.meta.per_page ?? perPage);
+          setTotalItems(res.meta.total ?? 0);
+          setPage(res.meta.current_page ?? page); // sync page if API returns different
+        }
       } catch (err) {
         console.error("Failed to fetch creatives:", err);
         setCreatives([]);
@@ -152,21 +176,25 @@ const CreativeDirectory = () => {
       }
     };
 
+    // only fetch once filters are loaded (existing logic preserved)
     if (filtersConfigDynamic.length > 0 || Object.keys(filtersMeta).length > 0) {
       fetchData();
     }
-  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, selectedIndustries, filtersMeta]);
+    // include page in dependency so fetch runs when page changes
+  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, selectedIndustries, filtersMeta, page]);
 
   const clearFilter = (label) => {
     setSelectedFilters((prev) => ({
       ...prev,
       [label]: defaultSelectedFilters[label] || (prev[label] && prev[label].startsWith(t("creative.all")) ? prev[label] : ""),
     }));
+    setPage(1); // reset to first page when clearing individual filter
   };
 
   const clearAllFilters = () => {
     setSelectedFilters(defaultSelectedFilters);
     setSelectedIndustries([]);
+    setPage(1); // reset pagination on clearing all filters
   };
 
   const getLocationText = (creative) => {
@@ -206,6 +234,7 @@ const CreativeDirectory = () => {
       }
       return Array.from(s);
     });
+    setPage(1); // reset to first page when industries change
   };
 
   const SidebarFilters = () => (
@@ -263,7 +292,10 @@ const CreativeDirectory = () => {
             label={filter.label}
             options={filter.options}
             value={selectedFilters[filter.label] || filter.options[0]}
-            setValue={(val) => setSelectedFilters((prev) => ({ ...prev, [filter.label]: val }))}
+            setValue={(val) => {
+              setSelectedFilters((prev) => ({ ...prev, [filter.label]: val }));
+              setPage(1); // reset page when a filter changes
+            }}
           />
         </div>
       ))}
@@ -315,175 +347,249 @@ const CreativeDirectory = () => {
     );
   };
 
+  const gotoPage = (p) => {
+    if (!p) return;
+    const num = Number(p);
+    if (Number.isNaN(num)) return;
+    if (num < 1) return;
+    if (lastPage && num > lastPage) return;
+    setPage(num);
+  };
+
+  const renderPagination = () => {
+    if (!totalItems || totalItems <= perPage) return null;
+
+    const maxButtons = 7;
+    const pages = [];
+    const start = Math.max(1, page - Math.floor(maxButtons / 2));
+    let end = start + maxButtons - 1;
+    if (end > lastPage) {
+      end = lastPage;
+    }
+    const realStart = Math.max(1, end - maxButtons + 1);
+    for (let i = realStart; i <= end; i++) pages.push(i);
+
+    return (
+      <div className="flex items-center justify-center space-x-2 mt-6">
+        <button
+          className="px-3 py-1 border rounded-md text-xs hover:bg-gray-100"
+          onClick={() => gotoPage(page - 1)}
+          disabled={page <= 1}
+        >
+          Prev
+        </button>
+
+        {realStart > 1 && (
+          <>
+            <button className="px-3 py-1 border rounded-md text-xs" onClick={() => gotoPage(1)}>1</button>
+            {realStart > 2 && <span className="px-2">...</span>}
+          </>
+        )}
+
+        {pages.map((p) => (
+          <button
+            key={p}
+            className={`px-3 py-1 border rounded-md text-xs ${p === page ? "bg-teal-500 text-white" : ""}`}
+            onClick={() => gotoPage(p)}
+          >
+            {p}
+          </button>
+        ))}
+
+        {end < lastPage && (
+          <>
+            {end < lastPage - 1 && <span className="px-2">...</span>}
+            <button className="px-3 py-1 border rounded-md text-xs" onClick={() => gotoPage(lastPage)}>{lastPage}</button>
+          </>
+        )}
+
+        <button
+          className="px-3 py-1 border rounded-md text-xs hover:bg-gray-100"
+          onClick={() => gotoPage(page + 1)}
+          disabled={page >= lastPage}
+        >
+         Next
+        </button>
+      </div>
+    );
+  };
+
   return (
-      <div className="bg-white min-h-screen w-full">
-        <div className="md:max-w-[80%] mx-auto pb-4">
-          <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
-            {/* Back to Home Link */}
-            <Link
-              to="/home"
-              className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
-            >
-              <FaArrowLeft className="mr-2 text-xs" /> {t("creative.back_to_home") || "Back to Home"}
-            </Link>
+    <div className="bg-white min-h-screen w-full">
+      <div className="md:max-w-[80%] mx-auto pb-4">
+        <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
+          {/* Back to Home Link */}
+          <Link
+            to="/home"
+            className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
+          >
+            <FaArrowLeft className="mr-2 text-xs" /> {t("creative.back_to_home") || "Back to Home"}
+          </Link>
 
-            {/* Title */}
-            <h1 className="text-center align-center text-sm sm:text-lg md:text-xl font-bold flex-1">
-              {t("creative.title")}
-            </h1>
+          {/* Title */}
+          <h1 className="text-center align-center text-sm sm:text-lg md:text-xl font-bold flex-1">
+            {t("creative.title")}
+          </h1>
 
-            {/* Button */}
-            <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
-              {creatives.length} Creatives
-            </button>
-          </div>
+          {/* Button */}
+          <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
+            {totalItems} Creatives
+          </button>
+        </div>
 
-          {/* Search + Sort */}
-          <div className="px-4  md:px-0 py-4 space-y-3 border-b">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("creative.search_placeholder")}
-              className="flex-1 form-input w-full text-xs"
-            />
-            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
-              <div className="w-48">
-                <CustomDropdown
-                  options={sortOptions}
-                  value={sort}
-                  setValue={setSort}
-                />
-              </div>
-
-              <div className="">
-                <ActiveFilterChips />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row md:space-x-6 my-5 p-4 lg:p-0">
-            {/* Sidebar (Desktop) */}
-            <div className="hidden md:block">
-              <SidebarFilters />
-            </div>
-            {/* Sidebar (Mobile) */}
-            <div className="md:hidden mb-4">
-              <SidebarFilters />
+        {/* Search + Sort */}
+        <div className="px-4  md:px-0 py-4 space-y-3 border-b">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t("creative.search_placeholder")}
+            className="flex-1 form-input w-full text-xs"
+          />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
+            <div className="w-48">
+              <CustomDropdown
+                options={sortOptions}
+                value={sort}
+                setValue={(v) => {
+                  setSort(v);
+                  setPage(1); // reset to first page when sorting changes
+                }}
+              />
             </div>
 
-            {/* Cards Grid */}
-            <div className="grid grid-cols-1  sm:grid-cols-1
-           lg:grid-cols-2 gap-6 w-full">
-              {loading ? (
-                <div className="text-gray-500"><SpinnerProvider /></div>
-              ) : creatives.length === 0 ? (
-                <p className="text-gray-500">{t("creative.no_creatives")}</p>
-              ) : (
-                creatives.map((creative) => {
-                  const availability = getAvailability(creative);
-                  const rating = typeof creative?.user.rating === "number" ? creative.user.rating.toFixed(1) : "—";
-                  const reviews = creative?.total_reviews ?? 0;
-                  const name = creative?.user?.full_name || t("creative.anonymous");
-                  const title = creative?.user?.profile?.title || "—";
-                  const uuid = creative?.user?.uuid || "";
-                  const years = creative?.experience_in_year ?? "0";
-                  const level = creative?.experience_in_level
-                    ? String(creative.experience_in_level).charAt(0).toUpperCase() +
-                    String(creative.experience_in_level).slice(1)
-                    : "—";
-                  const workStyle =
-                    creative?.on_site_active === "1" && creative?.is_remote_active === "0"
-                      ? t("creative.on_site")
-                      : creative?.is_remote_active === "1" && creative?.on_site_active === "0"
-                        ? t("creative.remote_ok")
-                        : t("creative.remote_ok_on_site");
-
-                  const profileSrc = creative?.user?.profile?.profile_picture || DEFAULT_AVATAR;
-
-                  return (
-                    <div
-                      key={creative.id}
-                      className="border rounded-xl p-4 shadow-sm bg-white"
-                    >
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <span className="flex items-center bg-black text-white text-xs px-2 py-1 rounded-md">
-                          <FaStar className="mr-1" /> {rating}
-                          {Number(reviews) > 0 && <span className="ml-1 opacity-80">({reviews})</span>}
-                        </span>
-                        <span className={`flex items-center text-xs px-2 py-1 rounded-md ${availability.badge}`}>
-                          ● {availability.label}
-                        </span>
-                      </div>
-
-                      {/* Profile */}
-                      <div className="flex items-center mt-4">
-                        <img
-                          src={profileSrc}
-                          alt={name}
-                          className="w-14 h-14 rounded-full object-cover border"
-                          onError={(e) => {
-                            if (e.currentTarget.src !== DEFAULT_AVATAR) {
-                              e.currentTarget.src = DEFAULT_AVATAR;
-                            }
-                          }}
-                        />
-                        <div className="ml-3">
-                          <h3 className="font-bold text-sm">{name}</h3>
-                          <p className="text-xs text-gray-600">{title}</p>
-                        </div>
-                      </div>
-
-                      {/* Bio */}
-                      <p className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
-                        {creative?.personal_intro || t("creative.no_intro")}
-                      </p>
-
-                      {/* Meta */}
-                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 text-xs text-gray-500">
-                        <p className="flex items-center">
-                          <FaMapMarkerAlt className="mr-2" /> {getLocationText(creative)}
-                        </p>
-                        <p className="flex items-center">
-                          <FaClock className="mr-2" /> {years}+ {t("creative.years")}
-                        </p>
-                        <p className="flex items-center">
-                          <FaBriefcase className="mr-2" /> {level} {t("creative.level")}
-                        </p>
-                        <p className="flex items-center">
-                          <FaGlobe className="mr-2" /> {workStyle}
-                        </p>
-                      </div>
-
-                      <SkillChips skills={creative?.skills} />
-
-                      {/* Button */}
-                      <button
-                        onClick={() => {
-                          setSelectedUuid(uuid);
-                          setOpen(true);
-                        }}
-                        className="w-full mt-4 bg-teal-500 text-white text-xs font-semibold py-2 rounded-md hover:bg-teal-600"
-                      >
-                        {t("creative.view_profile")}
-                      </button>
-                    </div>
-                  );
-                })
-              )}
+            <div className="">
+              <ActiveFilterChips />
             </div>
-
-
           </div>
         </div>
-        <ViewProfilePopupModel isOpen={open} onClose={() => {
+
+        <div className="flex flex-col md:flex-row md:space-x-6 my-5 p-4 lg:p-0">
+          {/* Sidebar (Desktop) */}
+          <div className="hidden md:block">
+            <SidebarFilters />
+          </div>
+          {/* Sidebar (Mobile) */}
+          <div className="md:hidden mb-4">
+            <SidebarFilters />
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1  sm:grid-cols-1
+           lg:grid-cols-2 gap-6 w-full">
+            {loading ? (
+              <div className="text-gray-500"><SpinnerProvider /></div>
+            ) : creatives.length === 0 ? (
+              <p className="text-gray-500">{t("creative.no_creatives")}</p>
+            ) : (
+              creatives.map((creative) => {
+                const availability = getAvailability(creative);
+                const rating = typeof creative?.user.rating === "number" ? creative.user.rating.toFixed(1) : "—";
+                const reviews = creative?.total_reviews ?? 0;
+                const name = creative?.user?.full_name || t("creative.anonymous");
+                const title = creative?.user?.profile?.title || "—";
+                const uuid = creative?.user?.uuid || "";
+                const years = creative?.experience_in_year ?? "0";
+                const level = creative?.experience_in_level
+                  ? String(creative.experience_in_level).charAt(0).toUpperCase() +
+                  String(creative.experience_in_level).slice(1)
+                  : "—";
+                const workStyle =
+                  creative?.on_site_active === "1" && creative?.is_remote_active === "0"
+                    ? t("creative.on_site")
+                    : creative?.is_remote_active === "1" && creative?.on_site_active === "0"
+                      ? t("creative.remote_ok")
+                      : t("creative.remote_ok_on_site");
+
+                const profileSrc = creative?.user?.profile?.profile_picture || DEFAULT_AVATAR;
+
+                return (
+                  <div
+                    key={creative.id}
+                    className="border rounded-xl p-4 shadow-sm bg-white"
+                  >
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center bg-black text-white text-xs px-2 py-1 rounded-md">
+                        <FaStar className="mr-1" /> {rating}
+                        {Number(reviews) > 0 && <span className="ml-1 opacity-80">({reviews})</span>}
+                      </span>
+                      <span className={`flex items-center text-xs px-2 py-1 rounded-md ${availability.badge}`}>
+                        ● {availability.label}
+                      </span>
+                    </div>
+
+                    {/* Profile */}
+                    <div className="flex items-center mt-4">
+                      <img
+                        src={profileSrc}
+                        alt={name}
+                        className="w-14 h-14 rounded-full object-cover border"
+                        onError={(e) => {
+                          if (e.currentTarget.src !== DEFAULT_AVATAR) {
+                            e.currentTarget.src = DEFAULT_AVATAR;
+                          }
+                        }}
+                      />
+                      <div className="ml-3">
+                        <h3 className="font-bold text-sm">{name}</h3>
+                        <p className="text-xs text-gray-600">{title}</p>
+                      </div>
+                    </div>
+
+                    {/* Bio */}
+                    <p className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
+                      {creative?.personal_intro || t("creative.no_intro")}
+                    </p>
+
+                    {/* Meta */}
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 text-xs text-gray-500">
+                      <p className="flex items-center">
+                        <FaMapMarkerAlt className="mr-2" /> {getLocationText(creative)}
+                      </p>
+                      <p className="flex items-center">
+                        <FaClock className="mr-2" /> {years}+ {t("creative.years")}
+                      </p>
+                      <p className="flex items-center">
+                        <FaBriefcase className="mr-2" /> {level} {t("creative.level")}
+                      </p>
+                      <p className="flex items-center">
+                        <FaGlobe className="mr-2" /> {workStyle}
+                      </p>
+                    </div>
+
+                    <SkillChips skills={creative?.skills} />
+
+                    {/* Button */}
+                    <button
+                      onClick={() => {
+                        setSelectedUuid(uuid);
+                        setOpen(true);
+                      }}
+                      className="w-full mt-4 bg-teal-500 text-white text-xs font-semibold py-2 rounded-md hover:bg-teal-600"
+                    >
+                      {t("creative.view_profile")}
+                    </button>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Pagination controls */}
+        <div className="px-4 md:px-0">
+          {renderPagination()}
+        </div>
+
+      </div>
+      <ViewProfilePopupModel isOpen={open} onClose={() => {
         setOpen(false);
         setSelectedUuid(null);
       }}
         uuid={selectedUuid} />
-      </div>
-      
+    </div>
+
   );
 }
 

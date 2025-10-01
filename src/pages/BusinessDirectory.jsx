@@ -39,10 +39,17 @@ const BusinessDirectory = () => {
   ]);
   const [sort, setSort] = useState(t("filters.sort.highest_rated"));
 
+  // Pagination state
+  const [page, setPage] = useState(1); // current page to request
+  const [lastPage, setLastPage] = useState(1); // last page from API metadata
+  const [totalItems, setTotalItems] = useState(0); // total results
+  const [perPage, setPerPage] = useState(10); // items per page (from API)
+
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
       setDebouncedSearch(search.trim());
+      setPage(1); // reset to first page when search changes
     }, 500);
     return () => {
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
@@ -134,6 +141,11 @@ const BusinessDirectory = () => {
       if (mapped) params.order_by_rate = mapped;
     }
 
+    // Add page param for pagination
+    if (page && Number(page) > 0) {
+      params.page = Number(page);
+    }
+
     return params;
   };
 
@@ -142,9 +154,22 @@ const BusinessDirectory = () => {
       try {
         setLoading(true);
         const params = buildApiParams();
-        const data = await getBusinessData(params);
-        setBusinesses(Array.isArray(data) ? data : []);
-        setShowingCount(Array.isArray(data) ? data.length : 0);
+        // updated getBusinessData now returns { data, links, meta }
+        const res = await getBusinessData(params);
+
+        const list = Array.isArray(res?.data) ? res.data : [];
+        setBusinesses(list);
+        setShowingCount(Array.isArray(res?.data) ? res.data.length : 0);
+
+        if (res?.meta) {
+          setLastPage(res.meta.last_page ?? 1);
+          setPerPage(res.meta.per_page ?? perPage);
+          setTotalItems(res.meta.total ?? 0);
+          setPage(res.meta.current_page ?? page); // sync page if API returns different
+          // showingCount can be totalItems when you want "Showing X of Y"
+          setShowingCount(res.meta.to ? res.meta.to - (res.meta.from ? res.meta.from - 1 : 0) : list.length);
+        }
+
         setError(null);
       } catch (err) {
         console.error("Failed to fetch businesses:", err);
@@ -162,9 +187,19 @@ const BusinessDirectory = () => {
       (async () => {
         try {
           setLoading(true);
-          const data = await getBusinessData({ search: debouncedSearch });
-          setBusinesses(Array.isArray(data) ? data : []);
-          setShowingCount(Array.isArray(data) ? data.length : 0);
+          const res = await getBusinessData({ search: debouncedSearch, page }); // include page even in fallback
+          const list = Array.isArray(res?.data) ? res.data : [];
+          setBusinesses(list);
+          setShowingCount(Array.isArray(res?.data) ? res.data.length : 0);
+
+          if (res?.meta) {
+            setLastPage(res.meta.last_page ?? 1);
+            setPerPage(res.meta.per_page ?? perPage);
+            setTotalItems(res.meta.total ?? 0);
+            setPage(res.meta.current_page ?? page);
+            setShowingCount(res.meta.to ? res.meta.to - (res.meta.from ? res.meta.from - 1 : 0) : list.length);
+          }
+
           setError(null);
         } catch (err) {
           setError(err.message || t("business.fetch_error"));
@@ -175,17 +210,20 @@ const BusinessDirectory = () => {
         }
       })();
     }
-  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic]);
+    // include page in dependency so fetch runs when page changes
+  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, page]);
 
   const clearFilter = (key) => {
     setSelectedFilters((prev) => ({
       ...prev,
       [key]: defaultSelectedFilters[key] ?? (prev[key] && prev[key].startsWith(t("filters.all_prefix") || "All") ? prev[key] : ""),
     }));
+    setPage(1); // reset to first page when clearing
   };
 
   const clearAllFilters = () => {
     setSelectedFilters(defaultSelectedFilters);
+    setPage(1); // reset pagination on clearing all filters
   };
 
   const handleSetFilterValue = (filterKey, value) => {
@@ -200,6 +238,7 @@ const BusinessDirectory = () => {
     );
 
     setSelectedFilters((prev) => ({ ...prev, [filterKey]: value }));
+    setPage(1); // reset to first page when filter changes
   };
 
   const SkillChips = ({ skills = [] }) => {
@@ -215,6 +254,74 @@ const BusinessDirectory = () => {
         {extra > 0 && (
           <span className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{`+${extra} ${t("creative.more")}`}</span>
         )}
+      </div>
+    );
+  };
+
+  // Pagination helpers
+  const gotoPage = (p) => {
+    if (!p) return;
+    const num = Number(p);
+    if (Number.isNaN(num)) return;
+    if (num < 1) return;
+    if (lastPage && num > lastPage) return;
+    setPage(num);
+    // fetch triggered by useEffect
+  };
+
+  const renderPagination = () => {
+    // show nothing when there's only one page or no total
+    if (!totalItems || totalItems <= perPage) return null;
+
+    const maxButtons = 7;
+    const pages = [];
+    const start = Math.max(1, page - Math.floor(maxButtons / 2));
+    let end = start + maxButtons - 1;
+    if (end > lastPage) end = lastPage;
+    const realStart = Math.max(1, end - maxButtons + 1);
+    for (let i = realStart; i <= end; i++) pages.push(i);
+
+    return (
+      <div className="flex items-center justify-center space-x-2 mt-6">
+        <button
+          className="px-3 py-1 border rounded-md text-xs hover:bg-gray-100"
+          onClick={() => gotoPage(page - 1)}
+          disabled={page <= 1}
+        >
+          Prev
+        </button>
+
+        {realStart > 1 && (
+          <>
+            <button className="px-3 py-1 border rounded-md text-xs" onClick={() => gotoPage(1)}>1</button>
+            {realStart > 2 && <span className="px-2">...</span>}
+          </>
+        )}
+
+        {pages.map((p) => (
+          <button
+            key={p}
+            className={`px-3 py-1 border rounded-md text-xs ${p === page ? "bg-teal-500 text-white" : ""}`}
+            onClick={() => gotoPage(p)}
+          >
+            {p}
+          </button>
+        ))}
+
+        {end < lastPage && (
+          <>
+            {end < lastPage - 1 && <span className="px-2">...</span>}
+            <button className="px-3 py-1 border rounded-md text-xs" onClick={() => gotoPage(lastPage)}>{lastPage}</button>
+          </>
+        )}
+
+        <button
+          className="px-3 py-1 border rounded-md text-xs hover:bg-gray-100"
+          onClick={() => gotoPage(page + 1)}
+          disabled={page >= lastPage}
+        >
+          Next
+        </button>
       </div>
     );
   };
@@ -283,7 +390,10 @@ const BusinessDirectory = () => {
             <CustomDropdown
               options={sortOptions}
               value={sort}
-              setValue={(val) => setSort(val)}
+              setValue={(val) => {
+                setSort(val);
+                setPage(1); // reset to first page when sorting changes
+              }}
             />
           </div>
         </div>
@@ -410,6 +520,11 @@ const BusinessDirectory = () => {
                 </div>
               );
             })}
+          </div>
+
+          {/* Pagination controls */}
+          <div className="mt-6">
+            {renderPagination()}
           </div>
         </div>
 

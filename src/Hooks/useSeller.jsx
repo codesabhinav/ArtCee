@@ -4,7 +4,14 @@ import Cookies from 'js-cookie';
 export function getCreativeData(params = {}) {
   return service
     .get(`site/seller/creative`, { params })
-    .then((res) => res.data?.data || [])
+    .then((res) => {
+      const payload = res.data || {};
+      return {
+        data: payload.data || [], 
+        links: payload.links || null,
+        meta: payload.meta || null,
+      };
+    })
     .catch((error) => {
       const errorMessage = error.response?.message || "Failed to fetch seller data";
       throw new Error(errorMessage);
@@ -14,12 +21,20 @@ export function getCreativeData(params = {}) {
 export function getBusinessData(params = {}) {
   return service
     .get(`site/seller/business`, { params })
-    .then((res) => res.data?.data || [])
+    .then((res) => {
+      const payload = res.data || {};
+      return {
+        data: payload.data || [],
+        links: payload.links || null,
+        meta: payload.meta || null,
+      };
+    })
     .catch((error) => {
       const errorMessage = error.response?.message || "Failed to fetch business data";
       throw new Error(errorMessage);
     });
 }
+
 
 
 export function getCreativeFilters() {
@@ -211,11 +226,27 @@ export async function JobsData(params = {}) {
   }
 }
 
-export function createPayment(formData) {
+export function createSubscription(formData) {
   return service
-    .post("seller/subscription/payment", formData, {
+    .post("seller/subscription/create", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     })
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to create subscription";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+      throw new Error(message);
+    });
+}
+
+export function createPayment(formData) {
+  return service
+    .post("seller/subscription/payment", formData)
     .then((res) => res.data)
     .catch((error) => {
       const apiErrors = error?.response?.data?.errors;

@@ -542,11 +542,11 @@ const GuestDashboardPage = () => {
                 {t("guest.upgrade_limited")}
               </div>
 
-              <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 bg-orange-500 text-white py-2 rounded-md font-medium">
+              <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 hover:bg-orange-500 hover:text-white py-2 rounded-md font-medium bg-white border border-orange-500 text-orange-500">
                 {premiumPrice.price ? `${premiumPrice.symbol} ${premiumPrice.price} • ${t("guest.premium_monthly_cta")}` : t("guest.founding_member_cta")}
               </button>
 
-              <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 border border-teal-500 text-teal-600 py-2 rounded-md font-medium hover:bg-gray-200">
+              <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 border border-teal-500 text-teal-600 py-2 rounded-md font-medium hover:bg-teal-500 hover:text-white">
                 {foundingPrice.price ? `${foundingPrice.symbol} ${foundingPrice.price} • ${t("guest.founding_member_cta")}` : t("guest.premium_monthly_cta")}
               </button>
             </div>

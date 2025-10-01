@@ -1,4 +1,3 @@
-// FeaturePremiumPage.jsx
 import { AiOutlineEye } from "react-icons/ai";
 import { FaArrowLeft, FaCrown, FaUsers, FaHeart, FaEye, FaChartLine, FaBolt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";

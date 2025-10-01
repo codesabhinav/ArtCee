@@ -240,11 +240,11 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
 
             {/* Premium Upgrade */}
             <div className="mt-2 w-full text-center items-center justify-center flex flex-col">
-              <p className="text-[10px] text-gray-500 mb-1">{t("profile.premium_features")}</p>
+              {/* <p className="text-[10px] text-gray-500 mb-1">{t("profile.premium_features")}</p> */}
 
-              <Link to='/featured' className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
+              {/* <Link to='/featured' className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
                 <Crown className="h-3 w-3" /> {t("profile.upgrade")}
-              </Link>
+              </Link> */}
 
               <button
                 onClick={() => handleFollow(uuid)}
@@ -260,12 +260,12 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                   "Follow"
                 )}
               </button>
-              <p className="text-[10px] mt-1 text-gray-500">{t("profile.premium_feature_note")}</p>
+              {/* <p className="text-[10px] mt-1 text-gray-500">{t("profile.premium_feature_note")}</p> */}
             </div>
 
-            <Link to='/featured' className="text-[10px] mt-2 w-full font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
+            {/* <Link to='/featured' className="text-[10px] mt-2 w-full font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
               <Crown className="h-3 w-3" /> Upgarde to Follow
-            </Link>
+            </Link> */}
 
             <button className="text-xs mt-2 w-full font-semibold bg-white hover:bg-gray-100 border text-black px-4 py-2 rounded-lg items-center justify-center flex gap-2">
               <Share className="h-3 w-4" /> Share Profile
@@ -639,15 +639,15 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                             <span className="md:hidden text-[11px]">♥</span>
                           </button>
 
-                          <div className="text-[10px] text-gray-400 mt-0 md:mt-2">Premium Feature</div>
+                          {/* <div className="text-[10px] text-gray-400 mt-0 md:mt-2">Premium Feature</div> */}
 
-                          <Link
+                          {/* <Link
                             to="/featured"
                             className="w-full md:w-auto text-[12px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-md flex items-center justify-center gap-2"
                             aria-label="Upgrade to premium"
                           >
                             <Crown className="h-3 w-3" /> <span className="text-xs">{t("profile.upgrade")}</span>
-                          </Link>
+                          </Link> */}
                         </div>
                       </article>
                     ))}
