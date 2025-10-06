@@ -35,21 +35,21 @@ const CreativeDirectory = () => {
   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
   const [selectedIndustries, setSelectedIndustries] = useState([]);
   const [selectedUuid, setSelectedUuid] = useState(null);
+  const [onlyAvailable, setOnlyAvailable] = useState(false);
 
   const [sortOptions, setSortOptions] = useState([]);
   const [sort, setSort] = useState("");
 
-  // Pagination state
-  const [page, setPage] = useState(1); // current page to request
-  const [lastPage, setLastPage] = useState(1); // last page from API metadata
-  const [totalItems, setTotalItems] = useState(0); // total results
-  const [perPage, setPerPage] = useState(10); // items per page (from API)
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [perPage, setPerPage] = useState(10);
 
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
       setDebouncedSearch(search.trim());
-      setPage(1); // reset to first page when search changes
+      setPage(1);
     }, 500);
     return () => {
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
@@ -82,7 +82,6 @@ const CreativeDirectory = () => {
           });
         };
 
-        // localized "All ..." labels
         pushFilter("availability", meta.availability, t("creative.all_status"));
         pushFilter("level", meta.level, t("creative.all_levels"));
         pushFilter("working_style", meta.working_style, t("creative.all_types"));
@@ -110,7 +109,7 @@ const CreativeDirectory = () => {
         setSelectedFilters(defaults);
         setDefaultSelectedFilters(defaults);
 
-        setSelectedIndustries([]); // default empty
+        setSelectedIndustries([]);
       } catch (err) {
         console.error("Failed to load filters:", err);
       }
@@ -133,7 +132,7 @@ const CreativeDirectory = () => {
 
     if (sort && filterLabelToKeyMap["__order_by_map__"]) {
       const orderMap = filterLabelToKeyMap["__order_by_map__"];
-      const mapped = orderMap[sort]; // map API label -> API key
+      const mapped = orderMap[sort];
       if (mapped) params.order_by_rate = mapped;
     }
 
@@ -141,7 +140,11 @@ const CreativeDirectory = () => {
       params.industries = selectedIndustries;
     }
 
-    // Add pagination page param
+
+    if (onlyAvailable) {
+      params.availability = "available";
+    }
+
     if (page && Number(page) > 0) {
       params.page = Number(page);
     }
@@ -154,19 +157,16 @@ const CreativeDirectory = () => {
       try {
         setLoading(true);
         const params = buildApiParams();
-        // updated getCreativeData now returns an object with { data, links, meta } (see API helper below)
         const res = await getCreativeData(params);
 
-        // handle response shape: res.data (array), res.meta (pagination metadata), res.links
         const list = Array.isArray(res?.data) ? res.data : [];
         setCreatives(list);
 
-        // Update pagination derived state (if present)
         if (res?.meta) {
           setLastPage(res.meta.last_page ?? 1);
           setPerPage(res.meta.per_page ?? perPage);
           setTotalItems(res.meta.total ?? 0);
-          setPage(res.meta.current_page ?? page); // sync page if API returns different
+          setPage(res.meta.current_page ?? page); 
         }
       } catch (err) {
         console.error("Failed to fetch creatives:", err);
@@ -176,25 +176,23 @@ const CreativeDirectory = () => {
       }
     };
 
-    // only fetch once filters are loaded (existing logic preserved)
     if (filtersConfigDynamic.length > 0 || Object.keys(filtersMeta).length > 0) {
       fetchData();
     }
-    // include page in dependency so fetch runs when page changes
-  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, selectedIndustries, filtersMeta, page]);
+  }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, selectedIndustries, onlyAvailable, filtersMeta, page]);
 
   const clearFilter = (label) => {
     setSelectedFilters((prev) => ({
       ...prev,
       [label]: defaultSelectedFilters[label] || (prev[label] && prev[label].startsWith(t("creative.all")) ? prev[label] : ""),
     }));
-    setPage(1); // reset to first page when clearing individual filter
+    setPage(1);
   };
 
   const clearAllFilters = () => {
     setSelectedFilters(defaultSelectedFilters);
     setSelectedIndustries([]);
-    setPage(1); // reset pagination on clearing all filters
+    setPage(1);
   };
 
   const getLocationText = (creative) => {
@@ -234,7 +232,7 @@ const CreativeDirectory = () => {
       }
       return Array.from(s);
     });
-    setPage(1); // reset to first page when industries change
+    setPage(1);
   };
 
   const SidebarFilters = () => (
@@ -263,7 +261,7 @@ const CreativeDirectory = () => {
       </div> */}
 
       <div className="mb-4">
-        <p className="font-medium text-sm">{t("creative.industries")}</p>
+        {/* <p className="font-medium text-sm">{t("creative.industries")}</p> */}
         <div className="mt-2 space-y-2 text-xs">
           {filtersMeta?.industries
             ? Object.entries(filtersMeta.industries).map(([id, label]) => (
@@ -285,6 +283,21 @@ const CreativeDirectory = () => {
             ))}
         </div>
       </div>
+
+      {/* <div className="mb-4">
+        <label className="flex items-center space-x-2 text-sm">
+          <input
+            type="checkbox"
+            className="accent-teal-500"
+            checked={onlyAvailable}
+            onChange={(e) => {
+              setOnlyAvailable(e.target.checked);
+              setPage(1);
+            }}
+          />
+          <span>Available Only</span>
+        </label>
+      </div> */}
 
       {filtersConfigDynamic.map((filter, idx) => (
         <div key={idx} className="mb-3">
@@ -408,7 +421,7 @@ const CreativeDirectory = () => {
           onClick={() => gotoPage(page + 1)}
           disabled={page >= lastPage}
         >
-         Next
+          Next
         </button>
       </div>
     );

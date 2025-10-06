@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { getSkills } from "../../Hooks/useAuth";
 import { useTranslation } from "../../contexts/LanguageProvider";
+import { Link } from "react-router-dom";
 
 const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
   const { t } = useTranslation();
@@ -19,9 +20,9 @@ const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
     return Array.isArray(formData.custom_skills)
       ? formData.custom_skills
       : String(formData.custom_skills)
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean);
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
   });
 
   useEffect(() => {
@@ -172,6 +173,14 @@ const ServicesSkillsStep = ({ formData, setFormData, onNext, onPrev }) => {
             <button type="submit" className="flex items-center px-6 py-2 text-xs bg-teal-400 text-white rounded-md hover:bg-teal-500">
               {t("services_skills.next")} <FaArrowRight className="ml-2" />
             </button>
+          </div>
+          <div className="flex justify-end">
+            <Link
+              to="/home"
+              className="text-gray-600 text-xs border-2 px-3 py-1.5 rounded-md hover:bg-gray-100"
+            >
+              {t("register.skip_for_now")}
+            </Link>
           </div>
         </form>
       )}

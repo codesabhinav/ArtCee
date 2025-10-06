@@ -26,7 +26,7 @@ export function login(formData) {
       return res.data;
     })
     .catch((error) => {
-      let errorMessage = "Failed to login";
+      let errorMessage = "The provided credentials are incorrect";
       if (error.response?.data?.errors) {
         const errors = Object.values(error.response.data.errors).flat();
         errorMessage = errors.length > 0 ? errors[0] : errorMessage;

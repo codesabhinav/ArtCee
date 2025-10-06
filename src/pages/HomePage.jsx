@@ -1,48 +1,35 @@
 import { Link } from "react-router-dom";
 import {
   FaSearch,
-  FaUsers,
-  FaHandshake,
-  FaTrophy,
   FaPlayCircle,
-  FaCrown,
   FaArrowRight,
   FaBolt,
-  FaBuilding,
-  FaBookOpen,
-  FaPalette,
 } from "react-icons/fa";
 import bannerImg from "../images/banner.avif";
 import backgrpoundImg from "../images/background.jpg";
-import { SiSpotlight } from "react-icons/si";
-import { BiChevronLeft, BiChevronRight, BiStar } from "react-icons/bi";
-import ViewProfilePopupModel from "../modal/ViewProfilePopupModel";
+import backimg from "/images/back-1.jpg";
 import { useEffect, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { getCreativeData } from "../Hooks/useSeller";
-import { Building2, Crown, Palette, Search, Shield, Trophy, Users } from "lucide-react";
+import { Building2, Palette, Search, Shield, Users, Crown, X } from "lucide-react";
+import LandingPage from "./LandingPage";
 
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
 
 export default function Home() {
-  const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [professionals, setProfessionals] = useState([]);
-  const [selectedUuid, setSelectedUuid] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // call same hook used in CreativeDirectory
         const data = await getCreativeData();
-        // the CreativeDirectory expects the API to return an array (it does in your sample)
         if (Array.isArray(data)) {
-          setProfessionals(data.slice(0, 3)); // only first 3
+          setProfessionals(data.slice(0, 3));
         } else if (data?.data && Array.isArray(data.data)) {
-          // in case getCreativeData returns the full response
           setProfessionals(data.data.slice(0, 3));
         } else {
           setProfessionals([]);
@@ -54,48 +41,12 @@ export default function Home() {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
-  const getAvailability = (creative) => {
-    const rawLabel = creative?.availability_label ?? creative?.status ?? "";
-    const label = String(rawLabel).trim();
-    const lower = label.toLowerCase();
-
-    if (lower.includes("avail") || lower.includes("available") || lower === "online") {
-      return { label: label || t("creative.available"), badge: "bg-green-100 text-green-700" };
-    }
-    if (lower.includes("busy")) {
-      return { label: label || t("creative.busy"), badge: "bg-yellow-100 text-yellow-700" };
-    }
-    if (lower.includes("book") || lower.includes("booked")) {
-      return { label: label || t("creative.booked"), badge: "bg-orange-100 text-orange-700" };
-    }
-
-    return { label: label || t("creative.offline"), badge: "bg-gray-100 text-gray-700" };
-  };
-
-  const SkillChips = ({ skills = [] }) => {
-    if (!Array.isArray(skills) || skills.length === 0) return null;
-    const visible = skills.slice(0, 3);
-    const extra = skills.length - visible.length;
-
-    return (
-      <div className="mt-3 flex flex-wrap gap-2">
-        {visible.map((s) => (
-          <span key={s.id} className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{s.name}</span>
-        ))}
-        {extra > 0 && (
-          <span className="text-xs px-2 py-1 font-medium rounded-md bg-gray-200">{`+${extra} ${t("creative.more")}`}</span>
-        )}
-      </div>
-    );
-  };
-
-
   return (
     <div className="w-full">
+
       {/* Hero Section */}
       <section
         className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-4 sm:px-6 bg-cover bg-center bg-no-repeat"
@@ -104,13 +55,16 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/60"></div>
 
         <div className="relative w-full max-w-3xl text-white">
-          {/* Top Badge */}
-          <button className="bg-orange-500 px-3 font-semibold sm:px-4 py-2 rounded-md mb-6 shadow text-xs flex items-center gap-2 justify-center mx-auto">
-            <Crown className="text-white h-3 w-3" />
-            {t("home.join_revolution")}
-          </button>
 
-          {/* Heading */}
+
+
+          {/* Top Badge */}
+          {/* <button className="bg-orange-500 px-3 font-semibold sm:px-4 py-2 rounded-md mb-6 shadow text-xs flex items-center gap-2 justify-center mx-auto">
+             <Crown className="text-white h-3 w-3" /> */}
+          {/* {t("home.join_revolution")} */}
+          {/* </button> */}
+
+
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight">
             {t("home.title")}{" "}
             <span className="bg-gradient-to-r from-[#1FA29A] to-orange-400 bg-clip-text text-transparent">
@@ -118,34 +72,32 @@ export default function Home() {
             </span>
           </h1>
 
-          {/* Subtext */}
           <p className="mt-4 text-sm sm:text-base max-w-2xl mx-auto text-gray-200 px-2 sm:px-0">
             {t("home.subtitle")}
           </p>
 
           {/* Founding Member Card */}
           {/* <div className="mt-8 sm:mt-10 bg-white text-black p-4 sm:p-6 rounded-xl shadow-md w-full max-w-full sm:max-w-md mx-auto border-2 border-teal-500">
-            <div className="font-bold text-start text-xs sm:text-sm flex flex-wrap justify-between items-center gap-2">
-              {t("home.founding_program")}{" "}
-              <span className="text-[10px] sm:text-xs bg-orange-500 text-white px-2 py-1 rounded-md flex items-center gap-1">
-                <Crown className="h-3 w-3" /> {t("home.lifetime_badge")}
-              </span>
-            </div>
+             <div className="font-bold text-start text-xs sm:text-sm flex flex-wrap justify-between items-center gap-2">
+               {t("home.founding_program")}{" "}
+               <span className="text-[10px] sm:text-xs bg-orange-500 text-white px-2 py-1 rounded-md flex items-center gap-1">
+                 <Crown className="h-3 w-3" /> {t("home.lifetime_badge")}
+               </span>
+             </div>
 
-            <div className="w-full bg-gray-200 h-3 rounded mt-3">
-              <div className="bg-black h-3 rounded w-2/3"></div>
-            </div>
-            <p className="mt-2 text-black/50 text-[10px] sm:text-xs flex justify-between">
-              {t("home.progress_joined", { joined: 673 })}{" "}
-              <span>{t("home.progress_left", { left: 327 })}</span>
-            </p>
+             <div className="w-full bg-gray-200 h-3 rounded mt-3">
+               <div className="bg-black h-3 rounded w-2/3"></div>
+             </div>
+             <p className="mt-2 text-black/50 text-[10px] sm:text-xs flex justify-between">
+               {t("home.progress_joined", { joined: 673 })}{" "}
+               <span>{t("home.progress_left", { left: 327 })}</span>
+             </p>
 
-            <p className="text-teal-600 font-semibold mt-1 text-[10px] sm:text-xs">
-              {t("home.premium_offer")}
-            </p>
-          </div> */}
+             <p className="text-teal-600 font-semibold mt-1 text-[10px] sm:text-xs">
+               {t("home.premium_offer")}
+             </p>
+           </div> */}
 
-          {/* Buttons */}
           <div className="mt-6 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center">
             <Link
               to="/creatives"
@@ -154,12 +106,23 @@ export default function Home() {
               <FaPlayCircle className="text-base sm:text-lg" />{" "}
               {t("home.explore_creatives")}
             </Link>
-            {/* <Link
+
+            <Link
               to="/featured"
-              className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-white text-white font-semibold flex items-center gap-2 hover:bg-white hover:text-black transition"
+              className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-orange-500 text-white font-semibold flex items-center gap-2 transition hover:scale-105"
             >
-              <Crown className="w-5 h-5" /> {t("home.get_featured")}
-            </Link> */}
+              <Crown className="text-white text-base sm:text-lg" />
+              JOIN TODAY!
+            </Link>
+            {/* <Link
+               to="/featured"
+               className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-white text-white font-semibold flex items-center gap-2 hover:bg-white hover:text-black transition"
+             >
+               <Crown className="w-5 h-5" /> {t("home.get_featured")}
+             </Link> */}
+
+
+
           </div>
         </div>
       </section>
@@ -253,23 +216,34 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-14  lg:py-20 bg-white">
+      <section className="py-14  lg:py-20 bg-white">
+        <div className="mb-10 flex justify-center">
+          <div className="max-w-2xl mx-auto">
+            <img
+              src={backimg}
+              alt="How ArtCee Works"
+              className="w-full rounded-xl shadow-md object-cover"
+            />
+          </div>
+        </div>
+
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900">
             {t("home.how_it_works_title")}
           </h2>
           <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-           {t("home.value_subtitle")}
+            {t("home.value_subtitle")}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-16">
             <div className="group">
               <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-teal-500 text-white text-3xl shadow-md">
                 <Search size={30} />
               </div>
-              <h4 className="mt-6 font-bold text-lg">{t("home.step1_title")}</h4>
+              <h4 className="mt-6 font-bold text-lg">1. Create</h4>
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                {t("home.step1_desc")}
+                Showcase your portfolio and bring your ideas to life in a space
+                built for creative professionals.
               </p>
             </div>
 
@@ -279,7 +253,8 @@ export default function Home() {
               </div>
               <h4 className="mt-6 font-bold text-lg">{t("home.step2_title")}</h4>
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                {t("home.step2_desc")}
+                Expand your network, discover opportunities, and build meaningful
+                relationships with peers, clients, and businesses.
               </p>
             </div>
 
@@ -289,155 +264,161 @@ export default function Home() {
               </div>
               <h4 className="mt-6 font-bold text-lg">{t("home.step3_title")}</h4>
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                {t("home.step3_desc")}
+                Work together on projects, share resources, and grow your career
+                through partnerships that inspire progress.
               </p>
             </div>
 
-            <div className="group">
-              <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-orange-500 text-white text-3xl shadow-md">
-                <Trophy size={30} />
-              </div>
-              <h4 className="mt-6 font-bold text-lg">{t("home.step4_title")}</h4>
-              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                {t("home.step4_desc")}
-              </p>
-            </div>
+            {/* <div className="group">
+                 <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-orange-500 text-white text-3xl shadow-md">
+                   <Trophy size={30} />
+                 </div>
+                 <h4 className="mt-6 font-bold text-lg">{t("home.step4_title")}</h4>
+                 <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                   {t("home.step4_desc")}
+                 </p>
+               </div> */}
+
+
+
+
           </div>
         </div>
       </section>
 
+
       {/* Featured Professionals */}
-      {/* <section className="py-14  lg:py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center">
-            <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
-              {t("home.featured_title")}
-            </h2>
-            <p className="mt-2 text-gray-600">{t("home.featured_subtitle")}</p>
-          </div>
+      {/* <section className="py-14  lg:py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">
+         <div className="max-w-6xl mx-auto px-6">
+           <div className="text-center">
+             <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">
+               {t("home.featured_title")}
+             </h2>
+             <p className="mt-2 text-gray-600">{t("home.featured_subtitle")}</p>
+           </div>
 
-          <div className="mt-12 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {loading ? (
-              <p className="text-center py-10 text-gray-500">{t("creative.loading") || "Loading..."}</p>
-            ) : professionals.length === 0 ? (
-              <p className="text-center py-10 text-gray-500">{t("creative.no_creatives")}</p>
-            ) : (
-              professionals.map((pro) => {
-                const profileSrc = pro?.user?.profile?.profile_picture || DEFAULT_AVATAR;
-                const name = pro?.user?.full_name || t("creative.anonymous");
-                const title = pro?.user?.profile?.title || "—";
-                const availability = getAvailability(pro);
-                const uuid = pro?.user?.uuid || "";
+           <div className="mt-12 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+             {loading ? (
+               <p className="text-center py-10 text-gray-500">{t("creative.loading") || "Loading..."}</p>
+             ) : professionals.length === 0 ? (
+               <p className="text-center py-10 text-gray-500">{t("creative.no_creatives")}</p>
+             ) : (
+               professionals.map((pro) => {
+                 const profileSrc = pro?.user?.profile?.profile_picture || DEFAULT_AVATAR;
+                 const name = pro?.user?.full_name || t("creative.anonymous");
+                 const title = pro?.user?.profile?.title || "—";
+                 const availability = getAvailability(pro);
+                 const uuid = pro?.user?.uuid || "";
 
-                return (
-                  <div
-                    key={pro.id ?? pro.uuid ?? name}
-                    className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1"
-                  >
-                    <div className="relative bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
-                      <img
-                        src={profileSrc}
-                        alt={name}
-                        className="object-cover max-h-[180px] w-full"
-                        onError={(e) => {
-                          if (e.currentTarget.src !== DEFAULT_AVATAR) {
-                            e.currentTarget.src = DEFAULT_AVATAR;
-                          }
-                        }}
-                      />
-                      <div className="absolute top-3 right-3 bg-gray-900 text-white text-sm px-2 py-1 rounded-md flex items-center gap-1">
-                        <BiStar className="w-4 h-4 text-yellow-400" />
-                        {typeof pro.user.rating === "number" ? pro.user.rating.toFixed(1) : pro.user.rating ?? "—"}
-                      </div>
-                    </div>
+                 return (
+                   <div
+                     key={pro.id ?? pro.uuid ?? name}
+                     className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1"
+                   >
+                     <div className="relative bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center">
+                       <img
+                         src={profileSrc}
+                         alt={name}
+                         className="object-cover max-h-[180px] w-full"
+                         onError={(e) => {
+                           if (e.currentTarget.src !== DEFAULT_AVATAR) {
+                             e.currentTarget.src = DEFAULT_AVATAR;
+                           }
+                         }}
+                       />
+                       <div className="absolute top-3 right-3 bg-gray-900 text-white text-sm px-2 py-1 rounded-md flex items-center gap-1">
+                         <BiStar className="w-4 h-4 text-yellow-400" />
+                         {typeof pro.user.rating === "number" ? pro.user.rating.toFixed(1) : pro.user.rating ?? "—"}
+                       </div>
+                     </div>
 
-                    <div className="p-5 text-left">
-                      <h4 className="text-sm text-gray-500">{title}</h4>
-                      <h3 className="text-lg font-semibold">{name}</h3>
+                     <div className="p-5 text-left">
+                       <h4 className="text-sm text-gray-500">{title}</h4>
+                       <h3 className="text-lg font-semibold">{name}</h3>
 
-                      <p className="flex items-center gap-2 mt-2 text-sm text-gray-600">
-                        <span
-                          className={`w-2.5 h-2.5 rounded-full ${availability.label === t("creative.available") ? "bg-green-500" : "bg-red-500"
-                            }`}
-                        ></span>
-                        {availability.label}
-                      </p>
+                       <p className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                         <span
+                           className={`w-2.5 h-2.5 rounded-full ${availability.label === t("creative.available") ? "bg-green-500" : "bg-red-500"
+                             }`}
+                         ></span>
+                         {availability.label}
+                       </p>
 
-                      <p className="mt-3 text-gray-600 text-sm line-clamp-3">
-                        {pro.personal_intro || pro.user?.profile?.bio || t("creative.no_intro")}
-                      </p>
+                       <p className="mt-3 text-gray-600 text-sm line-clamp-3">
+                         {pro.personal_intro || pro.user?.profile?.bio || t("creative.no_intro")}
+                       </p>
 
-                      <SkillChips skills={pro?.skills} />
+                       <SkillChips skills={pro?.skills} />
 
-                      <button
-                        onClick={() => {
-                          setSelectedUuid(uuid);
-                          setOpen(true);
-                        }}
+                       <button
+                         onClick={() => {
+                           setSelectedUuid(uuid);
+                           setOpen(true);
+                         }}
 
-                        className="mt-5 w-full bg-teal-500 hover:bg-teal-600 text-xs text-white py-2 rounded-md font-medium shadow-md transition"
-                      >
-                        {t("home.view_profile")}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
+                         className="mt-5 w-full bg-teal-500 hover:bg-teal-600 text-xs text-white py-2 rounded-md font-medium shadow-md transition"
+                       >
+                         {t("home.view_profile")}
+                       </button>
+                     </div>
+                   </div>
+                 );
+               })
+             )}
+           </div>
 
-          <ViewProfilePopupModel isOpen={open} onClose={() => {
-            setOpen(false);
-            setSelectedUuid(null);
-          }} uuid={selectedUuid} />
+           <ViewProfilePopupModel isOpen={open} onClose={() => {
+             setOpen(false);
+             setSelectedUuid(null);
+           }} uuid={selectedUuid} />
 
-          <div className="flex justify-center mt-10">
-            <Link
-              to="/creatives"
-              className="inline-flex items-center gap-2 bg-white hover:bg-gray-200 text-xs text-black font-medium px-6 py-3 rounded-md shadow-md transition transform hover:scale-105"
-            >
-              <FaSearch className="w-3 h-3" />
-              {t("home.browse_all_creatives")}
-              <FaArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        </div>
-      </section> */}
+           <div className="flex justify-center mt-10">
+             <Link
+               to="/creatives"
+               className="inline-flex items-center gap-2 bg-white hover:bg-gray-200 text-xs text-black font-medium px-6 py-3 rounded-md shadow-md transition transform hover:scale-105"
+             >
+               <FaSearch className="w-3 h-3" />
+               {t("home.browse_all_creatives")}
+               <FaArrowRight className="w-3 h-3" />
+             </Link>
+           </div>
+         </div>
+       </section> */}
 
       {/* Spotlight & Perspective */}
       {/* <section className="relative w-full">
-        <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-cyan-50 -z-10" />
+         <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-cyan-50 -z-10" />
 
-        <div className="max-w-5xl mx-auto px-6 py-14 lg:py-20 space-y-24 text-center">
-          <div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
-              {t("home.spotlight_title")}
-            </h2>
-            <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-              {t("home.spotlight_desc")}
-            </p>
-            <button className="text-xs mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-medium px-6 py-2.5 rounded-md shadow-md transition transform hover:scale-105">
-              <SiSpotlight className="w-4 h-4" />
-              {t("home.spotlight_btn")}
-              <FaArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+         <div className="max-w-5xl mx-auto px-6 py-14 lg:py-20 space-y-24 text-center">
+           <div>
+             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
+               {t("home.spotlight_title")}
+             </h2>
+             <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
+               {t("home.spotlight_desc")}
+             </p>
+             <button className="text-xs mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-medium px-6 py-2.5 rounded-md shadow-md transition transform hover:scale-105">
+               <SiSpotlight className="w-4 h-4" />
+               {t("home.spotlight_btn")}
+               <FaArrowRight className="w-4 h-4" />
+             </button>
+           </div>
 
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-              {t("home.perspective_title")}
-            </h2>
-            <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-              {t("home.perspective_desc")}
-            </p>
-            <button className="text-xs mt-6 inline-flex items-center gap-2 bg-teal-500 text-white font-medium px-6 py-2.5 rounded-md shadow-md transition transform hover:scale-105">
-              <FaBookOpen className="w-4 h-4" />
-              {t("home.perspective_btn")}
-              <FaArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section> */}
+           <div>
+             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+               {t("home.perspective_title")}
+             </h2>
+             <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
+               {t("home.perspective_desc")}
+             </p>
+             <button className="text-xs mt-6 inline-flex items-center gap-2 bg-teal-500 text-white font-medium px-6 py-2.5 rounded-md shadow-md transition transform hover:scale-105">
+               <FaBookOpen className="w-4 h-4" />
+               {t("home.perspective_btn")}
+               <FaArrowRight className="w-4 h-4" />
+             </button>
+           </div>
+         </div>
+       </section> */}
     </div>
   );
 }

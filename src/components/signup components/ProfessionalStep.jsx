@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useTranslation } from "../../contexts/LanguageProvider";
 import CustomDropdown from "../../components/CustomDropdown";
+import { Link } from "react-router-dom";
 
 const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
   const { t } = useTranslation();
@@ -70,23 +71,23 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
     t,
   ]);
 
- const validateLocal = () => {
-  const newErrors = {};
+  const validateLocal = () => {
+    const newErrors = {};
 
-  if (!String(local.personal_intro).trim())
-    newErrors.personal_intro = t("professional.errors.personal_intro");
+    if (!String(local.personal_intro).trim())
+      newErrors.personal_intro = t("professional.errors.personal_intro");
 
-  if (!String(local.exp_vision).trim())
-    newErrors.exp_vision = t("professional.errors.exp_vision");
+    if (!String(local.exp_vision).trim())
+      newErrors.exp_vision = t("professional.errors.exp_vision");
 
-  // if (!local.experience_in_level) {
-  //   newErrors.experience_in_level = "choose career level";
-  // }
+    // if (!local.experience_in_level) {
+    //   newErrors.experience_in_level = "choose career level";
+    // }
 
-  setErrors(newErrors);
-  setShowTopAlert(Object.keys(newErrors).length > 0);
-  return Object.keys(newErrors).length === 0;
-};
+    setErrors(newErrors);
+    setShowTopAlert(Object.keys(newErrors).length > 0);
+    return Object.keys(newErrors).length === 0;
+  };
 
 
   const syncToParent = (overrides = {}) => {
@@ -238,6 +239,14 @@ const ProfessionalStep = ({ formData, setFormData, onNext, onPrev }) => {
           <button type="submit" className="flex items-center px-6 py-2 text-xs bg-teal-400 text-white rounded-md hover:bg-teal-500">
             {t("professional.next")} <FaArrowRight className="ml-2" />
           </button>
+        </div>
+        <div className="flex justify-end">
+          <Link
+            to="/home"
+            className="text-gray-600 text-xs border-2 px-3 py-1.5 rounded-md hover:bg-gray-100"
+          >
+            {t("register.skip_for_now")}
+          </Link>
         </div>
       </form>
     </div>

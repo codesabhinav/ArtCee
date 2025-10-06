@@ -2,6 +2,7 @@ import { CameraIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState, useRef } from "react";
 import { FaArrowLeft, FaArrowRight, FaUpload, FaTimes } from "react-icons/fa";
 import { useTranslation } from "../../contexts/LanguageProvider";
+import { Link } from "react-router-dom";
 
 const MAX_RESUME_BYTES = 10 * 1024 * 1024; // 10MB
 
@@ -188,7 +189,7 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
     if (resumeInputRef.current) {
       try {
         resumeInputRef.current.value = "";
-      } catch (e) {}
+      } catch (e) { }
     }
     setFormData((prev) => ({ ...prev, resume: null }));
   };
@@ -313,13 +314,21 @@ const PortfolioSocialStep = ({ formData, setFormData, onNext, onPrev }) => {
       )}
 
       {/* Navigation */}
-      <div className="flex justify-between pt-4">
+      <div className="flex justify-between py-4">
         <button type="button" onClick={handlePrev} className="flex items-center px-4 py-2 text-xs border rounded-md text-gray-700 hover:bg-gray-100">
           <FaArrowLeft className="mr-2" /> {t("portfolio_social.prev")}
         </button>
         <button type="button" onClick={handleSubmit} className="flex items-center px-6 py-2 text-xs bg-teal-400 text-white rounded-md hover:bg-teal-500">
           {t("portfolio_social.next")} <FaArrowRight className="ml-2" />
         </button>
+      </div>
+      <div className="flex justify-end">
+        <Link
+          to="/home"
+          className="text-gray-600 text-xs border-2 px-3 py-1.5 rounded-md hover:bg-gray-100"
+        >
+          {t("register.skip_for_now")}
+        </Link>
       </div>
     </div>
   );

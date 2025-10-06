@@ -20,7 +20,7 @@ import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
 import SpinnerProvider from "../components/SpinnerProvider";
 import { deletePost, getGuestDashboardData, getPlans, getPostData, JobsData } from "../Hooks/useSeller";
-import { Crown, LogOut, Star, TrashIcon } from "lucide-react";
+import { Building, Building2, Crown, LogOut, Plus, Star, TrashIcon } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
 import UploadProfileModal from "../modal/dashboard models/UploadProfileModal";
@@ -28,6 +28,7 @@ import Cookies from "js-cookie";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import toast from "react-hot-toast";
 import PortfolioModal from "../modal/dashboard models/PortfolioModal";
+import PostJobPopupModal from "../modal/PostJobPopupModal";
 
 const GuestDashboardPage = () => {
   const { t } = useTranslation();
@@ -38,19 +39,20 @@ const GuestDashboardPage = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  // const [posts, setPosts] = useState([]);
   const [meta, setMeta] = useState(null);
   const [page, setPage] = useState(1);
   const [isPhotoOpen, setPhotoIsOpen] = useState(false);
   const [isWorkOpen, setWorkOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
 
-  // const [jobsList, setJobsList] = useState([]);
   const [jobsLoading, setJobsLoading] = useState(false);
   const [jobsError, setJobsError] = useState(null);
   const [plans, setPlans] = useState([]);
   const [plansLoading, setPlansLoading] = useState(false);
   const [plansError, setPlansError] = useState(null);
+  const [isPostJobOpen, setPostJobOpen] = useState(false);
+  const [jobsPostLoading, setJobsPostLoading] = useState(false);
+  const [jobsPostError, setjobsPostError] = useState(null);
 
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
@@ -68,24 +70,12 @@ const GuestDashboardPage = () => {
 
   useEffect(() => {
     let mounted = true;
-    // fetch dashboard when component mounts
     fetchDashboard();
 
     return () => {
       mounted = false;
     };
   }, [fetchDashboard]);
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   getPostData(page)
-  //     .then(({ posts, meta }) => {
-  //       setPosts(posts);
-  //       setMeta(meta);
-  //     })
-  //     .catch((err) => console.error(err?.message || t("guest.posts_load_error")))
-  //     .finally(() => setLoading(false));
-  // }, [page, t]);
 
   function openCreate() {
     setEditingPost(null);
@@ -103,7 +93,6 @@ const GuestDashboardPage = () => {
 
     try {
       await deletePost(postId);
-      // setPosts(prev => prev.filter(p => p.id !== postId));
     } catch (err) {
       console.error("Failed to delete:", err);
       alert(err.message || "Failed to delete post");
@@ -146,7 +135,45 @@ const GuestDashboardPage = () => {
 
   const memberSince = new Date(user?.created_at ?? profile?.created_at ?? Date.now()).toLocaleDateString();
   const jobsList = payload?.jobs ?? [];
+  const postedJobList = [];
   const posts = payload?.posts ?? [];
+  const subscription =
+    payload?.user?.subcription ??
+    payload?.seller?.user?.subcription ??
+    user?.subcription ??
+    sellerUser?.subcription ??
+    null;
+
+  const planDetails =
+    subscription?.plan ??
+    payload?.user?.plan ??
+    payload?.seller?.user?.plan ??
+    user?.plan ??
+    sellerUser?.plan ??
+    null;
+
+  const planPricing =
+    planDetails?.pricing?.price ??
+    (planDetails?.pricing === undefined && planDetails?.country ? planDetails?.country : null);
+
+  const subscriptionExpiry = subscription?.expired_date
+    ? new Date(subscription.expired_date).toLocaleDateString()
+    : null;
+
+  const planPriceDisplay = (() => {
+    if (planPricing?.price) {
+      const symbol = planPricing?.country?.currency_symbol ?? planPricing?.currency ?? "₹";
+      return `${symbol} ${planPricing.price}`;
+    }
+    if (planDetails?.pricing?.price) {
+      const symbol = planDetails?.pricing?.country?.currency_symbol ?? planDetails?.pricing?.currency ?? "₹";
+      return `${symbol} ${planDetails.pricing.price}`;
+    }
+    return null;
+  })();
+
+  const hasActiveSubscription = (subscription?.status ?? "").toLowerCase() === "active";
+
 
   useEffect(() => {
     const loadPlansForCountry = async () => {
@@ -516,6 +543,89 @@ const GuestDashboardPage = () => {
                 </div>
               )}
             </div>
+
+            {/* Posted Job Listing */}
+            {hasActiveSubscription ?
+              (<div className="bg-white border rounded-lg p-6 mt-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
+                  <h3 className="text-sm flex items-center gap-2">
+                    <Building2 className="h-5 w-5" /> Posted Jobs
+                  </h3>
+                  <button
+                    onClick={() => setPostJobOpen(true)}
+                    className="bg-teal-500 text-white font-semibold px-3 py-2 text-xs rounded-md  w-full sm:w-auto"
+                  >
+                    + Post Job
+                  </button>
+                </div>
+
+                {jobsPostLoading ? (
+                  <div className="text-sm text-gray-600">Loading jobs…</div>
+                ) : jobsPostError ? (
+                  <div className="text-sm text-red-500">{jobsPostError}</div>
+                ) : postedJobList.length === 0 ? (
+                  <div className="text-center py-6">
+                    <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
+                      <Building2 className="h-7 w-7" />
+                    </div>
+                    <p className="text-sm font-regular my-2">No jobs posted yet</p>
+                    <button
+                      onClick={() => setPostJobOpen(true)}
+                      className="bg-teal-500 text-white font-semibold px-4 py-2 rounded-md text-xs w-full sm:w-auto"
+                    >
+                      + Post Your First Job
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {postedJobList.map((job) => (
+                      <div key={job.id} className="border rounded-md p-3 flex items-start gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start gap-2">
+                            <div className="min-w-0">
+                              <h4 className="font-semibold text-sm truncate">{job.title}</h4>
+                              <p className="text-xs text-gray-600 truncate">{job.location} • {job.schedule_type}</p>
+                            </div>
+                            <div className="ml-2">
+                              <span className="text-[10px] px-2 py-1 bg-yellow-100 text-yellow-600 rounded-md">
+                                {job.via || "Source"}
+                              </span>
+                            </div>
+                          </div>
+
+                          <p className="text-xs text-gray-600 mt-2 line-clamp-3 hidden sm:block">
+                            {job.description?.slice(0, 200)}{job.description && job.description.length > 200 ? "…" : ""}
+                          </p>
+
+                          {/* apply buttons */}
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {Array.isArray(job.apply_options) && job.apply_options.length > 0 ? (
+                              job.apply_options.slice(0, 3).map((opt) => (
+                                <button
+                                  key={opt.id}
+                                  onClick={() => handleApply(job, opt)}
+                                  className="text-xs px-3 py-1 border rounded-md hover:bg-gray-50"
+                                >
+                                  {opt.title}
+                                </button>
+                              ))
+                            ) : (
+                              <button
+                                onClick={() => handleApply(job)}
+                                className="text-xs px-3 py-1 bg-teal-500 text-white rounded-md"
+                              >
+                                Apply
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>) : <></>
+            }
+
           </div>
 
           {/* Right Side */}
@@ -530,25 +640,75 @@ const GuestDashboardPage = () => {
                 <p className="text-xs text-gray-500 mb-4">{t("guest.unlock_subtitle")}</p>
               </div>
 
-              <ul className="text-xs space-y-2 text-left">
-                <li className="text-green-600">✔ {t("guest.upgrade.featured")}</li>
-                <li className="text-green-600">✔ {t("guest.upgrade.follow")}</li>
-                <li className="text-green-600">✔ {t("guest.upgrade.like")}</li>
-                <li className="text-green-600">✔ {t("guest.upgrade.story")}</li>
-                <li className="text-orange-500">★ {t("guest.upgrade.badge")}</li>
-              </ul>
+              {hasActiveSubscription && planDetails ? (
+                <div className="text-xs text-left space-y-3 mb-3">
+                  <span className="text-xs font-semibold bg-green-100 text-gray-600 px-2 py-1 rounded-xl">
+                    {subscription ? (subscription.status === "active" ? t("guest.plan_active") : t("guest.plan_inactive")) : t("guest.plan_free")}
+                  </span>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-semibold">{planDetails.title}</p>
+                      <p className="text-[11px] text-gray-500">{planDetails.description}</p>
+                    </div>
+                    <div className="text-right">
+                      {planPriceDisplay && <div className="font-semibold">{planPriceDisplay}</div>}
+                      {subscriptionExpiry && <div className="text-[11px] text-gray-500">Expires: {subscriptionExpiry}</div>}
+                    </div>
+                  </div>
 
-              <div className="mt-4 text-xs bg-orange-50 text-orange-600 border border-orange-600 px-3 py-2 rounded-md">
-                {t("guest.upgrade_limited")}
+                  <div className="text-[12px]">
+                    <p className="font-medium mb-1">Plan includes:</p>
+                    <ul className="list-disc pl-4 space-y-1">
+                      {planDetails.features?.length ? (
+                        planDetails.features.map((f) => (
+                          <li key={f.id} className="text-xs">{f.name ?? f}</li>
+                        ))
+                      ) : (
+                        <li className="text-xs">{t("guest.upgrade_default_features")}</li>
+                      )}
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <ul className="text-xs space-y-2 text-left">
+                    <li className="text-green-600">✔ {t("guest.upgrade.featured")}</li>
+                    <li className="text-green-600">✔ {t("guest.upgrade.follow")}</li>
+                    <li className="text-green-600">✔ {t("guest.upgrade.like")}</li>
+                    <li className="text-green-600">✔ {t("guest.upgrade.story")}</li>
+                    <li className="text-orange-500">★ {t("guest.upgrade.badge")}</li>
+                  </ul>
+
+                  <div className="mt-4 text-xs bg-orange-50 text-orange-600 border border-orange-600 px-3 py-2 rounded-md">
+                    {t("guest.upgrade_limited")}
+                  </div>
+                </>
+              )}
+
+              <div className="mt-3 space-y-2">
+                <button
+                  onClick={() => navigate("/featured")}
+                  className="w-full text-xs hover:bg-orange-500 hover:text-white py-2 rounded-md font-medium bg-white border border-orange-500 text-orange-500"
+                >
+                  {premiumPrice.price ? `${premiumPrice.symbol} ${premiumPrice.price} • ${t("guest.premium_monthly_cta")}` : t("guest.founding_member_cta")}
+                </button>
+
+                <button
+                  onClick={() => navigate("/featured")}
+                  className="w-full text-xs border border-teal-500 text-teal-600 py-2 rounded-md font-medium hover:bg-teal-500 hover:text-white"
+                >
+                  {foundingPrice.price ? `${foundingPrice.symbol} ${foundingPrice.price} • ${t("guest.founding_member_cta")}` : t("guest.premium_monthly_cta")}
+                </button>
+
+                {/* {hasActiveSubscription ? (
+                  <button
+                    onClick={() => navigate("/subscription/manage")}
+                    className="w-full text-xs mt-2 bg-gray-100 text-gray-700 py-2 rounded-md font-medium"
+                  >
+                    {t("guest.manage_subscription") || "Manage subscription"}
+                  </button>
+                ) : null} */}
               </div>
-
-              <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 hover:bg-orange-500 hover:text-white py-2 rounded-md font-medium bg-white border border-orange-500 text-orange-500">
-                {premiumPrice.price ? `${premiumPrice.symbol} ${premiumPrice.price} • ${t("guest.premium_monthly_cta")}` : t("guest.founding_member_cta")}
-              </button>
-
-              <button onClick={() => navigate("/featured")} className="w-full text-xs mt-3 border border-teal-500 text-teal-600 py-2 rounded-md font-medium hover:bg-teal-500 hover:text-white">
-                {foundingPrice.price ? `${foundingPrice.symbol} ${foundingPrice.price} • ${t("guest.founding_member_cta")}` : t("guest.premium_monthly_cta")}
-              </button>
             </div>
 
             {/* Account Includes */}
@@ -591,9 +751,11 @@ const GuestDashboardPage = () => {
             {/* Current Plan */}
             <div className="bg-white border rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-normal text-sm">{t("guest.current_plan_title")}: {payload?.data?.subcription?.plan_id ? t("guest.plan_paid") : t("guest.plan_free")}</h3>
+                <h3 className="font-normal text-sm">
+                  {t("guest.current_plan_title")}: {subscription?.plan?.title ? subscription.plan.title : (payload?.data?.subcription?.plan_id ? t("guest.plan_paid") : t("guest.plan_free"))}
+                </h3>
                 <span className="text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-1 rounded-xl">
-                  {payload?.data?.subcription?.status === "active" ? t("guest.plan_active") : t("guest.plan_inactive")}
+                  {subscription ? (subscription.status === "active" ? t("guest.plan_active") : t("guest.plan_inactive")) : t("guest.plan_free")}
                 </span>
               </div>
 
@@ -601,31 +763,47 @@ const GuestDashboardPage = () => {
                 <div>
                   <p className="text-black font-medium mb-2">{t("guest.billing.title")}</p>
                   <p className="text-gray-500">{t("guest.billing.price")}</p>
-                  <p className="font-medium mb-2">{payload?.data?.subcription?.plan_id ? "$" + payload?.data?.subcription?.plan_id : "$0"}</p>
+                  <p className="font-medium mb-2"> {foundingPrice.symbol} {user?.plan?.pricing?.price}</p>
 
                   <p className="text-gray-500">{t("guest.billing.cycle")}</p>
-                  <p className="font-medium mb-2">{payload?.data?.subcription?.status === "active" ? t("guest.billing.paid") : t("guest.billing.free")}</p>
+                  <p className="font-medium mb-2">{planDetails?.billing_cycle ?? t("guest.billing.free")}</p>
 
                   <p className="text-gray-500">{t("guest.billing.member_since")}</p>
-                  <p className="font-medium">{memberSince}</p>
+                  <p className="font-medium">{subscriptionExpiry ?? memberSince}</p>
 
-                  <button onClick={() => navigate("/featured")} className="w-full mt-4 bg-teal-500 text-white py-1.5 rounded-md text-xs font-semibold">
-                    {t("guest.upgrade_button")}
-                  </button>
-                  <p className="text-[10px] text-gray-500 mt-1 text-center">{t("guest.upgrade_hint")}</p>
+                  <div className="mt-3">
+                    {hasActiveSubscription ? (
+                      <button onClick={() => setPostJobOpen(true)} className="w-full mt-2 bg-teal-500 text-white py-1.5 rounded-md text-xs font-semibold">
+                        Post a job
+                      </button>
+                    ) : (
+                      <button onClick={() => navigate("/featured")} className="w-full mt-4 bg-teal-500 text-white py-1.5 rounded-md text-xs font-semibold">
+                        {t("guest.upgrade_button")}
+                      </button>
+                    )}
+                    <p className="text-[10px] text-gray-500 mt-1 text-center">{t("guest.upgrade_hint")}</p>
+                  </div>
                 </div>
 
                 <div>
                   <p className="text-black font-medium mb-2">{t("guest.plan_features_title")}</p>
                   <ul className="space-y-2 text-xs">
-                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.basic_profile")}</li>
-                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.unlimited_portfolio")}</li>
-                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.job_applications")}</li>
-                    <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.directory_listing")}</li>
+                    {planDetails?.features?.length ? (
+                      planDetails.features.map((f) => (
+                        <li key={f.id} className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {f.name}</li>
+                      ))
+                    ) : (
+                      <>
+                        <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.basic_profile")}</li>
+                        <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.unlimited_portfolio")}</li>
+                        <li className="flex items-center gap-2 text-gray-700"><span className="text-green-500">✔</span> {t("guest.features.job_applications")}</li>
+                      </>
+                    )}
                   </ul>
                 </div>
               </div>
             </div>
+
 
             {/* Account Usage */}
             <div className="bg-white border rounded-lg p-6 mt-6">
@@ -681,11 +859,21 @@ const GuestDashboardPage = () => {
                 <li onClick={() => setPhotoIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
                   <span className="flex items-center gap-2"><CameraIcon className="h-4 w-4" /> {t("guest.quick.update_photo")}</span>
                 </li>
+                {hasActiveSubscription ? (
+                  <li onClick={() => setPostJobOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                    <span className="flex items-center gap-2"><Plus className="h-4 w-4" />Post a job</span>
+                  </li>
+                ) : null}
               </ul>
             </div>
           </div>
         </div>
       </div>
+
+      <PostJobPopupModal
+        isOpen={isPostJobOpen}
+        setIsOpen={setPostJobOpen}
+        onSuccess={handleModalSaved} />
 
       <CreatePostPopupModel
         isOpen={isOpen}

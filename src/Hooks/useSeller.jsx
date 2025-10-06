@@ -342,3 +342,32 @@ export function sendMediaMessage(id, { message = "", message_type = "file", file
     throw new Error(errorMessage);
   });
 }
+
+export function uploadResume(uuid, formData) {
+  return service
+    .post(`seller/user/upload-resuma/${uuid}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to upload resume";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+
+      throw new Error(message);
+    });
+}
+
+export function fetchResume(id) {
+  return service
+    .get(`seller/user/resuma/${id}`)
+    .then((res) => res.data || {})
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message || "Failed to fetch resume";
+      throw new Error(errorMessage);
+    });
+}

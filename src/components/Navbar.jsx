@@ -1,21 +1,11 @@
-import { Link,useNavigate } from "react-router-dom";
-import {
-  FaUser,
-  FaBriefcase,
-  FaBuilding,
-  FaSearch,
-  FaStar,
-  FaBookOpen,
-  FaBars,
-  FaTimes,
-} from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUser, FaBars, FaTimes } from "react-icons/fa";
 import LoginPage from "../pages/LoginPage";
+import NotFoundPage from "../pages/NotFoundPage";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import Cookies from "js-cookie";
-import { BookOpen, Briefcase, Building2, Search, SearchIcon, Spotlight, Users } from "lucide-react";
-
-
+import { BookOpen, Briefcase, Building2, Search, Spotlight, Users } from "lucide-react";
 
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -24,8 +14,12 @@ const Navbar = () => {
   const { t, languages, lang, setLang } = useTranslation();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const langDropdownRef = useRef(null);
-  const navigate = useNavigate();
+  const [mobileLangOpen, setMobileLangOpen] = useState(false);
 
+  const [showComingSoon, setShowComingSoon] = useState(false);
+  const modalRef = useRef(null); 
+
+  const navigate = useNavigate();
 
   const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get("token"));
 
@@ -58,7 +52,43 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", onClick);
   }, [langDropdownOpen]);
 
+
+  useEffect(() => {
+    if (!showComingSoon) return;
+
+    function handleModalClick(e) {
+      const btn = e.target.closest && e.target.closest("button");
+      if (!btn) return;
+
+      const text = (btn.textContent || "").trim().toLowerCase();
+
+      if (text.includes("go back")) {
+        e.preventDefault();
+        setShowComingSoon(false);
+        navigate("/");
+      }
+    }
+
+    const el = modalRef.current;
+    if (el) el.addEventListener("click", handleModalClick);
+
+    return () => {
+      if (el) el.removeEventListener("click", handleModalClick);
+    };
+  }, [showComingSoon, navigate]);
+
   const selectedLang = languages.find((l) => l.code === lang) || languages[0];
+
+  useEffect(() => {
+    if (showComingSoon) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showComingSoon]);
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm">
@@ -75,7 +105,6 @@ const Navbar = () => {
               </span>
             </Link>
           </div>
-
 
           <div className="hidden [@media(min-width:999px)]:flex items-center space-x-2 text-xs font-semibold">
             <Link
@@ -96,25 +125,30 @@ const Navbar = () => {
             >
               <Building2 className="mr-2 h-4 w-4" /> {t("nav.business_directory")}
             </Link>
-            <Link
-              to="/spotlight"
+            <button
+              onClick={() => setShowComingSoon(true)}
               className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
+              aria-pressed={showComingSoon}
+              type="button"
             >
               <Spotlight className="mr-2 h-4 w-4" /> {t("nav.spotlight")}
-            </Link>
-            <Link
-              to="/perspective"
+            </button>
+
+            <button
+              onClick={() => setShowComingSoon(true)}
               className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
+              type="button"
             >
               <BookOpen className="mr-2 h-4 w-4" /> {t("nav.perspective")}
-            </Link>
-            <Link
-              to="/groups"
+            </button>
+
+            <button
+              onClick={() => setShowComingSoon(true)}
               className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
+              type="button"
             >
               <Users className="mr-2 h-4 w-4" /> Groups
-            </Link>
-
+            </button>
 
             <div className="relative" ref={langDropdownRef}>
               <button
@@ -145,8 +179,9 @@ const Navbar = () => {
                   {languages.map((l) => (
                     <li
                       key={l.code}
-                      className={`flex items-center px-3 py-2 cursor-pointer hover:bg-gray-100 text-xs ${lang === l.code ? "bg-gray-100 font-bold" : ""
-                        }`}
+                      className={`flex items-center px-3 py-2 cursor-pointer hover:bg-gray-100 text-xs ${
+                        lang === l.code ? "bg-gray-100 font-bold" : ""
+                      }`}
                       onClick={() => {
                         setLang(l.code);
                         setLangDropdownOpen(false);
@@ -154,11 +189,7 @@ const Navbar = () => {
                       role="option"
                       aria-selected={lang === l.code}
                     >
-                      <img
-                        src={l.flag}
-                        alt={l.name}
-                        className="w-5 h-5 mr-2 rounded-sm object-cover"
-                      />
+                      <img src={l.flag} alt={l.name} className="w-5 h-5 mr-2 rounded-sm object-cover" />
                       {l.name}
                     </li>
                   ))}
@@ -171,11 +202,10 @@ const Navbar = () => {
                 to="/profile"
                 className="flex items-center px-3 py-2 rounded-md bg-teal-500 text-white hover:bg-teal-600 transition text-xs font-semibold"
               >
-                <FaUser className="mr-2" />  {t("nav.my_account")}
+                <FaUser className="mr-2" /> {t("nav.my_account")}
               </Link>
             ) : (
               <button
-                // onClick={() => setShowModal(true)}
                 onClick={() => navigate("/login")}
                 className="flex items-center px-3 py-2 border border-gray-400 rounded-md text-gray-700 hover:bg-gray-100 transition text-xs font-semibold"
               >
@@ -184,7 +214,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Hamburger */}
           <div className="[@media(min-width:999px)]:hidden">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -196,10 +225,9 @@ const Navbar = () => {
         </div>
       </div>
 
-
       {showModal && <LoginPage onClose={() => setShowModal(false)} />}
 
-
+   
       {menuOpen && (
         <div className="[@media(min-width:999px)]:hidden px-4 pb-4 space-y-2 text-xs font-semibold w-full box-border">
           <Link to="/creatives" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
@@ -211,28 +239,86 @@ const Navbar = () => {
           <Link to="/business-directory" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
             <Building2 className="mr-3 h-4 w-4" /> {t("nav.business_directory")}
           </Link>
-          <Link to="/spotlight" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <Spotlight className="mr-3 h-4 w-4" /> {t("nav.spotlight")}
-          </Link>
-          <Link to="/perspective" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <BookOpen className="mr-3 h-4 w-4" /> {t("nav.perspective")}
-          </Link>
-          <Link to="/groups" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <Users className="mr-3 h-4 w-4" /> Groups
-          </Link>
 
+          <button
+            onClick={() => {
+              setShowComingSoon(true);
+              setMenuOpen(false);
+            }}
+            className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition w-full text-left"
+            type="button"
+          >
+            <Spotlight className="mr-3 h-4 w-4" /> {t("nav.spotlight")}
+          </button>
+
+          <button
+            onClick={() => {
+              setShowComingSoon(true);
+              setMenuOpen(false);
+            }}
+            className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition w-full text-left"
+            type="button"
+          >
+            <BookOpen className="mr-3 h-4 w-4" /> {t("nav.perspective")}
+          </button>
+
+          <button
+            onClick={() => {
+              setShowComingSoon(true);
+              setMenuOpen(false);
+            }}
+            className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition w-full text-left"
+            type="button"
+          >
+            <Users className="mr-3 h-4 w-4" /> Groups
+          </button>
+
+          <div className="border-t border-gray-200 pt-3">
+            <button
+              onClick={() => setMobileLangOpen((s) => !s)}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-md hover:bg-gray-100 transition text-left"
+              aria-expanded={mobileLangOpen}
+            >
+              <div className="flex items-center">
+                <img src={selectedLang.flag} alt={selectedLang.name} className="w-5 h-5 mr-2 rounded-sm object-cover" />
+                <span className="text-gray-700 text-xs font-semibold">{selectedLang.name}</span>
+              </div>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileLangOpen ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"} />
+              </svg>
+            </button>
+
+            {mobileLangOpen && (
+              <ul className="mt-2 space-y-1">
+                {languages.map((l) => (
+                  <li
+                    key={l.code}
+                    className={`flex items-center px-3 py-2 cursor-pointer rounded-md hover:bg-gray-100 text-xs ${lang === l.code ? "bg-gray-100 font-bold" : ""}`}
+                    onClick={() => {
+                      setLang(l.code);
+                      setMobileLangOpen(false);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    <img src={l.flag} alt={l.name} className="w-5 h-5 mr-2 rounded-sm object-cover" />
+                    {l.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
           {isAuthenticated ? (
             <Link
-                to="/profile"
-                className="flex items-center px-3 py-2 w-[120px] rounded-md bg-teal-500 text-white hover:bg-teal-600 transition text-xs font-semibold"
-              >
-                <FaUser className="mr-2" />  {t("nav.my_account")}
-              </Link>
+              to="/profile"
+              className="flex items-center px-3 py-2 w-[120px] rounded-md bg-teal-500 text-white hover:bg-teal-600 transition text-xs font-semibold"
+            >
+              <FaUser className="mr-2" /> {t("nav.my_account")}
+            </Link>
           ) : (
             <button
               onClick={() => {
-                navigate("/login")
+                navigate("/login");
                 setMenuOpen(false);
               }}
               className="flex items-center px-3 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition"
@@ -240,6 +326,23 @@ const Navbar = () => {
               <FaUser className="mr-2" /> {t("nav.sign_in")}
             </button>
           )}
+        </div>
+      )}
+
+      {showComingSoon && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="relative w-full max-w-2xl p-6" ref={modalRef}>
+            <div className="relative bg-transparent rounded-2xl overflow-hidden">
+
+              <div className="rounded-2xl overflow-hidden">
+                <NotFoundPage />
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </nav>

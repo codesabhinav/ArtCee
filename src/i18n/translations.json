@@ -317,7 +317,7 @@
       "all_types": "All Types",
       "filter_availability": "Availability",
       "filter_experience_level": "Experience Level",
-      "filter_work_style": "Work Style",
+      "filter_work_style": "Location",
       "filter_union_status": "Union Status",
       "sort_highest_rated": "Highest Rated",
       "sort_price_low_high": "Price: Low → High",
@@ -816,13 +816,13 @@
       "title": "Join ArtCee",
       "subtitle": "Where artsy people go to get discovered",
       "steps": {
-        "personal_info": "Personal Info",
-        "location": "Location",
-        "professional": "Professional",
-        "services_skills": "Services & Skills",
-        "portfolio_social": "Portfolio & Social",
-        "rates_pricing": "Rates & Pricing",
-        "profile_settings": "Profile Settings"
+        "personal_info": "Personal Info *" ,
+        "location": "Location *",
+        "professional": "Professional *",
+        "services_skills": "Services & Skills *",
+        "portfolio_social": "Portfolio & Social *",
+        "rates_pricing": "Rates & Pricing *",
+        "profile_settings": "Profile Settings *"
       }
     },
     "personal_info": {
@@ -2146,13 +2146,13 @@
       "title": "Únete a ArtCee",
       "subtitle": "Donde las personas artísticas van para ser descubiertas",
       "steps": {
-        "personal_info": "Información Personal",
-        "location": "Ubicación",
-        "professional": "Profesional",
-        "services_skills": "Servicios y Habilidades",
-        "portfolio_social": "Portafolio y Redes Sociales",
-        "rates_pricing": "Tarifas y Precios",
-        "profile_settings": "Configuración de Perfil"
+        "personal_info": "Información Personal *",
+        "location": "Ubicación *",
+        "professional": "Profesional *",
+        "services_skills": "Servicios y Habilidades *",
+        "portfolio_social": "Portafolio y Redes Sociales *",
+        "rates_pricing": "Tarifas y Precios *",
+        "profile_settings": "Configuración de Perfil *"
       }
     },
     "personal_info": {
@@ -3471,13 +3471,13 @@
       "title": "Junte-se ao ArtCee",
       "subtitle": "Onde pessoas artísticas vão para serem descobertas",
       "steps": {
-        "personal_info": "Informações Pessoais",
-        "location": "Localização",
-        "professional": "Profissional",
-        "services_skills": "Serviços e Habilidades",
-        "portfolio_social": "Portfólio e Redes Sociais",
-        "rates_pricing": "Taxas e Preços",
-        "profile_settings": "Configurações de Perfil"
+        "personal_info": "Informações Pessoais *",
+        "location": "Localização *",
+        "professional": "Profissional *",
+        "services_skills": "Serviços e Habilidades *",
+        "portfolio_social": "Portfólio e Redes Sociais *",
+        "rates_pricing": "Taxas e Preços *",
+        "profile_settings": "Configurações de Perfil *"
       }
     },
     "personal_info": {
@@ -4800,13 +4800,13 @@
       "title": "आर्टसी में शामिल हों",
       "subtitle": "जहां कलात्मक लोग खोजे जाने के लिए जाते हैं",
       "steps": {
-        "personal_info": "व्यक्तिगत जानकारी",
-        "location": "स्थान",
-        "professional": "पेशेवर",
-        "services_skills": "सेवाएँ और कौशल",
-        "portfolio_social": "पोर्टफोलियो और सोशल",
-        "rates_pricing": "दरें और मूल्य निर्धारण",
-        "profile_settings": "प्रोफाइल सेटिंग्स"
+        "personal_info": "व्यक्तिगत जानकारी *",
+        "location": "स्थान *",
+        "professional": "पेशेवर *",
+        "services_skills": "सेवाएँ और कौशल *",
+        "portfolio_social": "पोर्टफोलियो और सोशल *",
+        "rates_pricing": "दरें और मूल्य निर्धारण *",
+        "profile_settings": "प्रोफाइल सेटिंग्स *"
       }
     },
     "personal_info": {
@@ -6129,13 +6129,13 @@
       "title": "Sumali sa ArtCee",
       "subtitle": "Kung saan pumupunta ang mga artistikong tao para madiskubre",
       "steps": {
-        "personal_info": "Personal na Impormasyon",
-        "location": "Lokasyon",
-        "professional": "Propesyonal",
-        "services_skills": "Mga Serbisyo at Kasanayan",
-        "portfolio_social": "Portfolio at Social",
-        "rates_pricing": "Mga Rate at Pagpepresyo",
-        "profile_settings": "Mga Setting ng Profile"
+        "personal_info": "Personal na Impormasyon *",
+        "location": "Lokasyon *",
+        "professional": "Propesyonal *",
+        "services_skills": "Mga Serbisyo at Kasanayan *",
+        "portfolio_social": "Portfolio at Social *",
+        "rates_pricing": "Mga Rate at Pagpepresyo *",
+        "profile_settings": "Mga Setting ng Profile *"
       }
     },
     "personal_info": {
@@ -7458,13 +7458,13 @@
       "title": "ArtCee에 가입하세요",
       "subtitle": "예술적인 사람들이 발견되기 위해 가는 곳",
       "steps": {
-        "personal_info": "개인 정보",
-        "location": "위치",
-        "professional": "전문",
-        "services_skills": "서비스 및 기술",
-        "portfolio_social": "포트폴리오 및 소셜",
-        "rates_pricing": "요금 및 가격",
-        "profile_settings": "프로필 설정"
+        "personal_info": "개인 정보 *",
+        "location": "위치 *",
+        "professional": "전문 *",
+        "services_skills": "서비스 및 기술 *",
+        "portfolio_social": "포트폴리오 및 소셜 *",
+        "rates_pricing": "요금 및 가격 *",
+        "profile_settings": "프로필 설정 *"
       }
     },
     "personal_info": {
@@ -8787,13 +8787,13 @@
       "title": "加入ArtCee",
       "subtitle": "艺术人士被发现的地方",
       "steps": {
-        "personal_info": "个人信息",
-        "location": "地点",
-        "professional": "专业",
-        "services_skills": "服务与技能",
-        "portfolio_social": "作品集与社交",
-        "rates_pricing": "费率与定价",
-        "profile_settings": "个人资料设置"
+        "personal_info": "个人信息 *",
+        "location": "地点 *",
+        "professional": "专业 *",
+        "services_skills": "服务与技能 *",
+        "portfolio_social": "作品集与社交 *",
+        "rates_pricing": "费率与定价 *",
+        "profile_settings": "个人资料设置 *"
       }
     },
     "personal_info": {
@@ -10116,13 +10116,13 @@
       "title": "Rejoignez ArtCee",
       "subtitle": "Là où les personnes artistiques vont pour être découvertes",
       "steps": {
-        "personal_info": "Informations personnelles",
-        "location": "Localisation",
-        "professional": "Professionnel",
-        "services_skills": "Services et compétences",
-        "portfolio_social": "Portfolio et réseaux sociaux",
-        "rates_pricing": "Tarifs et prix",
-        "profile_settings": "Paramètres de profil"
+        "personal_info": "Informations personnelles *",
+        "location": "Localisation *",
+        "professional": "Professionnel *",
+        "services_skills": "Services et compétences *",
+        "portfolio_social": "Portfolio et réseaux sociaux *",
+        "rates_pricing": "Tarifs et prix *",
+        "profile_settings": "Paramètres de profil *"
       }
     },
     "personal_info": {
@@ -11445,13 +11445,13 @@
       "title": "ArtCeeに参加する",
       "subtitle": "芸術的な人が発見される場所",
       "steps": {
-        "personal_info": "個人情報",
-        "location": "所在地",
-        "professional": "プロフェッショナル",
-        "services_skills": "サービスとスキル",
-        "portfolio_social": "ポートフォリオとソーシャル",
-        "rates_pricing": "料金と価格",
-        "profile_settings": "プロフィール設定"
+        "personal_info": "個人情報 *",
+        "location": "所在地 *",
+        "professional": "プロフェッショナル *",
+        "services_skills": "サービスとスキル *",
+        "portfolio_social": "ポートフォリオとソーシャル *",
+        "rates_pricing": "料金と価格 *",
+        "profile_settings": "プロフィール設定 *"
       }
     },
     "personal_info": {
@@ -12774,13 +12774,13 @@
       "title": "انضم إلى ArtCee",
       "subtitle": "حيث يذهب الأشخاص الفنيون لاكتشافهم",
       "steps": {
-        "personal_info": "المعلومات الشخصية",
-        "location": "الموقع",
-        "professional": "المهنية",
-        "services_skills": "الخدمات والمهارات",
-        "portfolio_social": "المحفظة والتواصل الاجتماعي",
-        "rates_pricing": "الأسعار والتسعير",
-        "profile_settings": "إعدادات الملف الشخصي"
+        "personal_info": "المعلومات الشخصية *"  ,
+        "location": "الموقع *" ,
+        "professional": "المهنية *",
+        "services_skills": "ا لخدمات والمهارات*",
+        "portfolio_social": "المحفظة والتواصل الاجتماعي *",
+        "rates_pricing": "الأسعار والتسعير *",
+        "profile_settings": "إعدادات الملف الشخصي *"
       }
     },
     "personal_info": {
@@ -14103,13 +14103,13 @@
       "title": "Tritt ArtCee bei",
       "subtitle": "Wo künstlerische Menschen entdeckt werden",
       "steps": {
-        "personal_info": "Persönliche Informationen",
-        "location": "Standort",
-        "professional": "Beruflich",
-        "services_skills": "Dienstleistungen und Fähigkeiten",
-        "portfolio_social": "Portfolio und Soziales",
-        "rates_pricing": "Preise und Tarife",
-        "profile_settings": "Profileinstellungen"
+        "personal_info": "Persönliche Informationen *",
+        "location": "Standort *",
+        "professional": "Beruflich *",
+        "services_skills": "Dienstleistungen und Fähigkeiten *",
+        "portfolio_social": "Portfolio und Soziales *",
+        "rates_pricing": "Preise und Tarife *",
+        "profile_settings": "Profileinstellungen *"
       }
     },
     "personal_info": {
@@ -14504,7 +14504,7 @@
       "descriptions": {
         "PERSONAL_BIO": "Detaillierte berufliche Biografie",
         "SERVICE_SKILL_ADDED": "Angebotene Dienstleistungen und Fähigkeitskategorien",
-        "PORTIFLIO_WORK": "Präsentieren Sie Ihre besten kreativen Arbeiten",
+        "PORTIFLIO_WORK": "Präsentieren Sie Ihre besten kreativen Arbeiten",  
         "SOCAIL_LINK": "Verbinden Sie Ihre Social-Media-Profile",
         "PRICING_INFO": "Ihre Starttarife und Preisgestaltung",
         "default": "Optional"
@@ -15409,9 +15409,8 @@
           "contact": "<p>Per domande o preoccupazioni sulla sicurezza: <a href=\"mailto:privacy@artcee.co\">privacy@artcee.co</a></p>"
         }
       }
-    }
-  },
-  "landing": {
+    },
+    "landing": {
     "title": "ArtCee",
     "tagline": "\"Dove le persone creative vanno per essere scoperte\"",
     "welcome": "Benvenuto nel Prototipo del Viaggio Premium di ArtCee",
@@ -15440,13 +15439,13 @@
     "title": "Unisciti ad ArtCee",
     "subtitle": "Dove le persone artistiche vanno per farsi scoprire",
     "steps": {
-      "personal_info": "Informazioni personali",
-      "location": "Posizione",
-      "professional": "Professionale",
-      "services_skills": "Servizi e competenze",
-      "portfolio_social": "Portfolio e social",
-      "rates_pricing": "Tariffe e prezzi",
-      "profile_settings": "Impostazioni del profilo"
+      "personal_info": "Informazioni personali *",
+      "location": "Posizione *",
+      "professional": "Professionale *",
+      "services_skills": "Servizi e competenze *",
+      "portfolio_social": "Portfolio e social *",
+      "rates_pricing": "Tariffe e prezzi *",
+      "profile_settings": "Impostazioni del profilo *"
     }
   },
   "personal_info": {
@@ -15950,4 +15949,6 @@
       "load_plan": "Impossibile caricare i dettagli del piano"
     }
   }
+  }
+  
 }

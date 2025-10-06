@@ -380,7 +380,7 @@ const FeaturePremiumPage = () => {
 
       {/* Payment Modal */}
       <PurchasePopupModel
-        isOpen={ Cookies.get("token") ? !!selectedPlan : navigate('/login')}
+        isOpen={ Cookies.get("token") ? selectedPlan : navigate('/login')}
         onClose={() => setSelectedPlan(null)}
         planId={selectedPlan}
         country={location}

@@ -234,11 +234,11 @@ const RegisterPage = () => {
             toast.error(t("register.geocode_failed"));
           }
         },
-        (err) => {
-          console.warn("Geolocation failed", err);
-          toast.error(t("register.geolocation_failed"));
-        },
-        { timeout: 10000, maximumAge: 600000, enableHighAccuracy: false }
+        // (err) => {
+        //   console.warn("Geolocation failed", err);
+        //   toast.error(t("register.geolocation_failed"));
+        // },
+       // { timeout: 10000, maximumAge: 600000, enableHighAccuracy: false }
       );
     }
   }, [t]);
@@ -262,13 +262,15 @@ const RegisterPage = () => {
           >
             <FaArrowLeft className="mr-3" /> {t("register.back")}
           </Link>
-          <Link
+          {/* <Link
             to="/home"
             className="text-gray-600 text-xs border-2 px-3 py-1.5 rounded-md hover:bg-gray-100"
           >
             {t("register.skip_for_now")}
-          </Link>
+          </Link> */}
         </div>
+
+          
       </div>
 
       {/* Step progress tracker */}

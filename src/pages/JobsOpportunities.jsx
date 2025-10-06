@@ -217,9 +217,9 @@ const JobsOpportunities = () => {
             {t("jobs.page_title")}
           </h1>
 
-          <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
+          {/* <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
             {t("jobs.google_integration")}
-          </button>
+          </button> */}
         </div>
 
         <div className="px-6 py-4 space-y-3 border-b md:px-0">

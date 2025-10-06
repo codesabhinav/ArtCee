@@ -20,7 +20,24 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   const [error, setError] = useState(null);
   const [profilePayload, setProfilePayload] = useState(null);
   const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(() => {
+    try {
+      return Cookies.get("subscription_status") === "active";
+    } catch {
+      return false;
+    }
+  });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    try {
+      const status = Cookies.get("subscription_status");
+      setHasActiveSubscription(status === "active");
+    } catch {
+      setHasActiveSubscription(false);
+    }
+  }, [isOpen]);
 
   const fetchProfile = useCallback(async (id) => {
     if (!id) return;
@@ -37,7 +54,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     }
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -95,18 +112,34 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   };
 
   const handleMessageClick = () => {
-    if (!Cookies.get("token")) {
+    const token = Cookies.get("token");
+    if (!token) {
       navigate("/login");
       return;
     }
+
+    if (!hasActiveSubscription) {
+      toast.error("You need an active subscription to message creatives. Please upgrade.");
+      navigate("/featured");
+      return;
+    }
+
     setIsMessageOpen(true);
   };
 
   const handleVideoClick = () => {
-    if (!Cookies.get("token")) {
+    const token = Cookies.get("token");
+    if (!token) {
       navigate("/login");
       return;
     }
+
+    if (!hasActiveSubscription) {
+      toast.error("You need an active subscription to start a video call. Please upgrade.");
+      navigate("/featured");
+      return;
+    }
+
     navigate(`/video-call/${uuid}`);
   };
 
@@ -137,8 +170,13 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     t("profile.tabs.portfolio"),
     t("profile.tabs.reviews"),
     t("profile.tabs.education"),
-    t("profile.tabs.activity"),
-    t("profile.tabs.pricing"),
+    // t("profile.tabs.activity"),
+    // t("profile.tabs.pricing"),
+    "My Business Listing ",
+    "Post a Job",
+    "Upload Resume"
+
+
   ];
 
   function formatDateShort(dateStr) {
@@ -184,13 +222,13 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
           {error && <div className="text-sm text-red-500">Error: {error}</div>}
         </div>
 
-        <div className="border bg-orange-50 border-orange-500 px-4 py-4 rounded-md mx-6 flex gap-3 items-center">
+        {/* <div className="border bg-orange-50 border-orange-500 px-4 py-4 rounded-md mx-6 flex gap-3 items-center">
           <Crown className="h-6 w-6 text-orange-500" />
           <div className="flex flex-col gap-1">
             <div className="text-orange-500 text-sm font-semibold">Featured Creative</div>
             <div className="text-xs text-gray-600">This creative is highlighted for their exceptional work and premium membership</div>
           </div>
-        </div>
+        </div> */}
 
         {/* Profile Info Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-6 py-6">
@@ -218,38 +256,13 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               </div>
             </div>
 
-            {/* Buttons */}
-            <button className="mt-4 text-xs font-semibold bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg w-full">
-              {t("profile.book_now")}
-            </button>
-            <div className="flex gap-2 mt-3 w-full justify-center items-center">
-              <button
-                onClick={handleMessageClick}
-                className="inline-flex items-center justify-center text-xs border text-gray-400 font-semibold px-4 py-2 rounded-lg gap-2"
-              >
-                <MessageCircle className="h-3 w-3" /> {t("profile.message")}
-              </button>
-
-              <button
-                onClick={handleVideoClick}
-                className="inline-flex items-center justify-center text-xs border text-gray-400 font-semibold px-4 py-2 rounded-lg gap-2"
-              >
-                <Video className="h-4 w-3" /> {t("profile.video_call")}
-              </button>
-            </div>
 
             {/* Premium Upgrade */}
             <div className="mt-2 w-full text-center items-center justify-center flex flex-col">
-              {/* <p className="text-[10px] text-gray-500 mb-1">{t("profile.premium_features")}</p> */}
-
-              {/* <Link to='/featured' className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
-                <Crown className="h-3 w-3" /> {t("profile.upgrade")}
-              </Link> */}
-
               <button
                 onClick={() => handleFollow(uuid)}
                 disabled={loading}
-                className={`text-xs text-gray-400 font-semibold mt-2 border px-4 py-2 rounded-lg w-full flex items-center justify-center ${loading ? "opacity-60 cursor-not-allowed" : ""
+                className={`text-xs text-black-600 font-semibold mt-2 border px-4 py-2 rounded-lg w-full flex items-center justify-center ${loading ? "opacity-60 cursor-not-allowed" : ""
                   }`}
               >
                 {loading ? (
@@ -263,21 +276,17 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               {/* <p className="text-[10px] mt-1 text-gray-500">{t("profile.premium_feature_note")}</p> */}
             </div>
 
-            {/* <Link to='/featured' className="text-[10px] mt-2 w-full font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
-              <Crown className="h-3 w-3" /> Upgarde to Follow
-            </Link> */}
-
             <button className="text-xs mt-2 w-full font-semibold bg-white hover:bg-gray-100 border text-black px-4 py-2 rounded-lg items-center justify-center flex gap-2">
               <Share className="h-3 w-4" /> Share Profile
             </button>
+
 
             <div className="w-full mt-4">
               <h3 className="font-semibold">{t("profile.connect_title")}</h3>
               <div className="flex gap-2 mt-2 grid grid-cols-2 flex-wrap">
                 {socials.length === 0 && (
                   <>
-                    <a className="border px-3 py-1 rounded-lg text-sm">{t("profile.social.website")}</a>
-                    <a className="border px-3 py-1 rounded-lg text-sm">{t("profile.social.instagram")}</a>
+                    <p className="text-xs">No Links Added</p>
                   </>
                 )}
                 {socials.map((s, i) => (
@@ -287,6 +296,40 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                 ))}
               </div>
             </div>
+
+            {/* Buttons */}
+            <button className="mt-4 text-xs font-semibold bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg w-full">
+              {t("profile.book_now")}
+            </button>
+            <div className="mt-3 w-full ">
+              <h3 class="font-semibold">Collaborate</h3>
+              <div className="flex gap-2 mt-1 w-full justify-center items-center">
+                <button
+                  onClick={handleMessageClick}
+                  disabled={loading || !Cookies.get("token") || !hasActiveSubscription}
+                  className={`inline-flex items-center justify-center text-xs border font-semibold px-4 py-2 rounded-lg gap-2
+    ${(!Cookies.get("token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <MessageCircle className="h-3 w-3" /> {t("profile.message")}
+                </button>
+
+                <button
+                  onClick={handleVideoClick}
+                  disabled={loading || !Cookies.get("token") || !hasActiveSubscription}
+                  className={`inline-flex items-center justify-center text-xs border font-semibold px-4 py-2 rounded-lg gap-2
+    ${(!Cookies.get("token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <Video className="h-4 w-3" /> {t("profile.video_call")}
+                </button>
+
+              </div>
+            </div>
+
+            <p className="text-[10px] text-gray-500 my-1">{t("profile.premium_features")}</p>
+
+            <Link to='/featured' className="text-[10px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg items-center justify-center flex gap-2">
+              <Crown className="h-3 w-3" /> {t("profile.upgrade")}
+            </Link>
           </div>
 
           {/* Right Column */}
@@ -682,6 +725,27 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                 </div>
               </div>
             )}
+
+
+            {activeTab === "My Business Listing " && (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Business Listing</h3>
+                <p className="text-sm text-gray-500">No Business Listing yet.</p>
+              </div>
+            )}
+
+            {activeTab === "Post a Job" && (
+              <div className="grid grid-cols-2 gap-4">
+                <p className="text-sm text-gray-500">No Posted a Job.</p>
+              </div>
+            )}
+
+            {activeTab === "Upload Resume" && (
+              <div className="grid grid-cols-2 gap-4">
+                <p className="text-sm text-gray-500">No Uploaded Resume Yet.</p>
+              </div>
+            )}
+
           </div>
         </div>
       </div>

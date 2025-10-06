@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { FaArrowRight, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useTranslation } from "../../contexts/LanguageProvider";
 import CustomDropdown from "../../components/CustomDropdown";
+import { Link, useNavigate } from "react-router-dom";
 
 const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
   const { t } = useTranslation();
@@ -39,6 +40,7 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLocal((prev) => ({
@@ -116,8 +118,8 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
       selectedLabel === t("personal_info.account_business")
         ? STABLE_TYPES.BUSINESS
         : selectedLabel === t("personal_info.account_creative")
-        ? STABLE_TYPES.CREATIVE
-        : "";
+          ? STABLE_TYPES.CREATIVE
+          : "";
 
     setLocal((p) => ({ ...p, type: stable, typeLabel: selectedLabel }));
 
@@ -194,9 +196,8 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="full_name"
             value={local.full_name}
             onChange={handleChange}
-            className={`mt-1 block w-full border form-input text-xs ${
-              errors.full_name ? "border-red-400" : "border-none"
-            } rounded-md p-2`}
+            className={`mt-1 block w-full border form-input text-xs ${errors.full_name ? "border-red-400" : "border-none"
+              } rounded-md p-2`}
             placeholder={t("personal_info.full_name_placeholder")}
           />
           {errors.full_name && (
@@ -214,9 +215,8 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="email"
             value={local.email}
             onChange={handleChange}
-            className={`mt-1 block w-full border form-input text-xs ${
-              errors.email ? "border-red-400" : "border-none"
-            } rounded-md p-2`}
+            className={`mt-1 block w-full border form-input text-xs ${errors.email ? "border-red-400" : "border-none"
+              } rounded-md p-2`}
             placeholder={t("personal_info.email_placeholder")}
             autoComplete="email"
           />
@@ -235,9 +235,8 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="password"
             value={local.password}
             onChange={handleChange}
-            className={`mt-1 block w-full form-input border text-xs ${
-              errors.password ? "border-red-400" : "border-none"
-            } rounded-md p-2 pr-10`}
+            className={`mt-1 block w-full form-input border text-xs ${errors.password ? "border-red-400" : "border-none"
+              } rounded-md p-2 pr-10`}
             placeholder={t("personal_info.password_placeholder")}
             autoComplete="new-password"
           />
@@ -263,9 +262,8 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="phone"
             value={local.phone}
             onChange={handleChange}
-            className={`mt-1 block w-full form-input border text-xs ${
-              errors.phone ? "border-red-400" : "border-none"
-            } rounded-md p-2`}
+            className={`mt-1 block w-full form-input border text-xs ${errors.phone ? "border-red-400" : "border-none"
+              } rounded-md p-2`}
             placeholder={t("personal_info.phone_placeholder")}
             autoComplete="tel"
           />
@@ -284,9 +282,8 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
             name="title"
             value={local.title}
             onChange={handleChange}
-            className={`mt-1 block w-full form-input border text-xs ${
-              errors.title ? "border-red-400" : "border-none"
-            } rounded-md p-2`}
+            className={`mt-1 block w-full form-input border text-xs ${errors.title ? "border-red-400" : "border-none"
+              } rounded-md p-2`}
             placeholder={t("personal_info.title_placeholder")}
           />
           {errors.title && (
@@ -328,13 +325,22 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
         )}
 
         {/* Actions */}
-        <div className="flex justify-end py-3">
+        <div className="flex justify-end ">
           <button
             type="submit"
             className="flex items-center px-6 py-2 text-xs bg-teal-400 text-white rounded-md hover:bg-teal-500"
           >
             {t("personal_info.next")} <FaArrowRight className="ml-2" />
           </button>
+
+        </div>
+        <div className="flex justify-end">
+          <Link
+            to="/home"
+            className="text-gray-600 text-xs border-2 px-3 py-1.5 rounded-md hover:bg-gray-100"
+          >
+            {t("register.skip_for_now")}
+          </Link>
         </div>
       </form>
     </div>

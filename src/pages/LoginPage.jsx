@@ -30,6 +30,29 @@ const LoginPage = ({ onClose }) => {
       Cookies.set("token", token, { expires: 365 });
     }
 
+    try {
+      const user = resp?.data?.user ?? resp?.user ?? resp?.data ?? resp;
+      const userId = user.uuid;
+      console.log(userId);
+      const subscriptionObj = user?.subcription ?? user?.subscription ?? user?.subcription;
+      let status = "none";
+
+      if (!subscriptionObj) {
+        status = "none";
+      } else if (typeof subscriptionObj === "string") {
+        status = subscriptionObj === "active" ? "active" : "inactive";
+      } else if (typeof subscriptionObj === "object") {
+        const s = subscriptionObj?.status ?? subscriptionObj?.plan?.status ?? subscriptionObj?.plan?.is_active;
+        if (s === "active" || s === "1" || s === 1 || s === true) status = "active";
+        else status = "inactive";
+      }
+
+      Cookies.set("userId", userId, {expires: 365});
+      Cookies.set("subscription_status", status, { expires: 365 });
+    } catch (err) {
+      console.warn("Failed to save subscription status cookie:", err);
+      Cookies.set("subscription_status", "none", { expires: 365 });
+    }
     window.dispatchEvent(new Event("authChanged"));
   };
 
@@ -100,8 +123,8 @@ const LoginPage = ({ onClose }) => {
         {/* Close button */}
         <button
           onClick={() => {
-            if (onClose) onClose();
-            else navigate(-1);
+            // if (onClose) onClose();
+            navigate('/home');
           }}
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
         >

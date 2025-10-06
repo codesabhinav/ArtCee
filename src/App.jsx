@@ -31,6 +31,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainLayout />}>
+              <Route index element={<LandingPage />} />
               <Route path='home' element={<HomePage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="forgot-password" element={<ForgotPasswordModal />} />
@@ -56,7 +57,8 @@ function App() {
               <Route path="cancel" element={<PaymentCancelPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
-            <Route index element={<LandingPage />}></Route>
+            {/* <Route index element={<LandingPage />}></Route> */}
+            {/* <Route index element={<HomePage />} /> */}
           </Routes>
         </Router>
       </ProjectProvider>

@@ -4,7 +4,7 @@ import Footer from '../components/Footer'
 
 const MainLayout = () => {
   const location = useLocation()
-  const hideLayoutRoutes = ['/register', '/creatives', '/business-directory', '/jobs', '/featured', '/profile']
+  const hideLayoutRoutes = ['/register', '/']
   const hideLayout = hideLayoutRoutes.includes(location.pathname)
 
   return (

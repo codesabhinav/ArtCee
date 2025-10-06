@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useTranslation } from "../../contexts/LanguageProvider";
+import { Link } from "react-router-dom";
 
 
 const ToggleSwitch = ({ label, checked, onChange }) => {
@@ -11,15 +12,13 @@ const ToggleSwitch = ({ label, checked, onChange }) => {
       <button
         type="button"
         onClick={onChange}
-        className={`w-9 h-5 flex items-center rounded-full transition-colors ${
-          checked ? "bg-teal-500" : "bg-gray-300"
-        }`}
+        className={`w-9 h-5 flex items-center rounded-full transition-colors ${checked ? "bg-teal-500" : "bg-gray-300"
+          }`}
         aria-pressed={checked}
       >
         <div
-          className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-            checked ? "translate-x-5" : "translate-x-0"
-          }`}
+          className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${checked ? "translate-x-5" : "translate-x-0"
+            }`}
         />
       </button>
       <span className="text-xs font-semibold">{label}</span>
@@ -35,10 +34,10 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
 
   const [local, setLocal] = useState({
     city: formData.city ?? "",
-    state: formData.state ?? "", 
-    state_id: formData.state_id ?? null, 
-    country: formData.country ?? "", 
-    country_id: formData.country_id ?? null, 
+    state: formData.state ?? "",
+    state_id: formData.state_id ?? null,
+    country: formData.country ?? "",
+    country_id: formData.country_id ?? null,
     is_remote_active: formData.is_remote_active ?? 0,
     on_site_active: formData.on_site_active ?? 0,
     travel_radius_miles:
@@ -350,6 +349,14 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
           <button type="submit" className="flex items-center px-6 py-2 text-xs bg-teal-400 text-white rounded-md hover:bg-teal-500">
             {t("location.next")} <FaArrowRight className="ml-2" />
           </button>
+        </div>
+        <div className="flex justify-end">
+          <Link
+            to="/home"
+            className="text-gray-600 text-xs border-2 px-3 py-1.5 rounded-md hover:bg-gray-100"
+          >
+            {t("register.skip_for_now")}
+          </Link>
         </div>
       </form>
     </div>
