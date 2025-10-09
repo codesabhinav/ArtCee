@@ -19,7 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
 import SpinnerProvider from "../components/SpinnerProvider";
-import { deletePost, getGuestDashboardData, getPlans, getPostData, JobsData } from "../Hooks/useSeller";
+import { deletePost, getGuestDashboardData, getPlans, getPostData, getPostJobData, JobsData } from "../Hooks/useSeller";
 import { Building, Building2, Crown, LogOut, Plus, Star, TrashIcon } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
@@ -29,6 +29,7 @@ import { RiLogoutCircleRLine } from "react-icons/ri";
 import toast from "react-hot-toast";
 import PortfolioModal from "../modal/dashboard models/PortfolioModal";
 import PostJobPopupModal from "../modal/PostJobPopupModal";
+import BusinessListingModal from "../modal/BusinessListingModal";
 
 const GuestDashboardPage = () => {
   const { t } = useTranslation();
@@ -53,6 +54,8 @@ const GuestDashboardPage = () => {
   const [isPostJobOpen, setPostJobOpen] = useState(false);
   const [jobsPostLoading, setJobsPostLoading] = useState(false);
   const [jobsPostError, setjobsPostError] = useState(null);
+  const [jobsPostData, setjobsPostData] = useState(null);
+  const [listingOpen, setListingOpen] = useState(null);
 
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
@@ -67,6 +70,31 @@ const GuestDashboardPage = () => {
       setLoading(false);
     }
   }, [t]);
+
+  const fetchJobs = useCallback(async () => {
+    setJobsPostLoading(true);
+    setjobsPostError(null);
+
+    const userId = Cookies.get("userId");
+    try {
+      const res = await getPostJobData(userId);
+      const postedJobs =
+        res?.job ??
+        (res?.data && (res.data.job ?? res.data)) ??
+        res ??
+        [];
+      setjobsPostData(Array.isArray(postedJobs) ? postedJobs : [postedJobs]);
+    } catch (err) {
+      setjobsPostError(err?.message || "Failed to load job listing.");
+      setjobsPostData([]);
+    } finally {
+      setJobsPostLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [fetchJobs]);
 
   useEffect(() => {
     let mounted = true;
@@ -135,7 +163,6 @@ const GuestDashboardPage = () => {
 
   const memberSince = new Date(user?.created_at ?? profile?.created_at ?? Date.now()).toLocaleDateString();
   const jobsList = payload?.jobs ?? [];
-  const postedJobList = [];
   const posts = payload?.posts ?? [];
   const subscription =
     payload?.user?.subcription ??
@@ -274,9 +301,39 @@ const GuestDashboardPage = () => {
   const handleModalSaved = async (serverResponse) => {
     try {
       await fetchDashboard();
+      await fetchJobs();
     } catch (err) {
       console.warn("Failed to refresh dashboard after modal save:", err);
     }
+  };
+
+  function formatDateShort(dateStr) {
+    if (!dateStr) return "-";
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d)) return dateStr;
+      return d.toLocaleString(undefined, { month: "short", year: "numeric" });
+    } catch {
+      return dateStr;
+    }
+  }
+
+  const formatLocation = (loc) => {
+    if (!loc) return "-";
+    if (Array.isArray(loc)) return loc.filter(Boolean).join(", ");
+    return String(loc);
+  };
+
+  const Badge = ({ children, variant = "gray" }) => {
+    const base = "text-xs px-2 py-1 rounded-full border";
+    const color = {
+      gray: "bg-gray-100 border-gray-200",
+      indigo: "bg-indigo-100 border-indigo-200",
+      green: "bg-green-100 border-green-200",
+      yellow: "bg-yellow-100 border-yellow-200",
+      red: "bg-red-100 border-red-200",
+    }[variant] || "bg-gray-100 border-gray-200";
+    return <span className={`${base} ${color} mr-2 mb-2 inline-block`}>{children}</span>;
   };
 
   return (
@@ -455,7 +512,7 @@ const GuestDashboardPage = () => {
                     </div>
                     <p className="text-sm font-medium">{t("guest.posts_empty_title")}</p>
                     <p className="text-xs text-gray-500 mb-4">{t("guest.posts_empty_desc")}</p>
-                    <button className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto">
+                    <button onClick={openCreate} className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto">
                       + {t("guest.create_your_first_post")}
                     </button>
                   </div>
@@ -563,7 +620,7 @@ const GuestDashboardPage = () => {
                   <div className="text-sm text-gray-600">Loading jobs…</div>
                 ) : jobsPostError ? (
                   <div className="text-sm text-red-500">{jobsPostError}</div>
-                ) : postedJobList.length === 0 ? (
+                ) : jobsPostData.length === 0 ? (
                   <div className="text-center py-6">
                     <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
                       <Building2 className="h-7 w-7" />
@@ -578,48 +635,104 @@ const GuestDashboardPage = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {postedJobList.map((job) => (
-                      <div key={job.id} className="border rounded-md p-3 flex items-start gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex justify-between items-start gap-2">
-                            <div className="min-w-0">
-                              <h4 className="font-semibold text-sm truncate">{job.title}</h4>
-                              <p className="text-xs text-gray-600 truncate">{job.location} • {job.schedule_type}</p>
-                            </div>
-                            <div className="ml-2">
-                              <span className="text-[10px] px-2 py-1 bg-yellow-100 text-yellow-600 rounded-md">
-                                {job.via || "Source"}
-                              </span>
-                            </div>
-                          </div>
-
-                          <p className="text-xs text-gray-600 mt-2 line-clamp-3 hidden sm:block">
-                            {job.description?.slice(0, 200)}{job.description && job.description.length > 200 ? "…" : ""}
+                    {jobsPostData.map((job) => (
+                      <article
+                        key={job.id ?? job.uuid}
+                        className="border rounded-lg p-4 shadow-sm bg-white flex flex-col space-y-3"
+                      >
+                        <h4 className="text-md font-semibold leading-tight">{job.title}</h4>
+                        {job.description && (
+                          <p className="text-sm text-gray-700">
+                            <strong>Description:</strong> {job.description}
                           </p>
+                        )}
 
-                          {/* apply buttons */}
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {Array.isArray(job.apply_options) && job.apply_options.length > 0 ? (
-                              job.apply_options.slice(0, 3).map((opt) => (
-                                <button
-                                  key={opt.id}
-                                  onClick={() => handleApply(job, opt)}
-                                  className="text-xs px-3 py-1 border rounded-md hover:bg-gray-50"
-                                >
-                                  {opt.title}
-                                </button>
-                              ))
-                            ) : (
-                              <button
-                                onClick={() => handleApply(job)}
-                                className="text-xs px-3 py-1 bg-teal-500 text-white rounded-md"
-                              >
-                                Apply
-                              </button>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2 text-xs text-gray-600">
+                          <div><strong>Company:</strong> {job.company?.company_name ?? "Company"}</div>
+                          <div><strong>Rate:</strong> {job.rate ? `${job.rate} ${job.rate_type ?? ''}` : '-'}</div>
+                          <div><strong>Schedule:</strong> {job.schedule_type ?? '-'}</div>
+                          <div><strong>Source:</strong> {job.via ?? '-'}</div>
+                          <div><strong>Job ID:</strong> {job.uuid ?? '-'}</div>
+                          <div><strong>Posted:</strong> {formatDateShort(job.posted_at ?? job.created_at)}</div>
+                          <div><strong>Updated:</strong> {formatDateShort(job.updated_at)}</div>
+                          <div><strong>Location:</strong> {formatLocation(job.location)}</div>
+                          {job.cultural_identifiers && (
+                            <div><strong>Cultural Identifiers:</strong> {job.cultural_identifiers}</div>
+                          )}
+                        </div>
+                        <div>
+                          <strong className="text-xs">Types:</strong>
+                          <div className="mt-1 flex flex-wrap">
+                            {(job.types || []).map((t) => (
+                              <Badge key={t.id ?? t.name}>{t.name}</Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <strong className="text-xs">Skills:</strong>
+                          <div className="mt-1 flex flex-wrap">
+                            {(job.skills || []).map((s) => (
+                              <Badge key={s.id ?? s.name}>{s.name}</Badge>
+                            ))}
+                            {(job.unique_skills || []).map((s) => (
+                              <Badge key={s.id ?? s.name} variant="indigo">{s.name}</Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <strong className="text-xs">Degrees:</strong>
+                          <div className="mt-1 flex flex-wrap">
+                            {(job.degrees || []).map((d) => (
+                              <Badge key={d.id ?? d.degree} variant="green">{d.degree}</Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <strong className="text-xs">Demographics:</strong>
+                          <div className="text-xs text-gray-700 mt-1">
+                            {job.age_ranges && job.age_ranges.length > 0 && (
+                              <div><strong>Age ranges:</strong> {job.age_ranges.map(a => a.range).join(", ")}</div>
+                            )}
+                            {job.genders && job.genders.length > 0 && (
+                              <div><strong>Genders:</strong> {job.genders.map(g => g.gender).join(", ")}</div>
                             )}
                           </div>
                         </div>
-                      </div>
+
+                        {(job.job_highlights || []).length > 0 && (
+                          <div className="space-y-2">
+                            {job.job_highlights.map((section) => (
+                              <div key={section.id}>
+                                <div className="text-xs font-medium">{section.title}</div>
+                                <ul className="list-disc pl-5 text-xs text-gray-700">
+                                  {(section.items || []).map((it, idx) => (
+                                    <li key={idx}>{it}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {(job.applyOptions || []).length > 0 && (
+                          <div className="mt-2 flex flex-col space-y-2">
+                            {job.applyOptions.map((opt, i) => (
+                              <a
+                                key={i}
+                                href={opt.link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-xs font-semibold px-3 py-1 rounded border hover:bg-gray-100 w-fit"
+                              >
+                                {opt.title ?? "Apply"}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </article>
                     ))}
                   </div>
                 )}
@@ -864,6 +977,9 @@ const GuestDashboardPage = () => {
                     <span className="flex items-center gap-2"><Plus className="h-4 w-4" />Post a job</span>
                   </li>
                 ) : null}
+                <li onClick={() => setListingOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                  <span className="flex items-center gap-2"><Building2 className="h-4 w-4" /> Add Business Listing</span>
+                </li>
               </ul>
             </div>
           </div>
@@ -873,7 +989,9 @@ const GuestDashboardPage = () => {
       <PostJobPopupModal
         isOpen={isPostJobOpen}
         setIsOpen={setPostJobOpen}
-        onSuccess={handleModalSaved} />
+        editingJob={null}
+        onSaved={handleModalSaved}
+      />
 
       <CreatePostPopupModel
         isOpen={isOpen}
@@ -904,6 +1022,8 @@ const GuestDashboardPage = () => {
         uuid={uuid}
         onSaved={handleModalSaved}
       />
+
+      <BusinessListingModal isOpen={listingOpen} onClose={() => setListingOpen(false)} />
     </div>
   );
 };

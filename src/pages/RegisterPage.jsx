@@ -231,7 +231,7 @@ const RegisterPage = () => {
             }));
           } catch (err) {
             console.error("Reverse geocoding failed", err);
-            toast.error(t("register.geocode_failed"));
+            // toast.error(t("register.geocode_failed"));
           }
         },
         // (err) => {

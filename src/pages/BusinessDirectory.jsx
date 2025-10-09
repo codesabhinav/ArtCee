@@ -12,10 +12,12 @@ import { getBusinessData, getBusinessFilters } from "../Hooks/useSeller";
 import CustomDropdown from "../components/CustomDropdown";
 import SpinnerProvider from "../components/SpinnerProvider";
 import { useTranslation } from "../contexts/LanguageProvider";
+import ViewBusinessProfilePopupModel from "../modal/VIewBusinessProfilePopupModel";
 
 const BusinessDirectory = () => {
   const { t } = useTranslation();
 
+  const [open, setOpen] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,7 +31,7 @@ const BusinessDirectory = () => {
   const [filterLabelToKeyMap, setFilterLabelToKeyMap] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
   const [defaultSelectedFilters, setDefaultSelectedFilters] = useState({});
-
+  const [selectedUuid, setSelectedUuid] = useState(null);
   const [showingCount, setShowingCount] = useState(0);
 
   const [sortOptions, setSortOptions] = useState([
@@ -39,17 +41,16 @@ const BusinessDirectory = () => {
   ]);
   const [sort, setSort] = useState(t("filters.sort.highest_rated"));
 
-  // Pagination state
-  const [page, setPage] = useState(1); // current page to request
-  const [lastPage, setLastPage] = useState(1); // last page from API metadata
-  const [totalItems, setTotalItems] = useState(0); // total results
-  const [perPage, setPerPage] = useState(10); // items per page (from API)
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [perPage, setPerPage] = useState(10);
 
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
       setDebouncedSearch(search.trim());
-      setPage(1); // reset to first page when search changes
+      setPage(1);
     }, 500);
     return () => {
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
@@ -95,7 +96,7 @@ const BusinessDirectory = () => {
           const map = {};
           const sortLabels = [];
           Object.entries(meta.order_by_rate).forEach(([k, v]) => {
-            map[v] = k; 
+            map[v] = k;
             sortLabels.push(v);
           });
           labelToKey["__order_by_map__"] = map;
@@ -141,7 +142,6 @@ const BusinessDirectory = () => {
       if (mapped) params.order_by_rate = mapped;
     }
 
-    // Add page param for pagination
     if (page && Number(page) > 0) {
       params.page = Number(page);
     }
@@ -154,7 +154,6 @@ const BusinessDirectory = () => {
       try {
         setLoading(true);
         const params = buildApiParams();
-        // updated getBusinessData now returns { data, links, meta }
         const res = await getBusinessData(params);
 
         const list = Array.isArray(res?.data) ? res.data : [];
@@ -165,8 +164,7 @@ const BusinessDirectory = () => {
           setLastPage(res.meta.last_page ?? 1);
           setPerPage(res.meta.per_page ?? perPage);
           setTotalItems(res.meta.total ?? 0);
-          setPage(res.meta.current_page ?? page); // sync page if API returns different
-          // showingCount can be totalItems when you want "Showing X of Y"
+          setPage(res.meta.current_page ?? page);
           setShowingCount(res.meta.to ? res.meta.to - (res.meta.from ? res.meta.from - 1 : 0) : list.length);
         }
 
@@ -187,7 +185,7 @@ const BusinessDirectory = () => {
       (async () => {
         try {
           setLoading(true);
-          const res = await getBusinessData({ search: debouncedSearch, page }); // include page even in fallback
+          const res = await getBusinessData({ search: debouncedSearch, page });
           const list = Array.isArray(res?.data) ? res.data : [];
           setBusinesses(list);
           setShowingCount(Array.isArray(res?.data) ? res.data.length : 0);
@@ -210,7 +208,6 @@ const BusinessDirectory = () => {
         }
       })();
     }
-    // include page in dependency so fetch runs when page changes
   }, [debouncedSearch, sort, selectedFilters, filtersConfigDynamic, page]);
 
   const clearFilter = (key) => {
@@ -218,12 +215,12 @@ const BusinessDirectory = () => {
       ...prev,
       [key]: defaultSelectedFilters[key] ?? (prev[key] && prev[key].startsWith(t("filters.all_prefix") || "All") ? prev[key] : ""),
     }));
-    setPage(1); // reset to first page when clearing
+    setPage(1);
   };
 
   const clearAllFilters = () => {
     setSelectedFilters(defaultSelectedFilters);
-    setPage(1); // reset pagination on clearing all filters
+    setPage(1);
   };
 
   const handleSetFilterValue = (filterKey, value) => {
@@ -238,7 +235,7 @@ const BusinessDirectory = () => {
     );
 
     setSelectedFilters((prev) => ({ ...prev, [filterKey]: value }));
-    setPage(1); // reset to first page when filter changes
+    setPage(1);
   };
 
   const SkillChips = ({ skills = [] }) => {
@@ -258,7 +255,6 @@ const BusinessDirectory = () => {
     );
   };
 
-  // Pagination helpers
   const gotoPage = (p) => {
     if (!p) return;
     const num = Number(p);
@@ -266,11 +262,9 @@ const BusinessDirectory = () => {
     if (num < 1) return;
     if (lastPage && num > lastPage) return;
     setPage(num);
-    // fetch triggered by useEffect
   };
 
   const renderPagination = () => {
-    // show nothing when there's only one page or no total
     if (!totalItems || totalItems <= perPage) return null;
 
     const maxButtons = 7;
@@ -331,7 +325,6 @@ const BusinessDirectory = () => {
 
       <div className="md:max-w-[80%] mx-auto">
         <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
-          {/* Back to Home Link */}
           <Link
             to="/home"
             className="text-black font-medium text-xs hover:bg-gray-200 rounded-md px-3 sm:px-4 py-2 flex items-center"
@@ -339,17 +332,14 @@ const BusinessDirectory = () => {
             <FaArrowLeft className="mr-2 text-xs" /> {t("business.back_to_home") || "Back to Home"}
           </Link>
 
-          {/* Title */}
           <h1 className="text-center align-center text-sm sm:text-lg md:text-xl font-bold flex-1">
             {t("business.directory_title")}
           </h1>
 
-          {/* Button */}
           <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
             {t("business.industry_partners")}
           </button>
         </div>
-        {/* Search + Filters */}
         <div className="md:px-0 px-4 py-4 space-y-4 border-b">
           <input
             type="text"
@@ -360,7 +350,6 @@ const BusinessDirectory = () => {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:flex md:space-x-3 gap-3">
-            {/* Render dynamic filters (Type, Location, etc.) */}
             {filtersConfigDynamic.length > 0 ? (
               filtersConfigDynamic.map((f) => (
                 <CustomDropdown
@@ -371,7 +360,6 @@ const BusinessDirectory = () => {
                 />
               ))
             ) : (
-              // fallback hard-coded dropdowns when API doesn't provide filters yet
               <>
                 <CustomDropdown
                   options={[t("filters.all_types"), "CPA", "Law Firm", "Consulting"]}
@@ -386,19 +374,17 @@ const BusinessDirectory = () => {
               </>
             )}
 
-            {/* Sort dropdown */}
             <CustomDropdown
               options={sortOptions}
               value={sort}
               setValue={(val) => {
                 setSort(val);
-                setPage(1); // reset to first page when sorting changes
+                setPage(1);
               }}
             />
           </div>
         </div>
 
-        {/* Results */}
         <div className="px-4 md:px-0 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
             <p className="text-sm text-gray-500">
@@ -416,7 +402,6 @@ const BusinessDirectory = () => {
             <p className="text-gray-500">{t("business.no_results")}</p>
           )}
 
-          {/* Grid container */}
           <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6">
             {businesses.map((biz) => {
               const user = biz.user || {};
@@ -427,7 +412,6 @@ const BusinessDirectory = () => {
                   key={biz.id}
                   className="bg-white border rounded-xl shadow-sm p-5 flex items-start gap-4"
                 >
-                  {/* Image */}
                   <img
                     src={
                       profile?.profile_picture ||
@@ -437,7 +421,6 @@ const BusinessDirectory = () => {
                     className="w-20 h-20 rounded-lg object-cover shrink-0"
                   />
 
-                  {/* Content */}
                   <div className="flex-1">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                       <h2 className="font-bold text-base md:text-lg">{user?.full_name}</h2>
@@ -452,7 +435,6 @@ const BusinessDirectory = () => {
 
                     <p className="text-xs text-gray-600 mt-2">{biz.personal_intro}</p>
                     <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-500">
-                      {/* Location (row 1 col 1 on desktop) */}
                       <p className="flex items-start">
                         <FaMapMarkerAlt className="mr-2 flex-shrink-0" />
                         <span className="whitespace-normal break-words max-w-full">
@@ -477,17 +459,15 @@ const BusinessDirectory = () => {
                           {user?.email || "-"}
                         </span>
                       </p>
-                    </div>  
+                    </div>
 
 
-                    {/* Price */}
                     <p className="mt-3 text-gray-800 font-medium text-sm">
                       {t("price.hourly")}: {biz.hourly_rate != null ? `$${biz.hourly_rate}` : "-"} | {t("price.daily")}: {biz.daily_rate != null ? `$${biz.daily_rate}` : "-"} | {t("price.project")}: {biz.project_rate != null ? `$${biz.project_rate}` : "-"}
                     </p>
 
                     <SkillChips skills={biz?.skills} />
 
-                    {/* Social Links */}
                     <div className="mt-3 flex gap-2 flex-wrap">
                       {(user?.social_links || []).map((link) => (
                         <a
@@ -502,17 +482,21 @@ const BusinessDirectory = () => {
                       ))}
                     </div>
 
-                    {/* Footer */}
                     <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:space-x-3 justify-between">
-                      <a
+                      {/* <a
                         href={
                           (user?.social_links || []).find((l) => l.platform === "website")?.url || "#"
                         }
                         className="px-3 py-2 border rounded-md text-xs flex items-center justify-center gap-2 hover:bg-gray-100"
                       >
                         <FaGlobe /> <span>{t("business.website")}</span>
-                      </a>
-                      <button className="sm:ml-auto px-3 py-2 bg-teal-500 text-white font-semibold text-xs rounded-md hover:bg-teal-600">
+                      </a> */}
+                      <button
+                        onClick={() => {
+                          setSelectedUuid(user?.uuid);
+                          setOpen(true);
+                        }}
+                        className="sm:ml-auto px-3 py-2 bg-teal-500 text-white font-semibold text-xs rounded-md hover:bg-teal-600">
                         {t("business.view_details")}
                       </button>
                     </div>
@@ -522,13 +506,17 @@ const BusinessDirectory = () => {
             })}
           </div>
 
-          {/* Pagination controls */}
           <div className="mt-6">
             {renderPagination()}
           </div>
         </div>
 
       </div>
+      <ViewBusinessProfilePopupModel isOpen={open} onClose={() => {
+        setOpen(false);
+        setSelectedUuid(null);
+      }}
+        uuid={selectedUuid} />
     </div>
   );
 };

@@ -1,10 +1,34 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { IoCloseCircle } from "react-icons/io5";
 import { useTranslation } from "../contexts/LanguageProvider";
-import { followUnfollowMethod, getProfileData } from "../Hooks/useSeller";
+import {
+  fetchBusinessListing,
+  fetchResume,
+  followUnfollowMethod,
+  getPostJobData,
+  getProfileData,
+} from "../Hooks/useSeller";
 import SpinnerProvider from "../components/SpinnerProvider";
 import { FaCalendarAlt, FaClock, FaStar, FaUniversity } from "react-icons/fa";
-import { CalendarRange, Crown, Heart, LocationEdit, MessageCircle, Share, Share2, Star, Timer, Video } from "lucide-react";
+import {
+  CalendarRange,
+  Copy,
+  Crown,
+  Download,
+  Eye,
+  FileText,
+  Heart,
+  Image as ImageIcon,
+  Link as LinkIcon,
+  LocationEdit,
+  MessageCircle,
+  Share,
+  Share2,
+  Star,
+  Timer,
+  Video,
+  Video as VideoIcon,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
@@ -20,6 +44,12 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   const [error, setError] = useState(null);
   const [profilePayload, setProfilePayload] = useState(null);
   const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [jobLoading, setJobLoading] = useState(false);
+  const [jobError, setJobError] = useState(null);
+  const [jobData, setJobData] = useState([]);
+  const [resumeUrl, setResumeUrl] = useState(null);
+  const [listing, setListing] = useState([]);
+
   const [hasActiveSubscription, setHasActiveSubscription] = useState(() => {
     try {
       return Cookies.get("subscription_status") === "active";
@@ -28,6 +58,38 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     }
   });
   const navigate = useNavigate();
+
+  const loadListing = useCallback(async (uuid) => {
+    if (!uuid) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetchBusinessListing(uuid);
+      const payload = res?.data ?? res;
+      let data = payload?.data ?? payload;
+
+      const items = Array.isArray(data) ? data : data ? [data] : [];
+      setListing(items);
+    } catch (err) {
+      setError(err?.message ?? "Failed to fetch business listing");
+      setListing([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (!uuid) return;
+    let alive = true;
+    (async () => {
+      if (!alive) return;
+      await loadListing(uuid);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [uuid, loadListing]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -101,7 +163,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
       toast.success(message);
 
       await fetchProfile(id);
-
     } catch (error) {
       const errMsg = error?.message || "Failed to update follow status";
       toast.error(errMsg);
@@ -143,6 +204,95 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     navigate(`/video-call/${uuid}`);
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    let mounted = true;
+    async function loadJob() {
+      if (!uuid) {
+        if (!mounted) return;
+        setJobError("No job id provided.");
+        setJobData([]);
+        return;
+      }
+      setJobLoading(true);
+      setJobError(null);
+      try {
+        const res = await getPostJobData(uuid);
+        const jobs =
+          res?.job ??
+          (res?.data && (res.data.job ?? res.data)) ??
+          res ??
+          [];
+        if (!mounted) return;
+        setJobData(Array.isArray(jobs) ? jobs : [jobs]);
+      } catch (err) {
+        if (!mounted) return;
+        setJobError(err?.message || "Failed to load job listing.");
+        setJobData([]);
+      } finally {
+        if (!mounted) return;
+        setJobLoading(false);
+      }
+    }
+
+    loadJob();
+
+    return () => {
+      mounted = false;
+    };
+  }, [activeTab, uuid, isOpen]);
+
+  useEffect(() => {
+    if (!uuid) return;
+
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetchResume(uuid);
+        const url =
+          res?.data?.resume_url ??
+          res?.resume_url ??
+          (res?.data && (res.data.resume_url ?? null)) ??
+          null;
+
+        if (mounted) {
+          if (url) setResumeUrl(url);
+          else setError("No resume found for this user.");
+        }
+      } catch (err) {
+        if (mounted) setError(err.message || "Failed to load resume.");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [uuid]);
+
+  const getFileName = (url) => {
+    try {
+      const urlPath = new URL(url).pathname;
+      return decodeURIComponent(urlPath.split("/").pop() || "resume");
+    } catch {
+      const parts = url?.split("/") ?? [];
+      return decodeURIComponent(parts[parts.length - 1] || "resume");
+    }
+  };
+
+  const getExtension = (url) => {
+    const name = getFileName(url);
+    const match = name.match(/\.(\w+)(\?.*)?$/);
+    return match ? match[1].toLowerCase() : "";
+  };
+
+  const ext = resumeUrl ? getExtension(resumeUrl) : "";
+
   if (!isOpen) return null;
 
   const fullName = profilePayload?.full_name ?? profilePayload?.user?.full_name ?? "Unknown";
@@ -170,13 +320,9 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     t("profile.tabs.portfolio"),
     t("profile.tabs.reviews"),
     t("profile.tabs.education"),
-    // t("profile.tabs.activity"),
-    // t("profile.tabs.pricing"),
     "My Business Listing ",
     "Post a Job",
-    "Upload Resume"
-
-
+    "Uploaded Resume",
   ];
 
   function formatDateShort(dateStr) {
@@ -189,6 +335,70 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
       return dateStr;
     }
   }
+
+  const formatLocation = (loc) => {
+    if (!loc) return "-";
+    if (Array.isArray(loc)) return loc.filter(Boolean).join(", ");
+    return String(loc);
+  };
+
+  const Badge = ({ children, variant = "gray" }) => {
+    const base = "text-xs px-2 py-1 rounded-full border";
+    const color = {
+      gray: "bg-gray-100 border-gray-200",
+      indigo: "bg-indigo-100 border-indigo-200",
+      green: "bg-green-100 border-green-200",
+      yellow: "bg-yellow-100 border-yellow-200",
+      red: "bg-red-100 border-red-200",
+    }[variant] || "bg-gray-100 border-gray-200";
+    return <span className={`${base} ${color} mr-2 mb-2 inline-block`}>{children}</span>;
+  };
+
+  const getMediaUrl = (item) => {
+    if (!item) return null;
+    return (
+      item.uploads_file ??
+      item.uploads_file_url ??
+      item.media_url ??
+      item.file_url ??
+      item.image ??
+      (item.media && (item.media.url ?? item.media[0]?.url)) ??
+      item.media ??
+      item.url ??
+      null
+    );
+  };
+
+  const getSocials = (item) => {
+    if (!item) return [];
+    const raw =
+      item.social_media_link ??
+      item.social_media_links ??
+      item.socials ??
+      item.social_media_link_list ??
+      item.social_media_link_list_json ??
+      item.social_media_link_array ??
+      null;
+
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw.filter(Boolean);
+    if (typeof raw === "string") {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+      } catch {
+        return raw.split(/\n|,/).map((s) => s.trim()).filter(Boolean);
+      }
+    }
+    if (typeof raw === "object") {
+      return Object.values(raw).filter(Boolean);
+    }
+    return [];
+  };
+
+  const mediaUrl = getMediaUrl(listing);
+  const isVideo = mediaUrl && /\.(mp4|webm|mov|ogg)(?:\?.*)?$/i.test(mediaUrl);
+  const b_socials = getSocials(listing);
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -219,7 +429,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
         {/* Loading / Error */}
         <div className="px-6 py-4">
           {loading && <SpinnerProvider />}
-          {error && <div className="text-sm text-red-500">Error: {error}</div>}
         </div>
 
         {/* <div className="border bg-orange-50 border-orange-500 px-4 py-4 rounded-md mx-6 flex gap-3 items-center">
@@ -586,7 +795,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               </div>
             )}
 
-            {activeTab === t("profile.tabs.activity") && (
+            {/* {activeTab === t("profile.tabs.activity") && (
               <div className="space-y-6">
                 <div className="bg-gray-50 rounded-lg p-6 space-y-4">
                   <h3 className="font-semibold text-sm">{t("profile.activity.professional_experience")}</h3>
@@ -629,7 +838,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                         key={post.id}
                         className="flex flex-col md:flex-row gap-3 bg-white rounded-lg p-3 md:p-4 items-start md:items-center border"
                       >
-                        {/* LEFT: image -> full width on mobile, thumbnail on desktop */}
                         <div className="w-full md:w-28 flex-shrink-0">
                           <img
                             src={post.image || post.image_url || "https://picsum.photos/400/280"}
@@ -639,7 +847,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                           />
                         </div>
 
-                        {/* MIDDLE: title + description */}
                         <div className="flex-1 min-w-0">
                           <h4 className="font-semibold text-sm truncate">{post.title}</h4>
 
@@ -658,7 +865,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                               </span>
                             )}
 
-                            {/* tags (hide on very small screens if too many) */}
                             <div className="flex gap-2 flex-wrap mt-2">
                               {(post.tags || []).slice(0, 4).map((tag) => (
                                 <span
@@ -672,7 +878,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                           </div>
                         </div>
 
-                        {/* RIGHT: meta / actions -> stack under content on mobile, column on desktop */}
                         <div className="w-full md:w-auto flex md:flex-col items-start md:items-end gap-2 mt-3 md:mt-0">
                           <button
                             className="w-full md:w-auto text-xs text-gray-600 font-semibold border px-3 py-1 rounded-md bg-white flex items-center justify-center gap-2"
@@ -681,16 +886,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                             <Heart className="h-3 w-3" /> <span className="hidden md:inline">Like</span>
                             <span className="md:hidden text-[11px]">♥</span>
                           </button>
-
-                          {/* <div className="text-[10px] text-gray-400 mt-0 md:mt-2">Premium Feature</div> */}
-
-                          {/* <Link
-                            to="/featured"
-                            className="w-full md:w-auto text-[12px] font-semibold bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-md flex items-center justify-center gap-2"
-                            aria-label="Upgrade to premium"
-                          >
-                            <Crown className="h-3 w-3" /> <span className="text-xs">{t("profile.upgrade")}</span>
-                          </Link> */}
                         </div>
                       </article>
                     ))}
@@ -724,25 +919,269 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                   <p><span className="font-medium">{t("profile.pricing.rates_negotiable_label")}:</span> <span className="text-green-600 font-medium">{profilePayload?.seller?.is_rate_negotiable === "1" ? t("profile.pricing.yes") : t("profile.pricing.no")}</span></p>
                 </div>
               </div>
-            )}
-
+            )} */}
 
             {activeTab === "My Business Listing " && (
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Business Listing</h3>
-                <p className="text-sm text-gray-500">No Business Listing yet.</p>
+              <div className="p-4">
+                <h3 className="font-semibold text-lg mb-3">Business Listing</h3>
+
+                {listing.length === 0 ? (
+                  <div className="border rounded-lg bg-white shadow-sm p-6 text-sm text-gray-500">No Business Listing yet.</div>
+                ) : (
+                  listing.map((item, idx) => {
+                    const mediaUrlItem = getMediaUrl(item);
+                    const isVideoItem = mediaUrlItem && /\.(mp4|webm|mov|ogg)(?:\?.*)?$/i.test(mediaUrlItem);
+                    const socialsItem = getSocials(item);
+
+                    return (
+                      <div key={item.id ?? idx} className="border rounded-lg bg-white shadow-sm overflow-hidden mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+                          {/* Media */}
+                          <div className="col-span-1">
+                            <div className="h-40 w-full rounded-md bg-gray-50 overflow-hidden flex items-center justify-center">
+                              {mediaUrlItem ? (
+                                isVideoItem ? (
+                                  <video src={mediaUrlItem} controls className="w-full h-full object-cover" />
+                                ) : (
+                                  <img src={mediaUrlItem} alt="business media" className="w-full h-full object-cover" />
+                                )
+                              ) : (
+                                <div className="text-gray-400 flex flex-col items-center gap-2">
+                                  <ImageIcon className="h-8 w-8" />
+                                  <span className="text-xs">No media uploaded</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Main info */}
+                          <div className="col-span-1 md:col-span-2">
+                            <div>
+                              <p className="text-sm text-gray-500">Introduction</p>
+                              <h4 className="text-sm font-semibold">{item.intro ?? item.introduction ?? "—"}</h4>
+                            </div>
+
+                            <div className="mt-3">
+                              <p className="text-sm text-gray-500">Description</p>
+                              <p className="mt-1 text-sm text-gray-700 whitespace-pre-line">{item.description ?? item.desc ?? "—"}</p>
+                            </div>
+
+                            <div className="mt-4 flex flex-wrap items-center gap-3">
+                              {item.website_link ? (
+                                <div>
+                                  <p className="text-sm text-gray-500 my-2">Website</p>
+                                  <a href={item.website_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3 py-1 rounded-md border text-xs font-semibold hover:bg-gray-100">
+                                    <LinkIcon className="h-4 w-4" /> {item.website_link}
+                                  </a>
+                                </div>
+                              ) : (
+                                <span className="text-xs text-gray-400">No website</span>
+                              )}
+                            </div>
+
+                            <div className="mt-4">
+                              <p className="text-sm text-gray-500">Social links</p>
+                              {socialsItem.length === 0 ? (
+                                <p className="text-xs text-gray-400 mt-1">No social links</p>
+                              ) : (
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                  {socialsItem.map((s, i) => (
+                                    <a key={i} href={s} target="_blank" rel="noopener noreferrer" className="px-3 py-1 border rounded-md text-xs font-semibold hover:bg-gray-100 break-words">
+                                      {s}
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             )}
+
 
             {activeTab === "Post a Job" && (
-              <div className="grid grid-cols-2 gap-4">
-                <p className="text-sm text-gray-500">No Posted a Job.</p>
+              <div className="space-y-4">
+                <h3 className="font-semibold text-md">Job Listings</h3>
+
+                {jobError && <div className="text-sm text-red-500">Error: {jobError}</div>}
+                {!jobLoading && !jobError && jobData.length === 0 && (
+                  <p className="text-sm text-gray-500">No job listings found.</p>
+                )}
+
+                <div className="space-y-4">
+                  {jobData.map((job) => (
+                    <article
+                      key={job.id ?? job.uuid}
+                      className="border rounded-lg p-4 shadow-sm bg-white flex flex-col space-y-3"
+                    >
+                      <h4 className="text-md font-semibold leading-tight">{job.title}</h4>
+                      {job.description && (
+                        <p className="text-sm text-gray-700">
+                          <strong>Description:</strong> {job.description}
+                        </p>
+                      )}
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2 text-xs text-gray-600">
+                        <div><strong>Company:</strong> {job.company?.company_name ?? "Company"}</div>
+                        <div><strong>Rate:</strong> {job.rate ? `${job.rate} ${job.rate_type ?? ''}` : '-'}</div>
+                        <div><strong>Schedule:</strong> {job.schedule_type ?? '-'}</div>
+                        <div><strong>Source:</strong> {job.via ?? '-'}</div>
+                        <div><strong>Job ID:</strong> {job.uuid ?? '-'}</div>
+                        <div><strong>Posted:</strong> {formatDateShort(job.posted_at ?? job.created_at)}</div>
+                        <div><strong>Updated:</strong> {formatDateShort(job.updated_at)}</div>
+                        <div><strong>Location:</strong> {formatLocation(job.location)}</div>
+                        {job.cultural_identifiers && (
+                          <div><strong>Cultural Identifiers:</strong> {job.cultural_identifiers}</div>
+                        )}
+                      </div>
+                      <div>
+                        <strong className="text-xs">Types:</strong>
+                        <div className="mt-1 flex flex-wrap">
+                          {(job.types || []).map((t) => (
+                            <Badge key={t.id ?? t.name}>{t.name}</Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <strong className="text-xs">Skills:</strong>
+                        <div className="mt-1 flex flex-wrap">
+                          {(job.skills || []).map((s) => (
+                            <Badge key={s.id ?? s.name}>{s.name}</Badge>
+                          ))}
+                          {(job.unique_skills || []).map((s) => (
+                            <Badge key={s.id ?? s.name} variant="indigo">{s.name}</Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <strong className="text-xs">Degrees:</strong>
+                        <div className="mt-1 flex flex-wrap">
+                          {(job.degrees || []).map((d) => (
+                            <Badge key={d.id ?? d.degree} variant="green">{d.degree}</Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <strong className="text-xs">Demographics:</strong>
+                        <div className="text-xs text-gray-700 mt-1">
+                          {job.age_ranges && job.age_ranges.length > 0 && (
+                            <div><strong>Age ranges:</strong> {job.age_ranges.map(a => a.range).join(", ")}</div>
+                          )}
+                          {job.genders && job.genders.length > 0 && (
+                            <div><strong>Genders:</strong> {job.genders.map(g => g.gender).join(", ")}</div>
+                          )}
+                        </div>
+                      </div>
+
+                      {(job.job_highlights || []).length > 0 && (
+                        <div className="space-y-2">
+                          {job.job_highlights.map((section) => (
+                            <div key={section.id}>
+                              <div className="text-xs font-medium">{section.title}</div>
+                              <ul className="list-disc pl-5 text-xs text-gray-700">
+                                {(section.items || []).map((it, idx) => (
+                                  <li key={idx}>{it}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {(job.applyOptions || []).length > 0 && (
+                        <div className="mt-2 flex flex-col space-y-2">
+                          {job.applyOptions.map((opt, i) => (
+                            <a
+                              key={i}
+                              href={opt.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-xs font-semibold px-3 py-1 rounded border hover:bg-gray-100 w-fit"
+                            >
+                              {opt.title ?? "Apply"}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </article>
+                  ))}
+                </div>
               </div>
             )}
 
-            {activeTab === "Upload Resume" && (
-              <div className="grid grid-cols-2 gap-4">
-                <p className="text-sm text-gray-500">No Uploaded Resume Yet.</p>
+            {activeTab === "Uploaded Resume" && (
+              <div className="py-4">
+                {loading && (
+                  <div className="p-4 border rounded-lg bg-white shadow-sm animate-pulse">
+                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-3" />
+                    <div className="h-6 bg-gray-200 rounded w-1/2" />
+                  </div>
+                )}
+
+                {!loading && error && (
+                  <div className="p-4 border rounded-lg bg-red-50 text-red-700">
+                    <p className="text-sm">No uploaded resume yet.</p>
+                  </div>
+                )}
+
+                {!loading && !error && !resumeUrl && (
+                  <div className="p-4 border rounded-lg bg-gray-50 text-gray-600">
+                    <p className="text-sm">No uploaded resume yet.</p>
+                  </div>
+                )}
+
+                {!loading && resumeUrl && (
+                  <div className="p-5 border rounded-xl bg-white shadow-sm flex items-center justify-between hover:shadow-md transition">
+                    <div className="flex items-center space-x-4">
+                      <div className="h-12 w-12 flex items-center justify-center bg-gray-100 rounded-md">
+                        <FileText className="h-6 w-6 text-gray-500" />
+                      </div>
+
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {getFileName(resumeUrl)}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">Uploaded Resume</div>
+                      </div>
+                    </div>
+
+                    <div className="flex space-x-3">
+                      <a
+                        href={resumeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-md hover:bg-blue-50 text-blue-600 transition"
+                        title="View"
+                      >
+                        <Eye className="h-5 w-5" />
+                      </a>
+
+                      <a
+                        href={resumeUrl}
+                        download
+                        className="p-2 rounded-md hover:bg-green-50 text-green-600 transition"
+                        title="Download"
+                      >
+                        <Download className="h-5 w-5" />
+                      </a>
+
+                      <button
+                        onClick={() => navigator.clipboard?.writeText(resumeUrl)}
+                        className="p-2 rounded-md hover:bg-gray-50 text-gray-600 transition"
+                        title="Copy Link"
+                      >
+                        <Copy className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

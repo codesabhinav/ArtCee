@@ -371,3 +371,86 @@ export function fetchResume(id) {
       throw new Error(errorMessage);
     });
 }
+
+export function postJob(payload) {
+  return service
+    .post(`jobs/store`, payload)
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to post job";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+
+      throw new Error(message);
+    });
+}
+
+export function getPostJobData(uuid) {
+  return service
+    .get(`jobs/${uuid}`)
+    .then((res) => res.data?.data || null)
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message || "get post data failed";
+      throw new Error(errorMessage);
+    });
+}
+
+export function getCategory() {
+  return service
+    .get(`site/category`)
+    .then((res) => res.data?.data || null)
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message || "get category data failed";
+      throw new Error(errorMessage);
+    });
+}
+
+export function getSubCategory(id) {
+  return service
+    .get(`site/sub-category/${id}`)
+    .then((res) => res.data?.data || null)
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message || "get sub-category data failed";
+      throw new Error(errorMessage);
+    });
+}
+
+export function postBusinessListing(formData) {
+  return service
+    .post(`seller/business-listing`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to upload listing";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+
+      throw new Error(message);
+    });
+}
+
+export function fetchBusinessListing(uuid) {
+  return service
+    .get(`site/business-listing/${uuid}`)
+    .then((res) => res.data)
+    .catch((error) => {
+      const apiErrors = error?.response?.data?.errors;
+      let message = error?.response?.data?.message || error?.message || "Failed to fetch listing";
+
+      if (apiErrors) {
+        const allErrors = Object.values(apiErrors).flat();
+        message = allErrors.join("\n");
+      }
+
+      throw new Error(message);
+    });
+}

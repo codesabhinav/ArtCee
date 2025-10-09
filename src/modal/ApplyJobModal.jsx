@@ -52,29 +52,24 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
     setError(null);
   }, [job]);
 
-  // when modal opens, load userId and fetch existing resume (if any)
   useEffect(() => {
     if (!open) return;
     try {
       const id = Cookies.get("userId");
       setUserId(id ?? null);
       if (id) {
-        // fetch existing resume for this user
         (async () => {
           try {
             const res = await fetchResume(id);
-            // API returns { status: "success", data: { resume_url: "..." } }
             const url = res?.data?.resume_url ?? res?.resume_url ?? null;
             if (url) {
               setResumeUrl(url);
               setResumeFileName(filenameFromUrl(url));
             } else {
-              // clear if API returns no url
               setResumeUrl(null);
               setResumeFileName(null);
             }
           } catch (err) {
-            // not fatal — user simply has no resume or request failed
             console.debug("No resume found or fetch failed:", err?.message || err);
             setResumeUrl(null);
             setResumeFileName(null);

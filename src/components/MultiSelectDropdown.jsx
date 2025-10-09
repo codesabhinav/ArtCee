@@ -100,7 +100,7 @@ export default function MultiSelectDropdown({
                   key={opt.id}
                   value={opt}
                   className={({ active }) =>
-                    `relative cursor-default select-none px-3 py-2 m-1 rounded-md ${active ? "bg-blue-600 text-white" : "text-gray-900"}`
+                    `relative cursor-default select-none px-3 py-2 m-1 rounded-md ${active ? "bg-gray-200 text-gray-900" : "text-gray-900"}`
                   }
                 >
                   {({ selected }) => (
@@ -108,7 +108,7 @@ export default function MultiSelectDropdown({
                       <div className="flex items-center justify-between">
                         <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{opt.name}</span>
                         {selected ? (
-                          <span className="flex items-center text-white">
+                          <span className="flex items-center text-gray-900">
                             <FaCheck className="w-3 h-3" />
                           </span>
                         ) : null}
