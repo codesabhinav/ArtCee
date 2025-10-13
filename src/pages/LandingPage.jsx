@@ -18,7 +18,11 @@ const LandingPage = ({ onClose, isModal = false }) => {
   };
 
   const closeLanding = () => {
-    navigate('/home')
+    if (typeof onClose === "function") {
+      onClose();
+    } else {
+      navigate('/home');
+    }
   };
 
   useEffect(() => {

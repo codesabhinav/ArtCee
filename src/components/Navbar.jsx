@@ -65,7 +65,6 @@ const Navbar = () => {
       if (text.includes("go back")) {
         e.preventDefault();
         setShowComingSoon(false);
-        navigate("/");
       }
     }
 

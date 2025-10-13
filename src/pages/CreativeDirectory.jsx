@@ -166,7 +166,7 @@ const CreativeDirectory = () => {
           setLastPage(res.meta.last_page ?? 1);
           setPerPage(res.meta.per_page ?? perPage);
           setTotalItems(res.meta.total ?? 0);
-          setPage(res.meta.current_page ?? page); 
+          setPage(res.meta.current_page ?? page);
         }
       } catch (err) {
         console.error("Failed to fetch creatives:", err);
@@ -537,7 +537,7 @@ const CreativeDirectory = () => {
                       <img
                         src={profileSrc}
                         alt={name}
-                        className="w-14 h-14 rounded-full object-cover border"
+                        className="w-40 h-40 rounded-md object-cover border"
                         onError={(e) => {
                           if (e.currentTarget.src !== DEFAULT_AVATAR) {
                             e.currentTarget.src = DEFAULT_AVATAR;
@@ -547,28 +547,28 @@ const CreativeDirectory = () => {
                       <div className="ml-3">
                         <h3 className="font-bold text-sm">{name}</h3>
                         <p className="text-xs text-gray-600">{title}</p>
+
+                        {/* Bio */}
+                        <p className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
+                          {creative?.personal_intro || t("creative.no_intro")}
+
+                          {/* Meta */}
+                          <div className="mt-3 grid grid-cols-1 sm:grid-cols-1 gap-y-1 text-xs text-gray-500">
+                            <p className="flex items-center">
+                              <FaMapMarkerAlt className="mr-2" /> {getLocationText(creative)}
+                            </p>
+                            {/* <p className="flex items-center">
+                              <FaClock className="mr-2" /> {years}+ {t("creative.years")}
+                            </p>
+                            <p className="flex items-center">
+                              <FaBriefcase className="mr-2" /> {level} {t("creative.level")}
+                            </p> */}
+                            <p className="flex items-center">
+                              <FaGlobe className="mr-2" /> {workStyle}
+                            </p>
+                          </div>
+                        </p>
                       </div>
-                    </div>
-
-                    {/* Bio */}
-                    <p className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
-                      {creative?.personal_intro || t("creative.no_intro")}
-                    </p>
-
-                    {/* Meta */}
-                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 text-xs text-gray-500">
-                      <p className="flex items-center">
-                        <FaMapMarkerAlt className="mr-2" /> {getLocationText(creative)}
-                      </p>
-                      <p className="flex items-center">
-                        <FaClock className="mr-2" /> {years}+ {t("creative.years")}
-                      </p>
-                      <p className="flex items-center">
-                        <FaBriefcase className="mr-2" /> {level} {t("creative.level")}
-                      </p>
-                      <p className="flex items-center">
-                        <FaGlobe className="mr-2" /> {workStyle}
-                      </p>
                     </div>
 
                     <SkillChips skills={creative?.skills} />

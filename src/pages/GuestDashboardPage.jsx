@@ -8,6 +8,7 @@ import { useEffect, useState, useCallback } from "react";
 import {
   BiCloudUpload,
   BiImage,
+  BiMoney,
   BiSearch,
 } from "react-icons/bi";
 import {
@@ -20,7 +21,7 @@ import CreatePostPopupModel from "../modal/CreatePostPopupModel";
 import { useTranslation } from "../contexts/LanguageProvider";
 import SpinnerProvider from "../components/SpinnerProvider";
 import { deletePost, getGuestDashboardData, getPlans, getPostData, getPostJobData, JobsData } from "../Hooks/useSeller";
-import { Building, Building2, Crown, LogOut, Plus, Star, TrashIcon } from "lucide-react";
+import { Building, Building2, Crown, LogOut, MessageCircleMoreIcon, Plus, Star, TrashIcon } from "lucide-react";
 import StepModalManager from "../modal/dashboard models/StepModalManager";
 import ProfileSteps from "../components/ProfileSteps";
 import UploadProfileModal from "../modal/dashboard models/UploadProfileModal";
@@ -376,7 +377,7 @@ const GuestDashboardPage = () => {
                 <img
                   src={avatar}
                   alt={fullName}
-                  className="w-16 h-16 rounded-full mx-auto sm:mx-0 object-cover"
+                  className="w-24 h-24 rounded-md mx-auto sm:mx-0 object-cover"
                 />
                 <div className="text-center sm:text-left">
                   <h2 className="text-base sm:text-lg font-bold">{fullName}</h2>
@@ -960,25 +961,31 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6">
               <h3 className="font-semibold mb-3">{t("guest.quick_actions_title")}</h3>
               <ul className="space-y-2 text-xs font-bold">
-                <li onClick={() => setWorkOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                <li onClick={() => setWorkOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
                   <span className="flex items-center gap-2"><BiCloudUpload className="h-4 w-4" /> {t("guest.quick.upload_work")}</span>
                 </li>
-                <li onClick={openCreate} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                <li onClick={openCreate} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
                   <span className="flex items-center gap-2"><PencilIcon className="h-4 w-4" /> {t("guest.quick.write_blog")}</span>
                 </li>
-                <li onClick={() => navigate("/jobs")} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                <li onClick={() => navigate("/jobs")} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
                   <span className="flex items-center gap-2"><BriefcaseIcon className="h-4 w-4" /> {t("guest.quick.browse_jobs")}</span>
                 </li>
-                <li onClick={() => setPhotoIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2"><CameraIcon className="h-4 w-4" /> {t("guest.quick.update_photo")}</span>
+                <li onClick={() => setListingOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
+                  <span className="flex items-center gap-2"><Building2 className="h-4 w-4" /> Add Business Listing</span>
                 </li>
+                <li className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
+                  <span className="flex items-center gap-2"><MessageCircleMoreIcon className="h-4 w-4" />	Go to Inbox </span>
+                </li>
+                {/* <li onClick={() => setPhotoIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
+                  <span className="flex items-center gap-2"><CameraIcon className="h-4 w-4" /> {t("guest.quick.update_photo")}</span>
+                </li> */}
                 {hasActiveSubscription ? (
-                  <li onClick={() => setPostJobOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                  <li onClick={() => setPostJobOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
                     <span className="flex items-center gap-2"><Plus className="h-4 w-4" />Post a job</span>
                   </li>
                 ) : null}
-                <li onClick={() => setListingOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                  <span className="flex items-center gap-2"><Building2 className="h-4 w-4" /> Add Business Listing</span>
+                <li onClick={() => navigate("/featured")} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
+                  <span className="flex items-center gap-2"><BiMoney className="h-4 w-4" />Upgrade to Premium</span>
                 </li>
               </ul>
             </div>

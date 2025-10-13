@@ -418,7 +418,7 @@ const BusinessDirectory = () => {
                       "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80"
                     }
                     alt={user?.full_name || t("business.business")}
-                    className="w-20 h-20 rounded-lg object-cover shrink-0"
+                    className="w-40 h-40 rounded-lg object-cover shrink-0"
                   />
 
                   <div className="flex-1">
@@ -468,7 +468,7 @@ const BusinessDirectory = () => {
 
                     <SkillChips skills={biz?.skills} />
 
-                    <div className="mt-3 flex gap-2 flex-wrap">
+                    {/* <div className="mt-3 flex gap-2 flex-wrap">
                       {(user?.social_links || []).map((link) => (
                         <a
                           key={link.id || link.url}
@@ -480,7 +480,7 @@ const BusinessDirectory = () => {
                           {link.platform}
                         </a>
                       ))}
-                    </div>
+                    </div> */}
 
                     <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:space-x-3 justify-between">
                       {/* <a

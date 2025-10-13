@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   FaSearch,
   FaPlayCircle,
@@ -21,7 +21,10 @@ export default function Home() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [professionals, setProfessionals] = useState([]);
-
+  
+  const location = useLocation();
+  const [showLanding, setShowLanding] = useState(!!location.state?.showLanding);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,8 +47,21 @@ export default function Home() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (showLanding) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [showLanding]);
+
   return (
     <div className="w-full">
+
+      {showLanding && (
+        <LandingPage
+          isModal={true}
+          onClose={() => setShowLanding(false)}
+        />
+      )}
 
       {/* Hero Section */}
       <section
@@ -55,8 +71,6 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/60"></div>
 
         <div className="relative w-full max-w-3xl text-white">
-
-
 
           {/* Top Badge */}
           {/* <button className="bg-orange-500 px-3 font-semibold sm:px-4 py-2 rounded-md mb-6 shadow text-xs flex items-center gap-2 justify-center mx-auto">
@@ -120,9 +134,6 @@ export default function Home() {
              >
                <Crown className="w-5 h-5" /> {t("home.get_featured")}
              </Link> */}
-
-
-
           </div>
         </div>
       </section>
@@ -278,10 +289,6 @@ export default function Home() {
                    {t("home.step4_desc")}
                  </p>
                </div> */}
-
-
-
-
           </div>
         </div>
       </section>

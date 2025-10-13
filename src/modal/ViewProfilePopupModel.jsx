@@ -410,7 +410,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               if (e.currentTarget.src !== DEFAULT_AVATAR) {
                 e.currentTarget.src = DEFAULT_AVATAR;
               }
-            }} className="w-12 h-12 rounded-full object-cover" />
+            }} className="w-12 h-12 rounded-md object-cover" />
             <div>
               <h2 className="font-bold text-lg flex items-center gap-2">
                 {fullName}
@@ -447,7 +447,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               if (e.currentTarget.src !== DEFAULT_AVATAR) {
                 e.currentTarget.src = DEFAULT_AVATAR;
               }
-            }} className="h-48 rounded-lg object-cover" />
+            }} className="h-50 w-full rounded-lg object-cover" />
 
             {/* Stats */}
             <div className="flex gap-6 text-center mt-4">
@@ -938,7 +938,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
                           {/* Media */}
                           <div className="col-span-1">
-                            <div className="h-40 w-full rounded-md bg-gray-50 overflow-hidden flex items-center justify-center">
+                            <div className="w-full h-full rounded-md bg-gray-50 overflow-hidden flex items-center justify-center">
                               {mediaUrlItem ? (
                                 isVideoItem ? (
                                   <video src={mediaUrlItem} controls className="w-full h-full object-cover" />

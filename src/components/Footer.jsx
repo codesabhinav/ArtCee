@@ -17,7 +17,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-3 md:mt-0 flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-xs text-gray-600">
-          <p>{t("footer.rights")}</p>
+          <p>© {new Date().getFullYear()} Artcee. All rights reserved.</p>
           <div className="flex space-x-4">
             <button onClick={() => setShowPolicy(true)} className="hover:underline">
               {t("footer.privacy_policy")}

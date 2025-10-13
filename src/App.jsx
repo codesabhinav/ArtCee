@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import { ProjectProvider } from './contexts/ProjectContext'
 import MainLayout from './layouts/MainLayout'
@@ -31,7 +31,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainLayout />}>
-              <Route index element={<LandingPage />} />
+              <Route index element={<Navigate to="/home" replace state={{ showLanding: true }} />} />
               <Route path='home' element={<HomePage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="forgot-password" element={<ForgotPasswordModal />} />
@@ -56,7 +56,7 @@ function App() {
               <Route path="success" element={<PaymentSuccessPage />} />
               <Route path="cancel" element={<PaymentCancelPage />} />
             </Route>
-            <Route path="*" element={<NotFoundPage />} />
+            <Route path="*" element={<NotFoundPage/>} />
             {/* <Route index element={<LandingPage />}></Route> */}
             {/* <Route index element={<HomePage />} /> */}
           </Routes>
