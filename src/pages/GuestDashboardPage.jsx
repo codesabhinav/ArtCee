@@ -294,6 +294,8 @@ const GuestDashboardPage = () => {
 
   const handleLogout = () => {
     Cookies.remove("artcee_token");
+    Cookies.remove("userId");
+    Cookies.remove("subscription_status");
     window.dispatchEvent(new Event("authChanged"));
     navigate("/home");
   };

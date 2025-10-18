@@ -318,6 +318,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   const country = profilePayload?.seller.user.location?.country?.name ?? "";
   const is_followed_by_login_user = profilePayload?.is_followed_by_login_user ?? false;
   const saved_jobs = profilePayload?.bookmarked ?? [];
+  const progress_percentage = profilePayload?.progress_percentage ?? 0;
 
   const tabs = [
     t("profile.tabs.portfolio"),
@@ -403,6 +404,8 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   const mediaUrl = getMediaUrl(listing);
   const isVideo = mediaUrl && /\.(mp4|webm|mov|ogg)(?:\?.*)?$/i.test(mediaUrl);
   const b_socials = getSocials(listing);
+  const userId = Cookies.get("userId");
+  const shouldShowBox = userId === uuid && progress_percentage < 100;
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -431,7 +434,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
         </div>
 
         {/* Loading / Error */}
-        <div className="px-6 py-4">
+        <div className="px-6 py-2">
           {loading && <SpinnerProvider />}
         </div>
 
@@ -442,6 +445,15 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
             <div className="text-xs text-gray-600">This creative is highlighted for their exceptional work and premium membership</div>
           </div>
         </div> */}
+
+        {shouldShowBox && (
+          <div className="border border-orange-300 px-6 py-2 text-orange-800 p-2 rounded-md shadow-md mx-6 flex flex-row gap-2 items-center justify-between italic">
+            <h3 className="font-semibold text-sm">Please Complete Your Profile</h3>
+            <button onClick={() => navigate('/profile')} className="text-xs font-medium bg-yellow-100 text-yellow-600 px-3 py-1 rounded-md w-fit">
+              Complete Profile Now
+            </button>
+          </div>
+        )}
 
         {/* Profile Info Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-6 py-6">
@@ -1267,7 +1279,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                               </div>
 
                               {/* <div className="flex flex-col items-end gap-2"> */}
-                                {/* {applyFirst ? (
+                              {/* {applyFirst ? (
                                   <a
                                     href={applyFirst.link}
                                     target="_blank"
@@ -1282,8 +1294,8 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                                   </button>
                                 )} */}
 
-                                {/* Optional: link to view more or remove bookmark */}
-                                {/* <button
+                              {/* Optional: link to view more or remove bookmark */}
+                              {/* <button
                                   onClick={() => {
                                     // handle opening detailed modal (if you have one)
                                     setSelectedJob(job);

@@ -82,7 +82,7 @@ const LandingPage = ({ onClose, isModal = false }) => {
           {t("landing.hint")}
         </p> */}
               {/* Feature Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10 w-full max-w-3xl">
+              {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10 w-full max-w-3xl">
                 <div className="bg-white border rounded-xl p-6 text-center shadow-sm ">
                   <div className="h-12 w-12 mx-auto flex justify-center items-center bg-orange-500 text-white rounded-full mb-3">
                     <Palette size={24} />
@@ -112,10 +112,10 @@ const LandingPage = ({ onClose, isModal = false }) => {
                     {t("landing.feature_collab.desc")}
                   </p>
                 </div>
-              </div>
+              </div> */}
 
               {/* Buttons */}
-              <div className="flex flex-col items-center mt-12 space-y-4">
+              <div className="flex flex-col items-center mt-5 space-y-4">
                 <button
                   onClick={() => navigateAndClose("/register")}
                   className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-8 py-3 rounded-full shadow text-sm"
