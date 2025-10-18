@@ -116,7 +116,7 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   }, [isOpen, uuid, fetchProfile]);
 
   const handleFollow = async (id) => {
-    if (!Cookies.get("token")) {
+    if (!Cookies.get("artcee_token")) {
       navigate("/login");
       return;
     }
@@ -144,7 +144,7 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   };
 
   const handleMessageClick = () => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("artcee_token");
     if (!token) {
       navigate("/login");
       return;
@@ -160,7 +160,7 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   };
 
   const handleVideoClick = () => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("artcee_token");
     if (!token) {
       navigate("/login");
       return;
@@ -353,18 +353,18 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               <div className="flex gap-2 mt-1 w-full justify-center items-center">
                 <button
                   onClick={handleMessageClick}
-                  disabled={loading || !Cookies.get("token") || !hasActiveSubscription}
+                  disabled={loading || !Cookies.get("artcee_token") || !hasActiveSubscription}
                   className={`inline-flex items-center justify-center text-xs border font-semibold px-4 py-2 rounded-lg gap-2
-    ${(!Cookies.get("token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
+    ${(!Cookies.get("artcee_token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <MessageCircle className="h-3 w-3" /> {t("profile.message")}
                 </button>
 
                 <button
                   onClick={handleVideoClick}
-                  disabled={loading || !Cookies.get("token") || !hasActiveSubscription}
+                  disabled={loading || !Cookies.get("artcee_token") || !hasActiveSubscription}
                   className={`inline-flex items-center justify-center text-xs border font-semibold px-4 py-2 rounded-lg gap-2
-    ${(!Cookies.get("token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
+    ${(!Cookies.get("artcee_token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <Video className="h-4 w-3" /> {t("profile.video_call")}
                 </button>

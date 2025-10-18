@@ -31,6 +31,7 @@ import toast from "react-hot-toast";
 import PortfolioModal from "../modal/dashboard models/PortfolioModal";
 import PostJobPopupModal from "../modal/PostJobPopupModal";
 import BusinessListingModal from "../modal/BusinessListingModal";
+import UploadCoverPhotoModal from "../modal/dashboard models/UploadCoverPhotoModal";
 
 const GuestDashboardPage = () => {
   const { t } = useTranslation();
@@ -57,6 +58,12 @@ const GuestDashboardPage = () => {
   const [jobsPostError, setjobsPostError] = useState(null);
   const [jobsPostData, setjobsPostData] = useState(null);
   const [listingOpen, setListingOpen] = useState(null);
+  const [openCompletion, setOpenCompletion] = useState(true);
+  const [openPortfolio, setOpenPortfolio] = useState(true);
+  const [openActivity, setOpenActivity] = useState(true);
+  const [openJobs, setOpenJobs] = useState(true);
+  const [openPosted, setOpenPosted] = useState(true);
+  const [isCoverPhotoOpen, setCoverPhotoIsOpen] = useState(false);
 
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
@@ -117,11 +124,10 @@ const GuestDashboardPage = () => {
   }
 
   async function handleDelete(postId) {
-    const ok = window.confirm("Are you sure you want to delete this post?");
-    if (!ok) return;
-
     try {
       await deletePost(postId);
+      fetchDashboard();
+      toast.success("Post deleted");
     } catch (err) {
       console.error("Failed to delete:", err);
       alert(err.message || "Failed to delete post");
@@ -143,6 +149,7 @@ const GuestDashboardPage = () => {
   const fullName = user?.full_name ?? profile?.title ?? t("guest.default_name");
   const roleDisplay = (user?.role && user.role[0]?.display_name) ?? t("guest.default_role");
   const avatar = profile?.profile_picture ?? "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
+  const cover_image = profile?.cover_picture ?? null;
   const bio = profile?.bio ?? "";
   const title = profile?.title ?? t("guest.default_title");
 
@@ -165,6 +172,7 @@ const GuestDashboardPage = () => {
   const memberSince = new Date(user?.created_at ?? profile?.created_at ?? Date.now()).toLocaleDateString();
   const jobsList = payload?.jobs ?? [];
   const posts = payload?.posts ?? [];
+  const portfolios = payload?.portfolieo ?? [];
   const subscription =
     payload?.user?.subcription ??
     payload?.seller?.user?.subcription ??
@@ -285,7 +293,7 @@ const GuestDashboardPage = () => {
   };
 
   const handleLogout = () => {
-    Cookies.remove("token");
+    Cookies.remove("artcee_token");
     window.dispatchEvent(new Event("authChanged"));
     navigate("/home");
   };
@@ -337,6 +345,14 @@ const GuestDashboardPage = () => {
     return <span className={`${base} ${color} mr-2 mb-2 inline-block`}>{children}</span>;
   };
 
+  const handleInboxClick = () => {
+    if (hasActiveSubscription) {
+      navigate("/inbox");
+    } else {
+      navigate("/featured");
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen w-full">
       <div className="md:max-w-[80%] mx-auto px-4 pb-2 sm:px-6">
@@ -371,374 +387,617 @@ const GuestDashboardPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 mt-6 mb-2">
           {/* Left Side */}
           <div className="col-span-2 space-y-6">
-            {/* Profile Card */}
-            <div className="bg-white border rounded-lg p-6">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <img
-                  src={avatar}
-                  alt={fullName}
-                  className="w-24 h-24 rounded-md mx-auto sm:mx-0 object-cover"
-                />
-                <div className="text-center sm:text-left">
-                  <h2 className="text-base sm:text-lg font-bold">{fullName}</h2>
-                  <p className="text-gray-500 text-sm">{title}</p>
-                  <div className="flex flex-row">
-                    <p className="text-xs text-gray-500 mt-1 flex flex-row items-center gap-1">
-                      <FaMapMarkerAlt /> {city ?? t("guest.unknown")}, {state ?? t("guest.unknown")}, {country ?? t("guest.unknown")}
-                    </p>
-                    <p className="text-xs text-gray-500 mx-5 mt-1 flex flex-row items-center gap-1">
-                      <Star className="h-3 w-3" /> {rating}/{t("guest.rating_scale")}
-                    </p>
+            {/* Profile Card with Cover Image */}
+            <div className="bg-white border rounded-lg overflow-hidden shadow">
+              <div className="relative h-40  bg-gray-100">
+                {cover_image ? (
+                  <img
+                    src={cover_image}
+                    alt={`${fullName} cover`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-r from-gray-100 via-white to-white" />
+                )}
+
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent" />
+                </div>
+
+                <div className="absolute top-4 right-4 z-20">
+                  <button
+                    type="button"
+                    onClick={() => setCoverPhotoIsOpen(true)}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-white bg-opacity-95 border rounded-md text-xs shadow hover:bg-opacity-100"
+                    title="Change Cover"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M3 15v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M7 10l5-5 5 5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M12 5v10" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="hidden sm:inline">Change Cover</span>
+                  </button>
+                </div>
+
+                <div className="absolute left-6 right-6 -bottom-14 flex items-end z-10">
+                  <div className="flex items-end gap-6 w-full">
+                    <div className="relative flex-shrink-0">
+                      <img
+                        src={avatar}
+                        alt={fullName}
+                        className="w-20 h-20 sm:w-28 sm:h-28 rounded-md object-cover border-4 border-white shadow"
+                      />
+
+                      <button
+                        onClick={() => setPhotoIsOpen(true)}
+                        className="absolute -bottom-1 -right-1 w-8 h-8 rounded-sm bg-white border flex items-center justify-center shadow hover:bg-gray-50"
+                        title="Change Avatar"
+                        aria-label="Change Avatar"
+                      >
+                        <svg className="w-4 h-4 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path d="M12 5v10" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M7 10l5-5 5 5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="text-xs text-gray-600 text-center sm:text-left mt-4 line-clamp-2">
-                {title || t("guest.no_bio")}
-              </div>
+              <div className="h-10 sm:h-10" />
 
-              {/* Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 text-center mt-6 gap-4">
-                <div>
-                  <p className="font-bold">{followers}</p>
-                  <p className="text-xs text-gray-500">{t("guest.stats.followers")}</p>
-                </div>
-                <div>
-                  <p className="font-bold">{portfolioCount}</p>
-                  <p className="text-xs text-gray-500">{t("guest.stats.portfolio")}</p>
-                </div>
-                <div>
-                  <p className="font-bold">{servicesCount}</p>
-                  <p className="text-xs text-gray-500">{t("guest.stats.services")}</p>
-                </div>
-                <div>
-                  <p className="font-bold">{yearsExp}</p>
-                  <p className="text-xs text-gray-500">{t("guest.stats.years")}</p>
+              <div className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900 ">{fullName}</h3>
+                    <p className="text-sm text-gray-600 truncate">
+                      {title}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">{city} {state} {country}</p>
+                  </div>
+
+                  <div className="text-right">
+                    <p className="text-sm font-semibold">{followers}</p>
+                    <p className="text-xs text-gray-500">{t("guest.stats.followers")}</p>
+                    <button onClick={handleInboxClick} className="text-xs font-semibold px-2 py-2 bg-white border hover:bg-gray-100 rounded-md text-black mt-2 flex items-center justify-center gap-2">
+                      <MessageCircleMoreIcon className="h-4 w-4" /> Inbox
+                    </button>
+                    <p className="text-[10px] text-gray-500 mt-1">Premium Feature</p>
+                  </div>
+
                 </div>
               </div>
             </div>
 
             {/* Profile Completion */}
             <div className="bg-white border rounded-lg p-6 mt-6">
-              <div className="flex flex-col sm:flex-row sm:items-center  mb-3 gap-2">
-                <h3 className="font-regular text-sm">{t("guest.profile_completion_title")}</h3>
-                <span className="text-xs font-medium bg-yellow-100 text-yellow-600 px-3 py-1 rounded-md w-fit">
-                  {progress >= 100 ? t("guest.profile_complete") : t("guest.profile_incomplete")}
-                </span>
-              </div>
+              <button
+                type="button"
+                onClick={() => setOpenCompletion((v) => !v)}
+                aria-expanded={openCompletion}
+                className="w-full flex items-center justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <h3 className="text-sm font-medium">{t("guest.profile_completion_title")}</h3>
+                  <span className="text-xs font-medium bg-yellow-100 text-yellow-600 px-3 py-1 rounded-md w-fit">
+                    {progress >= 100 ? t("guest.profile_complete") : t("guest.profile_incomplete")}
+                  </span>
+                </div>
 
-              <p className="text-xs text-gray-500 mb-4">
-                {data.progress_percentage ?? 0}/100 {t("guest.completed_of")} – {progress}%
-              </p>
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                <div
-                  className="bg-black h-2 rounded-full"
-                  style={{ width: `${Math.min(Math.max(progress, 0), 100)}%` }}
-                />
-              </div>
+                <svg
+                  className={`w-4 h-4 transform transition-transform ${openCompletion ? "rotate-180" : "rotate-0"}`}
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden
+                >
+                  <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
 
-              <ProfileSteps data={data} openStepModal={openStepModal} />
+              {openCompletion && (
+                <div className="">
+                  <p className="text-xs text-gray-500 mb-4">
+                    {data.progress_percentage ?? 0}/100 {t("guest.completed_of")} – {progress}%
+                  </p>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                    <div
+                      className="bg-black h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.min(Math.max(progress, 0), 100)}%` }}
+                    />
+                  </div>
+
+                  <ProfileSteps data={data} openStepModal={openStepModal} />
+                </div>
+              )}
+            </div>
+
+            {/* Portfolio Section */}
+            <div className="bg-white border rounded-lg p-0 overflow-hidden mt-6">
+              <button
+                type="button"
+                onClick={() => setOpenPortfolio((v) => !v)}
+                aria-expanded={openPortfolio}
+                className="w-full flex items-center justify-between p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <h3 className="text-sm flex items-center gap-2">
+                    <BiCloudUpload className="h-5 w-5" /> Portfolio Work
+                  </h3>
+                </div>
+
+                <svg
+                  className={`w-4 h-4 transform transition-transform ${openPortfolio ? "rotate-180" : "rotate-0"}`}
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden
+                >
+                  <path
+                    d="M5 8l5 5 5-5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+
+              {openPortfolio && (
+                <div className="p-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-end sm:items-center mb-4 gap-3 sm:gap-0">
+                    <button
+                      onClick={() => setWorkOpen(true)}
+                      className="bg-teal-500 text-white px-4 py-2 text-xs font-semibold rounded-md hover:bg-teal-600 w-full sm:w-auto"
+                    >
+                      + Add Portfolio Work
+                    </button>
+                  </div>
+
+                  {!loading && portfolios.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-6">
+                      {portfolios.map((post, index) => {
+                        const isLocked = !hasActiveSubscription && index >= 5; // lock after 5 items if no active subscription
+                        const title = post?.title || t("guest.untitled");
+                        const description = post?.description || "";
+                        const role = post?.role || "";
+                        const technologies = Array.isArray(post?.technologies)
+                          ? post.technologies.join(", ")
+                          : "";
+                        const projectUrl = post?.project_url || "";
+
+                        return (
+                          <article
+                            key={post.id ?? post.uuid}
+                            className="relative flex flex-col sm:flex-row gap-4 border p-4 rounded-lg items-center sm:items-start transition"
+                          >
+                            {/* Content wrapper that gets blurred and non-interactive when locked */}
+                            <div className={`${isLocked ? "pointer-events-none filter opacity-60" : ""} flex-1 min-w-0 text-center sm:text-left`}>
+                              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                                <div className="min-w-0">
+                                  <h4 className="font-semibold text-sm truncate">{title}</h4>
+                                  <p className="text-xs text-gray-600 mt-1 truncate">{description}</p>
+
+                                  {technologies && (
+                                    <p className="text-[11px] text-gray-500 mt-2 truncate">
+                                      <strong className="mr-1">Tech:</strong> {technologies}
+                                    </p>
+                                  )}
+                                </div>
+
+                                <div className="mt-2 sm:mt-0 flex items-center gap-2">
+                                  {role && (
+                                    <span className="inline-block text-[10px] px-2 py-1 bg-yellow-100 max-h-[22px] text-yellow-600 rounded-md whitespace-nowrap">
+                                      {role}
+                                    </span>
+                                  )}
+
+                                  {projectUrl && (
+                                    <a
+                                      href={projectUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-xs underline px-2 py-1 rounded hover:bg-gray-100"
+                                      title="Open project"
+                                    >
+                                      Open Project
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+
+                              {post?.created_at && (
+                                <p className="text-[11px] text-gray-400 mt-2">
+                                  Added: {new Date(post.created_at).toLocaleDateString()}
+                                </p>
+                              )}
+
+                              {description && (
+                                <p className="text-xs text-gray-600 mt-2 line-clamp-3">{description}</p>
+                              )}
+                            </div>
+
+                            {/* Locked Overlay — visible and interactive */}
+                            {isLocked && (
+                              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-lg bg-white/80 backdrop-blur-sm text-center p-4">
+                                <p className="text-gray-700 text-sm font-semibold mb-2">Upgrade to Premium</p>
+                                <p className="text-xs text-gray-500 mb-3">Unlock all your portfolio items and more!</p>
+                                <button
+                                  onClick={() => navigate("/featured")}
+                                  className="z-30 bg-orange-500 text-white text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-orange-600"
+                                >
+                                  View Plans
+                                </button>
+                              </div>
+                            )}
+                          </article>
+
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    !loading && (
+                      <div className="text-center py-6">
+                        <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
+                          <BiCloudUpload className="h-7 w-7" />
+                        </div>
+                        <p className="text-sm font-medium">No Portfolio Work Added Yet</p>
+                        <button
+                          onClick={() => setWorkOpen(true)}
+                          className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs font-semibold w-full sm:w-auto mt-3"
+                        >
+                          + Add Your First Portfolio Work
+                        </button>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Activity & Blog (posts) */}
-            <div className="bg-white border rounded-lg p-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
-                <h3 className="text-sm flex items-center gap-2 justify-center text-center sm:justify-start sm:text-left w-full sm:w-auto">
-                  <PencilIcon className="h-5 w-5" /> {t("guest.activity_blog_title")}
-                </h3>
-
-                <button
-                  onClick={openCreate}
-                  className="bg-teal-500 text-white px-4 py-2 text-xs rounded-md hover:bg-teal-600 w-full sm:w-auto"
-                >
-                  + {t("guest.create_post")}
-                </button>
-              </div>
-
-              {!loading && posts.length > 0 ? (
-                <div className="grid grid-cols-1 gap-6">
-                  {posts.map((post) => (
-                    <article key={post.id} className="flex flex-col sm:flex-row gap-4 border p-4 rounded-lg items-center sm:items-start">
-                      <img
-                        src={post.image || post.image_url || ""}
-                        alt={post.title || t("guest.untitled")}
-                        loading="lazy"
-                        className="w-24 h-24 object-cover rounded-md flex-shrink-0 mx-auto sm:mx-0"
-                      />
-
-                      <div className="flex-1 min-w-0 text-center sm:text-left">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                          <div className="min-w-0">
-                            <h4 className="font-semibold text-sm truncate">{post.title}</h4>
-                            <p className="text-xs text-gray-600 mt-1 truncate">{post.dsc}</p>
-                          </div>
-
-                          <div className="mt-2 sm:mt-0 flex items-center gap-2">
-                            <span className="inline-block text-[10px] px-2 py-1 bg-yellow-100 max-h-[22px] text-yellow-600 rounded-md whitespace-nowrap mx-auto sm:mx-0">
-                              {post.type}
-                            </span>
-
-                            <button
-                              onClick={() => openEdit(post)}
-                              className="p-1 rounded hover:bg-gray-100"
-                              title="Edit"
-                              aria-label="Edit"
-                            >
-                              <PencilIcon className="h-4 w-4 text-gray-600" />
-                            </button>
-
-                            <button
-                              onClick={() => handleDelete(post.id)}
-                              className="p-1 rounded hover:bg-gray-100"
-                              title="Delete"
-                              aria-label="Delete"
-                            >
-                              <TrashIcon className="h-4 w-4 text-red-500" />
-                            </button>
-                          </div>
-                        </div>
-
-                        <p className="text-xs text-gray-600 mt-2 line-clamp-3">
-                          {post.content}
-                        </p>
-                      </div>
-                    </article>
-                  ))}
+            <div className="bg-white border rounded-lg p-0 overflow-hidden mt-6">
+              <button
+                type="button"
+                onClick={() => setOpenActivity((v) => !v)}
+                aria-expanded={openActivity}
+                className="w-full flex items-center justify-between p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <h3 className="text-sm flex items-center gap-2">
+                    <PencilIcon className="h-5 w-5" /> {t("guest.activity_blog_title")}
+                  </h3>
                 </div>
-              ) : (
-                !loading && (
-                  <div className="text-center py-6">
-                    <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
-                      <PencilIcon className="h-7 w-7" />
-                    </div>
-                    <p className="text-sm font-medium">{t("guest.posts_empty_title")}</p>
-                    <p className="text-xs text-gray-500 mb-4">{t("guest.posts_empty_desc")}</p>
-                    <button onClick={openCreate} className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto">
-                      + {t("guest.create_your_first_post")}
+
+                <svg
+                  className={`w-4 h-4 transform transition-transform ${openActivity ? "rotate-180" : "rotate-0"}`}
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden
+                >
+                  <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+
+              {openActivity && (
+                <div className="p-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-end sm:items-center mb-4 gap-3 sm:gap-0">
+                    {/* <h3 className="text-sm flex items-center gap-2 justify-center text-center sm:justify-start sm:text-left w-full sm:w-auto">
+                      <PencilIcon className="h-5 w-5" /> {t("guest.activity_blog_title")}
+                    </h3> */}
+
+                    <button
+                      onClick={openCreate}
+                      className="bg-teal-500 text-white px-4 py-2 text-xs font-semibold rounded-md hover:bg-teal-600 w-full sm:w-auto"
+                    >
+                      + {t("guest.create_post")}
                     </button>
                   </div>
-                )
+
+                  {!loading && posts.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-6">
+                      {posts.map((post) => (
+                        <article key={post.id} className="flex flex-col sm:flex-row gap-4 border p-4 rounded-lg items-center sm:items-start">
+                          <img
+                            src={post.image || post.image_url || ""}
+                            alt={post.title || t("guest.untitled")}
+                            loading="lazy"
+                            className="w-24 h-24 object-cover rounded-md flex-shrink-0 mx-auto sm:mx-0"
+                          />
+
+                          <div className="flex-1 min-w-0 text-center sm:text-left">
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                              <div className="min-w-0">
+                                <h4 className="font-semibold text-sm truncate">{post.title}</h4>
+                                <p className="text-xs text-gray-600 mt-1 truncate">{post.dsc}</p>
+                              </div>
+
+                              <div className="mt-2 sm:mt-0 flex items-center gap-2">
+                                <span className="inline-block text-[10px] px-2 py-1 bg-yellow-100 max-h-[22px] text-yellow-600 rounded-md whitespace-nowrap mx-auto sm:mx-0">
+                                  {post.type}
+                                </span>
+
+                                <button
+                                  onClick={() => openEdit(post)}
+                                  className="p-1 rounded hover:bg-gray-100"
+                                  title="Edit"
+                                  aria-label="Edit"
+                                >
+                                  <PencilIcon className="h-4 w-4 text-gray-600" />
+                                </button>
+
+                                <button
+                                  onClick={() => handleDelete(post.id)}
+                                  className="p-1 rounded hover:bg-gray-100"
+                                  title="Delete"
+                                  aria-label="Delete"
+                                >
+                                  <TrashIcon className="h-4 w-4 text-red-500" />
+                                </button>
+                              </div>
+                            </div>
+
+                            <p className="text-xs text-gray-600 mt-2 line-clamp-3">
+                              {post.content}
+                            </p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    !loading && (
+                      <div className="text-center py-6">
+                        <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
+                          <PencilIcon className="h-7 w-7" />
+                        </div>
+                        <p className="text-sm font-medium">{t("guest.posts_empty_title")}</p>
+                        <p className="text-xs text-gray-500 mb-4">{t("guest.posts_empty_desc")}</p>
+                        <button onClick={openCreate} className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs font-semibold w-full sm:w-auto">
+                          + {t("guest.create_your_first_post")}
+                        </button>
+                      </div>
+                    )
+                  )}
+                </div>
               )}
             </div>
 
             {/* Job Applications Section (dynamic) */}
-            <div className="bg-white border rounded-lg p-6 mt-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
-                <h3 className="text-sm flex items-center gap-2">
-                  <BriefcaseIcon className="h-5 w-5" /> {t("guest.job_applications_title")}
-                </h3>
-                <button
-                  onClick={() => navigate("/jobs")}
-                  className="border px-3 py-1 text-xs rounded-md hover:bg-gray-100 w-full sm:w-auto"
-                >
-                  {t("guest.browse_jobs")}
-                </button>
-              </div>
-
-              {jobsLoading ? (
-                <div className="text-sm text-gray-600">Loading jobs…</div>
-              ) : jobsError ? (
-                <div className="text-sm text-red-500">{jobsError}</div>
-              ) : jobsList.length === 0 ? (
-                <div className="text-center py-6">
-                  <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
-                    <BriefcaseIcon className="h-7 w-7" />
-                  </div>
-                  <p className="text-sm font-medium">{t("guest.no_applications") || "No jobs available"}</p>
-                  <p className="text-xs text-gray-500 mb-4">{t("guest.no_applications_desc") || "Check back later or browse all jobs."}</p>
-                  <button
-                    onClick={() => navigate("/jobs")}
-                    className="bg-teal-500 text-white px-4 py-2 rounded-md text-xs w-full sm:w-auto"
-                  >
-                    {t("guest.browse_available_jobs")}
-                  </button>
+            <div className="bg-white border rounded-lg p-0 overflow-hidden mt-6">
+              <button
+                type="button"
+                onClick={() => setOpenJobs(v => !v)}
+                aria-expanded={openJobs}
+                className="w-full flex items-center justify-between p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <h3 className="text-sm flex items-center gap-2">
+                    <BriefcaseIcon className="h-5 w-5" /> {t("guest.job_applications_title")}
+                  </h3>
+                  <span className="text-xs text-gray-500">{/* optional subtitle */}</span>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {jobsList.map((job) => (
-                    <div key={job.id} className="border rounded-md p-3 flex items-start gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start gap-2">
-                          <div className="min-w-0">
-                            <h4 className="font-semibold text-sm truncate">{job.title}</h4>
-                            <p className="text-xs text-gray-600 truncate">{job.location} • {job.schedule_type}</p>
-                          </div>
-                          <div className="ml-2">
-                            <span className="text-[10px] px-2 py-1 bg-yellow-100 text-yellow-600 rounded-md">
-                              {job.via || "Source"}
-                            </span>
-                          </div>
-                        </div>
 
-                        <p className="text-xs text-gray-600 mt-2 line-clamp-3 hidden sm:block">
-                          {job.description?.slice(0, 200)}{job.description && job.description.length > 200 ? "…" : ""}
-                        </p>
+                <svg
+                  className={`w-4 h-4 transform transition-transform ${openJobs ? "rotate-180" : "rotate-0"}`}
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden
+                >
+                  <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
 
-                        {/* apply buttons */}
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {Array.isArray(job.apply_options) && job.apply_options.length > 0 ? (
-                            job.apply_options.slice(0, 3).map((opt) => (
-                              <button
-                                key={opt.id}
-                                onClick={() => handleApply(job, opt)}
-                                className="text-xs px-3 py-1 border rounded-md hover:bg-gray-50"
-                              >
-                                {opt.title}
-                              </button>
-                            ))
-                          ) : (
-                            <button
-                              onClick={() => handleApply(job)}
-                              className="text-xs px-3 py-1 bg-teal-500 text-white rounded-md"
-                            >
-                              Apply
-                            </button>
-                          )}
-                        </div>
+              {openJobs && (
+                <div className="p-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-end sm:items-center mb-4 gap-3 sm:gap-0">
+                    {/* <h3 className="text-sm flex items-center gap-2">
+                      <BriefcaseIcon className="h-5 w-5" /> {t("guest.job_applications_title")}
+                    </h3> */}
+                    <button
+                      onClick={() => navigate("/jobs")}
+                      className="border px-3 py-1 text-xs rounded-md hover:bg-gray-100 w-full sm:w-auto"
+                    >
+                      {t("guest.browse_jobs")}
+                    </button>
+                  </div>
+
+                  {jobsLoading ? (
+                    <div className="text-sm text-gray-600">Loading jobs…</div>
+                  ) : jobsError ? (
+                    <div className="text-sm text-red-500">{jobsError}</div>
+                  ) : jobsList.length === 0 ? (
+                    <div className="text-center py-6">
+                      <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
+                        <BriefcaseIcon className="h-7 w-7" />
                       </div>
+                      <p className="text-sm font-medium">{t("guest.no_applications") || "No jobs available"}</p>
+                      <p className="text-xs text-gray-500 mb-4">{t("guest.no_applications_desc") || "Check back later or browse all jobs."}</p>
+                      <button
+                        onClick={() => navigate("/jobs")}
+                        className="bg-teal-500 text-white font-semibold px-4 py-2 rounded-md text-xs w-full sm:w-auto"
+                      >
+                        {t("guest.browse_available_jobs")}
+                      </button>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="space-y-4">
+                      {jobsList.map((job) => (
+                        <div key={job.id} className="border rounded-md p-3 flex items-start gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start gap-2">
+                              <div className="min-w-0">
+                                <h4 className="font-semibold text-sm truncate">{job.title}</h4>
+                                <p className="text-xs text-gray-600 truncate">{job.location} • {job.schedule_type}</p>
+                              </div>
+                              <div className="ml-2">
+                                <span className="text-[10px] px-2 py-1 bg-yellow-100 text-yellow-600 rounded-md">
+                                  {job.via || "Source"}
+                                </span>
+                              </div>
+                            </div>
+
+                            <p className="text-xs text-gray-600 mt-2 line-clamp-3 hidden sm:block">
+                              {job.description?.slice(0, 200)}{job.description && job.description.length > 200 ? "…" : ""}
+                            </p>
+
+                            {/* apply buttons */}
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              {Array.isArray(job.apply_options) && job.apply_options.length > 0 ? (
+                                job.apply_options.slice(0, 3).map((opt) => (
+                                  <button
+                                    key={opt.id}
+                                    onClick={() => handleApply(job, opt)}
+                                    className="text-xs px-3 py-1 border rounded-md hover:bg-gray-50"
+                                  >
+                                    {opt.title}
+                                  </button>
+                                ))
+                              ) : (
+                                <button
+                                  onClick={() => handleApply(job)}
+                                  className="text-xs px-3 py-1 bg-teal-500 text-white rounded-md"
+                                >
+                                  Apply
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
             {/* Posted Job Listing */}
-            {hasActiveSubscription ?
-              (<div className="bg-white border rounded-lg p-6 mt-6">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3 sm:gap-0">
-                  <h3 className="text-sm flex items-center gap-2">
-                    <Building2 className="h-5 w-5" /> Posted Jobs
-                  </h3>
-                  <button
-                    onClick={() => setPostJobOpen(true)}
-                    className="bg-teal-500 text-white font-semibold px-3 py-2 text-xs rounded-md  w-full sm:w-auto"
-                  >
-                    + Post Job
-                  </button>
-                </div>
-
-                {jobsPostLoading ? (
-                  <div className="text-sm text-gray-600">Loading jobs…</div>
-                ) : jobsPostError ? (
-                  <div className="text-sm text-red-500">{jobsPostError}</div>
-                ) : jobsPostData.length === 0 ? (
-                  <div className="text-center py-6">
-                    <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
-                      <Building2 className="h-7 w-7" />
-                    </div>
-                    <p className="text-sm font-regular my-2">No jobs posted yet</p>
-                    <button
-                      onClick={() => setPostJobOpen(true)}
-                      className="bg-teal-500 text-white font-semibold px-4 py-2 rounded-md text-xs w-full sm:w-auto"
-                    >
-                      + Post Your First Job
-                    </button>
+            {hasActiveSubscription ? (
+              <div className="bg-white border rounded-lg p-0 overflow-hidden mt-6">
+                <button
+                  type="button"
+                  onClick={() => setOpenPosted(v => !v)}
+                  aria-expanded={openPosted}
+                  className="w-full flex items-center justify-between p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-sm flex items-center gap-2">
+                      <Building2 className="h-5 w-5" /> Posted Jobs
+                    </h3>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {jobsPostData.map((job) => (
-                      <article
-                        key={job.id ?? job.uuid}
-                        className="border rounded-lg p-4 shadow-sm bg-white flex flex-col space-y-3"
+
+                  <svg
+                    className={`w-4 h-4 transform transition-transform ${openPosted ? "rotate-180" : "rotate-0"}`}
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden
+                  >
+                    <path d="M5 8l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+
+                {openPosted && (
+                  <div className="p-6">
+                    <div className="flex flex-col sm:flex-row sm:justify-end sm:items-center mb-4 gap-3 sm:gap-0">
+                      {/* <h3 className="text-sm flex items-center gap-2">
+                        <Building2 className="h-5 w-5" /> Posted Jobs
+                      </h3> */}
+                      <button
+                        onClick={() => setPostJobOpen(true)}
+                        className="bg-teal-500 text-white font-semibold px-3 py-2 text-xs rounded-md  w-full sm:w-auto"
                       >
-                        <h4 className="text-md font-semibold leading-tight">{job.title}</h4>
-                        {job.description && (
-                          <p className="text-sm text-gray-700">
-                            <strong>Description:</strong> {job.description}
-                          </p>
-                        )}
+                        + Post Job
+                      </button>
+                    </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2 text-xs text-gray-600">
-                          <div><strong>Company:</strong> {job.company?.company_name ?? "Company"}</div>
-                          <div><strong>Rate:</strong> {job.rate ? `${job.rate} ${job.rate_type ?? ''}` : '-'}</div>
-                          <div><strong>Schedule:</strong> {job.schedule_type ?? '-'}</div>
-                          <div><strong>Source:</strong> {job.via ?? '-'}</div>
-                          <div><strong>Job ID:</strong> {job.uuid ?? '-'}</div>
-                          <div><strong>Posted:</strong> {formatDateShort(job.posted_at ?? job.created_at)}</div>
-                          <div><strong>Updated:</strong> {formatDateShort(job.updated_at)}</div>
-                          <div><strong>Location:</strong> {formatLocation(job.location)}</div>
-                          {job.cultural_identifiers && (
-                            <div><strong>Cultural Identifiers:</strong> {job.cultural_identifiers}</div>
-                          )}
+                    {jobsPostLoading ? (
+                      <div className="text-sm text-gray-600">Loading jobs…</div>
+                    ) : jobsPostError ? (
+                      <div className="text-sm text-red-500">{jobsPostError}</div>
+                    ) : jobsPostData.length === 0 ? (
+                      <div className="text-center py-6">
+                        <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-gray-100">
+                          <Building2 className="h-7 w-7" />
                         </div>
-                        <div>
-                          <strong className="text-xs">Types:</strong>
-                          <div className="mt-1 flex flex-wrap">
-                            {(job.types || []).map((t) => (
-                              <Badge key={t.id ?? t.name}>{t.name}</Badge>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <strong className="text-xs">Skills:</strong>
-                          <div className="mt-1 flex flex-wrap">
-                            {(job.skills || []).map((s) => (
-                              <Badge key={s.id ?? s.name}>{s.name}</Badge>
-                            ))}
-                            {(job.unique_skills || []).map((s) => (
-                              <Badge key={s.id ?? s.name} variant="indigo">{s.name}</Badge>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <strong className="text-xs">Degrees:</strong>
-                          <div className="mt-1 flex flex-wrap">
-                            {(job.degrees || []).map((d) => (
-                              <Badge key={d.id ?? d.degree} variant="green">{d.degree}</Badge>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <strong className="text-xs">Demographics:</strong>
-                          <div className="text-xs text-gray-700 mt-1">
-                            {job.age_ranges && job.age_ranges.length > 0 && (
-                              <div><strong>Age ranges:</strong> {job.age_ranges.map(a => a.range).join(", ")}</div>
+                        <p className="text-sm font-regular my-2">No jobs posted yet</p>
+                        <button
+                          onClick={() => setPostJobOpen(true)}
+                          className="bg-teal-500 text-white font-semibold px-4 py-2 rounded-md text-xs w-full sm:w-auto"
+                        >
+                          + Post Your First Job
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {jobsPostData.map((job) => (
+                          <article
+                            key={job.id ?? job.uuid}
+                            className="border rounded-lg p-4 shadow-sm bg-white flex flex-col space-y-3"
+                          >
+                            <h4 className="text-md font-semibold leading-tight">{job.title}</h4>
+                            {job.description && (
+                              <p className="text-sm text-gray-700">
+                                <strong>Description:</strong> {job.description}
+                              </p>
                             )}
-                            {job.genders && job.genders.length > 0 && (
-                              <div><strong>Genders:</strong> {job.genders.map(g => g.gender).join(", ")}</div>
-                            )}
-                          </div>
-                        </div>
 
-                        {(job.job_highlights || []).length > 0 && (
-                          <div className="space-y-2">
-                            {job.job_highlights.map((section) => (
-                              <div key={section.id}>
-                                <div className="text-xs font-medium">{section.title}</div>
-                                <ul className="list-disc pl-5 text-xs text-gray-700">
-                                  {(section.items || []).map((it, idx) => (
-                                    <li key={idx}>{it}</li>
-                                  ))}
-                                </ul>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2 text-xs text-gray-600">
+                              <div><strong>Company:</strong> {job.company?.company_name ?? "Company"}</div>
+                              <div><strong>Rate:</strong> {job.rate ? `${job.rate} ${job.rate_type ?? ''}` : '-'}</div>
+                              <div><strong>Schedule:</strong> {job.schedule_type ?? '-'}</div>
+                              <div><strong>Source:</strong> {job.via ?? '-'}</div>
+                              <div><strong>Job ID:</strong> {job.uuid ?? '-'}</div>
+                              <div><strong>Posted:</strong> {formatDateShort(job.posted_at ?? job.created_at)}</div>
+                              <div><strong>Updated:</strong> {formatDateShort(job.updated_at)}</div>
+                              <div><strong>Location:</strong> {formatLocation(job.location)}</div>
+                              {job.cultural_identifiers && (
+                                <div><strong>Cultural Identifiers:</strong> {job.cultural_identifiers}</div>
+                              )}
+                            </div>
+
+                            {(job.job_highlights || []).length > 0 && (
+                              <div className="space-y-2">
+                                {job.job_highlights.map((section) => (
+                                  <div key={section.id}>
+                                    <div className="text-xs font-medium">{section.title}</div>
+                                    <ul className="list-disc pl-5 text-xs text-gray-700">
+                                      {(section.items || []).map((it, idx) => (
+                                        <li key={idx}>{it}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
-                          </div>
-                        )}
+                            )}
 
-                        {(job.applyOptions || []).length > 0 && (
-                          <div className="mt-2 flex flex-col space-y-2">
-                            {job.applyOptions.map((opt, i) => (
-                              <a
-                                key={i}
-                                href={opt.link}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-xs font-semibold px-3 py-1 rounded border hover:bg-gray-100 w-fit"
-                              >
-                                {opt.title ?? "Apply"}
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </article>
-                    ))}
+                            {(job.applyOptions || []).length > 0 && (
+                              <div className="mt-2 flex flex-col space-y-2">
+                                {job.applyOptions.map((opt, i) => (
+                                  <a
+                                    key={i}
+                                    href={opt.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-xs font-semibold px-3 py-1 rounded border hover:bg-gray-100 w-fit"
+                                  >
+                                    {opt.title ?? "Apply"}
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+                          </article>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
-              </div>) : <></>
-            }
+              </div>
+            ) : (
+              <></>
+            )}
 
           </div>
 
@@ -829,12 +1088,12 @@ const GuestDashboardPage = () => {
             <div className="bg-white border rounded-lg p-6">
               <h3 className="font-normal text-sm mb-3">{t("guest.account_includes_title")}</h3>
               <ul className="space-y-3 text-xs">
-                <li className="flex justify-between items-center">
+                {/* <li className="flex justify-between items-center">
                   <span className="flex items-center  gap-2">
                     <BiCloudUpload className="text-teal-500 h-4 w-4" /> {t("guest.includes.portfolio_uploads")}
                   </span>
                   <span className="bg-green-100 text-green-600 font-semibold text-xs px-2 py-1 rounded-md">{t("guest.includes.unlimited")}</span>
-                </li>
+                </li> */}
                 <li className="flex justify-between items-center">
                   <span className="flex items-center gap-2">
                     <BiImage className="text-teal-500 h-4 w-4" /> {t("guest.includes.images_videos")}
@@ -973,7 +1232,7 @@ const GuestDashboardPage = () => {
                 <li onClick={() => setListingOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
                   <span className="flex items-center gap-2"><Building2 className="h-4 w-4" /> Add Business Listing</span>
                 </li>
-                <li className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
+                <li onClick={handleInboxClick} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
                   <span className="flex items-center gap-2"><MessageCircleMoreIcon className="h-4 w-4" />	Go to Inbox </span>
                 </li>
                 {/* <li onClick={() => setPhotoIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
@@ -1008,6 +1267,8 @@ const GuestDashboardPage = () => {
       />
 
       <UploadProfileModal isOpen={isPhotoOpen} onClose={() => setPhotoIsOpen(false)} uuid={uuid} onSaved={handleModalSaved} />
+
+      <UploadCoverPhotoModal isOpen={isCoverPhotoOpen} onClose={() => setCoverPhotoIsOpen(false)} uuid={uuid} onSaved={handleModalSaved} />
 
       <PortfolioModal isOpen={isWorkOpen} onClose={() => setWorkOpen(false)} initialData={{
         ...user,

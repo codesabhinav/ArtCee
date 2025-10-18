@@ -21,10 +21,10 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get("token"));
+  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get("artcee_token"));
 
   useEffect(() => {
-    const checkAuth = () => setIsAuthenticated(!!Cookies.get("token"));
+    const checkAuth = () => setIsAuthenticated(!!Cookies.get("artcee_token"));
     checkAuth();
 
     window.addEventListener("authChanged", checkAuth);
@@ -37,7 +37,7 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    Cookies.remove("token");
+    Cookies.remove("artcee_token");
     setIsAuthenticated(false);
     window.dispatchEvent(new Event("authChanged"));
   };

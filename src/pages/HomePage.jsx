@@ -13,6 +13,7 @@ import { useTranslation } from "../contexts/LanguageProvider";
 import { getCreativeData } from "../Hooks/useSeller";
 import { Building2, Palette, Search, Shield, Users, Crown, X } from "lucide-react";
 import LandingPage from "./LandingPage";
+import Cookies from "js-cookie";
 
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
@@ -56,7 +57,7 @@ export default function Home() {
   return (
     <div className="w-full">
 
-      {showLanding && (
+      {(showLanding && Cookies.get('artcee_token') == null) && (
         <LandingPage
           isModal={true}
           onClose={() => setShowLanding(false)}

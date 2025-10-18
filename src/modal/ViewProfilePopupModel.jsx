@@ -9,7 +9,7 @@ import {
   getProfileData,
 } from "../Hooks/useSeller";
 import SpinnerProvider from "../components/SpinnerProvider";
-import { FaCalendarAlt, FaClock, FaStar, FaUniversity } from "react-icons/fa";
+import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaStar, FaUniversity } from "react-icons/fa";
 import {
   CalendarRange,
   Copy,
@@ -34,6 +34,8 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import MessagePopupModal from "./MessagePopupModal";
 
+const DEFAULT_JOB_IMAGE =
+  "https://img.myloview.com/posters/businessman-avatar-image-with-beard-hairstyle-male-profile-vector-illustration-700-201088702.jpg";
 const DEFAULT_AVATAR =
   "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
 
@@ -146,7 +148,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   }, [isOpen, uuid, fetchProfile]);
 
   const handleFollow = async (id) => {
-    if (!Cookies.get("token")) {
+    if (!Cookies.get("artcee_token")) {
       navigate("/login");
       return;
     }
@@ -173,7 +175,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   };
 
   const handleMessageClick = () => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("artcee_token");
     if (!token) {
       navigate("/login");
       return;
@@ -189,7 +191,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   };
 
   const handleVideoClick = () => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("artcee_token");
     if (!token) {
       navigate("/login");
       return;
@@ -315,6 +317,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   const state = profilePayload?.seller.user.location?.state?.name ?? "";
   const country = profilePayload?.seller.user.location?.country?.name ?? "";
   const is_followed_by_login_user = profilePayload?.is_followed_by_login_user ?? false;
+  const saved_jobs = profilePayload?.bookmarked ?? [];
 
   const tabs = [
     t("profile.tabs.portfolio"),
@@ -323,6 +326,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     "My Business Listing ",
     "Post a Job",
     "Uploaded Resume",
+    "Saved Jobs",
   ];
 
   function formatDateShort(dateStr) {
@@ -515,18 +519,18 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               <div className="flex gap-2 mt-1 w-full justify-center items-center">
                 <button
                   onClick={handleMessageClick}
-                  disabled={loading || !Cookies.get("token") || !hasActiveSubscription}
+                  disabled={loading || !Cookies.get("artcee_token") || !hasActiveSubscription}
                   className={`inline-flex items-center justify-center text-xs border font-semibold px-4 py-2 rounded-lg gap-2
-    ${(!Cookies.get("token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
+    ${(!Cookies.get("artcee_token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <MessageCircle className="h-3 w-3" /> {t("profile.message")}
                 </button>
 
                 <button
                   onClick={handleVideoClick}
-                  disabled={loading || !Cookies.get("token") || !hasActiveSubscription}
+                  disabled={loading || !Cookies.get("artcee_token") || !hasActiveSubscription}
                   className={`inline-flex items-center justify-center text-xs border font-semibold px-4 py-2 rounded-lg gap-2
-    ${(!Cookies.get("token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
+    ${(!Cookies.get("artcee_token") || !hasActiveSubscription) ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <Video className="h-4 w-3" /> {t("profile.video_call")}
                 </button>
@@ -621,17 +625,19 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
 
         {/* Tabs */}
         <div className="px-6 py-4 ">
-          <div className="flex justify-between overflow-x-auto border-b bg-gray-200 rounded-full">
+          <div className="flex overflow-x-auto scrollbar-hide space-x-4 border-b bg-gray-200 rounded-full px-2 py-1">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 px-4 py-1 text-xs text-black m-1 font-medium rounded-full transition ${activeTab === tab ? "bg-white shadow" : "bg-gray-200"}`}
+                className={`whitespace-nowrap flex-shrink-0 px-4 py-2 text-xs text-black font-medium rounded-full transition ${activeTab === tab ? "bg-white shadow" : "bg-gray-200"
+                  }`}
               >
                 {tab}
               </button>
             ))}
           </div>
+
 
           {/* Tab Content */}
           <div className="mt-4">
@@ -1002,7 +1008,6 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               </div>
             )}
 
-
             {activeTab === "Post a Job" && (
               <div className="space-y-4">
                 <h3 className="font-semibold text-md">Job Listings</h3>
@@ -1180,6 +1185,120 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                         <Copy className="h-5 w-5" />
                       </button>
                     </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === "Saved Jobs" && (
+              <div className="mt-4">
+                {(!saved_jobs || saved_jobs.length === 0) ? (
+                  <p className="text-gray-600 text-sm">No saved jobs yet.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {saved_jobs.map((bookmark) => {
+                      // the API returns job info inside the bookmark object
+                      const job = bookmark;
+                      // safe parsing of highlights that may be stored as JSON strings
+                      const highlights = (job.job_highlights || []).map((h) => {
+                        let items = [];
+                        try {
+                          // sometimes items come as JSON-stringified array
+                          items = typeof h.items === "string" ? JSON.parse(h.items) : h.items || [];
+                        } catch (e) {
+                          // fallback: if parse fails, keep the string as single item
+                          items = [h.items];
+                        }
+                        return { ...h, items };
+                      });
+
+                      const applyFirst = (job.apply_options && job.apply_options[0]) ? job.apply_options[0] : null;
+                      const postedAt = job.posted_at || (job.detected_extensions && job.detected_extensions.posted_at) || "";
+                      const schedule = job.schedule_type || (job.detected_extensions && job.detected_extensions.schedule_type) || "";
+
+                      return (
+                        <div
+                          key={bookmark.id || bookmark.src_job_id || Math.random()}
+                          className="border-2 rounded-md p-4 hover:shadow-md hover:border-teal-500 transition flex items-start gap-4"
+                        >
+                          <div className="flex-shrink-0">
+                            <img
+                              src={bookmark.company?.logo || bookmark.thumbnail || DEFAULT_JOB_IMAGE}
+                              alt={job.title}
+                              className="w-20 h-20 rounded-md object-contain border-2"
+                              onError={(e) => { if (e.currentTarget.src !== DEFAULT_JOB_IMAGE) e.currentTarget.src = DEFAULT_JOB_IMAGE; }}
+                            />
+                          </div>
+
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h3 className="text-sm lg:text-lg font-bold">{job.title}</h3>
+                                <p className="text-xs text-gray-600 flex items-center">
+                                  {bookmark.company?.company_name || job.company_name || "Unknown Company"}
+                                  <span className="mx-2">·</span>
+                                  <span className="flex items-center">
+                                    <FaMapMarkerAlt className="mr-1 text-xs" /> {job.location || bookmark.company?.location || ""}
+                                  </span>
+                                </p>
+
+                                <div className="flex gap-2 mt-2">
+                                  {postedAt && <span className="bg-gray-100 px-2 py-1 text-xs rounded">{postedAt}</span>}
+                                  {schedule && <span className="bg-gray-100 px-2 py-1 text-xs rounded">{schedule}</span>}
+                                </div>
+
+                                <p className="text-[12px] lg:text-sm text-gray-700 mt-2 max-w-[90%] font-thin">
+                                  {String(job.description || "").slice(0, 250)}{job.description && job.description.length > 250 ? "..." : ""}
+                                </p>
+
+                                {/* Optional highlights preview */}
+                                {highlights.length > 0 && (
+                                  <div className="mt-3 text-xs">
+                                    {highlights.slice(0, 2).map((h, i) => (
+                                      <div key={i} className="mb-2">
+                                        <strong className="block">{h.title}</strong>
+                                        <ul className="list-disc pl-5">
+                                          {Array.isArray(h.items) ? h.items.slice(0, 2).map((it, k) => <li key={k}>{it}</li>) : <li>{String(h.items)}</li>}
+                                        </ul>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* <div className="flex flex-col items-end gap-2"> */}
+                                {/* {applyFirst ? (
+                                  <a
+                                    href={applyFirst.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-4 py-2 text-xs bg-teal-500 text-white rounded-md font-semibold"
+                                  >
+                                    Apply
+                                  </a>
+                                ) : (
+                                  <button className="px-4 py-2 text-xs bg-gray-200 rounded-md font-semibold" disabled>
+                                    No Apply Link
+                                  </button>
+                                )} */}
+
+                                {/* Optional: link to view more or remove bookmark */}
+                                {/* <button
+                                  onClick={() => {
+                                    // handle opening detailed modal (if you have one)
+                                    setSelectedJob(job);
+                                    setActiveTab("Portfolio"); // keep as example or remove
+                                  }}
+                                  className="px-3 py-2 text-xs border rounded-md hover:bg-gray-100"
+                                >
+                                  View
+                                </button> */}
+                              {/* </div> */}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>

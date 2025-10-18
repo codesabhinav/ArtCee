@@ -4,7 +4,7 @@ import { IoAttachOutline, IoCallOutline } from "react-icons/io5";
 import { fetchChatData, initChatWithUser, sendMediaMessage, sendTextMessage } from "../Hooks/useSeller";
 import { FaFileCsv } from "react-icons/fa";
 
-export default function MessagePopupModal({ isOpen, onClose, fullName, title, uuid, avatar }) {
+export default function MessagePopupModal({ isOpen, onClose, fullName, uuid, avatar }) {
     const [chatId, setChatId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");

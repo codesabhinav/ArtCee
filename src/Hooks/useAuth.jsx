@@ -10,7 +10,7 @@ export function login(formData) {
 
       const token = payload?.token;
       if (token) {
-        Cookies.set("token", token, {
+        Cookies.set("artcee_token", token, {
           expires: 365,
           secure: true,
           sameSite: "Strict",
@@ -95,7 +95,7 @@ export function register(formData) {
     .then((res) => {
       const data = res.data;
       if (data?.token) {
-        Cookies.set("token", data.token, {
+        Cookies.set("artcee_token", data.token, {
           expires: 365,
           secure: true,
           sameSite: "Strict",

@@ -149,7 +149,7 @@ const PortfolioModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
           </div>
 
           <div>
-            <label className="text-xs">Upload files (you can add multiple)</label>
+            <label className="text-xs">Upload files</label>
             <input type="file" multiple onChange={handleFiles} className="w-full mt-1" />
             {files.length > 0 && (
               <div className="mt-2 text-xs">

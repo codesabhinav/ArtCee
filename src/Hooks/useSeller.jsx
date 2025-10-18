@@ -57,6 +57,20 @@ export function getBusinessFilters() {
     });
 }
 
+export function getCustomJobsData() {
+  return service
+    .get(`jobs`)
+    .then((res) => {
+      const data = res.data || {};
+      return data;
+    })
+    .catch((error) => {
+      const errorMessage =
+        error.response?.data?.message || error.message || "Failed to fetch custom jobs data";
+      throw new Error(errorMessage);
+    });
+}
+
 export function getJobsData(params = {}) {
   return service
     .post(`site/jobs`, params)
@@ -91,6 +105,17 @@ export function applyToJob(payload = {}) {
     .catch((error) => {
       const errorMessage =
         error.response?.data?.message || error.message || "Failed to apply for job";
+      throw new Error(errorMessage);
+    });
+}
+
+export function saveToJob(payload = {}) {
+  return service
+    .post(`seller/job/save`, payload)
+    .then((res) => res.data || {})
+    .catch((error) => {
+      const errorMessage =
+        error.response?.data?.message || error.message || "Failed to save job";
       throw new Error(errorMessage);
     });
 }
@@ -285,6 +310,16 @@ export function followUnfollowMethod(uuid) {
     .catch((error) => {
       const errorMessage =
         error.response?.data?.message || error.message || "Failed to follow/unfollow";
+      throw new Error(errorMessage);
+    });
+}
+
+export function getChatData() {
+  return service
+    .get(`chats`)
+    .then((res) => res.data?.data || null)
+    .catch((error) => {
+      const errorMessage = error.response?.data?.message || error.message || "get chat data failed";
       throw new Error(errorMessage);
     });
 }

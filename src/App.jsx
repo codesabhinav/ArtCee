@@ -22,6 +22,7 @@ import LandingPage from './pages/LandingPage'
 import PaymentSuccessPage from './pages/PaymentSuccessPage'
 import PaymentCancelPage from './pages/PaymentCancelPage'
 import ForgotPasswordModal from './modal/ForgotPasswordModal'
+import ChatList from './pages/ChatListScreen'
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
               <Route path="jobs" element={<JobsOpportunities />} />
               <Route path="featured" element={<FeaturePremiumPage />} />
               <Route path="profile" element={<GuestDashboardPage />} />
+              <Route path="inbox" element={<ChatList />} />
             </Route>
 
             <Route path="/dashboard" element={<DashboardLayout />}>

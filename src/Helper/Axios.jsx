@@ -17,7 +17,7 @@ async function requestConfig(config) {
     console.warn("Failed to retrieve app version:", error);
   }
 
-  const authToken = Cookies.get("token");
+  const authToken = Cookies.get("artcee_token");
 
   
   if (authToken) {
@@ -28,7 +28,6 @@ async function requestConfig(config) {
 
 service.interceptors.request.use(requestConfig);
 
-// service.interceptors.response.use((response) => response);
 service.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -36,7 +35,7 @@ service.interceptors.response.use(
       error?.response?.status === 401 ||
       error?.response?.statusText === "Unauthenticated."
     ) {
-      Cookies.remove("token");
+      Cookies.remove("artcee_token");
     }
 
     return Promise.reject(error);

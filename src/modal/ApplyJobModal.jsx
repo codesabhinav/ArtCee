@@ -4,7 +4,7 @@ import { useTranslation } from "../contexts/LanguageProvider";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { Eye } from "lucide-react";
+import { Crown, Eye } from "lucide-react";
 
 const DEFAULT_JOB_IMAGE =
   "https://img.myloview.com/posters/businessman-avatar-image-with-beard-hairstyle-male-profile-vector-illustration-700-201088702.jpg";
@@ -33,6 +33,13 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
       return null;
     }
   });
+  const [subscriptionStatus, setSubscriptionStatus] = useState(() => {
+    try {
+      return Cookies.get("subscription_status") || "none";
+    } catch {
+      return "none";
+    }
+  });
 
   const [resumeFileName, setResumeFileName] = useState(null);
   const [resumeUploading, setResumeUploading] = useState(false);
@@ -57,6 +64,12 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
     try {
       const id = Cookies.get("userId");
       setUserId(id ?? null);
+      try {
+        setSubscriptionStatus(Cookies.get("subscription_status") || "none");
+      } catch {
+        setSubscriptionStatus("none");
+      }
+
       if (id) {
         (async () => {
           try {
@@ -87,6 +100,19 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
   }, [open]);
 
   useEffect(() => {
+    const handler = () => {
+      try {
+        setSubscriptionStatus(Cookies.get("subscription_status") || "none");
+        setUserId(Cookies.get("userId") || null);
+      } catch {
+        setSubscriptionStatus("none");
+      }
+    };
+    window.addEventListener("authChanged", handler);
+    return () => window.removeEventListener("authChanged", handler);
+  }, []);
+
+  useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
     } else {
@@ -98,7 +124,7 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
   }, [open]);
 
   const buildPayload = (methodTitle = null) => ({
-    job_id: job?.job_id || "",
+    job_id: String(job?.job_id) || "",
     title: job?.title || "",
     company_name: job?.company_name || job?.company || "",
     location: job?.location || "",
@@ -139,7 +165,6 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
       formData.append("resume", file);
 
       const res = await uploadResume(uid, formData);
-      // response shapes handled defensively
       const url = res?.data?.resume_url ?? res?.resume_url ?? res?.data ?? null;
       const resolvedUrl = typeof url === "string" ? url : (res?.data?.resume_url ?? null);
 
@@ -148,7 +173,6 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
         setResumeFileName(filenameFromUrl(resolvedUrl) || file.name);
         toast.success("Resume uploaded");
       } else {
-        // fallback if only message returned
         toast.success(res?.data?.message ?? "Resume uploaded");
       }
     } catch (err) {
@@ -156,7 +180,6 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
       const msg = err?.message || "Failed to upload resume";
       setError(msg);
       toast.error(msg);
-      // revert filename if upload failed
       setResumeFileName(null);
       setResumeUrl(null);
     } finally {
@@ -166,9 +189,14 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
   };
 
   const handleSubmit = async () => {
+    if (subscriptionStatus !== "active") {
+      setError("A valid subscription is required to apply for this job. Please purchase a subscription.");
+      return;
+    }
+
     setError(null);
     setLoading(true);
-    const token = Cookies.get("token");
+    const token = Cookies.get("artcee_token");
     if (!token) {
       navigate("/login");
       return;
@@ -193,12 +221,14 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
 
   if (!open || !job) return null;
 
+  const isApplyDisabled = loading || subscriptionStatus !== "active";
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative overflow-auto max-h-[90vh] scrollbar-hide">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-md px-1.5"
           aria-label={"Close"}
         >
           ✕
@@ -220,6 +250,28 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
             <p className="text-sm text-gray-600">{job.company_name || job.company}</p>
           </div>
         </div>
+
+       {subscriptionStatus !== "active" && (
+          <div className="mb-4 border border-orange-200 bg-orange-50 rounded-md p-4 text-sm text-gray-800">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <div className="font-semibold text-orange-500">Subscription required</div>
+                <div className="text-xs text-gray-700 font-normal">
+                  You need an active subscription to apply for jobs. {subscriptionStatus === "inactive" ? "Your subscription appears inactive." : "You don't have a subscription yet."}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigate("/featured")}
+                  className="px-3 py-2 text-xs font-semibold border rounded-md bg-orange-400 text-white hover:brightness-95 flex items-center gap-1"
+                >
+                 <Crown className="h-4 w-4"/> Featured
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Choose method if multiple */}
         {Array.isArray(job?.apply_options) && job.apply_options.length > 0 && (
@@ -294,7 +346,14 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
           <button onClick={onClose} className="px-4 py-2 text-xs font-semibold border rounded-md hover:bg-gray-100">
             {t("apply_job_modal.cancel")}
           </button>
-          <button onClick={handleSubmit} disabled={loading} className="px-4 py-2 text-xs font-semibold bg-teal-500 text-white rounded-md hover:bg-teal-600 flex items-center gap-2">
+          <button
+            onClick={handleSubmit}
+            disabled={isApplyDisabled}
+            className={`px-4 py-2 text-xs font-semibold rounded-md flex items-center gap-2 ${
+              isApplyDisabled ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-teal-500 text-white hover:bg-teal-600"
+            }`}
+            title={subscriptionStatus !== "active" ? "Active subscription required to apply" : ""}
+          >
             {loading ? t("apply_job_modal.applying") : t("apply_job_modal.submit")}
           </button>
         </div>

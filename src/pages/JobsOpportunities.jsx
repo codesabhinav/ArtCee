@@ -1,14 +1,13 @@
-
-
 import { useEffect, useState, useCallback } from "react";
 import { FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ViewJobDetailsModel from "../modal/ViewJobDetailsModel";
 import ApplyJobModal from "../modal/ApplyJobModal";
 import CustomDropdown from "../components/CustomDropdown";
-import { getJobsData, getJobsDataFilters } from "../Hooks/useSeller";
+import { getJobsData, getJobsDataFilters, saveToJob, getCustomJobsData } from "../Hooks/useSeller";
 import SpinnerProvider from "../components/SpinnerProvider";
 import { useTranslation } from "../contexts/LanguageProvider";
+import toast from "react-hot-toast";
 
 const DEFAULT_JOB_IMAGE =
   "https://img.myloview.com/posters/businessman-avatar-image-with-beard-hairstyle-male-profile-vector-illustration-700-201088702.jpg";
@@ -43,6 +42,7 @@ const JobsOpportunities = () => {
 
   const [selectedJob, setSelectedJob] = useState(null);
   const [applyJob, setApplyJob] = useState(null);
+  const [savedJobs, setSavedJobs] = useState(new Set());
 
   useEffect(() => {
     (async () => {
@@ -118,13 +118,53 @@ const JobsOpportunities = () => {
     return body;
   };
 
-  const fetchJobs = useCallback(async () => {
+  const normalizeCustomJob = (cj) => {
+    return {
+      job_id: cj.id ?? cj.job_id,
+      id: cj.id ?? cj.job_id,
+      title: cj.title || "",
+      description: cj.description || "",
+      company_name: cj.company?.company_name || cj.company_name || "",
+      location: Array.isArray(cj.location) ? cj.location.join(", ").trim() : cj.location || "",
+      via: cj.via || "",
+      posted_at: cj.posted_at || cj.detected_extensions?.posted_at || null,
+      schedule_type: cj.schedule_type || cj.detected_extensions?.schedule_type || null,
+      thumbnail: cj.thumbnail || cj.image || null,
+      apply_options: cj.applyOptions || cj.apply_options || [],
+      job_highlights: cj.job_highlights || [],
+      _raw: cj,
+    };
+  };
+
+  const fetchCustomThenJobs = useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
+      let combined = [];
+      try {
+        const customRes = await getCustomJobsData();
+        const customJobsArr = customRes?.job || customRes?.jobs || customRes?.data?.job || [];
+
+        const normalizedCustom = (customJobsArr || []).map(normalizeCustomJob);
+        combined = normalizedCustom;
+        setJobs(normalizedCustom);
+      } catch (customErr) {
+        console.warn("Failed to load custom jobs:", customErr);
+      }
+
       const body = buildRequestBody(null);
-      const { jobs: fetchedJobs, next_page_token } = await getJobsData(body);
-      setJobs(fetchedJobs || []);
+      const { jobs: fetchedJobs = [], next_page_token } = await getJobsData(body);
+
+      const normalizedFetched = (fetchedJobs || []).map((j) => ({
+        ...j,
+        job_id: j.job_id ?? j.id ?? j.jobId,
+      }));
+
+      const existingIds = new Set(combined.map((j) => j.job_id));
+      const newItems = normalizedFetched.filter((j) => !existingIds.has(j.job_id));
+
+      const merged = [...combined, ...newItems];
+      setJobs(merged);
       setNextPageToken(next_page_token || null);
     } catch (err) {
       console.error("Error fetching jobs:", err);
@@ -139,12 +179,16 @@ const JobsOpportunities = () => {
     try {
       setLoadingMore(true);
       const body = buildRequestBody(nextPageToken);
-      const { jobs: fetchedJobs, next_page_token } = await getJobsData(body);
-      setJobs((prev) => {
-        const existingIds = new Set(prev.map((j) => j.job_id));
-        const newItems = (fetchedJobs || []).filter((j) => !existingIds.has(j.job_id));
-        return [...prev, ...newItems];
-      });
+      const { jobs: fetchedJobs = [], next_page_token } = await getJobsData(body);
+
+      const existingIds = new Set(jobs.map((j) => j.job_id));
+      const normalizedFetched = (fetchedJobs || []).map((j) => ({
+        ...j,
+        job_id: j.job_id ?? j.id ?? j.jobId,
+      }));
+      const newItems = normalizedFetched.filter((j) => !existingIds.has(j.job_id));
+
+      setJobs((prev) => [...prev, ...newItems]);
       setNextPageToken(next_page_token || null);
     } catch (err) {
       console.error("Failed to load more jobs:", err);
@@ -156,8 +200,8 @@ const JobsOpportunities = () => {
   useEffect(() => {
     setJobs([]);
     setNextPageToken(null);
-    fetchJobs();
-  }, [activeFilters, fetchJobs]);
+    fetchCustomThenJobs();
+  }, [activeFilters, fetchCustomThenJobs]);
 
   const handleJobApplied = (jobId) => {
     setJobs((prev) => prev.map((j) => (j.job_id === jobId ? { ...j, applied: true } : j)));
@@ -201,10 +245,36 @@ const JobsOpportunities = () => {
       t("filters.options.sort_by.oldest_first") || "Oldest First",
     ];
 
+  const handleSaveJob = async (job) => {
+    try {
+      const payload = {
+        job_id: String(job.job_id),
+        title: job.title,
+        company_name: job.company_name,
+        location: job.location,
+        via: job.via,
+        posted_at: job.detected_extensions?.posted_at || job.posted_at,
+        schedule_type: job.detected_extensions?.schedule_type || job.schedule_type,
+        qualifications: job.qualifications || "No degree mentioned",
+        dental_coverage: job.dental_coverage || false,
+        health_insurance: job.health_insurance || false,
+        description: job.description,
+        job_highlights: job.job_highlights || [],
+        apply_options: job.apply_options || job.applyOptions || [],
+      };
+
+      await saveToJob(payload);
+      toast.success("Job saved successfully!");
+      setSavedJobs((prev) => new Set([...prev, job.job_id]));
+    } catch (err) {
+      toast.error("Failed to save job:", err);
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen w-full">
       <div className="md:max-w-[80%] mx-auto">
-  
+
         <div className="flex flex-row items-center justify-between px-4 py-4 gap-3 md:gap-4 md:px-0">
           <Link
             to="/home"
@@ -216,10 +286,6 @@ const JobsOpportunities = () => {
           <h1 className="text-center align-center text-sm sm:text-lg md:text-xl font-bold flex-1">
             {t("jobs.page_title")}
           </h1>
-
-          {/* <button className="px-2 sm:px-4 hidden lg:block md:px-4 py-2 text-xs bg-teal-500 text-white rounded-md">
-            {t("jobs.google_integration")}
-          </button> */}
         </div>
 
         <div className="px-6 py-4 space-y-3 border-b md:px-0">
@@ -269,7 +335,7 @@ const JobsOpportunities = () => {
             <div key={job.job_id || job.id || idx} className="border-2 rounded-md p-4 mb-4 hover:shadow-md hover:border-teal-500 transition flex items-start gap-4">
               <div className="flex-1">
                 <div className="flex justify-between items-start">
-                  <div>
+                  <div className="w-full">
                     <div className="flex gap-4 items-center">
                       <img
                         src={job.thumbnail || job.image || DEFAULT_JOB_IMAGE}
@@ -291,29 +357,30 @@ const JobsOpportunities = () => {
                       {job.detected_extensions?.schedule_type && <span className="bg-gray-100 px-2 py-1 text-xs rounded">{job.detected_extensions.schedule_type}</span>}
                     </div>
 
-                    <p className="text-[12px] lg:text-sm text-gray-700 mt-2 max-w-[90%] font-thin">{job.description?.slice(0, 200)}{job.description && job.description.length > 200 ? "..." : ""}</p>
+                    <p className="text-[12px] lg:text-sm text-gray-700 mt-2 max-w-[100%] font-thin">{job.description?.slice(0, 200)}{job.description && job.description.length > 200 ? "..." : ""}</p>
 
-                    <div className="mt-4">
-                      <div className="grid grid-cols-2 gap-3 md:flex md:items-center md:justify-between md:gap-2">
-                        <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
+                    <div className="mt-4 w-full">
+                      <div className="w-full flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                        <div className="flex flex-row flex-wrap items-center gap-2">
                           {job.via && (
                             <button className="text-xs border rounded-md px-3 py-2 hover:bg-gray-100">
                               {t("jobs.job_card.via")}: {job.via}
                             </button>
                           )}
-                          {job.share_link && (
-                            <a
-                              href={job.share_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs border rounded-md px-3 py-2 hover:bg-gray-100 inline-block text-center"
-                            >
-                              {t("jobs.job_card.share")}
-                            </a>
-                          )}
+
+                          <button
+                            onClick={() => handleSaveJob(job)}
+                            disabled={savedJobs.has(job.job_id)}
+                            className={`text-xs border rounded-md px-3 py-2 ${savedJobs.has(job.job_id)
+                              ? "bg-gray-200 text-black cursor-not-allowed"
+                              : "hover:bg-gray-100"
+                              }`}
+                          >
+                            {savedJobs.has(job.job_id) ? "Saved" : "Save"}
+                          </button>
                         </div>
 
-                        <div className="flex flex-col items-end gap-2 md:flex-row md:items-center">
+                        <div className="flex flex-row flex-wrap items-center gap-2 md:justify-end">
                           <button
                             onClick={() => setSelectedJob(job)}
                             className="px-4 py-2 text-xs border rounded-md font-semibold hover:bg-gray-100"
@@ -330,7 +397,6 @@ const JobsOpportunities = () => {
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>

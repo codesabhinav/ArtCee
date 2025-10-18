@@ -1190,7 +1190,7 @@
       "posts_load_error": "Failed to load posts"
     },
     "profile_steps": {
-      "required_title": "Required for Profile Activation",
+      "required_title": "Required for Profile Activation For Creatives",
       "optional_title": "Optional Enhancements",
       "status": {
         "completed": "Completed",

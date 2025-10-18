@@ -37,10 +37,10 @@ export async function uploadProfileMedia({ uuid, file, onProgress }) {
 
   const form = new FormData();
   form.append("uuid", uuid);
-  form.append("portfolio", file);
+  form.append("logo", file);
 
   try {
-    const res = await service.post("seller/profile/portfolio", form, {
+    const res = await service.post("seller/profile/upload", form, {
       headers: { "Content-Type": "multipart/form-data" },
       onUploadProgress: (event) => {
         if (onProgress && event.total) {
@@ -83,6 +83,18 @@ export async function updatePortfolio(formData) {
     });
     return res.data?.data ?? res.data;
   } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Failed to add portfolio";
+    throw new Error(msg);
+  }
+}
+
+export async function updateThePortfolio(formData, id) {
+  try {
+    const res = await service.post(`seller/portfolio/update/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data?.data ?? res.data;
+  } catch (err) {
     const msg = err?.response?.data?.message || err?.message || "Failed to update portfolio";
     throw new Error(msg);
   }
@@ -105,6 +117,30 @@ export async function updatePricing(payload) {
     return res.data?.data ?? res.data;
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || "Failed to update pricing";
+    throw new Error(msg);
+  }
+}
+
+export async function uploadCoverPhotoMedia({ uuid, file, onProgress }) {
+  if (!uuid) throw new Error("Missing uuid");
+  if (!file) throw new Error("Missing file");
+
+  const form = new FormData();
+  form.append("background_image", file);
+
+  try {
+    const res = await service.post(`seller/user/upload-cover/${uuid}`, form, {
+      headers: { "Content-Type": "multipart/form-data" },
+      onUploadProgress: (event) => {
+        if (onProgress && event.total) {
+          const percent = Math.round((event.loaded * 100) / event.total);
+          onProgress(percent);
+        }
+      },
+    });
+    return res.data?.data ?? res.data;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || "Upload failed";
     throw new Error(msg);
   }
 }

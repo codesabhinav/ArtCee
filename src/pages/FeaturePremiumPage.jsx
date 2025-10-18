@@ -158,7 +158,7 @@ const FeaturePremiumPage = () => {
   };
 
   const handleSelectPlan = (plan) => {
-    if (!Cookies.get("token")) {
+    if (!Cookies.get("artcee_token")) {
       navigate("/login");
       return;
     }

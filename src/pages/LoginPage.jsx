@@ -27,7 +27,7 @@ const LoginPage = ({ onClose }) => {
       resp?.token || resp?.data?.token || resp?.access_token || resp?.accessToken || resp?.data?.access_token;
 
     if (token) {
-      Cookies.set("token", token, { expires: 365 });
+      Cookies.set("artcee_token", token, { expires: 365 });
     }
 
     try {

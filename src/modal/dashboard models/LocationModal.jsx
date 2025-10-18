@@ -23,9 +23,9 @@ const LocationModal = ({ isOpen, onClose, initialData = {}, onSaved }) => {
   useEffect(() => {
     if (isOpen) {
       setForm({
-        country: initialData.location.country.name || initialData.country_name || "",
-        state: initialData.location.state.name || initialData.state_name || "",
-        city: initialData.location.city.name || initialData.city_name || "",
+        country: initialData?.location?.country?.name || initialData?.country_name || "",
+        state: initialData?.location?.state?.name || initialData?.state_name || "",
+        city: initialData?.location?.city?.name || initialData?.city_name || "",
       });
       setErr(null);
     }
