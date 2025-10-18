@@ -389,7 +389,7 @@ const GuestDashboardPage = () => {
           <div className="col-span-2 space-y-6">
             {/* Profile Card with Cover Image */}
             <div className="bg-white border rounded-lg overflow-hidden shadow">
-              <div className="relative h-40  bg-gray-100">
+              <div className="relative h-40 bg-gray-100">
                 {cover_image ? (
                   <img
                     src={cover_image}
