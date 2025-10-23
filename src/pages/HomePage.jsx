@@ -54,6 +54,15 @@ export default function Home() {
     }
   }, [showLanding]);
 
+    useEffect(() => {
+    if (Cookies.get('artcee_token') == null) {
+      const timer = setTimeout(() => {
+        setShowLanding(true);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+  
   return (
     <div className="w-full">
 
@@ -171,7 +180,7 @@ export default function Home() {
                 <li>{t("home.for_creatives_list4")}</li>
               </ul>
               <Link
-                to="/creatives"
+                to="/register"
                 className="text-xs mt-6 w-full flex items-center justify-center gap-2 px-5 py-2 bg-teal-500 text-white rounded-md font-semibold hover:opacity-90 transition"
               >
                 {t("home.for_creatives_btn")} <FaArrowRight />

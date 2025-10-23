@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ViewJobDetailsModel from "../modal/ViewJobDetailsModel";
 import ApplyJobModal from "../modal/ApplyJobModal";
 import CustomDropdown from "../components/CustomDropdown";
@@ -14,6 +14,8 @@ const DEFAULT_JOB_IMAGE =
 
 const JobsOpportunities = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const ALL_CATEGORIES = t("filters.all_categories") || "All Categories";
   const ALL_TYPES = t("filters.all_types") || "All Types";
@@ -269,6 +271,86 @@ const JobsOpportunities = () => {
     } catch (err) {
       toast.error("Failed to save job:", err);
     }
+  };
+
+  useEffect(() => {
+    const urlFilters = readFiltersFromUrl();
+    if (Object.keys(urlFilters).length) {
+      setActiveFilters((prev) => ({
+        ...prev,
+        ...urlFilters,
+      }));
+    }
+  }, [filtersOptions]);
+
+  useEffect(() => {
+    writeFiltersToUrl(activeFilters);
+  }, [activeFilters]); 
+
+
+  const writeFiltersToUrl = (filters) => {
+    const params = new URLSearchParams();
+
+    if (filters.category && !filters.category.startsWith(ALL_CATEGORIES)) {
+      params.set("category", encodeURIComponent(filters.category));
+    }
+    if (filters.type && !filters.type.startsWith(ALL_TYPES)) {
+      const key = findKeyByLabel(filtersOptions?.type, filters.type);
+      params.set("type", key || encodeURIComponent(filters.type));
+    }
+    if (filters.location && !filters.location.startsWith(ALL_LOCATIONS)) {
+      params.set("location", encodeURIComponent(filters.location));
+    }
+    if (filters.location_type && !filters.location_type.startsWith(ALL_LOCATION_TYPES)) {
+      const key = findKeyByLabel(filtersOptions?.location_type, filters.location_type);
+      params.set("location_type", key || encodeURIComponent(filters.location_type));
+    }
+    if (filters.sort_by) {
+      const key = findKeyByLabel(filtersOptions?.sort_by, filters.sort_by);
+      if (key) params.set("sort_by", key);
+      else params.set("sort_by", encodeURIComponent(filters.sort_by));
+    }
+    if (filters.keyword_search) {
+      params.set("q", encodeURIComponent(filters.keyword_search));
+    }
+
+    const base = location.pathname || "/jobs";
+    const newUrl = `${base}?${params.toString()}`;
+    navigate(newUrl, { replace: true });
+  };
+
+  const readFiltersFromUrl = () => {
+    const params = new URLSearchParams(location.search);
+    const fromUrl = {};
+
+    const rawCategory = params.get("category");
+    if (rawCategory) fromUrl.category = decodeURIComponent(rawCategory);
+
+    const rawType = params.get("type");
+    if (rawType) {
+      const maybeLabel = filtersOptions?.type?.[rawType] ?? Object.values(filtersOptions?.type || {}).find(v => v === decodeURIComponent(rawType));
+      fromUrl.type = maybeLabel || decodeURIComponent(rawType);
+    }
+
+    const rawLocation = params.get("location");
+    if (rawLocation) fromUrl.location = decodeURIComponent(rawLocation);
+
+    const rawLocationType = params.get("location_type");
+    if (rawLocationType) {
+      const maybeLabel = filtersOptions?.location_type?.[rawLocationType] ?? Object.values(filtersOptions?.location_type || {}).find(v => v === decodeURIComponent(rawLocationType));
+      fromUrl.location_type = maybeLabel || decodeURIComponent(rawLocationType);
+    }
+
+    const rawSort = params.get("sort_by");
+    if (rawSort) {
+      const maybeLabel = filtersOptions?.sort_by?.[rawSort] ?? Object.values(filtersOptions?.sort_by || {}).find(v => v === decodeURIComponent(rawSort));
+      fromUrl.sort_by = maybeLabel || decodeURIComponent(rawSort);
+    }
+
+    const rawQ = params.get("q");
+    if (rawQ) fromUrl.keyword_search = decodeURIComponent(rawQ);
+
+    return fromUrl;
   };
 
   return (

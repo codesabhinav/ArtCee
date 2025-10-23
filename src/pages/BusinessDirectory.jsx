@@ -424,9 +424,9 @@ const BusinessDirectory = () => {
                   <div className="flex-1">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                       <h2 className="font-bold text-base md:text-lg">{user?.full_name}</h2>
-                      <span className="text-xs md:text-sm text-gray-500 flex items-center gap-1">
+                      {/* <span className="text-xs md:text-sm text-gray-500 flex items-center gap-1">
                         {user.rating ?? "-"} <FaStar className="text-orange-600" />
-                      </span>
+                      </span> */}
                     </div>
 
                     <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-md inline-block mt-1">

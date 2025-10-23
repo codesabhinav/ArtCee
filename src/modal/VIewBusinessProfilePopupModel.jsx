@@ -179,7 +179,7 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
 
   const fullName = profilePayload?.full_name ?? profilePayload?.user?.full_name ?? "Unknown";
   const title = profilePayload?.profile?.title ?? profilePayload?.title ?? t("profile.role_photography");
-  const bio = profilePayload?.profile?.bio ?? profilePayload?.personal_intro ?? t("profile.about_text");
+  const bio = profilePayload?.profile?.bio ?? profilePayload?.personal_intro ?? "Not provided.";
   const avatar = profilePayload?.profile?.profile_picture ?? DEFAULT_AVATAR;
   const rating = profilePayload?.seller.user?.rating ?? profilePayload?.user?.rating ?? 0;
   const email = profilePayload?.email ?? '-';
@@ -253,7 +253,7 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white w-[800px] max-h-[80vh] overflow-y-auto rounded-xl shadow-lg relative border border-orange-600 scrollbar-hide">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b sticky top-0 bg-white z-10">
           <div className="flex items-center gap-3">
             <img src={avatar} alt={DEFAULT_AVATAR} onError={(e) => {
               if (e.currentTarget.src !== DEFAULT_AVATAR) {
@@ -424,7 +424,7 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                 <span>💬</span> {t("profile.introduction_title")}
               </h3>
               <div className="text-gray-600 font-light text-sm italic mt-1 line-clamp-4">
-                {profilePayload?.seller?.personal_intro ?? profilePayload?.profile?.personal_intro ?? t("profile.introduction_quote")}
+                {profilePayload?.seller?.personal_intro ?? profilePayload?.profile?.personal_intro ?? "Not provided."}
               </div>
             </div>
 
@@ -433,14 +433,14 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               <h3 className="font-semibold flex items-center gap-2 text-black">
                 <span>💡</span> {t("profile.vision_title")}
               </h3>
-              <p className="text-gray-600 font-light mt-1 text-sm line-clamp-4">{profilePayload?.seller?.exp_vision ?? t("profile.vision_text")}</p>
+              <p className="text-gray-600 font-light mt-1 text-sm line-clamp-4">{profilePayload?.seller?.exp_vision ?? "Not provided"}</p>
             </div>
 
             {/* Services & Industries (use skills/categories from API) */}
             <div>
               <h3 className="font-semibold text-sm">{t("profile.industries_title")}</h3>
               <div className="flex gap-2 flex-wrap mt-2">
-                {skills.length === 0 && <span className="text-xs text-gray-500">{t("profile.no_skills")}</span>}
+                {skills.length === 0 && <span className="text-xs text-gray-500">Not Added</span>}
                 {skills.map((s) => (
                   <span key={s.id ?? s.name} className="bg-gray-100 text-black font-semibold text-[10px] px-3 py-1 rounded-lg">
                     {s.name}
@@ -487,9 +487,9 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                       <div className="h-full w-full rounded-md bg-gray-50 overflow-hidden flex items-center justify-center">
                         {mediaUrlItem ? (
                           isVideoItem ? (
-                            <video src={mediaUrlItem} controls className="w-full h-full object-cover" />
+                            <video src={mediaUrlItem} controls className="w-full h-full object-contain" />
                           ) : (
-                            <img src={mediaUrlItem} alt="business media" className="w-full h-full object-cover" />
+                            <img src={mediaUrlItem} alt="business media" className="w-full h-full object-contain" />
                           )
                         ) : (
                           <div className="text-gray-400 flex flex-col items-center gap-2">

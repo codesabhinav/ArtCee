@@ -131,7 +131,6 @@ export default function BusinessListingModal({ isOpen, onClose }) {
     return Object.keys(errs).length === 0;
   };
 
-  // ---------- MAIN submit: call postBusinessListing API with expected field names ----------
   const handleSubmit = async (e) => {
     e?.preventDefault?.();
     if (submitting) return;
@@ -141,17 +140,14 @@ export default function BusinessListingModal({ isOpen, onClose }) {
     try {
       const formData = new FormData();
 
-      // keys matched to your Postman example
       formData.append("description", description);
-      formData.append("intro", introduction); // backend expects `intro`
+      formData.append("intro", introduction); 
       formData.append("website_link", website);
 
-      // file key matches your API: `uploads_file`
       if (file) {
         formData.append("uploads_file", file);
       }
 
-      // append each social as `social_media_link[]` (multiple fields)
       socials
         .map((s) => s.url?.trim())
         .filter(Boolean)
@@ -159,13 +155,9 @@ export default function BusinessListingModal({ isOpen, onClose }) {
           formData.append("social_media_link[]", url);
         });
 
-      // call API
       const res = await postBusinessListing(formData);
-      // success
       toast.success("Business listing created.");
-      // optionally you can inspect res and do further actions
       clearFile();
-      // close modal
       if (onClose) onClose();
     } catch (err) {
       console.error("Submit failed", err);
@@ -195,7 +187,7 @@ export default function BusinessListingModal({ isOpen, onClose }) {
           </button>
         </div>
 
-        <div className="p-6 space-y-4 overflow-y-auto max-h-[70vh]">
+        <div className="p-6 space-y-4 overflow-y-auto max-h-[70vh] scrollbar-hide">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Upload Image / Video</label>
             <div className="border border-dashed border-gray-200 rounded-md p-4 flex items-center justify-between gap-4">

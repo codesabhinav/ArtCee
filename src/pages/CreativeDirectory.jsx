@@ -522,15 +522,9 @@ const CreativeDirectory = () => {
                     className="border rounded-xl p-4 shadow-sm bg-white"
                   >
                     {/* Header */}
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center bg-black text-white text-xs px-2 py-1 rounded-md">
-                        <FaStar className="mr-1" /> {rating}
-                        {Number(reviews) > 0 && <span className="ml-1 opacity-80">({reviews})</span>}
-                      </span>
-                      <span className={`flex items-center text-xs px-2 py-1 rounded-md ${availability.badge}`}>
+                    <span className={`items-center text-xs px-2 py-1 rounded-md ${availability.badge}`}>
                         ● {availability.label}
                       </span>
-                    </div>
 
                     {/* Profile */}
                     <div className="flex items-center mt-4">

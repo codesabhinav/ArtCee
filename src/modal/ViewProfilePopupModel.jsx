@@ -298,8 +298,8 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   if (!isOpen) return null;
 
   const fullName = profilePayload?.full_name ?? profilePayload?.user?.full_name ?? "Unknown";
-  const title = profilePayload?.profile?.title ?? profilePayload?.title ?? t("profile.role_photography");
-  const bio = profilePayload?.profile?.bio ?? profilePayload?.personal_intro ?? t("profile.about_text");
+  const title = profilePayload?.profile?.title ?? profilePayload?.title;
+  const bio = profilePayload?.profile?.bio ?? profilePayload?.personal_intro ?? "Not provided.";
   const avatar = profilePayload?.profile?.profile_picture ?? DEFAULT_AVATAR;
   const rating = profilePayload?.seller.user?.rating ?? profilePayload?.user?.rating ?? 0;
   const rating_count = profilePayload?.rating_count ?? 0;
@@ -411,7 +411,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white w-[800px] max-h-[80vh] overflow-y-auto rounded-xl shadow-lg relative border border-orange-600 scrollbar-hide">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b sticky top-0 bg-white z-10">
           <div className="flex items-center gap-3">
             <img src={avatar} alt={DEFAULT_AVATAR} onError={(e) => {
               if (e.currentTarget.src !== DEFAULT_AVATAR) {
@@ -523,9 +523,10 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
             </div>
 
             {/* Buttons */}
-            <button className="mt-4 text-xs font-semibold bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg w-full">
+            {/* <button className="mt-4 text-xs font-semibold bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg w-full">
               {t("profile.book_now")}
-            </button>
+            </button> */}
+
             <div className="mt-3 w-full ">
               <h3 class="font-semibold">Collaborate</h3>
               <div className="flex gap-2 mt-1 w-full justify-center items-center">
@@ -561,17 +562,17 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
           <div className="col-span-2 space-y-4">
             {/* Quick Info */}
             <div className="grid gap-6 text-sm grid-cols-2">
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <Star className="h-4 w-4 text-orange-600" /> <b>{rating} rating</b>
-              </div>
+              </div> */}
 
               <div className="flex items-center gap-2 font-light">
                 <LocationEdit className="h-4 w-4 text-orange-600" /> <b>{city}, {state}, {country}</b>
               </div>
 
-              <div className="flex items-center gap-2 font-light">
+              {/* <div className="flex items-center gap-2 font-light">
                 <CalendarRange className="h-4 w-4 text-orange-600" /> <b>{profilePayload?.seller?.experience_in_year ?? "0"} years experience</b>
-              </div>
+              </div> */}
 
               <div className="flex items-center gap-2 font-light">
                 <Timer className="h-4 w-4 text-orange-600" /> <b>{availabilityLabel ?? t("profile.available_text")}</b>
@@ -590,7 +591,7 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
                 <span>💬</span> {t("profile.introduction_title")}
               </h3>
               <div className="text-gray-600 font-light text-sm italic mt-1 line-clamp-4">
-                {profilePayload?.seller?.personal_intro ?? profilePayload?.profile?.personal_intro ?? t("profile.introduction_quote")}
+                {profilePayload?.seller?.personal_intro ?? profilePayload?.profile?.personal_intro ?? "Not provided."}
               </div>
             </div>
 
@@ -599,14 +600,14 @@ const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
               <h3 className="font-semibold flex items-center gap-2 text-black">
                 <span>💡</span> {t("profile.vision_title")}
               </h3>
-              <p className="text-gray-600 font-light mt-1 text-sm line-clamp-4">{profilePayload?.seller?.exp_vision ?? t("profile.vision_text")}</p>
+              <p className="text-gray-600 font-light mt-1 text-sm line-clamp-4">{profilePayload?.seller?.exp_vision ?? "Not provided." }</p>
             </div>
 
             {/* Services & Industries (use skills/categories from API) */}
             <div>
               <h3 className="font-semibold text-sm">{t("profile.industries_title")}</h3>
               <div className="flex gap-2 flex-wrap mt-2">
-                {skills.length === 0 && <span className="text-xs text-gray-500">{t("profile.no_skills")}</span>}
+                {skills.length === 0 && <span className="text-xs text-gray-500">Not Added</span>}
                 {skills.map((s) => (
                   <span key={s.id ?? s.name} className="bg-gray-100 text-black font-semibold text-[10px] px-3 py-1 rounded-lg">
                     {s.name}

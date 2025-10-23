@@ -176,7 +176,7 @@ export default function ForgotPasswordModal({ onClose }) {
                                     disabled={loading}
                                     className="flex-1 bg-teal-500 text-white py-2 rounded-lg disabled:opacity-60 text-xs"
                                 >
-                                    {loading ? "Sending..." : "Send OTP"}
+                                    {loading ? "Sending..." : "Send one-time passcode"}
                                 </button>
                                 <button
                                     onClick={() => {

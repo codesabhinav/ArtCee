@@ -318,7 +318,7 @@ const LocationStep = ({ formData = {}, setFormData, onNext, onPrev }) => {
 
         {local.on_site_active === 1 && (
           <div>
-            <label className="block text-xs font-semibold">{t("location.travel_radius_label")} *</label>
+            <label className="block text-xs font-semibold">{t("location.travel_radius_label")}</label>
             <input
               type="number"
               name="travel_radius_miles"
