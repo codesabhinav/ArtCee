@@ -384,7 +384,8 @@ const CreativeDirectory = () => {
         </div>
       ))}
 
-      <MultiSelectDropdown
+      {statesOptions.length > 0 && (
+        <MultiSelectDropdown
         options={statesOptions}
         value={selectedStates}
         setValue={async (vals) => {
@@ -433,6 +434,7 @@ const CreativeDirectory = () => {
         placeholder={statesOptions.length ? "Select states" : "Select a country first"}
         disabled={!statesOptions.length}
       />
+      )}
 
     </div>
   );
