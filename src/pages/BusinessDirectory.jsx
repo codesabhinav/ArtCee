@@ -267,7 +267,7 @@ const BusinessDirectory = () => {
   const renderPagination = () => {
     if (!totalItems || totalItems <= perPage) return null;
 
-    const maxButtons = 7;
+    const maxButtons = 3;
     const pages = [];
     const start = Math.max(1, page - Math.floor(maxButtons / 2));
     let end = start + maxButtons - 1;
@@ -415,10 +415,10 @@ const BusinessDirectory = () => {
                   <img
                     src={
                       profile?.profile_picture ||
-                      "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80"
+                      "../default-avatar.png"
                     }
                     alt={user?.full_name || t("business.business")}
-                    className="w-40 h-40 rounded-lg object-cover shrink-0"
+                    className="w-28 h-28 rounded-lg object-cover shrink-0"
                   />
 
                   <div className="flex-1">

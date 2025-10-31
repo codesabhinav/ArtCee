@@ -148,7 +148,7 @@ const GuestDashboardPage = () => {
 
   const fullName = user?.full_name ?? profile?.title ?? t("guest.default_name");
   const roleDisplay = (user?.role && user.role[0]?.display_name) ?? t("guest.default_role");
-  const avatar = profile?.profile_picture ?? "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740&q=80";
+  const avatar = profile?.profile_picture ?? "../default-avatar.png";
   const cover_image = profile?.cover_picture ?? null;
   const bio = profile?.bio ?? "";
   const title = profile?.title ?? t("guest.default_title");
@@ -355,6 +355,14 @@ const GuestDashboardPage = () => {
     }
   };
 
+  const handlePostJobClick = () => {
+    if (hasActiveSubscription) {
+      setPostJobOpen(true);
+    } else {
+      navigate("/featured");
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen w-full">
       <div className="md:max-w-[80%] mx-auto px-4 pb-2 sm:px-6">
@@ -548,19 +556,19 @@ const GuestDashboardPage = () => {
 
               {openPortfolio && (
                 <div className="p-6">
-                  <div className="flex flex-col sm:flex-row sm:justify-end sm:items-center mb-4 gap-3 sm:gap-0">
+                  {/* <div className="flex flex-col sm:flex-row sm:justify-end sm:items-center mb-4 gap-3 sm:gap-0">
                     <button
                       onClick={() => setWorkOpen(true)}
                       className="bg-teal-500 text-white px-4 py-2 text-xs font-semibold rounded-md hover:bg-teal-600 w-full sm:w-auto"
                     >
                       + Add Portfolio Work
                     </button>
-                  </div>
+                  </div> */}
 
                   {!loading && portfolios.length > 0 ? (
                     <div className="grid grid-cols-1 gap-6">
                       {portfolios.map((post, index) => {
-                        const isLocked = !hasActiveSubscription && index >= 5; // lock after 5 items if no active subscription
+                        const isLocked = !hasActiveSubscription && index >= 5;
                         const title = post?.title || t("guest.untitled");
                         const description = post?.description || "";
                         const role = post?.role || "";
@@ -1006,7 +1014,7 @@ const GuestDashboardPage = () => {
           {/* Right Side */}
           <div className="space-y-6">
             {/* Upgrade Card */}
-            <div className="bg-white border border-orange-400 rounded-lg p-6">
+            {/* <div className="bg-white border border-orange-400 rounded-lg p-6">
               <div className="flex flex-col items-center text-center">
                 <div className="bg-orange-500 text-white w-12 h-12 flex items-center justify-center rounded-full mb-3">
                   <Crown className="text-2xl" />
@@ -1074,17 +1082,8 @@ const GuestDashboardPage = () => {
                 >
                   {foundingPrice.price ? `${foundingPrice.symbol} ${foundingPrice.price} • ${t("guest.founding_member_cta")}` : t("guest.premium_monthly_cta")}
                 </button>
-
-                {/* {hasActiveSubscription ? (
-                  <button
-                    onClick={() => navigate("/subscription/manage")}
-                    className="w-full text-xs mt-2 bg-gray-100 text-gray-700 py-2 rounded-md font-medium"
-                  >
-                    {t("guest.manage_subscription") || "Manage subscription"}
-                  </button>
-                ) : null} */}
               </div>
-            </div>
+            </div> */}
 
             {/* Account Includes */}
             <div className="bg-white border rounded-lg p-6">
@@ -1234,19 +1233,23 @@ const GuestDashboardPage = () => {
                 <li onClick={() => setListingOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
                   <span className="flex items-center gap-2"><Building2 className="h-4 w-4" /> Add Business Listing</span>
                 </li>
-                <li onClick={handleInboxClick} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
-                  <span className="flex items-center gap-2"><MessageCircleMoreIcon className="h-4 w-4" />	Go to Inbox </span>
+                <li onClick={handleInboxClick} className="border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
+                  <div className="flex flex-row items-center justify-between">
+                    <span className="flex items-center gap-2"><MessageCircleMoreIcon className="h-4 w-4" />	Go to Inbox </span>
+                    <div className="text-[10px] px-2 bg-orange-600 text-white rounded-md">Premium Feature</div>
+                  </div>
                 </li>
                 {/* <li onClick={() => setPhotoIsOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
                   <span className="flex items-center gap-2"><CameraIcon className="h-4 w-4" /> {t("guest.quick.update_photo")}</span>
                 </li> */}
-                {hasActiveSubscription ? (
-                  <li onClick={() => setPostJobOpen(true)} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
-                    <span className="flex items-center gap-2"><Plus className="h-4 w-4" />Post a job</span>
+                <li onClick={handlePostJobClick} className="border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-2"><Plus className="h-4 w-4" />Post a job</span>
+                      <div className="text-[10px] px-2 bg-orange-600 text-white rounded-md">Premium Feature</div>
+                    </div>
                   </li>
-                ) : null}
                 <li onClick={() => navigate("/featured")} className="flex items-center justify-between border px-3 py-2 rounded-md hover:bg-gray-100 cursor-pointer">
-                  <span className="flex items-center gap-2"><BiMoney className="h-4 w-4" />Upgrade to Premium</span>
+                  <span className="flex items-center gap-2"><Crown className="h-4 w-4" />Upgrade to Premium</span>
                 </li>
               </ul>
             </div>

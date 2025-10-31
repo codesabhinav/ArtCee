@@ -47,6 +47,16 @@ export function getCreativeFilters() {
     });
 }
 
+export function getStatesData(countryId) {
+  return service
+    .get(`site/country/${countryId}/states`)
+    .then((res) => res.data?.data || [])
+    .catch((error) => {
+      const errorMessage = error.response?.message || "Failed to fetch state data";
+      throw new Error(errorMessage);
+    });
+}
+
 export function getBusinessFilters() {
   return service
     .get(`site/seller/filter/business`)

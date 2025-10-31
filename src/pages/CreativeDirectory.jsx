@@ -9,13 +9,13 @@ import {
   FaGlobe,
 } from "react-icons/fa";
 import ViewProfilePopupModel from "../modal/ViewProfilePopupModel";
-import { getCreativeData, getCreativeFilters } from "../Hooks/useSeller";
+import { getCreativeData, getCreativeFilters, getStatesData } from "../Hooks/useSeller";
 import CustomDropdown from "../components/CustomDropdown";
 import SpinnerProvider from "../components/SpinnerProvider";
 import { useTranslation } from "../contexts/LanguageProvider";
+import MultiSelectDropdown from "../components/MultiSelectDropdown";
 
-const DEFAULT_AVATAR =
-  "https://static.vecteezy.com/system/resources/previews/021/548/095/non_2x/default-profile-picture-avatar-user-avatar-icon-person-icon-head-icon-profile-picture-icons-default-anonymous-user-male-and-female-businessman-photo-placeholder-social-network-avatar-portrait-free-vector.jpg";
+const DEFAULT_AVATAR = "../default-avatar.png";
 
 const CreativeDirectory = () => {
   const { t } = useTranslation();
@@ -44,6 +44,8 @@ const CreativeDirectory = () => {
   const [lastPage, setLastPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [statesOptions, setStatesOptions] = useState([]);
+  const [selectedStates, setSelectedStates] = useState([]);
 
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
@@ -67,9 +69,7 @@ const CreativeDirectory = () => {
 
         const humanLabel = (key) => {
           if (key === "availability") return t("creative.filter_availability");
-          if (key === "level") return t("creative.filter_experience_level");
-          if (key === "working_style") return t("creative.filter_work_style");
-          if (key === "union_status") return t("creative.filter_union_status");
+          if (key === "country") return "Location";
           return key;
         };
 
@@ -83,9 +83,7 @@ const CreativeDirectory = () => {
         };
 
         pushFilter("availability", meta.availability, t("creative.all_status"));
-        pushFilter("level", meta.level, t("creative.all_levels"));
-        pushFilter("working_style", meta.working_style, t("creative.all_types"));
-        pushFilter("union_status", meta.union_status, t("creative.all_status"));
+        pushFilter("country", meta.country, "All Countries");
 
         if (meta.order_by_rate) {
           const map = {};
@@ -116,6 +114,68 @@ const CreativeDirectory = () => {
     })();
   }, [t]);
 
+  useEffect(() => {
+    const countryFilterObj = filtersConfigDynamic.find((f) => f.key === "country");
+    const countryFilterLabel = countryFilterObj?.label;
+    if (!countryFilterLabel) {
+      setStatesOptions([]);
+      setSelectedStates([]);
+      return;
+    }
+
+    const chosenCountryLabel = selectedFilters[countryFilterLabel];
+
+    if (!chosenCountryLabel || chosenCountryLabel.startsWith(t("creative.all"))) {
+      setStatesOptions([]);
+      setSelectedStates([]);
+      return;
+    }
+
+    const countryId = filterLabelToKeyMap[chosenCountryLabel];
+    if (!countryId) {
+      setStatesOptions([]);
+      setSelectedStates([]);
+      return;
+    }
+
+    let mounted = true;
+    (async () => {
+      try {
+        const data = await getStatesData(countryId);
+        const entries = data && typeof data === "object" ? Object.entries(data) : [];
+        const opts = entries.map(([id, name]) => ({ id: Number(id), name }));
+        if (!mounted) return;
+        setStatesOptions(opts);
+        setSelectedStates((prev) => {
+          if (!Array.isArray(prev) || prev.length === 0) return [];
+          const optIds = new Set(opts.map((o) => String(o.id)));
+          return prev
+            .map((s) => {
+              if (s && typeof s === "object" && (s.id !== undefined)) return { id: Number(s.id), name: s.name };
+              if (typeof s === "number" || (typeof s === "string" && /^\d+$/.test(s))) {
+                const idNum = Number(s);
+                const match = opts.find((o) => Number(o.id) === idNum);
+                return match || null;
+              }
+              return null;
+            })
+            .filter(Boolean)
+            .filter((o) => optIds.has(String(o.id)));
+        });
+      } catch (err) {
+        console.error("Failed to load states:", err);
+        if (mounted) {
+          setStatesOptions([]);
+          setSelectedStates([]);
+        }
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [selectedFilters, filterLabelToKeyMap, filtersConfigDynamic, t]);
+
   const buildApiParams = () => {
     const params = {};
     if (debouncedSearch) params.search = debouncedSearch;
@@ -140,10 +200,21 @@ const CreativeDirectory = () => {
       params.industries = selectedIndustries;
     }
 
-
-    if (onlyAvailable) {
-      params.availability = "available";
+    if (Array.isArray(selectedStates) && selectedStates.length > 0) {
+      const stateIds = selectedStates
+        .map((s) => {
+          if (s == null) return null;
+          if (typeof s === "number") return s;
+          if (typeof s === "string" && /^\d+$/.test(s)) return Number(s);
+          if (typeof s === "object" && s.id !== undefined) return Number(s.id);
+          return null;
+        })
+        .filter((n) => Number.isFinite(n));
+      if (stateIds.length > 0) {
+        params["states[]"] = stateIds;
+      }
     }
+
 
     if (page && Number(page) > 0) {
       params.page = Number(page);
@@ -307,11 +378,62 @@ const CreativeDirectory = () => {
             value={selectedFilters[filter.label] || filter.options[0]}
             setValue={(val) => {
               setSelectedFilters((prev) => ({ ...prev, [filter.label]: val }));
-              setPage(1); // reset page when a filter changes
+              setPage(1);
             }}
           />
         </div>
       ))}
+
+      <MultiSelectDropdown
+        options={statesOptions}
+        value={selectedStates}
+        setValue={async (vals) => {
+          const normalized = Array.isArray(vals)
+            ? vals
+              .map((v) => {
+                if (v && typeof v === "object" && v.id !== undefined)
+                  return { id: Number(v.id), name: v.name ?? v.label ?? String(v.id) };
+                if (typeof v === "string" && /^\d+$/.test(v)) {
+                  const match = statesOptions.find((o) => String(o.id) === v);
+                  return match || null;
+                }
+                return null;
+              })
+              .filter(Boolean)
+            : [];
+
+          setSelectedStates(normalized);
+          setPage(1);
+
+          try {
+            const params = buildApiParams();
+            if (normalized.length > 0) {
+              const stateIds = normalized.map((s) => Number(s.id)).filter(Boolean);
+              params["states[]"] = stateIds;
+            }
+
+            setLoading(true);
+            const res = await getCreativeData(params);
+            const list = Array.isArray(res?.data) ? res.data : [];
+            setCreatives(list);
+
+            if (res?.meta) {
+              setLastPage(res.meta.last_page ?? 1);
+              setPerPage(res.meta.per_page ?? perPage);
+              setTotalItems(res.meta.total ?? 0);
+              setPage(res.meta.current_page ?? page);
+            }
+          } catch (err) {
+            console.error("Failed to fetch creatives on state change:", err);
+            setCreatives([]);
+          } finally {
+            setLoading(false);
+          }
+        }}
+        placeholder={statesOptions.length ? "Select states" : "Select a country first"}
+        disabled={!statesOptions.length}
+      />
+
     </div>
   );
 
@@ -372,7 +494,7 @@ const CreativeDirectory = () => {
   const renderPagination = () => {
     if (!totalItems || totalItems <= perPage) return null;
 
-    const maxButtons = 7;
+    const maxButtons = 3;
     const pages = [];
     const start = Math.max(1, page - Math.floor(maxButtons / 2));
     let end = start + maxButtons - 1;
@@ -519,19 +641,19 @@ const CreativeDirectory = () => {
                 return (
                   <div
                     key={creative.id}
-                    className="border rounded-xl p-4 shadow-sm bg-white"
+                    className="border rounded-xl p-4 shadow-sm bg-white max-h-[300px]"
                   >
                     {/* Header */}
                     <span className={`items-center text-xs px-2 py-1 rounded-md ${availability.badge}`}>
-                        ● {availability.label}
-                      </span>
+                      ● {availability.label}
+                    </span>
 
                     {/* Profile */}
                     <div className="flex items-center mt-4">
                       <img
                         src={profileSrc}
                         alt={name}
-                        className="w-40 h-40 rounded-md object-cover border"
+                        className="w-28 h-28 rounded-md object-cover border"
                         onError={(e) => {
                           if (e.currentTarget.src !== DEFAULT_AVATAR) {
                             e.currentTarget.src = DEFAULT_AVATAR;
@@ -543,25 +665,25 @@ const CreativeDirectory = () => {
                         <p className="text-xs text-gray-600">{title}</p>
 
                         {/* Bio */}
-                        <p className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
+                        <div className="text-xs font-regular text-gray-500 mt-3 line-clamp-4">
                           {creative?.personal_intro || t("creative.no_intro")}
 
                           {/* Meta */}
                           <div className="mt-3 grid grid-cols-1 sm:grid-cols-1 gap-y-1 text-xs text-gray-500">
-                            <p className="flex items-center">
+                            <div className="flex items-center">
                               <FaMapMarkerAlt className="mr-2" /> {getLocationText(creative)}
-                            </p>
+                            </div>
                             {/* <p className="flex items-center">
                               <FaClock className="mr-2" /> {years}+ {t("creative.years")}
                             </p>
                             <p className="flex items-center">
                               <FaBriefcase className="mr-2" /> {level} {t("creative.level")}
                             </p> */}
-                            <p className="flex items-center">
+                            <div className="flex items-center">
                               <FaGlobe className="mr-2" /> {workStyle}
-                            </p>
+                            </div>
                           </div>
-                        </p>
+                        </div>
                       </div>
                     </div>
 

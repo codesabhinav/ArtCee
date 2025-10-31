@@ -37,7 +37,7 @@ import MessagePopupModal from "./MessagePopupModal";
 const DEFAULT_JOB_IMAGE =
   "https://img.myloview.com/posters/businessman-avatar-image-with-beard-hairstyle-male-profile-vector-illustration-700-201088702.jpg";
 const DEFAULT_AVATAR =
-  "https://static.vecteezy.com/system/resources/previews/021/548/095/non_2x/default-profile-picture-avatar-user-avatar-icon-person-icon-head-icon-profile-picture-icons-default-anonymous-user-male-and-female-businessman-photo-placeholder-social-network-avatar-portrait-free-vector.jpg";
+  "../default-avatar.png";
 
 const ViewProfilePopupModel = ({ isOpen, onClose, uuid }) => {
   const { t } = useTranslation();

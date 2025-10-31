@@ -1,3 +1,4 @@
+// MultiSelectDropdown.jsx
 import { Fragment, useMemo } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { FaCheck, FaChevronDown } from "react-icons/fa";
@@ -14,7 +15,7 @@ export default function MultiSelectDropdown({
 }) {
   const normalized = useMemo(() => {
     return options.map((o, i) =>
-      typeof o === "string" ? { id: `s-${i}`, name: o, _raw: o } : { id: o.id ?? o.name ?? `o-${i}`, name: o.name ?? o.label ?? o.id, _raw: o }
+      typeof o === "string" ? { id: `s-${i}`, name: o, _raw: o } : { id: String(o.id ?? o.name ?? `o-${i}`), name: o.name ?? o.label ?? String(o.id ?? o.name), _raw: o }
     );
   }, [options]);
 
@@ -22,15 +23,24 @@ export default function MultiSelectDropdown({
     if (!Array.isArray(value)) return [];
     if (value.length === 0) return [];
     const first = value[0];
+    // if user provided strings originally, match by _raw
     if (typeof first === "string") {
       return normalized.filter((n) => value.includes(n._raw));
     }
-    return normalized.filter((n) => value.some((v) => (v?.id && String(v.id) === String(n.id)) || v === n._raw || v?.name === n.name));
+    // otherwise compare objects by id or by raw
+    return normalized.filter((n) =>
+      value.some((v) =>
+        (v?.id && String(v.id) === String(n.id)) ||
+        v === n._raw ||
+        v?.name === n.name
+      )
+    );
   }, [value, normalized]);
 
   const toOutput = (selectedObjects) => {
     const origIsStringArray = options.length && typeof options[0] === "string";
     if (origIsStringArray) return selectedObjects.map((s) => s._raw);
+    // prefer returning the original _raw object if it's an object, otherwise return {id,name}
     return selectedObjects.map((s) => (s._raw && typeof s._raw === "object" ? s._raw : { id: s.id, name: s.name }));
   };
 
@@ -48,9 +58,13 @@ export default function MultiSelectDropdown({
         disabled={disabled}
       >
         <div className="relative">
+          {/* render the button as a div to avoid nested-button issues */}
           <Listbox.Button
+            as="div"
+            role="button"
+            tabIndex={0}
             className={clsx(
-              "relative w-full cursor-default rounded-md border form-input py-2 px-2 text-left text-xs",
+              "relative w-full cursor-default rounded-md border form-input py-2 px-2 text-left text-xs select-none",
               { "opacity-50 pointer-events-none bg-gray-50": disabled }
             )}
           >
@@ -60,7 +74,7 @@ export default function MultiSelectDropdown({
                   <span
                     key={s.id}
                     className="flex items-center gap-1 bg-gray-100 text-xs px-2 py-0.5 rounded-md border"
-                    onClick={(e) => e.stopPropagation()} 
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <span className="max-w-[180px] truncate">{s.name}</span>
                     <button
@@ -104,16 +118,14 @@ export default function MultiSelectDropdown({
                   }
                 >
                   {({ selected }) => (
-                    <>
-                      <div className="flex items-center justify-between">
-                        <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{opt.name}</span>
-                        {selected ? (
-                          <span className="flex items-center text-gray-900">
-                            <FaCheck className="w-3 h-3" />
-                          </span>
-                        ) : null}
-                      </div>
-                    </>
+                    <div className="flex items-center justify-between">
+                      <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{opt.name}</span>
+                      {selected ? (
+                        <span className="flex items-center text-gray-900">
+                          <FaCheck className="w-3 h-3" />
+                        </span>
+                      ) : null}
+                    </div>
                   )}
                 </Listbox.Option>
               ))}
