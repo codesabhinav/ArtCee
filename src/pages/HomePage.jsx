@@ -22,10 +22,10 @@ export default function Home() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [professionals, setProfessionals] = useState([]);
-  
+
   const location = useLocation();
   const [showLanding, setShowLanding] = useState(!!location.state?.showLanding);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,15 +54,15 @@ export default function Home() {
     }
   }, [showLanding]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (Cookies.get('artcee_token') == null) {
       const timer = setTimeout(() => {
         setShowLanding(true);
-      }, 2000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, []);
-  
+
   return (
     <div className="w-full">
 

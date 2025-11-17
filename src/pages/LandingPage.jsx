@@ -8,7 +8,7 @@ import { Palette, Users, X } from "lucide-react";
 const LandingPage = ({ onClose, isModal = false }) => {
   const navigate = useNavigate();
   const [showLanding, setShowLanding] = useState(true);
-
+  const [animate, setAnimate] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
   const { t } = useTranslation();
 
@@ -18,12 +18,17 @@ const LandingPage = ({ onClose, isModal = false }) => {
   };
 
   const closeLanding = () => {
-    if (typeof onClose === "function") {
-      onClose();
-    } else {
-      navigate('/home');
-    }
+    setAnimate(false);
+    setTimeout(() => {
+      if (typeof onClose === "function") onClose();
+      else navigate('/home');
+    }, 300);
   };
+
+
+  useEffect(() => {
+    setTimeout(() => setAnimate(true), 10);
+  }, []);
 
   useEffect(() => {
     if (showLanding) {
@@ -49,7 +54,10 @@ const LandingPage = ({ onClose, isModal = false }) => {
         />
 
         <div
-          className="relative z-10 w-full max-w-sm sm:max-w-2xl mx-auto"
+          className={`relative z-10 w-full max-w-sm sm:max-w-2xl mx-auto
+    transition-all duration-500 ease-out
+    ${animate ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}
+  `}
         >
           <div
             className="relative bg-white rounded-xl overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto scrollbar-hide"
