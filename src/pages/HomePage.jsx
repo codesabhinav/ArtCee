@@ -24,7 +24,7 @@ export default function Home() {
   const [professionals, setProfessionals] = useState([]);
 
   const location = useLocation();
-  const [showLanding, setShowLanding] = useState(!!location.state?.showLanding);
+  const [showLanding, setShowLanding] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,7 +58,8 @@ export default function Home() {
     if (Cookies.get('artcee_token') == null) {
       const timer = setTimeout(() => {
         setShowLanding(true);
-      }, 5000);
+        window.history.replaceState({}, document.title);
+      }, 4000);
       return () => clearTimeout(timer);
     }
   }, []);
