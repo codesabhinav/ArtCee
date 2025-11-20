@@ -23,6 +23,7 @@ import PaymentSuccessPage from './pages/PaymentSuccessPage'
 import PaymentCancelPage from './pages/PaymentCancelPage'
 import ForgotPasswordModal from './modal/ForgotPasswordModal'
 import ChatList from './pages/ChatListScreen'
+import PricingPage from './pages/PricingPage'
 
 function App() {
   return (
@@ -40,7 +41,7 @@ function App() {
               <Route path="creatives" element={<CreativeDirectory />} />
               <Route path="business-directory" element={<BusinessDirectory />} />
               <Route path="jobs" element={<JobsOpportunities />} />
-              <Route path="featured" element={<FeaturePremiumPage />} />
+              <Route path="featured" element={<PricingPage />} />
               <Route path="profile" element={<GuestDashboardPage />} />
               <Route path="inbox" element={<ChatList />} />
             </Route>
