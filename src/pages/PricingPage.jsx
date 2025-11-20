@@ -3,6 +3,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { getPlans } from "../Hooks/useSeller";
 import Cookies from "js-cookie";
+import image from "../images/chinii.png";
 import PurchasePopupModel from "../modal/PurchasePopupModel";
 import { SparklesIcon } from "lucide-react";
 
@@ -370,7 +371,8 @@ export default function PricingPage() {
         <section className="mb-10 flex justify-center">
           <div className="rounded-3xl overflow-hidden shadow-md max-w-xl w-full aspect-video bg-black">
             <img
-              src="../images/chinii.png"
+              src={image}
+              alt="ArtCee Premium Features"
               className="w-full h-full object-cover"
             />
           </div>
