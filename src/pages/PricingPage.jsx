@@ -136,18 +136,18 @@ export default function PricingPage() {
               setLocation(country);
             } else {
               setPermissionDenied(true);
-              setLocation("United States"); // Default to United States
+              setLocation("United States");
             }
           } catch (err) {
             console.error("Reverse geocoding failed", err);
             setPermissionDenied(true);
-            setLocation("United States"); // Default to United States
+            setLocation("United States");
           }
         },
         (err) => {
           console.warn("Geolocation error:", err);
           setPermissionDenied(true);
-          setLocation("United States"); // Default to United States
+          setLocation("United States");
         },
         {
           timeout: 8000,
@@ -156,7 +156,7 @@ export default function PricingPage() {
       );
     } else {
       setPermissionDenied(true);
-      setLocation("United States"); // Default to United States
+      setLocation("United States");
     }
   }, []);
 
@@ -168,9 +168,7 @@ export default function PricingPage() {
         const res = await getPlans({ location: locationToUse });
         const normalized = normalizePlansResponse(res);
 
-        // Find the premium plan (usually the first non-free plan or the one with highest price)
         if (normalized.length > 0) {
-          // Look for a plan that's not free, or use the first one
           const premiumPlan =
             normalized.find(
               (plan) =>
@@ -185,14 +183,12 @@ export default function PricingPage() {
             setBillingCycle(`/ ${premiumPlan.billing_cycle}`);
           }
 
-          // Extract currency symbol from pricing data
           const symbol =
             premiumPlan?.pricing?.country?.currency_symbol ??
             premiumPlan?.pricing?.currency ??
-            "$"; // Default to $ if not found
+            "$"; 
           setCurrencySymbol(symbol);
 
-          // Store premium plan ID and location ID for purchase flow
           if (premiumPlan?.id) {
             setPremiumPlanId(premiumPlan.id);
           }
@@ -202,13 +198,11 @@ export default function PricingPage() {
         }
       } catch (err) {
         console.error("Failed to load plans:", err);
-        // Keep default price on error
       } finally {
         setLoadingPrice(false);
       }
     }
 
-    // Load plans when location is determined or if permission is denied (defaults to United States)
     if (location !== null || permissionDenied) {
       const locationToUse = location || "United States";
       loadPlans(locationToUse);
@@ -227,7 +221,6 @@ export default function PricingPage() {
 
   return (
     <div className="bg-white min-h-screen">
-      {/* Top bar */}
       <div className="w-full bg-white">
         <div className="max-w-6xl mx-auto flex justify-between items-center py-4 px-4">
           <Link
@@ -252,9 +245,7 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-10">
-        {/* Title Section */}
         <section className="text-center mb-10">
           <button className="inline-flex items-center rounded-full bg-gradient-to-r from-teal-50 to-orange-50 px-3 py-2 text-xs font-medium text-black mb-4 font-regular">
             {" "}
@@ -270,9 +261,7 @@ export default function PricingPage() {
           </p>
         </section>
 
-        {/* Pricing cards */}
         <section className="grid md:grid-cols-2 gap-10 mb-16 -mx-4 px-4 py-10 rounded-md">
-          {/* Free Plan */}
           <div className="bg-white rounded-lg border-2 border-slate-200 p-8 shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-100 hover:-translate-y-1 cursor-pointer">
             <p className="uppercase text-2xl font-semibold mb-1 text-slate-800">
               FREE PLAN
@@ -318,7 +307,6 @@ export default function PricingPage() {
             </button>
           </div>
 
-          {/* Premium Plan */}
           <div className="relative bg-white rounded-lg border-2 border-orange-300 p-8 shadow-md transition-all duration-300 hover:shadow-xl hover:scale-100 hover:-translate-y-1 cursor-pointer hover:border-orange-400">
             <div className="absolute -top-3 right-6 bg-orange-500 text-xs text-white font-bold px-3 py-2 rounded-md uppercase tracking-wide">
               MOST POPULAR
@@ -379,7 +367,6 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Middle Image */}
         <section className="mb-10 flex justify-center">
           <div className="rounded-3xl overflow-hidden shadow-md max-w-xl w-full aspect-video bg-black">
             <img
@@ -389,7 +376,6 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Comparison Table */}
         <section className="mb-20">
           <div className="text-center mb-6">
             <h2 className="text-xl lg:text-3xl font-regular text-slate-800">
@@ -450,7 +436,6 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Bottom CTA */}
         <section className="text-center pb-20">
           <h2 className="text-2xl lg:text-3xl font-regular text-slate-800">
             Ready to take your creative career to the next level?
@@ -478,7 +463,6 @@ export default function PricingPage() {
         </section>
       </main>
 
-      {/* Payment Modal (purchase) */}
       <PurchasePopupModel
         isOpen={!!selectedPlan}
         onClose={() => setSelectedPlan(null)}
