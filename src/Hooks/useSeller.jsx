@@ -268,13 +268,24 @@ export function createSubscription(formData) {
     })
     .then((res) => res.data)
     .catch((error) => {
-      const apiErrors = error?.response?.data?.errors;
-      let message = error?.response?.data?.message || error?.message || "Failed to create subscription";
-
+      const responseData = error?.response?.data;
+      const apiErrors = responseData?.errors;
+      
+      let message = responseData?.error?.message;
+      
+      if (!message) {
+        message = responseData?.message;
+      }
+      
       if (apiErrors) {
         const allErrors = Object.values(apiErrors).flat();
         message = allErrors.join("\n");
       }
+      
+      if (!message) {
+        message = error?.message || "Failed to create subscription";
+      }
+      
       throw new Error(message);
     });
 }

@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import Cookies from "js-cookie";
 import { getPlans } from "../Hooks/useSeller";
+import { updateLocation } from "../Hooks/useDashboard";
 import { Crown, Heart, X } from "lucide-react";
 import bannerImg from "../images/banner.avif";
 
@@ -61,6 +62,24 @@ const FeaturePremiumPage = () => {
               Cookies.set("user_state", state, { expires: 7 });
               Cookies.set("user_country", country, { expires: 30 });
               setLocation(country);
+
+              // Update user location if logged in
+              const token = Cookies.get("artcee_token");
+              if (token) {
+                try {
+                  const userId = Cookies.get("userId");
+                  if (userId && (city || state || country)) {
+                    await updateLocation(userId, {
+                      city: city || "",
+                      state: state || "",
+                      country: country || "",
+                    });
+                    console.log("User location updated successfully");
+                  }
+                } catch (updateErr) {
+                  console.warn("Failed to update user location:", updateErr);
+                }
+              }
             } else {
               setPermissionDenied(true);
             }
