@@ -4,6 +4,7 @@ import SuccessPopupModel from "./SuccessPopupModel";
 import { createSubscription, createPayment, getPlanShow } from "../Hooks/useSeller";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { Crown } from "lucide-react";
+import toast from "react-hot-toast";
 
 const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => {
   const { t } = useTranslation();
@@ -93,6 +94,62 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
 
   if (!isOpen) return null;
 
+  const validateCardNumber = (cardNumber) => {
+    const cleaned = cardNumber.replace(/\s+/g, "");
+    if (!/^\d{13,19}$/.test(cleaned)) return false;
+
+    let sum = 0;
+    let isEven = false;
+
+    for (let i = cleaned.length - 1; i >= 0; i--) {
+      let digit = parseInt(cleaned[i]);
+
+      if (isEven) {
+        digit *= 2;
+        if (digit > 9) {
+          digit -= 9;
+        }
+      }
+
+      sum += digit;
+      isEven = !isEven;
+    }
+
+    return sum % 10 === 0;
+  };
+
+  const validateExpiryDate = (expiryDate) => {
+    if (!expiryDate || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+      return { valid: false, message: "Expiry must be MM/YY"};
+    }
+
+    const [month, year] = expiryDate.split("/");
+    const expiryMonth = parseInt(month);
+    const expiryYear = 2000 + parseInt(year);
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+
+    if (expiryYear < currentYear || (expiryYear === currentYear && expiryMonth < currentMonth)) {
+      return { valid: false, message: "Card has expired" };
+    }
+
+    return { valid: true };
+  };
+
+  const validatePincode = (zip) => {
+    if (!zip || !zip.trim()) {
+      return { valid: false, message: "ZIP/Pincode required" };
+    }
+
+    const cleaned = zip.trim();
+    if (!/^[A-Z0-9\s-]{4,10}$/i.test(cleaned)) {
+      return { valid: false, message: "Enter a valid ZIP/Pincode" };
+    }
+
+    return { valid: true };
+  };
+
   const validate = () => {
     let newErrors = {};
     if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = t("purchase.errors.email") || "Invalid email";
@@ -100,17 +157,25 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
     if (!form.address || !form.address.trim()) newErrors.address = t("purchase.errors.address") || "Address required";
     if (!form.city || !form.city.trim()) newErrors.city = t("purchase.errors.city") || "City required";
     if (!form.state || !form.state.trim()) newErrors.state = t("purchase.errors.state") || "State required";
-    if (!form.zip || !form.zip.trim()) newErrors.zip = t("purchase.errors.zip") || "ZIP required";
 
-    // card fields validation (basic)
-    if (!form.card_number || !/^\d{12,19}$/.test(form.card_number.replace(/\s+/g, ""))) {
-      newErrors.card_number = t("purchase.errors.card_number") || "Enter a valid card number";
+    if (!form.card_number || !form.card_number.trim()) {
+      newErrors.card_number = "Card number is required";
+    } else if (!validateCardNumber(form.card_number)) {
+      newErrors.card_number = "Enter a valid card number";
     }
-    if (!form.expiry_date || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(form.expiry_date)) {
-      newErrors.expiry_date = t("purchase.errors.expiry_date") || "Expiry must be MM/YY";
+
+    const expiryValidation = validateExpiryDate(form.expiry_date);
+    if (!expiryValidation.valid) {
+      newErrors.expiry_date = expiryValidation.message;
     }
+
     if (!form.cvv || !/^\d{3,4}$/.test(form.cvv)) {
-      newErrors.cvv = t("purchase.errors.cvv") || "Enter CVV";
+      newErrors.cvv = "Enter CVV";
+    }
+
+    const zipValidation = validatePincode(form.zip);
+    if (!zipValidation.valid) {
+      newErrors.zip = zipValidation.message;
     }
 
     setErrors(newErrors);
@@ -125,29 +190,22 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
     setSubmitting(true);
 
     try {
-      // 1) Create subscription first
       const subFd = new FormData();
       subFd.append("plan_id", planId);
       if (countryId != null) subFd.append("country_id", countryId);
       if (form.email) subFd.append("email", form.email);
 
       const subscriptionResponse = await createSubscription(subFd);
-      // createSubscription returns res.data (per your helper)
-      // payload might be in subscriptionResponse.data or subscriptionResponse directly
       const subscriptionPayload = subscriptionResponse?.data ?? subscriptionResponse;
       const subscriptionId = subscriptionPayload?.id ?? subscriptionResponse?.id ?? null;
 
       if (!subscriptionId) {
-        // If API didn't return a subscription id, treat this as failure
-        const msg = subscriptionResponse?.message || t("purchase.errors.subscription_failed") || "Failed to create subscription";
+        const msg = subscriptionResponse?.error?.message || "Failed to create subscription";
         throw new Error(msg);
       }
 
-      // 2) Create payment for the subscription
       const fd = new FormData();
-      // include subscription id returned by previous call
       fd.append("subscription_id", subscriptionId);
-      // include some duplicate info to help server identify the payer
       fd.append("plan_id", planId);
       if (countryId != null) fd.append("country_id", countryId);
       fd.append("email", form.email);
@@ -161,13 +219,11 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
       fd.append("zip_code", form.zip);
 
       const paymentResponse = await createPayment(fd);
-      // createPayment returns res.data (per your helper)
       const paymentPayload = paymentResponse?.data ?? paymentResponse;
 
       if (paymentResponse?.status === "success" || paymentPayload?.status === "success") {
         const checkoutUrl = paymentPayload?.checkout_url ?? paymentResponse?.checkout_url;
         if (checkoutUrl) {
-          // open checkout in new tab if provided
           window.open(checkoutUrl, "_blank");
         }
         setShowSuccess(true);
@@ -177,7 +233,11 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
       }
     } catch (err) {
       console.error("Subscription/Payment error:", err);
-      setSubmitError(err?.message || t("purchase.errors.payment_failed"));
+      
+      const errorMessage = err?.message || t("purchase.errors.payment_failed") || "An error occurred. Please try again.";
+      
+      setSubmitError(errorMessage);
+      toast.error(`${errorMessage}, Update your location from profile page`);
     } finally {
       setSubmitting(false);
     }
@@ -273,7 +333,19 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
               <input
                 type="text"
                 value={form.card_number}
-                onChange={(e) => setForm({ ...form, card_number: e.target.value })}
+                onChange={(e) => {
+                  // Format card number with spaces every 4 digits
+                  let value = e.target.value.replace(/\s+/g, "").replace(/\D/g, "");
+                  if (value.length > 16) value = value.slice(0, 16);
+                  // Add spaces every 4 digits
+                  value = value.match(/.{1,4}/g)?.join(" ") || value;
+                  setForm({ ...form, card_number: value });
+                  // Clear error when user starts typing
+                  if (errors.card_number) {
+                    setErrors((prev) => ({ ...prev, card_number: "" }));
+                  }
+                }}
+                maxLength={19}
                 className="w-full form-input px-3 py-2 text-xs"
                 placeholder="1234 5678 9012 3456"
               />
@@ -287,7 +359,20 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
                 <input
                   type="text"
                   value={form.expiry_date}
-                  onChange={(e) => setForm({ ...form, expiry_date: e.target.value })}
+                  onChange={(e) => {
+                    // Format expiry date as MM/YY
+                    let value = e.target.value.replace(/\D/g, "");
+                    if (value.length >= 2) {
+                      value = value.slice(0, 2) + "/" + value.slice(2, 4);
+                    }
+                    if (value.length > 5) value = value.slice(0, 5);
+                    setForm({ ...form, expiry_date: value });
+                    // Clear error when user starts typing
+                    if (errors.expiry_date) {
+                      setErrors((prev) => ({ ...prev, expiry_date: "" }));
+                    }
+                  }}
+                  maxLength={5}
                   className="w-full form-input px-3 py-2 text-xs"
                   placeholder="MM/YY"
                 />
@@ -298,7 +383,17 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
                 <input
                   type="text"
                   value={form.cvv}
-                  onChange={(e) => setForm({ ...form, cvv: e.target.value })}
+                  onChange={(e) => {
+                    // Only allow digits, max 4 characters
+                    let value = e.target.value.replace(/\D/g, "");
+                    if (value.length > 4) value = value.slice(0, 4);
+                    setForm({ ...form, cvv: value });
+                    // Clear error when user starts typing
+                    if (errors.cvv) {
+                      setErrors((prev) => ({ ...prev, cvv: "" }));
+                    }
+                  }}
+                  maxLength={4}
                   className="w-full form-input px-3 py-2 text-xs"
                   placeholder="123"
                 />
@@ -339,9 +434,19 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
               <input
                 type="text"
                 value={form.zip}
-                onChange={(e) => setForm({ ...form, zip: e.target.value })}
+                onChange={(e) => {
+                  // Allow alphanumeric pincode with spaces and hyphens
+                  let value = e.target.value.toUpperCase();
+                  if (value.length > 10) value = value.slice(0, 10);
+                  setForm({ ...form, zip: value });
+                  // Clear error when user starts typing
+                  if (errors.zip) {
+                    setErrors((prev) => ({ ...prev, zip: "" }));
+                  }
+                }}
+                maxLength={10}
                 className="w-full form-input px-3 py-2 text-xs"
-                placeholder="ZIP Code"
+                placeholder="ZIP/Pincode"
               />
               {errors.zip && <p className="text-xs text-red-500 mt-1">{errors.zip}</p>}
             </div>

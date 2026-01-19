@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getPlans } from "../Hooks/useSeller";
 import Cookies from "js-cookie";
 import image from "../images/chinii.png";
+import { updateLocation } from "../Hooks/useDashboard";
 import PurchasePopupModel from "../modal/PurchasePopupModel";
 import { SparklesIcon } from "lucide-react";
 
@@ -130,25 +131,44 @@ export default function PricingPage() {
               `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`
             );
             const data = await res.json();
+            const city = data?.address?.state_district || data?.address?.city || data?.address?.village || "";
+            const state = data?.address?.state || "";
             const country = data?.address?.country || "";
 
             if (country) {
+              Cookies.set("user_city", city, { expires: 7 });
+              Cookies.set("user_state", state, { expires: 7 });
               Cookies.set("user_country", country, { expires: 30 });
               setLocation(country);
+
+              // Update user location if logged in
+              const token = Cookies.get("artcee_token");
+              if (token) {
+                try {
+                  const userId = Cookies.get("userId");
+                  if (userId && (city || state || country)) {
+                    await updateLocation(userId, {
+                      city: city || "",
+                      state: state || "",
+                      country: country || "",
+                    });
+                    console.log("User location updated successfully");
+                  }
+                } catch (updateErr) {
+                  console.warn("Failed to update user location:", updateErr);
+                }
+              }
             } else {
               setPermissionDenied(true);
-              setLocation("United States");
             }
           } catch (err) {
             console.error("Reverse geocoding failed", err);
             setPermissionDenied(true);
-            setLocation("United States");
           }
         },
         (err) => {
           console.warn("Geolocation error:", err);
           setPermissionDenied(true);
-          setLocation("United States");
         },
         {
           timeout: 8000,
@@ -157,7 +177,6 @@ export default function PricingPage() {
       );
     } else {
       setPermissionDenied(true);
-      setLocation("United States");
     }
   }, []);
 
