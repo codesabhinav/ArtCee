@@ -67,7 +67,8 @@ const LoginPage = ({ onClose }) => {
       saveTokenAndNotify(response);
 
       toast.success(t("login.success"));
-      setShowProfileModal(true);
+      // setShowProfileModal(true);
+      navigate("/profile");
     } catch (error) {
       console.error("Login error:", error);
       // show server message if available
@@ -90,7 +91,8 @@ const LoginPage = ({ onClose }) => {
       saveTokenAndNotify(response);
 
       toast.success(t("login.google_success"));
-      setShowProfileModal(true);
+      // setShowProfileModal(true);
+      navigate("/profile");
     } catch (err) {
       console.error("Google login error:", err);
       toast.error(err?.message || t("login.google_error"));
@@ -187,7 +189,8 @@ const LoginPage = ({ onClose }) => {
             <div className="flex justify-between items-center text-xs mt-3">
               <label className="flex items-center">
                 <input type="checkbox" className="mr-1 rounded-md" />{" "}
-                {t("login.remember_me")}
+                Keep me signed in
+                {/* {t("login.remember_me")} */}
               </label>
               <button
                 type="button"

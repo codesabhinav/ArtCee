@@ -7,7 +7,7 @@
     "nav": {
       "browse_creatives": "Browse Creatives",
       "business_directory": "Business Directory",
-      "find_jobs": "Find Jobs",
+      "find_jobs": "Jobs",
       "spotlight": "Spotlight",
       "perspective": "The Perspective",
       "dashboard": "Dashboard",
@@ -1316,6 +1316,7 @@
       "cancel": "Cancel",
       "processing": "Processing…",
       "pay": "Pay {price}",
+      "promo_code": "Promo code",
       "errors": {
         "email": "Valid email required",
         "name": "Name required",
@@ -3990,7 +3991,7 @@
     "nav": {
       "browse_creatives": "क्रिएटिव ढूंढें",
       "business_directory": "व्यवसाय निर्देशिका",
-      "find_jobs": "नौकरियाँ ढूंढें",
+      "find_jobs": "नौकरियाँ",
       "spotlight": "स्पॉटलाइट",
       "perspective": "द पर्सपेक्टिव",
       "dashboard": "डैशबोर्ड",

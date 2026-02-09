@@ -113,12 +113,6 @@ const Navbar = () => {
               <Search className="mr-2 h-4 w-4" /> {t("nav.browse_creatives")}
             </Link>
             <Link
-              to="/jobs"
-              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
-            >
-              <Briefcase className="mr-2 h-4 w-4" /> {t("nav.find_jobs")}
-            </Link>
-            <Link
               to="/business-directory"
               className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
             >
@@ -141,13 +135,19 @@ const Navbar = () => {
               <BookOpen className="mr-2 h-4 w-4" /> {t("nav.perspective")}
             </button>
 
-            <button
+            {/* <button
               onClick={() => setShowComingSoon(true)}
               className="text-gray-700 hover:text-black flex rounded-md items-center hover:bg-gray-200 transition px-3 py-2"
               type="button"
             >
               <Users className="mr-2 h-4 w-4" /> Groups
-            </button>
+            </button> */}
+            <Link
+              to="/jobs"
+              className="text-gray-700 hover:text-black rounded-md flex items-center hover:bg-gray-200 transition px-3 py-2"
+            >
+              <Briefcase className="mr-2 h-4 w-4" /> {t("nav.find_jobs")}
+            </Link>
 
             <div className="relative" ref={langDropdownRef}>
               <button
@@ -232,9 +232,6 @@ const Navbar = () => {
           <Link to="/creatives" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
             <Search className="mr-3 h-4 w-4" /> {t("nav.browse_creatives")}
           </Link>
-          <Link to="/jobs" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
-            <Briefcase className="mr-3 h-4 w-4" /> {t("nav.find_jobs")}
-          </Link>
           <Link to="/business-directory" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
             <Building2 className="mr-3 h-4 w-4" /> {t("nav.business_directory")}
           </Link>
@@ -261,7 +258,7 @@ const Navbar = () => {
             <BookOpen className="mr-3 h-4 w-4" /> {t("nav.perspective")}
           </button>
 
-          <button
+          {/* <button
             onClick={() => {
               setShowComingSoon(true);
               setMenuOpen(false);
@@ -270,7 +267,11 @@ const Navbar = () => {
             type="button"
           >
             <Users className="mr-3 h-4 w-4" /> Groups
-          </button>
+          </button> */}
+
+          <Link to="/jobs" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition">
+            <Briefcase className="mr-3 h-4 w-4" /> {t("nav.find_jobs")}
+          </Link>
 
           <div className="border-t border-gray-200 pt-3">
             <button

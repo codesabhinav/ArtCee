@@ -2,6 +2,7 @@ import { AiOutlineEye } from "react-icons/ai";
 import { FaArrowLeft, FaUsers, FaChartLine, FaBolt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import PurchasePopupModel from "../modal/PurchasePopupModel";
+import PremiumFeatureModal from "../modal/PremiumFeatureModal";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import Cookies from "js-cookie";
@@ -17,6 +18,7 @@ const FeaturePremiumPage = () => {
   const modalRef = useRef(null);
 
   const [open, setOpen] = useState(true);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
 
   const joined = 347;
   const spotsLeft = 153;
@@ -178,7 +180,7 @@ const FeaturePremiumPage = () => {
 
   const handleSelectPlan = (plan) => {
     if (!Cookies.get("artcee_token")) {
-      navigate("/login");
+      setPremiumModalOpen(true);
       return;
     }
     setSelectedPlan(plan.id);
@@ -385,6 +387,15 @@ const FeaturePremiumPage = () => {
         planId={selectedPlan}
         country={location}
         countryId={locationId}
+      />
+
+      <PremiumFeatureModal
+        open={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+        onUpgrade={() => {
+          setPremiumModalOpen(false);
+          navigate("/login");
+        }}
       />
     </>
   );

@@ -8,7 +8,7 @@ import {
 import bannerImg from "../images/banner.avif";
 import backgrpoundImg from "../images/background.jpg";
 import backimg from "/images/back-1.jpg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { getCreativeData } from "../Hooks/useSeller";
 import { Building2, Palette, Search, Shield, Users, Crown, X } from "lucide-react";
@@ -18,11 +18,19 @@ import Cookies from "js-cookie";
 const DEFAULT_AVATAR =
   "../default-avatar.png";
 
+const creativeModules = import.meta.glob(
+  "../../images/creatives/*.{jpg,jpeg,png,webp}",
+  { eager: true }
+);
+const CREATIVES_IMAGES = Object.values(creativeModules).map((m) => m.default);
+
 export default function Home() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [professionals, setProfessionals] = useState([]);
-
+  const carouselRef = useRef(null);
+  const carouselRef2 = useRef(null);
+  const carouselRef3 = useRef(null);
   const location = useLocation();
   const [showLanding, setShowLanding] = useState(false);
 
@@ -64,6 +72,81 @@ export default function Home() {
     }
   }, []);
 
+  const speed = 0.5;
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    let animationId;
+    const startScroll = () => {
+      animationId = requestAnimationFrame(() => {
+        carousel.scrollLeft += speed;
+        if (carousel.scrollLeft + carousel.offsetWidth >= carousel.scrollWidth) {
+          carousel.scrollLeft = 0;
+        }
+        startScroll();
+      });
+    };
+    startScroll();
+    const stopScroll = () => cancelAnimationFrame(animationId);
+    carousel.addEventListener("mouseenter", stopScroll);
+    carousel.addEventListener("mouseleave", startScroll);
+    return () => {
+      cancelAnimationFrame(animationId);
+      carousel.removeEventListener("mouseenter", stopScroll);
+      carousel.removeEventListener("mouseleave", startScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const carousel = carouselRef2.current;
+    if (!carousel) return;
+    carousel.scrollLeft = carousel.scrollWidth;
+    let animationId;
+    const startScroll = () => {
+      animationId = requestAnimationFrame(() => {
+        carousel.scrollLeft -= speed;
+        if (carousel.scrollLeft <= 0) {
+          carousel.scrollLeft = carousel.scrollWidth - carousel.offsetWidth;
+        }
+        startScroll();
+      });
+    };
+    startScroll();
+    const stopScroll = () => cancelAnimationFrame(animationId);
+    carousel.addEventListener("mouseenter", stopScroll);
+    carousel.addEventListener("mouseleave", startScroll);
+    return () => {
+      cancelAnimationFrame(animationId);
+      carousel.removeEventListener("mouseenter", stopScroll);
+      carousel.removeEventListener("mouseleave", startScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const carousel = carouselRef3.current;
+    if (!carousel) return;
+    let animationId;
+    const startScroll = () => {
+      animationId = requestAnimationFrame(() => {
+        carousel.scrollLeft += speed;
+        if (carousel.scrollLeft + carousel.offsetWidth >= carousel.scrollWidth) {
+          carousel.scrollLeft = 0;
+        }
+        startScroll();
+      });
+    };
+    startScroll();
+    const stopScroll = () => cancelAnimationFrame(animationId);
+    carousel.addEventListener("mouseenter", stopScroll);
+    carousel.addEventListener("mouseleave", startScroll);
+    return () => {
+      cancelAnimationFrame(animationId);
+      carousel.removeEventListener("mouseenter", stopScroll);
+      carousel.removeEventListener("mouseleave", startScroll);
+    };
+  }, []);
+
   return (
     <div className="w-full">
 
@@ -81,7 +164,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-black/60"></div>
 
-        <div className="relative w-full max-w-3xl text-white">
+        <div className="relative w-full max-w-3xl text-white text-center items-center flex flex-col">
 
           {/* Top Badge */}
           {/* <button className="bg-orange-500 px-3 font-semibold sm:px-4 py-2 rounded-md mb-6 shadow text-xs flex items-center gap-2 justify-center mx-auto">
@@ -90,15 +173,16 @@ export default function Home() {
           {/* </button> */}
 
 
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight">
-            {t("home.title")}{" "}
-            <span className="bg-gradient-to-r from-[#1FA29A] to-orange-400 bg-clip-text text-transparent">
-              {t("home.get_discovered")}
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight">Digital portfolio for
+            {/* {t("home.title")}{" "} */}
+            <span className="bg-gradient-to-r from-[#1FA29A] to-orange-400 bg-clip-text text-transparent"> artsy professionals
+              {/* {t("home.get_discovered")} */}
             </span>
           </h1>
 
           <p className="mt-4 text-sm sm:text-base max-w-2xl mx-auto text-gray-200 px-2 sm:px-0">
-            {t("home.subtitle")}
+            Manage your professional brand with our portfolio solution. Showcase your current projects and collaborate on future ones
+            {/* {t("home.subtitle")} */}
           </p>
 
           {/* Founding Member Card */}
@@ -124,20 +208,20 @@ export default function Home() {
            </div> */}
 
           <div className="mt-6 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center">
-            <Link
+            {/* <Link
               to="/creatives"
               className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-teal-600 text-white font-semibold flex items-center gap-2 transition hover:scale-105"
             >
               <FaPlayCircle className="text-base sm:text-lg" />{" "}
               {t("home.explore_creatives")}
-            </Link>
+            </Link> */}
 
             <Link
               to="/featured"
               className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-orange-500 text-white font-semibold flex items-center gap-2 transition hover:scale-105"
             >
-              <Crown className="text-white text-base sm:text-lg" />
-              JOIN TODAY!
+              <Crown className="text-white text-base sm:text-lg" />BUILD YOUR PORTFOLIO
+              {/* JOIN TODAY! */}
             </Link>
             {/* <Link
                to="/featured"
@@ -146,11 +230,19 @@ export default function Home() {
                <Crown className="w-5 h-5" /> {t("home.get_featured")}
              </Link> */}
           </div>
+          <div className="my-4 text-lg">Are you looking for talent?</div>
+          <Link
+            to="/creatives"
+            className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-teal-600 text-white font-semibold flex items-center gap-2 transition hover:scale-105"
+          >
+            <FaPlayCircle className="text-base sm:text-lg" />{" "}
+            BROWSE CREATIVES
+          </Link>
         </div>
       </section>
 
       {/* Value Proposition */}
-      <section className="relative py-20 bg-gray-50">
+      {/* <section className="relative py-20 bg-gray-50">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-10"
           style={{ backgroundImage: `url(${backgrpoundImg})` }}
@@ -165,7 +257,6 @@ export default function Home() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-            {/* For Creatives */}
             <div className="bg-white p-8 rounded-xl shadow-md border hover:border-teal-500 hover:shadow-lg transition group">
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-teal-500 text-white shadow-md mb-4">
                 <Palette />
@@ -188,7 +279,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* For Companies */}
             <div className="bg-white p-8 rounded-xl shadow-md border-2 hover:border-orange-500 hover:shadow-lg transition group">
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-orange-500 text-white shadow-md mb-4">
                 <FaBolt />
@@ -211,7 +301,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* For Businesses */}
             <div className="bg-white p-8 rounded-xl shadow-md border hover:border-teal-500 hover:shadow-lg transition group">
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-teal-500 text-white shadow-md mb-4">
                 <Building2 />
@@ -235,75 +324,151 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* How It Works */}
-      <section className="py-14  lg:py-20 bg-white">
-        <div className="mb-10 flex justify-center">
-          <div className="max-w-2xl mx-auto">
-            <img
-              src={backimg}
-              alt="How ArtCee Works"
-              className="w-full rounded-xl shadow-md object-cover"
-            />
-          </div>
-        </div>
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900">
-            {t("home.how_it_works_title")}
-          </h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            {t("home.value_subtitle")}
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-16">
-            <div className="group">
-              <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-teal-500 text-white text-3xl shadow-md">
-                <Search size={30} />
-              </div>
-              <h4 className="mt-6 font-bold text-lg">1. Create</h4>
-              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                Showcase your portfolio and bring your ideas to life in a space
-                built for creative professionals.
-              </p>
+            <div className="relative">
+              <img
+                src={backimg}
+                alt="Who ArtCee is for"
+                className="w-full rounded-2xl shadow-lg object-cover"
+              />
             </div>
 
-            <div className="group">
-              <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-orange-500 text-white text-3xl shadow-md">
-                <Users size={30} />
+            <div>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+                WHO IS ARTCEE FOR?
+              </h2>
+
+                <div className="mt-12 space-y-6">
+
+                <div className="group rounded-2xl border border-gray-200 p-6 transition-all hover:shadow-lg hover:-translate-y-1">
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    The Dreamers
+                  </h4>
+                  <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                    For visionaries with big ideas. Build your brand, foster
+                    collaborations, and turn your creative dreams into reality.
+                  </p>
+                </div>
+
+                <div className="group rounded-2xl border border-gray-200 p-6 transition-all hover:shadow-lg hover:-translate-y-1">
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    The Doers
+                  </h4>
+                  <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                    For creatives shaping the world. Manage your brand effortlessly,
+                    track progress, and focus on what you do best — creating.
+                  </p>
+                </div>
+
+                <div className="group rounded-2xl border border-gray-200 p-6 transition-all hover:shadow-lg hover:-translate-y-1">
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    The Drivers
+                  </h4>
+                  <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                    For the movers and shakers. Find the doers and dreamers to bring
+                    projects to life, manage activity, and grow your network.
+                  </p>
+                </div>
               </div>
-              <h4 className="mt-6 font-bold text-lg">{t("home.step2_title")}</h4>
-              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                Expand your network, discover opportunities, and build meaningful
-                relationships with peers, clients, and businesses.
+
+              <p className="mt-8 text-sm text-gray-500 italic font-semibold">
+                …and everyone in between.
+              </p>
+
+              <p className="mt-5 text-gray-600 max-w-xl text-center font-semibold text-sm">
+                ArtCee recognizes that as artists, creatives, and business owners - more often than not we don’t
+                fit neatly into one box. We celebrate dynamic abilities, experiences, expressions, and are here to foster  more aligned connections & opportunites across the Arts, Entertainment, and Creative indutries.
               </p>
             </div>
-
-            <div className="group">
-              <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-teal-500 text-white text-3xl shadow-md">
-                <Shield size={30} />
-              </div>
-              <h4 className="mt-6 font-bold text-lg">{t("home.step3_title")}</h4>
-              <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                Work together on projects, share resources, and grow your career
-                through partnerships that inspire progress.
-              </p>
-            </div>
-
-            {/* <div className="group">
-                 <div className="w-20 h-20 flex items-center justify-center mx-auto rounded-full bg-orange-500 text-white text-3xl shadow-md">
-                   <Trophy size={30} />
-                 </div>
-                 <h4 className="mt-6 font-bold text-lg">{t("home.step4_title")}</h4>
-                 <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                   {t("home.step4_desc")}
-                 </p>
-               </div> */}
           </div>
         </div>
       </section>
 
+      {/* Meet Our Creatives */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
+              Meet Our Creatives
+            </h2>
+            <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
+              A glimpse into the diverse artists, makers, and visionaries building their
+              portfolios on ArtCee.
+            </p>
+          </div>
+
+          <div
+            ref={carouselRef}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-6"
+          >
+            {[...CREATIVES_IMAGES, ...CREATIVES_IMAGES].map((src, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[360px]"
+              >
+                <div className="rounded-2xl overflow-hidden shadow-lg bg-white">
+                  <img
+                    src={src}
+                    alt="ArtCee Creative"
+                    className="h-[280px] sm:h-[320px] md:h-[360px] w-full object-cover"
+                    draggable="false"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            ref={carouselRef2}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-6"
+          >
+            {[...CREATIVES_IMAGES, ...CREATIVES_IMAGES].map((src, index) => (
+              <div
+                key={`row2-${index}`}
+                className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[360px]"
+              >
+                <div className="rounded-2xl overflow-hidden shadow-lg bg-white">
+                  <img
+                    src={src}
+                    alt="ArtCee Creative"
+                    className="h-[280px] sm:h-[320px] md:h-[360px] w-full object-cover"
+                    draggable="false"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div
+            ref={carouselRef3}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-6"
+          >
+            {[...CREATIVES_IMAGES, ...CREATIVES_IMAGES].map((src, index) => (
+              <div
+                key={`row3-${index}`}
+                className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[360px]"
+              >
+                <div className="rounded-2xl overflow-hidden shadow-lg bg-white">
+                  <img
+                    src={src}
+                    alt="ArtCee Creative"
+                    className="h-[280px] sm:h-[320px] md:h-[360px] w-full object-cover"
+                    draggable="false"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
 
       {/* Featured Professionals */}
       {/* <section className="py-14  lg:py-20 bg-gradient-to-b from-cyan-50 via-white to-pink-50">

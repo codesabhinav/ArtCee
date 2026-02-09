@@ -20,6 +20,7 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
     card_number: "",
     expiry_date: "", // format MM/YY
     cvv: "",
+    promo_code: "",
   });
   const [errors, setErrors] = useState({});
   const [planDetails, setPlanDetails] = useState(null);
@@ -55,6 +56,7 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
         card_number: "",
         expiry_date: "",
         cvv: "",
+        promo_code: "",
       });
       setErrors({});
       setShowSuccess(false);
@@ -194,6 +196,7 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
       subFd.append("plan_id", planId);
       if (countryId != null) subFd.append("country_id", countryId);
       if (form.email) subFd.append("email", form.email);
+      if (form.promo_code?.trim()) subFd.append("promo_code", form.promo_code.trim());
 
       const subscriptionResponse = await createSubscription(subFd);
       const subscriptionPayload = subscriptionResponse?.data ?? subscriptionResponse;
@@ -217,6 +220,7 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
       fd.append("city", form.city);
       fd.append("state", form.state);
       fd.append("zip_code", form.zip);
+      if (form.promo_code?.trim()) fd.append("promo_code", form.promo_code.trim());
 
       const paymentResponse = await createPayment(fd);
       const paymentPayload = paymentResponse?.data ?? paymentResponse;
@@ -279,6 +283,20 @@ const PurchasePopupModel = ({ isOpen, onClose, planId, country, countryId }) => 
                 {Array.isArray(planDetails.features) && planDetails.features.map((f) => <li key={f.id}>✅ {f.name}</li>)}
               </ul>
             )}
+
+            {/* Promo code */}
+            <div className="mt-3 pt-3 border-t border-orange-200">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                {t("purchase.promo_code") || "Promo code"}
+              </label>
+              <input
+                type="text"
+                value={form.promo_code}
+                onChange={(e) => setForm({ ...form, promo_code: e.target.value.toUpperCase() })}
+                className="w-full form-input px-3 py-2 text-xs"
+                placeholder="Enter Promo Code"
+              />
+            </div>
           </div>
 
           <div>

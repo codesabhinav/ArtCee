@@ -31,6 +31,7 @@ import toast from "react-hot-toast";
 import PortfolioModal from "../modal/dashboard models/PortfolioModal";
 import PostJobPopupModal from "../modal/PostJobPopupModal";
 import BusinessListingModal from "../modal/BusinessListingModal";
+import PremiumFeatureModal from "../modal/PremiumFeatureModal";
 import UploadCoverPhotoModal from "../modal/dashboard models/UploadCoverPhotoModal";
 
 const GuestDashboardPage = () => {
@@ -58,6 +59,7 @@ const GuestDashboardPage = () => {
   const [jobsPostError, setjobsPostError] = useState(null);
   const [jobsPostData, setjobsPostData] = useState(null);
   const [listingOpen, setListingOpen] = useState(null);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const [openCompletion, setOpenCompletion] = useState(true);
   const [openPortfolio, setOpenPortfolio] = useState(true);
   const [openActivity, setOpenActivity] = useState(true);
@@ -351,7 +353,7 @@ const GuestDashboardPage = () => {
     if (hasActiveSubscription) {
       navigate("/inbox");
     } else {
-      navigate("/featured");
+      setPremiumModalOpen(true);
     }
   };
 
@@ -359,7 +361,7 @@ const GuestDashboardPage = () => {
     if (hasActiveSubscription) {
       setPostJobOpen(true);
     } else {
-      navigate("/featured");
+      setPremiumModalOpen(true);
     }
   };
 
@@ -1297,6 +1299,15 @@ const GuestDashboardPage = () => {
       />
 
       <BusinessListingModal isOpen={listingOpen} onClose={() => setListingOpen(false)} />
+
+      <PremiumFeatureModal
+        open={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+        onUpgrade={() => {
+          setPremiumModalOpen(false);
+          navigate("/featured");
+        }}
+      />
     </div>
   );
 };

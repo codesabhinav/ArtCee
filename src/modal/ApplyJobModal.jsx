@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { Crown, Eye } from "lucide-react";
+import PremiumFeatureModal from "./PremiumFeatureModal";
 
 const DEFAULT_JOB_IMAGE =
   "https://img.myloview.com/posters/businessman-avatar-image-with-beard-hairstyle-male-profile-vector-illustration-700-201088702.jpg";
@@ -44,6 +45,7 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
   const [resumeFileName, setResumeFileName] = useState(null);
   const [resumeUploading, setResumeUploading] = useState(false);
   const [resumeUrl, setResumeUrl] = useState(null);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
 
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -198,7 +200,8 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
     setLoading(true);
     const token = Cookies.get("artcee_token");
     if (!token) {
-      navigate("/login");
+      setLoading(false);
+      setPremiumModalOpen(true);
       return;
     }
 
@@ -358,6 +361,15 @@ const ApplyJobModal = ({ job, open, onClose, onApplied }) => {
           </button>
         </div>
       </div>
+
+      <PremiumFeatureModal
+        open={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+        onUpgrade={() => {
+          setPremiumModalOpen(false);
+          navigate("/featured");
+        }}
+      />
     </div>
   );
 };

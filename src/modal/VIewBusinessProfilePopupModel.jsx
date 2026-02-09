@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import MessagePopupModal from "./MessagePopupModal";
+import PremiumFeatureModal from "./PremiumFeatureModal";
 
 const DEFAULT_AVATAR =
   "../default-avatar.png";
@@ -27,6 +28,7 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
       return false;
     }
   });
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const loadListing = useCallback(async (uuid) => {
@@ -117,7 +119,7 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
 
   const handleFollow = async (id) => {
     if (!Cookies.get("artcee_token")) {
-      navigate("/login");
+      setPremiumModalOpen(true);
       return;
     }
 
@@ -145,14 +147,8 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
 
   const handleMessageClick = () => {
     const token = Cookies.get("artcee_token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    if (!hasActiveSubscription) {
-      toast.error("You need an active subscription to message creatives. Please upgrade.");
-      navigate("/featured");
+    if (!token || !hasActiveSubscription) {
+      setPremiumModalOpen(true);
       return;
     }
 
@@ -161,14 +157,8 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
 
   const handleVideoClick = () => {
     const token = Cookies.get("artcee_token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    if (!hasActiveSubscription) {
-      toast.error("You need an active subscription to start a video call. Please upgrade.");
-      navigate("/featured");
+    if (!token || !hasActiveSubscription) {
+      setPremiumModalOpen(true);
       return;
     }
 
@@ -548,6 +538,15 @@ const ViewBusinessProfilePopupModel = ({ isOpen, onClose, uuid }) => {
         </div>
       </div>
       <MessagePopupModal isOpen={isMessageOpen} onClose={() => setIsMessageOpen(false)} fullName={fullName} title={title} uuid={uuid} avatar={avatar} />
+
+      <PremiumFeatureModal
+        open={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+        onUpgrade={() => {
+          setPremiumModalOpen(false);
+          navigate("/featured");
+        }}
+      />
     </div>
   );
 };

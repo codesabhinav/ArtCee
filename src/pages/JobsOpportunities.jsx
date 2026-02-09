@@ -4,7 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import ViewJobDetailsModel from "../modal/ViewJobDetailsModel";
 import ApplyJobModal from "../modal/ApplyJobModal";
 import CustomDropdown from "../components/CustomDropdown";
-import { getJobsData, getJobsDataFilters, saveToJob, getCustomJobsData } from "../Hooks/useSeller";
+import { getJobsDataFilters, saveToJob, getCustomJobsData } from "../Hooks/useSeller";
+// import { getJobsData } from "../Hooks/useSeller"; // commented – custom jobs only for now
 import SpinnerProvider from "../components/SpinnerProvider";
 import { useTranslation } from "../contexts/LanguageProvider";
 import toast from "react-hot-toast";
@@ -150,24 +151,26 @@ const JobsOpportunities = () => {
         const normalizedCustom = (customJobsArr || []).map(normalizeCustomJob);
         combined = normalizedCustom;
         setJobs(normalizedCustom);
+        setNextPageToken(null); // custom jobs only – no external pagination
       } catch (customErr) {
         console.warn("Failed to load custom jobs:", customErr);
       }
 
-      const body = buildRequestBody(null);
-      const { jobs: fetchedJobs = [], next_page_token } = await getJobsData(body);
+      // Display only custom jobs for now – comment out external job API calls
+      // const body = buildRequestBody(null);
+      // const { jobs: fetchedJobs = [], next_page_token } = await getJobsData(body);
 
-      const normalizedFetched = (fetchedJobs || []).map((j) => ({
-        ...j,
-        job_id: j.job_id ?? j.id ?? j.jobId,
-      }));
+      // const normalizedFetched = (fetchedJobs || []).map((j) => ({
+      //   ...j,
+      //   job_id: j.job_id ?? j.id ?? j.jobId,
+      // }));
 
-      const existingIds = new Set(combined.map((j) => j.job_id));
-      const newItems = normalizedFetched.filter((j) => !existingIds.has(j.job_id));
+      // const existingIds = new Set(combined.map((j) => j.job_id));
+      // const newItems = normalizedFetched.filter((j) => !existingIds.has(j.job_id));
 
-      const merged = [...combined, ...newItems];
-      setJobs(merged);
-      setNextPageToken(next_page_token || null);
+      // const merged = [...combined, ...newItems];
+      // setJobs(merged);
+      // setNextPageToken(next_page_token || null);
     } catch (err) {
       console.error("Error fetching jobs:", err);
       setError(err.message || t("jobs.messages.network_error") || "Failed to fetch jobs");
@@ -177,26 +180,27 @@ const JobsOpportunities = () => {
   }, [activeFilters, filtersOptions, t]);
 
   const fetchMore = async () => {
+    // Custom jobs only – no external pagination for now
     if (!nextPageToken) return;
-    try {
-      setLoadingMore(true);
-      const body = buildRequestBody(nextPageToken);
-      const { jobs: fetchedJobs = [], next_page_token } = await getJobsData(body);
+    // try {
+    //   setLoadingMore(true);
+    //   const body = buildRequestBody(nextPageToken);
+    //   const { jobs: fetchedJobs = [], next_page_token } = await getJobsData(body);
 
-      const existingIds = new Set(jobs.map((j) => j.job_id));
-      const normalizedFetched = (fetchedJobs || []).map((j) => ({
-        ...j,
-        job_id: j.job_id ?? j.id ?? j.jobId,
-      }));
-      const newItems = normalizedFetched.filter((j) => !existingIds.has(j.job_id));
+    //   const existingIds = new Set(jobs.map((j) => j.job_id));
+    //   const normalizedFetched = (fetchedJobs || []).map((j) => ({
+    //     ...j,
+    //     job_id: j.job_id ?? j.id ?? j.jobId,
+    //   }));
+    //   const newItems = normalizedFetched.filter((j) => !existingIds.has(j.job_id));
 
-      setJobs((prev) => [...prev, ...newItems]);
-      setNextPageToken(next_page_token || null);
-    } catch (err) {
-      console.error("Failed to load more jobs:", err);
-    } finally {
-      setLoadingMore(false);
-    }
+    //   setJobs((prev) => [...prev, ...newItems]);
+    //   setNextPageToken(next_page_token || null);
+    // } catch (err) {
+    //   console.error("Failed to load more jobs:", err);
+    // } finally {
+    //   setLoadingMore(false);
+    // }
   };
 
   useEffect(() => {

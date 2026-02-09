@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import image from "../images/chinii.png";
 import { updateLocation } from "../Hooks/useDashboard";
 import PurchasePopupModel from "../modal/PurchasePopupModel";
+import PremiumFeatureModal from "../modal/PremiumFeatureModal";
 import { SparklesIcon } from "lucide-react";
 
 const featuresFree = [
@@ -103,6 +104,7 @@ export default function PricingPage() {
   const [loadingPrice, setLoadingPrice] = useState(true);
   const [permissionDenied, setPermissionDenied] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const [locationId, setLocationId] = useState(null);
   const [premiumPlanId, setPremiumPlanId] = useState(null);
 
@@ -231,7 +233,7 @@ export default function PricingPage() {
 
   const handleSelectPlan = () => {
     if (!Cookies.get("artcee_token")) {
-      navigate("/login");
+      setPremiumModalOpen(true);
       return;
     }
     if (premiumPlanId) {
@@ -490,6 +492,15 @@ export default function PricingPage() {
         planId={selectedPlan}
         country={location || "United States"}
         countryId={locationId}
+      />
+
+      <PremiumFeatureModal
+        open={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+        onUpgrade={() => {
+          setPremiumModalOpen(false);
+          navigate("/login");
+        }}
       />
     </div>
   );
