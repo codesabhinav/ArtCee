@@ -160,7 +160,7 @@ const PersonalInfoStep = ({ formData = {}, setFormData, setField, onNext }) => {
     <div className="w-full max-w-2xl bg-white p-8 rounded-lg border">
       <h2 className="text-xl text-md text-center mb-2">Welcome to ArtCee!</h2>
       <p className="text-gray-500 font-light text-xs text-center mb-4">
-        Where artsy people go to get discovered <br />
+        {/* Where artsy people go to get discovered <br /> */}
         Let&apos;s start by getting to know you
       </p>
 

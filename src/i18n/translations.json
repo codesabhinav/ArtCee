@@ -789,7 +789,7 @@
     },
     "landing": {
       "title": "ArtCee",
-      "tagline": "\"Where artsy people go to get discovered\"",
+      "tagline": "\"\"",
       "welcome": "Welcome to the ArtCee Premium Journey Prototype",
       "hint": "Click teal buttons and featured cards to explore the flow.",
       "feature_create": {
@@ -814,7 +814,7 @@
     },
     "join": {
       "title": "Join ArtCee",
-      "subtitle": "Where artsy people go to get discovered",
+      "subtitle": "",
       "steps": {
         "personal_info": "Personal Info *" ,
         "location": "Location *",
@@ -827,7 +827,7 @@
     },
     "personal_info": {
       "title": "Welcome to ArtCee!",
-      "subtitle": "Where artsy people go to get discovered. Let's start by getting to know you",
+      "subtitle": ". Let's start by getting to know you",
       "note_required": "* Required fields help us create your complete creative profile",
       "account_type": "Account Type",
       "account_type_placeholder": "Select Account Type",

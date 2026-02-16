@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import bannerImg from "../images/banner.avif";
 import backgrpoundImg from "../images/background.jpg";
-import backimg from "/images/back-1.jpg";
+import backimg from "/images/back-4.jpg";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "../contexts/LanguageProvider";
 import { getCreativeData } from "../Hooks/useSeller";
@@ -180,7 +180,7 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="mt-4 text-sm sm:text-base max-w-2xl mx-auto text-gray-200 px-2 sm:px-0">
+          <p className="mt-8 text-base sm:text-lg max-w-2xl mx-auto text-gray-200 px-2 sm:px-0">
             Manage your professional brand with our portfolio solution. Showcase your current projects and collaborate on future ones
             {/* {t("home.subtitle")} */}
           </p>
@@ -207,7 +207,7 @@ export default function Home() {
              </p>
            </div> */}
 
-          <div className="mt-6 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center">
+          <div className="mt-10 sm:mt-12 flex flex-col sm:flex-row items-center gap-4 sm:gap-5 justify-center">
             {/* <Link
               to="/creatives"
               className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-teal-600 text-white font-semibold flex items-center gap-2 transition hover:scale-105"
@@ -230,7 +230,9 @@ export default function Home() {
                <Crown className="w-5 h-5" /> {t("home.get_featured")}
              </Link> */}
           </div>
-          <div className="my-4 text-lg">Are you looking for talent?</div>
+          <div className="mt-10 text-sm sm:text-base text-gray-200">
+            Are you looking for talent?
+          </div>
           <Link
             to="/creatives"
             className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-teal-600 text-white font-semibold flex items-center gap-2 transition hover:scale-105"
@@ -344,7 +346,7 @@ export default function Home() {
                 WHO IS ARTCEE FOR?
               </h2>
 
-                <div className="mt-12 space-y-6">
+              <div className="mt-12 space-y-6">
 
                 <div className="group rounded-2xl border border-gray-200 p-6 transition-all hover:shadow-lg hover:-translate-y-1">
                   <h4 className="text-lg font-semibold text-gray-900">
@@ -411,13 +413,13 @@ export default function Home() {
             {[...CREATIVES_IMAGES, ...CREATIVES_IMAGES].map((src, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[360px]"
+                className="flex-shrink-0 w-[200px] sm:w-[240px] md:w-[280px]"
               >
                 <div className="rounded-2xl overflow-hidden shadow-lg bg-white">
                   <img
                     src={src}
                     alt="ArtCee Creative"
-                    className="h-[280px] sm:h-[320px] md:h-[360px] w-full object-cover"
+                    className="h-[200px] sm:h-[240px] md:h-[280px] w-full object-cover"
                     draggable="false"
                   />
                 </div>
@@ -432,13 +434,13 @@ export default function Home() {
             {[...CREATIVES_IMAGES, ...CREATIVES_IMAGES].map((src, index) => (
               <div
                 key={`row2-${index}`}
-                className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[360px]"
+                className="flex-shrink-0 w-[200px] sm:w-[240px] md:w-[280px]"
               >
                 <div className="rounded-2xl overflow-hidden shadow-lg bg-white">
                   <img
                     src={src}
                     alt="ArtCee Creative"
-                    className="h-[280px] sm:h-[320px] md:h-[360px] w-full object-cover"
+                    className="h-[200px] sm:h-[240px] md:h-[280px] w-full object-cover"
                     draggable="false"
                   />
                 </div>
@@ -453,13 +455,13 @@ export default function Home() {
             {[...CREATIVES_IMAGES, ...CREATIVES_IMAGES].map((src, index) => (
               <div
                 key={`row3-${index}`}
-                className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[360px]"
+                className="flex-shrink-0 w-[200px] sm:w-[240px] md:w-[280px]"
               >
                 <div className="rounded-2xl overflow-hidden shadow-lg bg-white">
                   <img
                     src={src}
                     alt="ArtCee Creative"
-                    className="h-[280px] sm:h-[320px] md:h-[360px] w-full object-cover"
+                    className="h-[200px] sm:h-[240px] md:h-[280px] w-full object-cover"
                     draggable="false"
                   />
                 </div>

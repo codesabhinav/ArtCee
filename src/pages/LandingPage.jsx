@@ -79,7 +79,7 @@ const LandingPage = ({ onClose, isModal = false }) => {
 
               <h1 className="text-4xl font-bold text-gray-800">{t("landing.title")}</h1>
               <p className="text-teal-600 mt-4 text-lg font-medium">
-                "CREATE. CONNECT. COLLABORATE. GET DISCOVERED."
+                "CREATE. CONNECT. COLLABORATE."
               </p>
 
               {/* <p className="text-gray-500 mt-4 text-center max-w-lg">

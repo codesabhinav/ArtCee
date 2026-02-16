@@ -278,8 +278,7 @@ export default function PricingPage() {
             ArtCee Pricing Plans
           </h1>
           <p className="text-slate-600 max-w-xl mx-auto text-md">
-            Where artsy people go to get discovered. Create, Connect, and
-            Collaborate.
+            Create, Connect, and Collaborate.
           </p>
         </section>
 
